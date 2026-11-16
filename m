@@ -1,92 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794815685;
-	b=CdRcluXIb4OHNDsShnsxJnUpcebWqrZ7RnBXfEkjhJQEpehGJtwIuHFdjRVGhVADcMkU
-	 2Z4O95zJ3jA+fbQABObVTRALDYl6an5Tmca8nSy9mdU0WHUltYmYk2UdeVrc+StBjkXCN
-	 7tIpgOaaCc1ij8izM9nkiyZz0+a17ZxADfN46utL1W9oudZJ66ZEe6P/iWtlenBboHOz9
-	 fZqpVQN58BZS5sSLGGxRcsjDD/gHgdMjfbfAGZD6nSKdUxdZ7fo4lgTyCWLVIzd7LFwCK
-	 oWEmTJ/I+G+EiASlgnuCY/9tW68aHw8cI3ag059/RD/GUVS3qCHOOGBAfjRERBe9DdA==
+	b=x3iqKpbgvXQAN8LYRj5DGGcwocN9AMutEiDPgkJuevvRamb1ahGRJIdAqHgHFuuTE8Ay
+	 NABPe/3JHz0nSWsRfplxGVCxkRz8h4IoqEZO2iStTsixf6Npfdi0t7U+4lLURx4/XRpyo
+	 yUH+cTxYE8MK3R1SMcHzSKrINqvXONxETw5FLkxZdImmxD3IZ2YY8+sIwqxxx05hinjSp
+	 QDiiWEqTAbl7t9Y5O4HsI8RjSnEvb/NX+2B49biSISi7hS75wCCQCR3ocqKk7W+UgoOy5
+	 8EsJ92th9aHgQngPSjg0OfPRPEtA1r02hs0omnGWVPvSY+KvkFOhdzbil5amJTA5vUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794815685;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=3S8KfE2z0glH5v8quz46BnbWAnWJFZkpiRBDqpKkjZU=;
-	b=5KrG1UEzJ62BwDaD91UuAa3olw799J9+3rYZYg+/R22jffAFnuX4crTQbUJcf31RDpTv
-	 DpE6ZvbqbOWotaa20Gx5W4XkuBELRZAnO1z4OFEqt6cp0p2wnLFD5YPchqXhiNRLhrgg1
-	 SQUnYlClkJlcwXdpT974bgf/lkNAfGM1HsA+rVbWfgaa/geCPUbwc2LVqVmJiontsl5bB
-	 jE97kCNE/cES52ugJcklOZ6JGpeYGvg2O9boIkUk6WH5o685XzYZHaffE21Cywefx+spI
-	 oBawv8SflsjS86p+uxEfOIcqhuVTJnIi8BHM2BbpOgr4uSz42it2Bp4ZJjFAPWRRlpA==
+	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=wJhyoVPyEIrD5yY2pde0MNrXE6PDsUwt9Ka8QuL+Adc=;
+	b=fQQKsrK8rAt1G0jpLliKA6OrjJPAl+3iriMqPL6abUaAb32U6K5SgOQ1ZmEKyv/vAPVO
+	 ZwAkF2nDKst0MWIoNhfr1YN5o3f2XLFT9nLjh0zGEC56GQJMSE6iXzz8XtuW0LIx0SDj/
+	 6RMcerZZtxGpF0nMpRE9daw8rgQAk1DAeFqNN3hSpxyL4tG3sTKh7STCloTTIP/7KfNhJ
+	 /RHnKYDXYlnb1Y4DiGpglWfUyhD2gRCszyQdX5vwzBugVlXXVXzas7oi4HmzuphWlDGCS
+	 VQV/yxXqfwy3VMwbBD3DaHNdjPBE9uuuawQm3ARFtrc4qV8ui24ZO25xzKiBAazyFRw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Svoyk9Oe;
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lhQUqA5t;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314BD606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 07:54:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 314BD606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16334606A331
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 07:54:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16334606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Svoyk9Oe
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4bb5b8ef642so17525755e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 23:54:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lhQUqA5t
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a35d5d4a20so38864515e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 23:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794815682; x=1795420482; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=3S8KfE2z0glH5v8quz46BnbWAnWJFZkpiRBDqpKkjZU=;
-        b=Svoyk9OeIgA5CrWzHRhBX/vVjGQ4KhCIwR8o+KZGSUeFauGW52ixWvTzihSZzy1AQF
-         Jatlbgw2Oz/zzI8h3uf7zloAqp5S/zXdBi4u6E/YbQwCIIuH98hbAyryjBM9Gy8EvuUC
-         jnJU0NM/O1FPwEOUUmZ0gt0YtUXszZZ4ZKrkQzerfilHTJVx7Jljx2KJFPzDX6NUDanB
-         R8Om7gbV0y+Un8qQBOHE0KJC9QuaiA1PModXec5xfD8CUghQp7eIiepyoB5Qgk0HinjF
-         Q5DpKj80L6HnqXk82BGO2/TZOE6VbgiX9pNz6htp5UInfwuxtd2BexPu2VhqvMFkrloN
-         GQyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794815682; x=1795420482;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1794815683; x=1795420483; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=3S8KfE2z0glH5v8quz46BnbWAnWJFZkpiRBDqpKkjZU=;
-        b=EIXxKocU6XtyrmiMxdgivS32WANruBXl/xGMQk2q3Q1tzekEA+u76Av7mgWbvUSJSw
-         K7LWKAnjEbQvWnyFZStnNQI+wwUKn5ORJM4eLc+WbXpQ/T6bAndkchXwTYWeUff6EGiq
-         pGfXI72dNgls4Zl1ih2H9d5bDRIXLd6yw7bPe07MM4DyfHdSs+IuFBmA0OAfekqPp5ac
-         B0d3c0QjBMdgbl1RnGUkFJT8/au9CFsz/xLTg088u9McUcKVfvZt+9QSrssuuMbnwnx8
-         bS5NjffA9i29AWFB4UiKpBlJDNuyF0COFkkgVkntwmolIl+QYor5cMb2qj9Zz3cNs+/P
-         j/Zw==
-X-Forwarded-Encrypted: i=1; AL+hErFIC2ijuSgUJwLtfOa77nfLMUYXRns661gn9HPLYuDk1rpRcYETohD5PwtVNZqUvHKJqSHRudr3FjnTy/3bJ7DeTv4=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/H4I1a99NGza9pCtXWJknmk7g52Zbv3j1tveKVLU9rMC5CIHPb
-	HgOeUbXYcRUSxUNtth+qrVipSHeX91FOriuabE7ysuBJQRekQ0Mi7fJy
-X-Gm-Gg: AYBFou3X0D+bMUOgWrcGOpdM2L3+DY/m+tIzjGt1Y9H3742WrcglLZXcM9drT1xqDTl
-	o1UGwBW2nCr0o+E9XjiVhk3qNEw2YOUhSEctfQ7nTwoZz8myAibpnnh3/iOVe07YPlFOkoOoOaZ
-	JepPMq12S+HZuNfwInm694+MwLT+/up7qAm8NRu85Wp0JSCTrBe3AVP0dV4PwHZ0N6FFj01E4ip
-	b9h/Yr00OuyotQRlrY/DsESt7kf/amPhrvCItiv9ZDOsECYZR2ThP1FbImu0nY/Fp4wTQRP2zEy
-	aoby73iwazh5jQC95F1ej75Be/CMQR+4xktjuHeqynbZlDsFYVNGeBbNAWk3Fa6dDQQGSr3Cj01
-	AiXWBvVXKphIrjbMIPHCC3BPaZiowFHt3yZZKwPCr3eCD08gs53BRk+OaOoD1iJRtF/RhwJ8hy/
-	tn1IUt5SGQQDthSZ+Xxlm0IDhjwo7wqTpSLHJnwGUKoo1toa0uznCmkcuMkjd8E7jbLm446tnKn
-	TC7MrR5U+xV2Vm1eGcMC+Aq4Y6LxlTxKTt3AzsxB+ygv6qQDUOMVchSnHjRGbEjT/sunDjRQSkl
-	U3kvZmCIuZQ+A1QsESvGmn/qZbs7PmOk9m2Y7Y2Zzul6B47mlkIQfIKoq+9phivA7pcc60HDsLC
-	vwrosuTGNNvNO+v9H3wYOQKTphIVewxQVpIDdD31QSXUbs7CJvEbmizdi6JXg5hhmQdC1YJTLaJ
-	6+lVhg7E5BBzLxHOu+KLdqifk/nJLP
-X-Received: by 2002:a05:600c:2d2:b0:4af:c210:5b3f with SMTP id 5b1f17b1804b1-4bb55a63720mr149965015e9.24.1794815682214;
-        Sun, 15 Nov 2026 23:54:42 -0800 (PST)
+        bh=wJhyoVPyEIrD5yY2pde0MNrXE6PDsUwt9Ka8QuL+Adc=;
+        b=lhQUqA5tQxQyzdAeDP0B7IISnBLRD6tyu9/mhI4hP9HrceXSEkJxjHy0rFBtYK92KP
+         ww+JIfzB9y9fTwlYgoxLMV6aCfUuf803kp0Wb7BuiJNjsugc6rgrDeTQPc8Ot/McY8Uh
+         CthJEKswOASfsQojc2vA8sQQwbtE9k/FzVXJFpjsMeggFXWymyQkWRTGJ3jK/OR4WvBM
+         jMpzSxyKl4fQBO9C/w7xFHjUETY0v41ewe+WSrGTmhjisZxsPh/z/ISrsoRbdb6KYDTW
+         YVbIFrLAw0wvRLxIEcGqYdHs7FAV84jcRZkZR1aeR7Dud4q1J7M8Db2gslNLntI2wvuo
+         mjIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794815683; x=1795420483;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=wJhyoVPyEIrD5yY2pde0MNrXE6PDsUwt9Ka8QuL+Adc=;
+        b=Ern4f+VGnSH+nNZDM+f9xQskF4MZL4MaVjDB+CLqPlMOJuqUehUXUThbSUXkm8gdd8
+         kT+OxFvcINkQeiAKwxnNuxSywjLueGSY40NbFDIPJQ3Kvo9UwEsHpmW0/pxAx4X8TtTU
+         uX8Nzb868Kxg7MsFhvWVKEmyWRAfG25NxH21g/d4V0cRLhoRvBWBpjcPefdVWVuMnryt
+         YWNzQq5HNH4rpBjkQxupqTB5/edSRl59ZnU4HYOH5iPG72tVkfUPF1aZ4XImsIMYhkyE
+         l93nKnScxN/qctJBRJHe2m+kdN0h4pfTAmqpg2W4OYmf3ldi/linFgz1LsbE7vGvjK9e
+         pH5g==
+X-Forwarded-Encrypted: i=1; AL+hErF+0Mr1b0rZ2y6DdGDKnok8rCMohTenj+P6YTbwXhZXAmCpLrd1cfmXKX3ZAfHgtkQU1WbB/3d770ZHTQdx/3qn/dI=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9ZFrGwVUbZdmvM34OF6bud/3fKAvoxwSKh9l8/pSF+kiJISnrX
+	FYkbJmi5AXeazYMGGYfWAedFEzmPYR7s1l6c86lTf3bFPbw97U4Nk/dB
+X-Gm-Gg: AYBFou1nf0pIeejsqGR+qXoTStQ15NAo+1t8dPyilnIfO653RJvpb2/kzatNoFzBs5q
+	sVmTx1nDofExrFwLHNd+0tGYR1lBaQ/AejRRuAtpDrcyyyTNbKB/ttlSg0GyzIIVbQhelLnodHS
+	fqEyL+8zYpGqJQxk+9fcCsHF1I3ymUXnjDrC0ZtxCee/+vqyt1txC6Q+NKqCPKPHu9X5ezs6tCs
+	JJxfIcvmXMWDOI521jlP6a3cLnmz7xkVr2SVaRxR2NUW2+nx8+uEViIfbb6VGtOXo/2jlCrOR2Y
+	Lw7SJU0YduPMRlt9Kl9KnjFli8HFojd7VIsMSd2ifO1mEtRVmRJouCPz7ccng3vI/bhnCG6w/tV
+	wy8/RoMrJ0wqnjrzye/FTBvfiRfz+4+4RouH7HtCtpUBGZIpFBkCuX6CWNlbRz2Hacb8DPPUrT4
+	TA5MZHRMtpK5rp4mLaIooMBhbMpQ1vvK5GIZWO5dGv5W1oulnsa42upBbvHAIDuzabmHTFD1Y3m
+	X+Il0vSO3QaZgeRAA5mSah5lfCXEggfIN/C+wG6VRyEtszMGx0Z7n11CMdcFtHg36EtDmW7qXG6
+	Iww735/MA7ED+asWNZhGIXcnGNkim8n+i7g+JLxkd8HhyBu6uFcI1uoQUYoUCWV45Oxu/6WZJmo
+	ifqCxDqBgytcg6sQcLNpgJ8A7+qbAJkIYd9HAPkcGDK9aOkmJey6vq96haBUPQ0D6MZs/vU2S7w
+	X1I8QQNUs=
+X-Received: by 2002:a05:600c:8b23:b0:4bb:6f6a:1976 with SMTP id 5b1f17b1804b1-4bb6f6a1e5amr67223255e9.2.1794815683432;
+        Sun, 15 Nov 2026 23:54:43 -0800 (PST)
 Received: from MacBook-Pro-von-Karl.localdomain (dynamic-095-117-148-032.95.117.pool.telefonica.de. [95.117.148.32])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb5ba25b50sm210329875e9.14.2026.11.15.23.54.41
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb5ba25b50sm210329875e9.14.2026.11.15.23.54.42
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 15 Nov 2026 23:54:41 -0800 (PST)
+        Sun, 15 Nov 2026 23:54:43 -0800 (PST)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
+Cc: Hongyan Xia <hongyan.xia@transsion.com>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Hongyan Xia <hongyan.xia@transsion.com>,
 	Song Liu <song@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Juri Lelli <juri.lelli@redhat.com>,
@@ -95,11 +95,14 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] sched/preempt: Check notrace preempt-count updates
-Date: Mon, 16 Nov 2026 08:54:21 +0100
-Message-Id: <cover.1794814699.git.kmehltretter@gmail.com>
+	linux-kernel@vger.kernel.org,
+	Karl Mehltretter <kmehltretter@gmail.com>
+Subject: [PATCH 1/3] arm64: Always inline raw preempt count updates
+Date: Mon, 16 Nov 2026 08:54:22 +0100
+Message-Id: <23dc25d010cfeb8eddde12be5212fd73bf1cd5c4.1794814699.git.kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <cover.1794814699.git.kmehltretter@gmail.com>
+References: <cover.1794814699.git.kmehltretter@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -111,82 +114,39 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With CONFIG_DEBUG_PREEMPT, the notrace preemption macros bypass the
-bounds checks used by ordinary operations. Add checked noinstr updates
-for their existing callers and share validation with
-preempt_count_add() and preempt_count_sub().
+From: Hongyan Xia <hongyan.xia@transsion.com>
 
-Patch 1 forces the arm64 raw updates called by the new helpers inline.
-Patch 2 does the same for preempt_count(), which the helpers use, for
-should_resched(), reached by the debug notrace enable path, and for the
-existing non-debug __preempt_count_dec_and_test() path. The corresponding
-x86, s390 and asm-generic operations are already __always_inline.
+Raw preempt count updates can be emitted out of line by the compiler.
+For a noinstr caller, that puts the update in ordinary instrumentable
+text. Force __preempt_count_add() and __preempt_count_sub() inline so
+their code stays in the caller's section.
 
-Patch 1 is extracted from Hongyan Xia's entry RFC. Song Liu also posted
-notrace annotations for the same arm64 helpers:
+Link: https://lore.kernel.org/all/c3a90368dd6c096af9d918e036a27728696fb8a4.1786603168.git.hongyan.xia@transsion.com/
+Signed-off-by: Hongyan Xia <hongyan.xia@transsion.com>
+[kmehltretter: split out the arm64 preempt.h hunk and rewrite the changelog]
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+---
+ arch/arm64/include/asm/preempt.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  https://lore.kernel.org/r/20261023011049.1164625-10-song@kernel.org
-
-Patch 3 disables branch profiling for core.o when DEBUG_PREEMPT and
-TRACE_BRANCH_PROFILING are both enabled. DEBUG_LOCKS_WARN_ON() evaluates
-its condition before entering its instrumentation region, so profiling
-that condition would call ftrace_likely_update() from noinstr text. The
-scheduler Makefile already uses this per-object exclusion for
-build_policy.o and build_utility.o.
-
-The cost is loss of branch-profile data for the rest of core.o in that
-configuration. Scheduler tracepoints and function tracing are unchanged.
-A dedicated non-profiled object is the fallback if this object-wide cost
-is considered too broad.
-
-This series is independently useful. It also supplies the checked count
-update planned for follow-up IRQ-entry work; it does not change IRQ entry,
-trace-recursion lifetime or TRACE_CTX_TRANSITION.
-
-This addresses Peter's suggestion here:
-
-  https://lore.kernel.org/r/20261029093219.GH1779021@noisy.programming.kicks-ass.net
-
-The series is based on v7.4-rc2.
-
-Testing:
-
-- Clang 19.1.7 x86-64: a W=1 defconfig-derived build with
-  DEBUG_PREEMPT, annotated branch profiling, DEBUG_ENTRY and noinstr
-  validation passed. A nested-KVM boot passed the built-in and external
-  module checks and all five tracer workloads. A DEBUG_PREEMPT=n control
-  retained branch profiling for core.o and emitted no new helper symbols.
-- GCC 14.2 arm64: a W=1 PREEMPT_RT build and allmodconfig passed. The
-  latter's nVHE object had no undefined references to the new helpers.
-  A native Axion boot passed the built-in and module checks and all five
-  tracers.
-- GCC 14.2 and 16.2 ARC, C-SKY and MIPS: performance, size, all-branches
-  and forced-noinline core.o inspections passed without prohibited
-  noinstr relocations or branch-profile records. Full baseline and patched
-  kernels plus the external debug module built. Matching QEMU boots reached
-  the expected balanced and invalid-count markers on ARC and C-SKY UP and
-  MIPS UP/SMP. The patched kernels diagnosed every invalid operation;
-  rejected decrements retained their counts. An ARC DEBUG_PREEMPT=n
-  control retained core.o profiling without references to the new helpers.
-
-The MIPS UP baseline and patched positive boots emitted the same three
-existing smp_processor_id() diagnostics; the SMP boots emitted none.
-
-I used an LLM to help extract and review the changes, write the test
-harnesses and prepare the commit messages.
-
-Hongyan Xia (1):
-  arm64: Always inline raw preempt count updates
-
-Karl Mehltretter (2):
-  arm64: Always inline preempt count and reschedule checks
-  sched/preempt: Check preempt counts in notrace helpers
-
- arch/arm64/include/asm/preempt.h | 10 ++++----
- include/linux/preempt.h          | 22 ++++++++++++++----
- kernel/sched/Makefile            |  3 +++
- kernel/sched/core.c              | 40 ++++++++++++++++++++++++++++----
- 4 files changed, 62 insertions(+), 13 deletions(-)
-
-
-base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+diff --git a/arch/arm64/include/asm/preempt.h b/arch/arm64/include/asm/preempt.h
+index 75a592b7f47f7..f3a5c2cd1936d 100644
+--- a/arch/arm64/include/asm/preempt.h
++++ b/arch/arm64/include/asm/preempt.h
+@@ -41,14 +41,14 @@ static inline bool test_preempt_need_resched(void)
+ 	return !current_thread_info()->preempt.need_resched;
+ }
+ 
+-static inline void __preempt_count_add(int val)
++static __always_inline void __preempt_count_add(int val)
+ {
+ 	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
+ 	pc += val;
+ 	WRITE_ONCE(current_thread_info()->preempt.count, pc);
+ }
+ 
+-static inline void __preempt_count_sub(int val)
++static __always_inline void __preempt_count_sub(int val)
+ {
+ 	u32 pc = READ_ONCE(current_thread_info()->preempt.count);
+ 	pc -= val;
