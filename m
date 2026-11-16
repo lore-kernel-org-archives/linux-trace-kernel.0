@@ -1,55 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=80.241.56.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794844896;
-	b=pHE/nyac+1chqzvzNdLwiS3qjah40J7svmaBK3gGHwk3xPGZ3qbCwR78oIYwazydqv+C
-	 7dfi2v5KOYLqYfvIDTfqAfnoQtS1AZ+xJvEpcyIrqUu4utRZDvRhW2vB4fYnnJlwREn3b
-	 cevf6i/l4hsXCBGvaSUHYSW0DuxH9NS8IpfjgcoCTzrWafGahrBAuv4VWVDeQgyClrp3m
-	 4zDfvYxSksTETWyPw2rLJKhTeXzeFPp0xp4v1WEACws/PWlm3r1loNXA/wdlSaI8qtB5/
-	 enG0IGNEPClMaB/me63ok1RPVBdEtwq2iYXBVf9CIvIRS+2Nc5X9iPabxunn478NAZg==
+	t=1794848045;
+	b=gctVhryo0FP04x1diPhyNuMLU2HOYbhbhurE6K2hpFQr2G7eMrI+pV31B2QTXwoDNJpL
+	 wclxogJ2dgbUZ+UWVbTgxusKCr2bg6ZahQBMQOASe9prPeP8pjUxrd4VmPCzx3CxauxVR
+	 UWEF+KhTWCJokrtBzeonAT9nr4j8ad3rKS6vQ6a/EVKYsr95vZn3KPfhvJzLFzNXn1f7N
+	 uihlU3SCz/5b+6tYCqlR+mGI5pZ1Hhq6h6L9uoKtFmxIvSnyxe+CvS9bxYsPZ5UnWwP/s
+	 3/CSJjR5kkHwd7dSSzYGF8PyO36VY6TEF2yGy7i8RSnXZh6J4M6njbVovkK5Xkr6Mbw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794844896;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=8AtIllrW3jqSU2MyKn8xX9LlKY0ZVFVj8MIH4CkTtAY=;
-	b=uCRJ/fs5vjj/VvbZXcA5awHJvUnCXFJ1LGq1P6rGfY4AiL4Z2EmvFIsj51QYEBHQDHlp
-	 9rEplJnLbxSbomqfLrP8JbjLMzwDw9JR2nWrj6iLwYqmZ044y38gcqFEzwBI94gYmXGY2
-	 KYxeZgpD/lXK4fOfnPP0LMHYDcL2+ieywPNu5v+aJQa9c9EfvAmNEq2jXmwHvsHvtHMUE
-	 sbCm0U/QIDZRPwfllxjjSw3qZ+HCwaWw9WdM25hGZ6jpF2bNmt+lzPEv8C7ZGWMBfVkLf
-	 c+LWfmXaTgaps/qB7G5Di7W68nQfU9v4jMVS24CLTrU+n3j2G1MJqGpGXCXuynwBuUA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794848045;
+	h=DMARC-Filter:Received:DKIM-Signature:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:Content-Language:To:Cc:References:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-Rspamd-Queue-Id;
+	bh=S3bxneiWF925sHRWuhmHNR2GbqcJSpHqdoFk1dfbgNk=;
+	b=tCjXM56LF1VHtQZ6gqHoJX6WiZhwJqVxnHXNZ8qDyeYc2y0FW+fV3oMJR4X9TGMQAvfk
+	 /X3R1N3v66TnzdvE7YKy1bABmpLAcuLQXDJeMm/HuzivzF3PUSqr/jxpPLxmVg475p4hq
+	 i2wcY7XewRgJQ20tzGEI3kb8SUXTzvxUd9BqkEbgxmpABaHmfmKXfaJD4N5mey6mOEdaN
+	 fPZ2UMcAULGV3MO0JsFhyCXVJnsShqQaaYBAeI8zXbBKVD+AR2pAezF2zYaCxZcUJE6An
+	 rO9QoLhxTzWzk+eJVLE9JHMc7mepaCdaCcbt554Opp5JAJnFixe3C34Rt4DgK7l+7DQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ia96QjDy;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=pablofraile.net;
+	spf=pass smtp.mailfrom=pablofraile.net;
+	dkim=pass header.d=pablofraile.net header.i=@pablofraile.net header.a=rsa-sha256 header.s=MBO0001 header.b=QpBEdrTo;
+	arc=none smtp.remote-ip=80.241.56.171
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD03606A322
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 16:01:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122CD606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 16:54:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 122CD606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pablofraile.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pablofraile.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ia96QjDy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6181E1F000C9;
-	Mon, 16 Nov 2026 16:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794844895;
-	bh=8AtIllrW3jqSU2MyKn8xX9LlKY0ZVFVj8MIH4CkTtAY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ia96QjDyEKndifIqCXgqfvMzf6Zox2bMdAlqM/Dj1njB/JjATdeOf/BN06nHV9Rtw
-	 TWaSLP+EQGdKfHocjUmcSN1U8ORgBNrIZDSzt3/pN37jQiIkJBWwmi2sbSxg4bJTMI
-	 ngmrbYHzcXUQXh8Vsk55VHdh7bOLekYk0E4e8eJOMnlNj7/PmLMiG76w5xBsmTGv9x
-	 YaQ5kdQDN26rbSRKRsJLVfPbglPLSJ5Snni7jaoQt6Yho47qcKY6GUwq7fvg9hnNWv
-	 b/3f2k8o36dyBISxWDYJeB5jQ8EgiH6UNULJ+KYhSPtuWOxFev0YXgroivIrXoSAx1
-	 Ig6oXwQOzrliQ==
-Message-ID: <sashiko-outbox-217334@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] uprobes/x86: Fix bypass of two-byte opcode validation
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Pablo Fraile Alonso" <pablo@pablofraile.net>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261116-x86-uprobes-two-byte-opcode-v1-1-2b6dbabead52@pablofraile.net>
-References: <20261116-x86-uprobes-two-byte-opcode-v1-1-2b6dbabead52@pablofraile.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 16:01:34 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=pablofraile.net header.i=@pablofraile.net header.a=rsa-sha256 header.s=MBO0001 header.b=QpBEdrTo
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4jSv8S1kT6zMlkh;
+	Mon, 16 Nov 2026 17:54:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pablofraile.net;
+	s=MBO0001; t=1794848040;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S3bxneiWF925sHRWuhmHNR2GbqcJSpHqdoFk1dfbgNk=;
+	b=QpBEdrToFOfl8yju8CirB4ZkETT4dw5APekHI/hflqRyCmjBxERXDdGZhNTE0IueDZl5Sa
+	QLkNINVXi4fL1IPTsuJWt38Hf4XLqrmOPab1MN0r3TUbkwms6zzrXrp0MeWrobjK0xK2bH
+	soZI7RSL0bS2cDJfGqp/KsK9obDP7cIFja4SadsCE9ngfA/dtjRenuNRPZ/s9ywJaIFjpX
+	biv4/2N70URinIbw2J/qM3Mi3P1b2E8uH6hHvfA00MMt7rbqhS0fkcjQ4Q/1rhPTp9SYVv
+	0677LUxOLqgth/kBEeEt9pMBilm3eWHw55XuZ8sLmH6t8WufJhhw/q8QGuH4nQ==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=none;
+	spf=pass (outgoing_mbo_mout: domain of pablo@pablofraile.net designates 2001:67c:2050:b231:465::1 as permitted sender) smtp.mailfrom=pablo@pablofraile.net
+Message-ID: <83290e65-131e-4aea-ba79-e1453445e872@pablofraile.net>
+Date: Mon, 16 Nov 2026 17:53:58 +0100
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,83 +64,29 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] uprobes/x86: Fix bypass of two-byte opcode validation
+Content-Language: en-US
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+References: <20261116-x86-uprobes-two-byte-opcode-v1-1-2b6dbabead52@pablofraile.net>
+ <sashiko-outbox-217334@kernel.org>
+From: Pablo Fraile Alonso <pablo@pablofraile.net>
+In-Reply-To: <sashiko-outbox-217334@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4jSv8S1kT6zMlkh
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] uprobes/x86: REX2 map-1 opcodes bypass good_2byte_insns in
-  uprobe_init_insn()
---
 
-commit 4da9c45b309734e7a1e4eb07255d608c16d67ca3
-Author: Pablo Fraile Alonso <pablo@pablofraile.net>
+On 11/16/26 17:01, sashiko-bot@kernel.org wrote:
+> map-1 opcode against good_insns_64 (map 0) instead of good_2byte_insns,
 
-uprobes/x86: Fix bypass of two-byte opcode validation
+I checked the parent revision and confirmed that the reported REX2 behavior already exists before this patch.
 
-This commit updates uprobe_init_insn() to switch on insn->opcode.nbytes so
-that two-byte instructions starting with 0x0f are checked against
-good_2byte_insns instead of matching bit 0x0f in good_insns.
+Previously, REX2 map-1 instructions also reached the first OPCODE1(insn) lookup against good_insns_64. The in-place opcode modification in insn_is_nop() is likewise pre-existing and unchanged. Consequently, the examples described here have the same acceptance/rejection results before and after this patch.
 
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 0f60c0d076b62..1cf901d186884 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -292,14 +292,24 @@ static int uprobe_init_insn(struct arch_uprobe *aup=
-robe, struct insn *insn)
->  	else
->  		good_insns =3D good_insns_32;
-> =20
-> -	if (test_bit(OPCODE1(insn), (unsigned long *)good_insns))
-> -		return 0;
-> -
-> -	if (insn->opcode.nbytes =3D=3D 2) {
-> +	switch (insn->opcode.nbytes) {
-> +	case 1:
-> +		if (test_bit(OPCODE1(insn), (unsigned long *)good_insns))
-> +			return 0;
-> +		break;
-> +	case 2:
->  		if (test_bit(OPCODE2(insn), (unsigned long *)good_2byte_insns))
->  			return 0;
-> +		break;
+This patch specifically addresses the validation bypass for legacy 0x0f-escaped instructions. It leaves REX2 handling unresolved, and I can make that limitation explicit in the commit message.
 
-[Severity: Medium]
-Does switching solely on insn->opcode.nbytes still allow REX2-prefixed
-map-1 (0x0f) instructions to bypass good_2byte_insns?
+I agree that prefixed encodings need separate attention. I was already planning a patch for some VEX/EVEX handling issues.
 
-For a REX2 prefix with M0=3D1, insn_get_opcode() stores the map-1 opcode
-byte in insn->opcode.bytes[0] (OPCODE1(insn)) and leaves
-insn->opcode.nbytes =3D=3D 1:
-
-arch/x86/lib/insn.c:insn_get_opcode() {
-    ...
-	if (insn_is_rex2(insn)) {
-		if (insn_rex2_m_bit(insn)) {
-			/* map 1 is escape 0x0f */
-			insn_attr_t esc_attr =3D inat_get_opcode_attribute(0x0f);
-
-			pfx_id =3D insn_last_prefix_id(insn);
-			insn->attr =3D inat_get_escape_attribute(op, pfx_id, esc_attr);
-		} else {
-			insn->attr =3D inat_get_opcode_attribute(op);
-		}
-		goto end;
-	}
-    ...
-}
-
-In uprobe_init_insn(), those instructions enter case 1 and test their
-map-1 opcode against good_insns_64 (map 0) instead of good_2byte_insns,
-allowing disallowed 2-byte instructions such as syscall (0xd5 0x80 0x05)
-to pass validation while rejecting valid map-1 instructions such as
-bswap (0x0f 0xc8..0xcf) whose opcode byte is 0 in good_insns_64.
-
-In addition, because bit 0x0f remains set in good_insns_64, a 10-byte
-REX2 M0=3D1 instruction has its insn->opcode.value shifted and ORed with
-0x0f in-place by can_optimize() -> is_optimizable_nop10() ->
-insn_is_nop() without updating insn->opcode.nbytes, so case 1 tests bit
-0x0f and accepts any 10-byte REX2 M0=3D1 instruction regardless of opcode
-(as well as an invalid REX2 M0=3D0 instruction with opcode byte 0x0f).
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116-x86-uprobe=
-s-two-byte-opcode-v1-1-2b6dbabead52@pablofraile.net?part=3D1
