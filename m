@@ -1,47 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794776456;
-	b=qRfKHGUtGlBKTsqpC97IIjfxR58CYhruTmnVPNo0N4u4Yp9xIwaiDp7wnMYk8ivtj9hG
-	 zyrGAdizivcT7sEnOXvF/6hUG4eayIuEk/erS9t1NAteM3ZD1mOIQOWqPga7gOHoSYzv1
-	 h60aBD0iWQxP2eZfyWOv53wMBBfAftD0ufK4IncT/5grKAaJkZQtQ+QO0a7SneKxe6DEI
-	 UC7RV9NUa6PTWTqVT7SkOzlgIMLBpBaiKXgDdNHFThqPmFLEeWyHSjLSE+oai4JlJhqHg
-	 0GzY8aXlfXI3iP4WOV3lrYDVKrUqPB+/O7P1iT5oA8lg2+ufYyN/hOpUv2M2kKGoVUQ==
+	t=1794795336;
+	b=BvYHAHn4cT41Dp1uYyKcbI+A1NtBhmhDhm29U05vwGbOqGuxSOhec260tPLf0jlryDLw
+	 TVjwRDxzMCbvyEBDLvTlw1nHLzUmV0iSPFQT2qZQGTNUEMwTBe6C7t9St//jv55DlbN4O
+	 iuVld8y47w8z2rezRvPx7vCnQe5tKQXfkaVly14+96knVECRZP7uhvRjE621jijv4qYkg
+	 fKYKXsEUGj0aIG5X3KhhNBkt4C48w24HkPM4qb6ZBhnMzBTk3RGS785UFN/C3ds54cgSt
+	 KRaPACt4ZOC3Tb5X65M76FDalOUmtWx1hMJvw1MlmRf4fYzHZvfDy52SzEXM5B6HkjQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794776456;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=lEm6igHXIFAAgEEuRJ/bqCUFcve2TkljyAexsixdkJo=;
-	b=2H8pfDaEXmsKlC2U2lb08m1K9ezfqQ5pD1hkVteEqiJdxFTjYqFPsO4CYkPuVZLYxRvy
-	 oZDQmxfLc7BSjEzE+36VjZvksuNiePi/zYiRHXNViElWpyI+7wVcTEOlS9ChMJkBqrO9P
-	 zOPxztEANPndFBisYEslj1N6UAd7GICzesDF/CbfBsdcviDoyrrGRf6SiSCrBioWqkJ3U
-	 lpxodnPLyGnCmPJpjMsEuNIT0ocmPJO7LWkLEkatgcPclFiBS8Fl3WgHgGJoGI3rt9xVy
-	 Fk4zZ2MlrpEJC/PrUNCCO1rDDmb1qeZO7Z3r/AIiWeLSu2cCE3jYKMa+OGn5UzwO7KQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794795336;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=wZItRaySY14g5BVC2viKZy/bcmMP3lZf5uclPF7bOgQ=;
+	b=ZCYqnpHQ7cKO8XDWRB7S6c58VZ3Bwn4Xjqvt5h0Z4yJShpoSp38ZLrsoSOQ6u8gsM79I
+	 N60UDe9/FzBPzcET78jAaH8zy8qfTO3ZPsPne5tvusuk23j8IEawa/+Z/lkhaat2iUTnv
+	 fq0v5zPptvE1qQTgl24dm94MCNPOtzqwdsYPUtxZCaXsfX9jhF4X50OnWLmAtpiMgG3LE
+	 nkibcKEbzFgO7bgMyPJJ79hgtNpKWObLLp2B99qKT7+YrDFTNlRv+EJQrMAk3igV1eKQM
+	 H7kGaMwZFsUQOSG1RFxn7vDhJJr+A3WDecDK4yAKFi9mX205KZIxg7bxbCLlvtBsaVw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fTFSmfz6;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d+SASHCL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C50E606A31F;
-	Sun, 15 Nov 2026 21:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1128606A31C;
+	Mon, 16 Nov 2026 02:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fTFSmfz6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04B61F000C8;
-	Sun, 15 Nov 2026 21:00:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d+SASHCL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BAF1F000C4;
+	Mon, 16 Nov 2026 02:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794776455;
-	bh=lEm6igHXIFAAgEEuRJ/bqCUFcve2TkljyAexsixdkJo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=fTFSmfz62R/xzgkMpYRbTZzSO1fAaOTf4jflJ+BI1Scxj9kPgQQRUJh5ePp5hBeOu
-	 +Bd9/jFgUX/Vr3SrSaL7NiWng2cleM7I5eVUET0CxCOxtD3z3JtobCtoEK1uZsrk9O
-	 iAGU9e2NNbHTnHUUm1WhpTgrGJI9DxfNtXj3ZbOqcBeV+X0YOubFg16rMVAG4n816S
-	 meAMgeXKPUTzQXxkWxbQZTL7zIU7+61yO8ddDum1vZdciy3700YyDsvoCC6X0U8Z75
-	 isgWalRVkoXJWNKjU4wQOTcFTO3/feMNx7FHCW3f8rR417/NwmEPrn+s1XJbm2eRIP
-	 zaZrd+FRk8kcA==
-Message-ID: <4e9a39ac-9ad5-49d8-b0c4-09e665504609@kernel.org>
-Date: Sun, 15 Nov 2026 13:00:55 -0800
+	s=k20260515; t=1794795336;
+	bh=wZItRaySY14g5BVC2viKZy/bcmMP3lZf5uclPF7bOgQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=d+SASHCLD8J4UyxeKcK5oLKoxcClXd8k5ryvD/8KFbfu+YIKJ2OFjkOVuo1Wt6+4E
+	 m8y9bvEo/UOhwCNw341Wd91Spx6B86BfiIeLpuuCluMfauvIF431hg5kEY/ErDd+N5
+	 EI7vwGGAkH6ZC9iVa+DrJQEH34oa2uUaEnAQ/7LoO7LfvD5ijMntJWLcEjku70yip2
+	 ywJV8kjZttCIMz0dAoYg+2izpohn2AUUyoyTx8q1AX59mRWU3/GzmGuOoKx8n6BOko
+	 33cfOspRIROCSX/OwzfZkDBZYFIhU3JucE2ekUkxLFzTymB0+xk+FwcKPxgCo8t68s
+	 pWGrplZc9XcHw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: mhiramat@kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v19 04/11] tracing/wprobe: Add wprobe (watchpoint probe) trace event support
+Date: Mon, 16 Nov 2026 11:15:31 +0900
+Message-ID: <undine-1794795331149989582-cc3cda1a799c5477@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <179101398088.22872.14081308855446744398.stgit@devnote2>
+References: <179101393469.22872.5895666191299551553.stgit@devnote2> <179101398088.22872.14081308855446744398.stgit@devnote2>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -51,97 +58,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/13] ipe: handle errors from resolving the real inode
-To: Christian Brauner <brauner@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org
-Cc: Chris Down <chris@chrisdown.name>, Miklos Szeredi <mszeredi@redhat.com>,
- linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-mm@kvack.org
-References: <20261115-work-ovl-d_real-v1-0-ca155efbcb2e@kernel.org>
- <20261115-work-ovl-d_real-v1-8-ca155efbcb2e@kernel.org>
-Content-Language: en-US
-From: Fan Wu <wufan@kernel.org>
-In-Reply-To: <20261115-work-ovl-d_real-v1-8-ca155efbcb2e@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On 11/15/2026 6:01 AM, Christian Brauner wrote:
+On Sat,  3 Oct 2026 16:53:01 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-...
-
-> 
-> diff --git a/security/ipe/eval.c b/security/ipe/eval.c
-> index 4a7be96c84f03..3751963509df4 100644
-> --- a/security/ipe/eval.c
-> +++ b/security/ipe/eval.c
-> @@ -102,7 +102,11 @@ void ipe_build_eval_ctx(struct ipe_eval_ctx *ctx,
->  
->  	if (file) {
->  		build_ipe_sb_ctx(ctx, file);
-> -		ino = d_real_inode(file->f_path.dentry);
-> +		ino = d_real_data_inode(file->f_path.dentry);
-> +		if (IS_ERR(ino)) {
-> +			ctx->file_err = PTR_ERR(ino);
-> +			return;
-> +		}
->  		build_ipe_bdev_ctx(ctx, ino);
->  		build_ipe_inode_ctx(ctx, ino);
-
-
-I think we only need to change this part like:
-
-	/*
-	 * If the real data inode cannot be resolved, leave the bdev
-	 * and inode fields unset so the file is evaluated without
-	 * dm-verity/fs-verity state.
-	 */
-	ino = d_real_data_inode(file->f_path.dentry);
-	if (!IS_ERR(ino)) {
-		build_ipe_bdev_ctx(ctx, ino);
-		build_ipe_inode_ctx(ctx, ino);
-	}
-
-
-This also avoids the missing audit issue noted by the bpf bot, and we
-don't need to add file_err to struct ipe_eval_ctx.
-
-With the above change, feel free to add:
-
-Acked-by: Fan Wu <wufan@kernel.org>
-
-Fan
-
->  	}
-> @@ -335,6 +339,15 @@ int ipe_evaluate_event(const struct ipe_eval_ctx *const ctx)
->  		return 0;
->  	}
->  
-> +	/*
-> +	 * Without the inode hosting the data none of the properties of the
-> +	 * file can be evaluated. Refuse it unless IPE is permissive.
-> +	 */
-> +	if (ctx->file_err) {
-> +		rcu_read_unlock();
-> +		return READ_ONCE(enforce) ? -EACCES : 0;
-> +	}
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
+> @@ -0,0 +1,775 @@
+> +	if (system && strcmp(trace_probe_group_name(&tw->tp), system))
+> +		return false;
 > +
->  	if (ctx->op == IPE_OP_INVALID) {
->  		if (pol->parsed->global_default_action == IPE_ACTION_INVALID) {
->  			WARN(1, "no default rule set for unknown op, ALLOW it");
-> diff --git a/security/ipe/eval.h b/security/ipe/eval.h
-> index b26d1147d0708..58ca50987b2b5 100644
-> --- a/security/ipe/eval.h
-> +++ b/security/ipe/eval.h
-> @@ -42,6 +42,7 @@ struct ipe_eval_ctx {
->  	enum ipe_hook_type hook;
->  
->  	const struct file *file;
-> +	int file_err;
->  	bool initramfs;
->  #ifdef CONFIG_IPE_PROP_DM_VERITY
->  	const struct ipe_bdev *ipe_bdev;
-> 
+> +	return trace_probe_match_command_args(&tw->tp, argc, argv);
+
+Oops, this wrongly checks the command argument and targets.
+The argv[] is originally something like this:
+
+argv[] = {"w:[system/event]","<target>","<arg0>","<arg1>" ...}
+
+Since the dyn_event_release() passes `argv+1` to .match() function
+(original argv[0] is already parsed as @system and @event), 
+@argv[0] = "<target>" here, and trace_probe_match_command_args()
+only for comparing {<arg0>,...} parts.
+So wprobe need check "<target>" part by itself, and pass the
+@argv+1, @argc-1 to trace_probe_match_command_args().
+
+
+> +}
+> +
+> +/*
+> [...]
+> +
+> +	for (i = 0; i < tw->tp.nr_args; i++)
+> +		seq_printf(m, " %s=%s", tw->tp.args[i].name, tw->tp.args[i].comm);
+> +	seq_putc(m, '\n');
+
+This patch adds `FETCH_OP(BADDR, none)` to `trace_probe.c` for
+`CONFIG_PROBE_EVENTS_DUMP_FETCHARG`, but `trace_wprobe_show()` is missing
+`trace_probe_dump_args(m, &tw->tp);` before `seq_putc(m, '\n');`.
+(Yeah, this debug dump was introduced recently. I missed it.)
+
+Thanks,
+
+> +
+> +	return 0;
+> +}
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
