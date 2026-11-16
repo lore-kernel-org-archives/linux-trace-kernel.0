@@ -1,108 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794843048;
-	b=S08k1EV2zt8uX+yl+PUwVCg9nlhgeAunZD9wlMDDQ04ACDTx0w3ImCge/w7C+Gt9p9Fl
-	 8sSmD5+p97qr3hsekK5ajb9WnH3uppeLjpEBNAD+JYQ5iXV0DYheU/riLlwt2ytsrDrMb
-	 rrvv5qQ/wRHp1kDapRz8hbY7ps8Hi8QXKPa2KIXuBxcrWVOsR/AvEGeNCFKi1LeVr8Xyq
-	 tgqcJ6QP4Y5hMqRdpoXdlwMQ4gGce7oG0QsxcnzOIZ3VJyNJxcBPloc4Cw9jPlC8kytiT
-	 sibFQ/PVD7UbHzAWn05+cIze+VayoNLugEZxo3k/7+kcVKPjumJ2aUwa46WfyR6v10A==
+	t=1794843301;
+	b=3vYFNqLLnt0XYeY/Cc4ii1Y1hfKOZ6zf73cBw32IOnjEX+lhluBfhrBoWdFQf42VJdJ9
+	 3LpvuaZX6Jz03vRGqxvXh6fHmwqhX7RS6eQEeuIBGnvUwLDM5f5cVtdWyEg8UI3NgHBz4
+	 81GYFDTIFqik/g6oU9W/KQUIiB+rnS0gvZ/lKXfH0TLyBVPUrMIl51hcL5/uaWPruDVRj
+	 1FO3aItHsHdaZTjGKPL56oKuY4lcY6tRiHKlxlmUKjSpIxaKTn50jyT3VjNzlUgSEZ+CE
+	 4+rQ2ylgFkophE7xkWlxLiV/QikxFIrC48i1oWTfWq2FDIUO1WfApeHPp4yeR7+PFmA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794843048;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=hPr9IOYFjtJaYI4q2QerjW2bLfRzLv1kPuZUspzu/XY=;
-	b=HKG+SwS24fbL7VfrbRXqewpLwJJii5lpDm+dVozZbTURHjF2oT7Yda+Dz+594xIPL0cE
-	 s1i+hPPTI8X1S3dVzivJpt7U+zFtlmJUDIKr8ABglxFg5YIcRRiuXyYy483FtfN5wKqlk
-	 gOxHm4ewLtfZfnWyKxIPhDq6c51XXUU9P5NR8qJk2N3E3DZNaAcaYFUy3zMr9K77iN8B9
-	 9xC7/3AK7XEUljwWOPLUbh9/rPgpQ6svEzeKHWgBYwaXWsxnlWY6kMGGT5ewRs014vAGO
-	 qNnjaJnxYuOKMDi/7WfQrhSe/hYcF3t2j8cPRQMQS2weKVi7wbAVFlHNBpYoPROtnpQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794843301;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Spam-Status:X-Rspamd-Server:
+	 X-Stat-Signature:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=fbxTxlVd+uVhJASLdAzyK6UAyh6+fjwIt3spRNPcd/4=;
+	b=HmD4LMhI8NXjmmG+au6c4dMZWSn7m7eqzfpYcgd1CA+wfDMBIMIcRlR3zz7G9y/FON1r
+	 icYWPycW96DoO6b0DgOXTxs3xWBd0d+98QLpNTKCRRAxF2M2ubBJ6dsXm0f8aI0BG0pHR
+	 ZV08EKd0P5rnS19D9znB96ua3gCAOeABgeFHUvSVLSTU48NwfrOHPZOF8Irc3ZJLazd2V
+	 NkYc+SN0KE+9z0N+z8hKe/aFK9eIYhYTt6akkI8rifuWaEN1mA6/EKFIdEVPCKyaG7grS
+	 xjIJ3fpvfno1LDlvNL9avxBRuPKzLg1V9jxC+qBGt5dv/111oacoFh9SuXqvLrl1sMA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.com;
-	spf=pass smtp.mailfrom=suse.com;
-	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=eAhCdfIK;
-	arc=none smtp.remote-ip=209.85.128.54
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QPnWo2OA;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573BD606A339
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 15:30:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 573BD606A339
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA265606A32A;
+	Mon, 16 Nov 2026 15:35:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA265606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=eAhCdfIK
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a5b2be99a8so24183395e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 07:30:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1794843047; x=1795447847; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=hPr9IOYFjtJaYI4q2QerjW2bLfRzLv1kPuZUspzu/XY=;
-        b=eAhCdfIKl5mPrwQuKFbVoFA3q4oXWguQqagInhzpW4knYPgHyd/+RDBzfKdfDUhYrc
-         B8YxxDd7tF5OawO5pQ1prRvBlKt6Ff1uJfp5058atdcuoGSs8UxE9WDjFpYaFKaSJaOU
-         VhuLX80MPey6FZEe+WGZznQWSeo/HiVC2wkglBkhRAkVJC4dGCb3ptqvBTefe27K5wY7
-         ft8VUxABnRKDLwjs5Sa8oLWEnVx7u8nujPT52t3wTTpydkZ7cW21QxFZuhEPe65xPJwa
-         AN1TnrBi2DLTrq6KzGGB229v5ORJq+adCRoXoIoNt7NSTeTNyR3kAGJ3YHa8+5Yu2Lb+
-         7qDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794843047; x=1795447847;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hPr9IOYFjtJaYI4q2QerjW2bLfRzLv1kPuZUspzu/XY=;
-        b=f4Q1QVmFDnkfy+xbrKpIigc95WKadR9LLvoKSnvBGs05lTtO76BHe/mjfXCDX/Y096
-         g1r5Rfotrslb7VchDwbuLgx8YneUmiEiWJ4tOe/SH1HIt50FMKrYh7v8ICwN5vVsLXyp
-         YpVOAkWBFZSX7TBZOYMs4gFLAtyjK8E0ikkz72cWmjMJipy1P8RpZSWFa2gEkWSk8h9a
-         HxR6iZmPkdeUrkDmHJzFuYlpNUdyLacKZZqxeWPoVxr6B4DKNQut0XTn3nrMqrhCUnfP
-         EDpa/bHvjthEkBCN/ss4ajgaN1Wh0/czzx9ZcvIMmqEyTl1Z23T2owgc1hL/bxKJdocH
-         rY6A==
-X-Forwarded-Encrypted: i=1; AL+hErGJvqsFYSU+YIP06WYozCCPGQHqTw0lqlW/qJ1kYOz2iR3l9SWGDzOTUo38b3TfJIglzAW/TTFMNA4F/PqdijpSyHs=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+ONNXAtD5tdu+sY4nm0m1OSuIr0c4KvELRQamGifpHNSik8B2j
-	EbX6laQWJDYrLsBYv745MUfW51iEDEguFHZOQVekZBOGmOwnT2Um7D4R6bOx0AbcBAs=
-X-Gm-Gg: AYBFou0xmTXknuP1CdSkTdOtWo7lpvvjAknJq7rDKwoPBi8qyQ6EG7zkjSGeGEC6p1h
-	ZwkOIuPGd34YHBysKJ1IGe0zKlktf68yDwMe80dhUbWcQrIO4U4YCPNltiElFxjZQkYt25RVUsV
-	/iPpe2fF9ax2tnbVGq5eGvYvG2EyRCHqs8PyY5Lz3qie6itPGUyCJXhEyjscCHKtEnr4wX2/lGr
-	MxiT4TAMVQ6cHZ8w+548MBO5fggpU6rgbiqY4U6V4u3BMgonweVIJe+rcOLBnb2mi8D9HhRBLTS
-	fd7AR0fcfLvedVP58m9cWvY2fEGdGeJCXIXNePo9q5EBoFZhR0mTdOlkYVMGD8uTPSnp9T02ASF
-	q0UjGl/Z9HWqOq+7m30gmsEqd/qBfanLB/NVpatdfR/knjPZeVwp9NnZ/7xI3S3/uFZsqzveObl
-	nSnjKk39ICBU0jp8YOp5Q5UfBhHviAAqFYIuptGZ+9IRVuMpA5/tLfWjCkzhFPnwY78uYI0C4NR
-	RQY6g4XwJNOMGt3CCbZ5An9PXnSVEV6CeAUNF3KBmQCObS2bYEl3AKW/KyFf1QCo5CUyt9ZlEsM
-	8CftINXaKfaVuMBZl7g0GBuNMoqpPCs=
-X-Received: by 2002:a05:600d:8449:b0:4bb:5f07:10d7 with SMTP id 5b1f17b1804b1-4bb5f07134dmr146384475e9.26.1794843046610;
-        Mon, 16 Nov 2026 07:30:46 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb55ae5299sm315252695e9.11.2026.11.16.07.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2026 07:30:45 -0800 (PST)
-Date: Mon, 16 Nov 2026 16:30:42 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: john.ogness@linutronix.de, rostedt@goodmis.org,
-	senozhatsky@chromium.org, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, kprateek.nayak@amd.com,
-	akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, david@kernel.org, ljs@kernel.org,
-	liam@infradead.org, vbabka@kernel.org, surenb@google.com,
-	mhocko@suse.com, kees@kernel.org, anna-maria@linutronix.de,
-	frederic@kernel.org, tglx@kernel.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, brendan.jackman@linux.dev,
-	hannes@cmpxchg.org, ziy@nvidia.com, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Subject: Re: [RFC PATCH v2 1/5] panic, sys_info: Fix duplicate and dropped
- all-CPU backtraces in panic
-Message-ID: <avshouTNBIeM5qtP@pathway.suse.cz>
-References: <20261103024453.922373-1-atomlin@atomlin.com>
- <20261103024453.922373-2-atomlin@atomlin.com>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=QPnWo2OA
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id D6A7812014C;
+	Mon, 16 Nov 2026 15:34:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 096E53D;
+	Mon, 16 Nov 2026 15:34:51 +0000 (UTC)
+Date: Mon, 16 Nov 2026 10:34:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Song Liu <song@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
+ kernel-team@meta.com
+Subject: Re: [PATCH v2 07/16] tracepoint: Mark __do_trace_##name() notrace
+Message-ID: <20261116103450.4575d61b@gandalf.local.home>
+In-Reply-To: <CAPhsuW5t2OqERqVm5LDCGDjae17LNpijqRgB3mbi8Mmv41P2RQ@mail.gmail.com>
+References: <20261023011049.1164625-1-song@kernel.org>
+	<20261023011049.1164625-8-song@kernel.org>
+	<20261023093256.20d3e300@gandalf.local.home>
+	<CAPhsuW78w86tV3gwRWQMOdWUK7Rcc8dSsp==XypKdB5BMP6QiQ@mail.gmail.com>
+	<20261028210844.105c431f@fedora>
+	<CAPhsuW54Tco1Y_khWHeomq_ZTxvDoHFuX77w9cqojuXCrhGKWg@mail.gmail.com>
+	<20261029134721.66bb584c@gandalf.local.home>
+	<CAPhsuW5t2OqERqVm5LDCGDjae17LNpijqRgB3mbi8Mmv41P2RQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -112,76 +67,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261103024453.922373-2-atomlin@atomlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: m185ocok44yffeiw317ru69m8dnfh96c
+X-Rspamd-Queue-Id: 096E53D
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/CLaBGFac+wOUf4n5koLZBa+3VG96c2CE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=fbxTxlVd+uVhJASLdAzyK6UAyh6+fjwIt3spRNPcd/4=; b=QPnWo2OAFe765QZ3Dkre7L3vRamihQipXkGhvp/w/3zCvVCorn/9/j0Y085qQWLyRl+yQU14qt6Cp712ft783XunkGMuWrzg8P/jN6ABrH4bZtlIphqXLAOU+Gz0Qlesgqci+RMmUBn9Tuvdlbr2hUhsAwViYVaXO85zOiLXIEs=
+X-HE-Tag: 1794843291-662085
+X-HE-Meta: U2FsdGVkX1/a8ZJeQga2chop/pZQoJCt9NQZdw4dBlfaxs5Vzeq60J1gQyTIeCOxSeBI5qt4cMRb+6i/44AsTmGwahwcaK2c0hQsVS/DebXVvP9EySQzVe4cSdteB7M3rT6jMKAwblSwiZ+DZLhMukhsrJiu1buceNyJHmZpRwGx0u6GhodHhLihsU9k47mPbDttMq4QOVfevP+EfuJBgMkUya6zzVZAcT6pVhe4T2H2qcgcv9KDausA0Ee0gbMxBmTmd+SIl9mngO9l+w/8qCPbU1DF9FCZ/3VEW+LVYimzadpE5rcq1Fn742ofEkx5D5EZG9nK8/YTV0fluVLn7SebO+fabO4PaER6KW8OIp+Ik6+aQkWKVwPgKyBYAVddL+0M9XDPj+XD+FdYnZ/hFA==
 
-On Mon 2026-11-02 21:44:49, Aaron Tomlin wrote:
-> When sys_info() was factored out of kernel/panic.c by
-> commit b76e89e50fc3 ("panic: generalize panic_print's function to show
-> sys info"), __sys_info() gained an unconditional call to
-> trigger_all_cpu_backtrace() when SYS_INFO_ALL_BT is set, while
-> panic_other_cpus_shutdown() retained its own call to
-> panic_trigger_all_cpu_backtrace().
-> 
-> This causes two problems during a kernel panic:
-> 
->     1.  vpanic() invokes panic_trigger_all_cpu_backtrace() inside
->         panic_other_cpus_shutdown() before stopping secondary CPUs, and
->         then invokes trigger_all_cpu_backtrace() a second time inside
->         sys_info(panic_print) after secondary CPUs have already been
->         shut down, stalling for up to 10 seconds waiting for offline
->         CPUs to respond to NMIs. Furthermore, if SYS_INFO_ALL_BT is
->         configured via the kernel.kernel_sys_info sysctl rather than
->         panic_print, panic_other_cpus_shutdown() misses it prior to CPU
->         shutdown.
-> 
->     2.  If sys_info(SYS_INFO_ALL_BT) is invoked on the panicking CPU
->         prior to panic_other_cpus_shutdown(), calling
->         trigger_all_cpu_backtrace() directly bypasses
->         panic_trigger_all_cpu_backtrace() and leaves
->         panic_triggering_all_cpu_backtrace unset. Because panic_cpu is
->         already active, vprintk_emit() silently drops all NMI backtrace
->         messages originating from non-panic CPUs.
-> 
-> Export panic_trigger_all_cpu_backtrace() with a panic_on_this_cpu() and
-> one-shot guard so all-CPU backtraces are only emitted once before
-> secondary CPUs are stopped, consult sys_info_get_mask(panic_print) in
-> panic_other_cpus_shutdown(), record prior Oops stack dumps in
-> panic_try_start(), and route SYS_INFO_ALL_BT in __sys_info()
-> through panic_trigger_all_cpu_backtrace() on the panicking CPU.
-> 
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -451,13 +452,21 @@ bool panic_try_start(void)
->  	old_cpu = PANIC_CPU_INVALID;
->  	this_cpu = raw_smp_processor_id();
->  
-> -	return atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu);
-> +	if (!atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu))
-> +		return false;
-> +
-> +	if (atomic_read(&panic_redirect_cpu) == PANIC_CPU_INVALID &&
-> +	    (test_taint(TAINT_DIE) || oops_in_progress))
-> +		panic_this_cpu_backtrace_printed = true;
+On Fri, 13 Nov 2026 12:33:28 -0800
+Song Liu <song@kernel.org> wrote:
 
-This would be pretty hard to maintain. The complexity of the check
-shows how many code paths affect the decision. I can't imagine how
-to synchonize all the pieces this way.
+> Hi Steven,
+>=20
+> On Thu, Oct 29, 2026 at 10:47=E2=80=AFAM Steven Rostedt <rostedt@goodmis.=
+org> wrote:
+> > =20
+> [...]
+> > >
+> > > I think this should go through the ftrace tree. It has very little to=
+ do with
+> > > BPF. We discovered the need for this change when building live patche=
+s.
+> > >
+> > > Regarding ACKs, it is a bit tricky. For the code we touched in this s=
+et,
+> > > there is actually no behavior change at all. OTOH, the real change
+> > > happens to "inline"s that we didn't touch in this set. If such a func=
+tion
+> > > was left out-of-line by the compiler, it was not traceable before, bu=
+t is
+> > > traceable after this set. How should we approach this? Maybe we can
+> > > just ask ACKs from the maintainers of all the code touched here.
+> > > =20
+> >
+> > OK, I'll just add it to Linux next around -rc2 then. =20
+>=20
+> I haven't seen this set in linux-next yet. I guess we would like to queue=
+ it
+> up soon so it gets enough pre-upstream testing?
 
-We need another approach. I remember that I have already proposed
-something some time ago.
+Sorry, I've been traveling. I'm trying hard to catch up on all my patches t=
+his week.
 
-The idea was to enhance sys_info() API to remember what has already
-been printed. trigger_all_cpu_backtrace() and frieds should
-not longer be called directly. They should be called only via
-sys_info() API.
+-- Steve
 
-See https://lore.kernel.org/all/aj5tFiwhRqPkAkqU@pathway.suse.cz/
-for more details.
-
-I think that this would be a better way to go.
-What do you think, please?
-
-Best Regards,
-Petr
