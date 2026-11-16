@@ -1,54 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794795336;
-	b=BvYHAHn4cT41Dp1uYyKcbI+A1NtBhmhDhm29U05vwGbOqGuxSOhec260tPLf0jlryDLw
-	 TVjwRDxzMCbvyEBDLvTlw1nHLzUmV0iSPFQT2qZQGTNUEMwTBe6C7t9St//jv55DlbN4O
-	 iuVld8y47w8z2rezRvPx7vCnQe5tKQXfkaVly14+96knVECRZP7uhvRjE621jijv4qYkg
-	 fKYKXsEUGj0aIG5X3KhhNBkt4C48w24HkPM4qb6ZBhnMzBTk3RGS785UFN/C3ds54cgSt
-	 KRaPACt4ZOC3Tb5X65M76FDalOUmtWx1hMJvw1MlmRf4fYzHZvfDy52SzEXM5B6HkjQ==
+	t=1794799382;
+	b=w5dRwJLdFpHgaG6uu0DTvLgwyVn5F7g97u7y0UHkn/STF6N8clUHfxmI5LaSYLl+PSzf
+	 Y3RWq0zt2mzBKJl0SQz3RKCS3pOH85/BC2uJQmPx7A4AMRuShrW7/+BYqzVxNDhMaPtXB
+	 t/LQNHcaZ/oIPDrusKKcE4bEajuOGZK6JSSsx4EoszNMIqb4U3jTQWKWu3TaDogMNhmOD
+	 6FLo0NgO+CSJ3nIfJ2rKXs7Fuzs03Fz5aEbTIsHaPInNBV3qz7Zba6nMntx/2Iy+S2ALf
+	 7wF4cw4nDM2P7jG7d6jcW7FXElg/AztYIMaD10UGqcjjB4xDbh7ELYOar41xL67AwuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794795336;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794799382;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=wZItRaySY14g5BVC2viKZy/bcmMP3lZf5uclPF7bOgQ=;
-	b=ZCYqnpHQ7cKO8XDWRB7S6c58VZ3Bwn4Xjqvt5h0Z4yJShpoSp38ZLrsoSOQ6u8gsM79I
-	 N60UDe9/FzBPzcET78jAaH8zy8qfTO3ZPsPne5tvusuk23j8IEawa/+Z/lkhaat2iUTnv
-	 fq0v5zPptvE1qQTgl24dm94MCNPOtzqwdsYPUtxZCaXsfX9jhF4X50OnWLmAtpiMgG3LE
-	 nkibcKEbzFgO7bgMyPJJ79hgtNpKWObLLp2B99qKT7+YrDFTNlRv+EJQrMAk3igV1eKQM
-	 H7kGaMwZFsUQOSG1RFxn7vDhJJr+A3WDecDK4yAKFi9mX205KZIxg7bxbCLlvtBsaVw==
+	bh=ooEn12XwfXuGSQOnlTHC3VMKYjKiX/IC7zMY3dtpoFk=;
+	b=nyS9jcDIc3Yntnkcgh/dHZUaC2HyS2vNixqtD/2A/14FqQsPAQ+OlmAXIcG6eipsdYjm
+	 MnKVUQ4KsVc2mEjkg2Quem4pxRInFCnZb+J4p3GdVzGiWmkt1AIaqEfA/7Fm8vMTOm9LU
+	 XO6jMRagwyDN4t2RxY39iu3u7pgkgJ8greg2LgocLuExMPiowxvoy2903fUG+QQ0ZXnRs
+	 DmQ8JqvHJSMASNlBR/UGSg9aqifwdVs7vu8u6gP5ck4zLFBQ9gN9owP+Oon7lySfnPg3V
+	 7jIR/bgoQW5RIvLQpG5evKxtPjyoF0mMqAYna3FowNk9w8R+L7BpA45iUhUxUA4B6XA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d+SASHCL;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ikw5Lpwn;
+	arc=none smtp.remote-ip=209.85.216.49
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1128606A31C;
-	Mon, 16 Nov 2026 02:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CDB606A31F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Nov 2026 03:23:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61CDB606A31F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d+SASHCL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BAF1F000C4;
-	Mon, 16 Nov 2026 02:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794795336;
-	bh=wZItRaySY14g5BVC2viKZy/bcmMP3lZf5uclPF7bOgQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=d+SASHCLD8J4UyxeKcK5oLKoxcClXd8k5ryvD/8KFbfu+YIKJ2OFjkOVuo1Wt6+4E
-	 m8y9bvEo/UOhwCNw341Wd91Spx6B86BfiIeLpuuCluMfauvIF431hg5kEY/ErDd+N5
-	 EI7vwGGAkH6ZC9iVa+DrJQEH34oa2uUaEnAQ/7LoO7LfvD5ijMntJWLcEjku70yip2
-	 ywJV8kjZttCIMz0dAoYg+2izpohn2AUUyoyTx8q1AX59mRWU3/GzmGuOoKx8n6BOko
-	 33cfOspRIROCSX/OwzfZkDBZYFIhU3JucE2ekUkxLFzTymB0+xk+FwcKPxgCo8t68s
-	 pWGrplZc9XcHw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: mhiramat@kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v19 04/11] tracing/wprobe: Add wprobe (watchpoint probe) trace event support
-Date: Mon, 16 Nov 2026 11:15:31 +0900
-Message-ID: <undine-1794795331149989582-cc3cda1a799c5477@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <179101398088.22872.14081308855446744398.stgit@devnote2>
-References: <179101393469.22872.5895666191299551553.stgit@devnote2> <179101398088.22872.14081308855446744398.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ikw5Lpwn
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3b1c2c31a6fso328693a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Nov 2026 19:23:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794799382; x=1795404182; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ooEn12XwfXuGSQOnlTHC3VMKYjKiX/IC7zMY3dtpoFk=;
+        b=ikw5Lpwn0n8u1bt+RZ5oZvms6fAWSgv8M2KZnTeTzr8Rcxn/RPZtQwngMukKEjUZ6Z
+         MLtM9jqx3LiV7BLHhiZLKvH20Lw6fv8dyT/JSkqVU8ZOR+Ng3p79EpsGWp/BvrkcuqCH
+         LU6xBYNonFSblxOJQFcNwN3UUM3BXHLFox/W02H/zBsKhE7HgSpC274Us/VWWhMtTD62
+         LpmmpUxDdPuMZ87FQ7i1jYdc7B3p/zBeFwju3hwA1gbWQNyaP6wNWajLoCUmc4V93KJZ
+         XdETZfBpqm1fAWxmf7pf8fJj7NAOvRllDAAXaGE/2CckrbdRmSgdB3itDiuYkjfz7Iyq
+         MI4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794799382; x=1795404182;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ooEn12XwfXuGSQOnlTHC3VMKYjKiX/IC7zMY3dtpoFk=;
+        b=J3tBYGmaBhK3huaoKukkaxfSj/i+mQMVLJZBuAshCQ+MnQ7i79noUOi5g2GIVdt8NM
+         AZrand6QuISn7X4MkEckBRI1QG+VUyqJlDt9JV1GL55YNPQsJfYkvaQ0FD5vRuPkJ/vc
+         /MIXCr7mTlPLqLFXACXn/FiDzz1+1de4gap7AOlEuw+ZWxYhJrVutGtLhRTAK9pbWzY4
+         mMpbCVjAQqT4jQag4FPt0705JbAs6FuT7lQEQ/8YZVjClgGlqkUd5ouf609rRdVxoyl+
+         UNsEg+IdbTMsKlVtWYXdXE1cM1I1BA7nGWvHBdkR5O4ymlNh7tBjh0MZPSSV8OFyqg1b
+         dSFg==
+X-Forwarded-Encrypted: i=1; AL+hErHpdnOxmvzroL3lSsC0dEP08xh/N94YSkURs1c5eRTQcAnH/TsHI75UqrjxtwXWGLka5VYkKSZP/yggEzlcJRABC94=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+5ZWfzzjoaS9w4vccbToDPUQ8miazshndcSng7hx+Mi556u9VC
+	g7KjDXrK7/mgGqunndBgBdKCvqcltU9+Is0xPqDkc0q44TnYA58VrE2EnmgVb4bEd8E=
+X-Gm-Gg: AYBFou11J1IDegM4xgLKCWKTCLX1+gNxvMqc56cuet0aiEc/POkPdHTKX5M8kjub2IP
+	/xQCYCfSpFHg4qdNGdTenrEGUkuUX6MbTJUvnyA2SRqzS05eAURaMlVcpBsgAqygIduWfgpLChJ
+	/qAtM/jE40p/qNzjlPOjvmYWNDDWPI5DT7k1KRMKJaHRiIr+t5xLTdQfpbaYCoQbELJjfD1swS5
+	45pE8a3mJF15okK2iw3PeItJrBg31lvbIclND6NZxzq8ipQoVbEzzoJyQjDVm4ef9oQj5accyUt
+	cbyluLJPE7hSoi6M1RDHoy1fXplhEwOZV4feLfzhuhmMQWwCXrRDZC7TEob/u/dfwpKx+c8dah3
+	UVTK0Ohv8zzFP5rVWWKNAtgz4D+VR4KubLPBLmHnZRqGZSFwl2ZbkfU2/qV2Y6/R/nhM4UC/tEK
+	VYD0YDIXi1zz5/kPTUm9cD+QX0l9CKQGb2w6zww8gqYx4UxWINwRGQHM42uoHlmXN7PDJ71Z+h3
+	mpT2EvDIJsAS56Sbh8S3N//SdBlp79StdWjhYo+ehS69neJHVNJd6djAgmQfhEmoTLxGYCwKy8S
+	lpnlbJBbyzWfNiCgmiTKrGpt0Ecp8816tu/DTci4rGmwimSvczHqe1I=
+X-Received: by 2002:a17:90b:1b06:b0:3ac:9c37:9422 with SMTP id 98e67ed59e1d1-3b1b085e335mr14790525a91.2.1794799381561;
+        Sun, 15 Nov 2026 19:23:01 -0800 (PST)
+Received: from mi-ThinkCentre-M760t.mioffice.cn ([43.224.245.234])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1ae981c55sm14908718a91.1.2026.11.15.19.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Nov 2026 19:23:01 -0800 (PST)
+From: Wenwu Hou <hwenwur@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wenwu Hou <hwenwur@gmail.com>
+Subject: [PATCH v4] tracing/hwlat: Do the latency calculations in nanoseconds
+Date: Mon, 16 Nov 2026 11:21:56 +0800
+Message-ID: <20261116032156.3138060-1-hwenwur@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,53 +97,170 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Sat,  3 Oct 2026 16:53:01 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+tr->max_latency is expected to hold nanoseconds: tracing_max_lat_read()
+converts it with nsecs_to_usecs() to print the usecs documented in
+hwlat_detector.rst, and the other latency tracers store nanoseconds there
+too.
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
-> @@ -0,0 +1,775 @@
-> +	if (system && strcmp(trace_probe_group_name(&tw->tp), system))
-> +		return false;
-> +
-> +	return trace_probe_match_command_args(&tw->tp, argc, argv);
+Do all the latency calculations in nanoseconds instead, and only convert
+the durations to microseconds when recording the hwlat event.
 
-Oops, this wrongly checks the command argument and targets.
-The argv[] is originally something like this:
+This also makes the backward-clock error paths reachable.
+Previously, time_to_us() passed the delta through unsigned div_u64(),
+so a negative delta became a positive value after division. These
+error paths jumped to out without clearing trace_hwlat_callback_enabled.
+Fix this as well.
 
-argv[] = {"w:[system/event]","<target>","<arg0>","<arg1>" ...}
+Fixes: e7c15cd8a1133 ("tracing: Added hardware latency tracer")
+Fixes: 7b2c86250122d ("tracing: Add NMI tracing in hwlat detector")
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Wenwu Hou <hwenwur@gmail.com>
+---
+Tested in a 4-vCPU KVM guest; all three hwlat modes worked as expected.
 
-Since the dyn_event_release() passes `argv+1` to .match() function
-(original argv[0] is already parsed as @system and @event), 
-@argv[0] = "<target>" here, and trace_probe_match_command_args()
-only for comparing {<arg0>,...} parts.
-So wprobe need check "<target>" part by itself, and pass the
-@argv+1, @argc-1 to trace_probe_match_command_args().
+v3: https://lore.kernel.org/linux-trace-kernel/20261113094918.2402297-1-hwenwur@gmail.com/T/#t
+v2: https://lore.kernel.org/linux-trace-kernel/avW1t81WLQ9YrylB@gmail.com/T/#t
 
+Changes in v4:
+- Record a hwlat event only when count is nonzero to avoid recording an
+  uninitialized s.timestamp after a backward clock jump, as pointed out
+  by Sashiko AI.
+- Check diff < 0 before comparing diff against the unsigned threshold.
 
-> +}
-> +
-> +/*
-> [...]
-> +
-> +	for (i = 0; i < tw->tp.nr_args; i++)
-> +		seq_printf(m, " %s=%s", tw->tp.args[i].name, tw->tp.args[i].comm);
-> +	seq_putc(m, '\n');
+Changes in v3:
+- Fix trace_hwlat_callback_enabled remaining set on the backward-clock
+  error paths, as pointed out by Sashiko AI.
+- Add a Fixes tag for the commit that introduced NMI tracing.
 
-This patch adds `FETCH_OP(BADDR, none)` to `trace_probe.c` for
-`CONFIG_PROBE_EVENTS_DUMP_FETCHARG`, but `trace_wprobe_show()` is missing
-`trace_probe_dump_args(m, &tw->tp);` before `seq_putc(m, '\n');`.
-(Yeah, this debug dump was introduced recently. I missed it.)
+Changes in v2:
+- Perform the latency calculations in nanoseconds instead of converting
+  only the maximum latency, as suggested by Steven Rostedt.
+- Convert the durations to microseconds only when recording the hwlat event
+  to preserve the existing event format.
 
-Thanks,
+ kernel/trace/trace_hwlat.c | 41 +++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 21 deletions(-)
 
-> +
-> +	return 0;
-> +}
-
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 65e184d800ff1..a69699daca558 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -203,14 +203,12 @@ static int get_sample(void)
+ 	time_type start, t1, t2, last_t2;
+ 	s64 diff, outer_diff, total, last_total = 0;
+ 	u64 sample = 0;
+-	u64 sample_width = READ_ONCE(hwlat_data.sample_width);
++	u64 sample_width = READ_ONCE(hwlat_data.sample_width) * NSEC_PER_USEC;
+ 	u64 thresh = tracing_thresh;
+ 	u64 outer_sample = 0;
+-	int ret = -1;
++	int ret = 0;
+ 	unsigned int count = 0;
+ 
+-	do_div(thresh, NSEC_PER_USEC); /* modifies interval value */
+-
+ 	kdata->nmi_total_ts = 0;
+ 	kdata->nmi_count = 0;
+ 	/* Make sure NMIs see this first */
+@@ -229,28 +227,37 @@ static int get_sample(void)
+ 
+ 		if (time_u64(last_t2)) {
+ 			/* Check the delta from outer loop (t2 to next t1) */
+-			outer_diff = time_to_us(time_sub(t1, last_t2));
++			outer_diff = time_sub(t1, last_t2);
+ 			/* This shouldn't happen */
+ 			if (outer_diff < 0) {
+ 				hwlat_err(BANNER "time running backwards\n");
+-				goto out;
++				ret = -1;
++				break;
+ 			}
+ 			if (outer_diff > outer_sample)
+ 				outer_sample = outer_diff;
+ 		}
+ 		last_t2 = t2;
+ 
+-		total = time_to_us(time_sub(t2, start)); /* sample width */
++		total = time_sub(t2, start); /* sample width */
+ 
+ 		/* Check for possible overflows */
+ 		if (total < last_total) {
+ 			hwlat_err("Time total overflowed\n");
++			/* Keep ret == 0 to preserve any latencies already detected */
+ 			break;
+ 		}
+ 		last_total = total;
+ 
+ 		/* This checks the inner loop (t1 to t2) */
+-		diff = time_to_us(time_sub(t2, t1));     /* current diff */
++		diff = time_sub(t2, t1);     /* current diff */
++
++		/* This shouldn't happen: time went backwards between t1 and t2 */
++		if (diff < 0) {
++			hwlat_err(BANNER "time running backwards\n");
++			ret = -1;
++			break;
++		}
+ 
+ 		if (diff > thresh || outer_diff > thresh) {
+ 			if (!count)
+@@ -258,12 +265,6 @@ static int get_sample(void)
+ 			count++;
+ 		}
+ 
+-		/* This shouldn't happen */
+-		if (diff < 0) {
+-			hwlat_err(BANNER "time running backwards\n");
+-			goto out;
+-		}
+-
+ 		if (diff > sample)
+ 			sample = diff; /* only want highest value */
+ 
+@@ -273,10 +274,11 @@ static int get_sample(void)
+ 	trace_hwlat_callback_enabled = false;
+ 	barrier(); /* Make sure nmi_total_ts is no longer updated */
+ 
+-	ret = 0;
++	if (ret)
++		return ret;
+ 
+ 	/* If we exceed the threshold value, we have found a hardware latency */
+-	if (sample > thresh || outer_sample > thresh) {
++	if (count) {
+ 		u64 latency;
+ 
+ 		ret = 1;
+@@ -286,8 +288,8 @@ static int get_sample(void)
+ 			do_div(kdata->nmi_total_ts, NSEC_PER_USEC);
+ 
+ 		s.seqnum = atomic64_inc_return(&hwlat_data.count);
+-		s.duration = sample;
+-		s.outer_duration = outer_sample;
++		s.duration = time_to_us(sample);
++		s.outer_duration = time_to_us(outer_sample);
+ 		s.nmi_total_ts = kdata->nmi_total_ts;
+ 		s.nmi_count = kdata->nmi_count;
+ 		s.count = count;
+@@ -301,8 +303,6 @@ static int get_sample(void)
+ 			latency_fsnotify(tr);
+ 		}
+ 	}
+-
+-out:
+ 	return ret;
+ }
+ 
+@@ -839,7 +839,6 @@ static int hwlat_tracer_init(struct trace_array *tr)
+ 	tr->max_latency = 0;
+ 	save_tracing_thresh = tracing_thresh;
+ 
+-	/* tracing_thresh is in nsecs, we speak in usecs */
+ 	if (!tracing_thresh)
+ 		tracing_thresh = last_tracing_thresh;
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
 
