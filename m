@@ -1,50 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=84.16.66.168
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=83.166.143.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794910886;
-	b=4G/WXY+fu5ZPJahqEEpIIIovtU+RCFBkOBdaERCR66axw3VNQL81gEt68EvmLmqWH68o
-	 jIIXn+6hxvp0sfx2qrEBUlzaQ6kB2oJUQXtrt6D+ND/E8O67WY+fyU+KAvj3YBQ9ThYpv
-	 tb9/Unv9J8ZZqiOS3WqJxIfAiZD4HUxmloHnrRPNO+qBQcfVT/Ph8OR0nLjuyzHFlpE8I
-	 iDTUlpvvnrI/Un9yvS3cHNkIuBgRzzhbsPRkx0IzYlouG6AX3TPvUdryYQMVKJK2gBdae
-	 5tJyL42DoI3cDrQNavgQo7yyfqEGQx4bDhVpy3goNGF2XHxd08HZi+qiCOk1jKRza3w==
+	b=3M0VH8rjcVlomlb9sg8SbWabm2a1iu26o/ZyeYulQ6BhIuJHZK9rvvWVFUdKfS56eBxl
+	 psueBT5SlC4Mw2XgIpQp/W5HX95wsZttGxw1ocXvXtFniF69upaOVtstyJz/g1rjfP3hy
+	 edcJiQx6HFDhe3rhk7SCOJqDOwEScYuCgRR+7mPmC3RrzCA6Ir2A0Kp30pGHUfpA8nA7A
+	 jtNEMsIaoE2wvIOmKECd3YRJm52xmLxi9lnIfwtDu55/4dO9EkwA9Kv7Y7rQgCd6gHBd8
+	 4JV53jGMXsx45g9yOEjAYm816d0rihZHlY55g9MwRSOnVh93HxYuuzUwSDZ/GnXhv4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794910886;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:From:To:Cc:Subject:
 	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:X-Infomaniak-Routing;
-	bh=JL2V1SxgjLTmfDXFR1jDnFruDSQqm6wMJEsnCZKyRDU=;
-	b=Hu9TAoQTGP7+NRRwtGIbZI8zPuRxpxHZYfvT7kC3y9GBnepU6yY6Fo4pwn4rC82L1ABw
-	 zn+BFxQ3lfVCJWcD2Ks0OGBtIrw+9anTtdqWiQs6PLI1xg80hSPTrFP0qiXtzZq0b5ULt
-	 WatGxLFocQWQ19GYaPruu7EhDzd5EgwecsaIEFukvHbcS46ZQ/HNWw307uRTBU871wBrd
-	 9vCAUyiyeMwANZ/RB+w52fwMHtj10/b9hA/Dspxkku9Y9FgbyJNFYjssP2RT5wxgVSlPW
-	 7vnZ4+TjdLgNtj/8oZ4tX+V9mlVkt5B0w2UW75OB19U0T0LFNecYJjpONJR9I7Xns+w==
+	bh=I+Dbrs3QptBZJl4e2yqTfL5XvkVcnY9GdfhfJ4l0xYg=;
+	b=u6rs4UUvFqFUOnAPUnAlsJyxmQwfDhDBGCt9fzKT6kfMKG6RRJocmHMAvkbQJb1YkCSx
+	 yWxTPIIaa4CMU0UFxYzt1sL/bNHJifPEFZ5hY4s1Two+jKey7kHtVY3seWJpnA9VM3VhX
+	 I+0vE53nOx+Rp/yIX+ClQdwCFqlxwfcRDkcnoTonlJ4j/W/Ja7Y+K6c4KUEth8/6qeROm
+	 bYdPL97MccAYARhvzToq+8yphg0NXqqj6DM80K1YKt9WrUcpcj+u9YOXUEo8XPGOXCJpZ
+	 5ChUAaqk6II7UDTP9DC1dRXH5gRKHc3TzEkG5lE8jSG0UUBCdBnFIuso5CF3RX+H5Cg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=digikod.net;
 	spf=pass smtp.mailfrom=digikod.net;
-	dkim=pass header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=YUE5UEj+;
-	arc=none smtp.remote-ip=84.16.66.168
-Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+	dkim=pass header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=1l53FVk6;
+	arc=none smtp.remote-ip=83.166.143.174
+Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D58606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122E8606A32A
 	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 10:21:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 84D58606A31C
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 122E8606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=YUE5UEj+
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=1l53FVk6
 Received: from smtp-4-0001 (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jTLNz44njz5PX;
-	Tue, 17 Nov 2026 11:21:23 +0100 (CET)
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jTLP02zFfz4RJ;
+	Tue, 17 Nov 2026 11:21:24 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1794910883;
-	bh=JL2V1SxgjLTmfDXFR1jDnFruDSQqm6wMJEsnCZKyRDU=;
+	s=20191114; t=1794910884;
+	bh=I+Dbrs3QptBZJl4e2yqTfL5XvkVcnY9GdfhfJ4l0xYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YUE5UEj+6J3oM55X1FZDYR2ApAu8VBUf+TEH4o2iie4Z9u30dBWrchUDxFqv+2OzL
-	 1/f+f4uxrKS7G3P8QmH5wOeVHca2EFHLUKVGvYArcvVFD8pInc08TfKFy5ZnneDOcB
-	 rrYhZic2123crbjgJXA8PBWpQHTqW9rx3+uy3A2g=
-Received: from unknown by smtp-4-0001 (Postfix) with ESMTPA id 4jTLNx44wwzXZK;
-	Tue, 17 Nov 2026 11:21:21 +0100 (CET)
+	b=1l53FVk6cRNQnBwUOQdyvZVIyOm1itgvF4DDsgaD0YVQJpEAKu4Qfs42uf3LnGYJb
+	 6x1+mUGE/zmjTlyD6w+GFk/W3RQoXlVSvyq9t1qDrqtnztc0rPEtF5R6BRWCqJXIZP
+	 u+K1uJuE09m6mdAB8+wttmNhMHPhbJbNyO8D8yDk=
+Received: from unknown by smtp-4-0001 (Postfix) with ESMTPA id 4jTLNz2jpczXZP;
+	Tue, 17 Nov 2026 11:21:23 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
 Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
@@ -57,9 +57,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 2/4] landlock: Add capability objects to denial tracing
-Date: Tue, 17 Nov 2026 11:21:05 +0100
-Message-ID: <20261117102110.2524197-3-mic@digikod.net>
+Subject: [PATCH 3/4] selftests/landlock: Test namespace denial operations
+Date: Tue, 17 Nov 2026 11:21:06 +0100
+Message-ID: <20261117102110.2524197-4-mic@digikod.net>
 In-Reply-To: <20261117102110.2524197-1-mic@digikod.net>
 References: <20261117102110.2524197-1-mic@digikod.net>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -75,169 +75,39 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-The capability denial tracepoint identifies the capability number but
-not the credentials or user namespace against which it was checked.
-Typed BPF consumers therefore cannot reconstruct the authoritative hook
-context, especially when a check targets a user namespace other than the
-caller's current namespace.
+The namespace trace tests cover creation and entry denials, but only
+creation exercises the quiet path.  This leaves the new ENTER request
+tag untested through quiet selection and trace dispatch when audit
+logging is suppressed.
 
-Carry the exact cred and user_ns arguments from capable() through the
-synchronous Landlock logging request and add them to the tracepoint's
-BTF prototype.  Keep them out of TP_STRUCT__entry and TP_printk so the
-raw ring-buffer layout and textual format remain unchanged.  They
-provide context only and do not participate in Landlock's verdict.
-
-Do not carry the capability options.  CAP_OPT_NOAUDIT already suppresses
-the complete denial record, and the remaining option bits do not explain
-the checked security relationship.
+Add the missing quiet setns(2) case.  Together with the existing cases,
+this exercises all four combinations of CREATE and ENTER with logged and
+quieted denials, including each exact namespace_op value.
 
 Cc: Günther Noack <gnoack@google.com>
-Fixes: 97c8386f1d74 ("landlock: Enforce capability restrictions")
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
- include/trace/events/landlock.h | 10 ++++++++--
- security/landlock/cap.c         | 11 +++++++++--
- security/landlock/log.h         |  9 +++++++++
- security/landlock/trace.c       |  9 ++++++++-
- 4 files changed, 34 insertions(+), 5 deletions(-)
+ tools/testing/selftests/landlock/ns_test.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
-index 9b3e24a613d8..1e115c80b741 100644
---- a/include/trace/events/landlock.h
-+++ b/include/trace/events/landlock.h
-@@ -21,6 +21,7 @@
- #include <net/af_unix.h>
+diff --git a/tools/testing/selftests/landlock/ns_test.c b/tools/testing/selftests/landlock/ns_test.c
+index d4a85cbebeae..52206ad94eca 100644
+--- a/tools/testing/selftests/landlock/ns_test.c
++++ b/tools/testing/selftests/landlock/ns_test.c
+@@ -2575,6 +2575,13 @@ TEST_F(ns_trace, deny_setns)
+ 	test_ns_trace_denial(_metadata, true, false);
+ }
  
- enum landlock_request_type;
-+struct cred;
- struct dentry;
- struct landlock_blockers;
- struct landlock_domain;
-@@ -30,6 +31,7 @@ struct landlock_ruleset;
- struct path;
- struct sock;
- struct task_struct;
-+struct user_namespace;
- 
- static_assert(sizeof(access_mask_t) <= sizeof(u64));
- 
-@@ -1046,6 +1048,8 @@ TRACE_EVENT(landlock_deny_permission_namespace,
-  * @logged: Whether this denial was selected for audit logging.
-  * @blockers: Request type and final missing permission subset (never NULL).
-  * @capability: CAP_* number that was denied.
-+ * @cred: Credentials checked by the capability hook (never NULL).
-+ * @user_ns: Target user namespace checked by the capability hook (never NULL).
-  *
-  * Emitted when a Landlock domain denies capability use, except for checks
-  * made with CAP_OPT_NOAUDIT, which are denied without emitting this event.
-@@ -1054,9 +1058,11 @@ TRACE_EVENT(landlock_deny_permission_capability,
- 
- 	TP_PROTO(const struct landlock_hierarchy *hierarchy, bool same_exec,
- 		 bool logged, const struct landlock_blockers *blockers,
--		 int capability),
-+		 int capability, const struct cred *cred,
-+		 const struct user_namespace *user_ns),
- 
--	TP_ARGS(hierarchy, same_exec, logged, blockers, capability),
-+	TP_ARGS(hierarchy, same_exec, logged, blockers, capability, cred,
-+		user_ns),
- 
- 	TP_STRUCT__entry(
- 		__field(	u64,		domain_id	)
-diff --git a/security/landlock/cap.c b/security/landlock/cap.c
-index b4f491b09baa..8e1a9c458783 100644
---- a/security/landlock/cap.c
-+++ b/security/landlock/cap.c
-@@ -27,8 +27,8 @@ static const struct access_masks cap_permission = {
-  * hook_capable - Deny capability use for Landlock-sandboxed processes
-  *
-  * @cred: Credentials being checked.
-- * @ns: Target user namespace (intentionally ignored; policy depends on the
-- *      acting credentials and @cap, not namespace ownership).
-+ * @ns: Target user namespace, forwarded unchanged to typed trace context but
-+ *      not used for the verdict (policy depends on @cred and @cap).
-  * @cap: Capability number (CAP_*).
-  * @opts: Capability check options.  CAP_OPT_NOAUDIT skips the denial record:
-  *        no audit record, no trace event, and no denial count.
-@@ -67,6 +67,13 @@ static int hook_capable(const struct cred *cred, struct user_namespace *ns,
- 				.permission =
- 					LANDLOCK_PERMISSION_CAPABILITY_USE,
- 				.layer_plus_one = denied_layer,
-+#ifdef CONFIG_TRACEPOINTS
-+				.trace_cap =
-+					&(struct landlock_cap_trace){
-+						.cred = cred,
-+						.user_ns = ns,
-+					},
-+#endif /* CONFIG_TRACEPOINTS */
- 			});
- 
- 	return -EPERM;
-diff --git a/security/landlock/log.h b/security/landlock/log.h
-index 641a2c3c78ed..5ca87870c7b7 100644
---- a/security/landlock/log.h
-+++ b/security/landlock/log.h
-@@ -13,10 +13,12 @@
- 
- #include "access.h"
- 
-+struct cred;
- struct landlock_cred_security;
- struct landlock_hierarchy;
- struct sockaddr;
- struct task_struct;
-+struct user_namespace;
- 
- enum landlock_request_type {
- 	LANDLOCK_REQUEST_PTRACE = 1,
-@@ -54,6 +56,11 @@ struct landlock_signal_trace {
- 	int signal;
- };
- 
-+struct landlock_cap_trace {
-+	const struct cred *cred;
-+	const struct user_namespace *user_ns;
-+};
++TEST_F(ns_trace, deny_setns_quiet)
++{
++	if (!self->tracefs_ok)
++		SKIP(return, "tracefs not available");
++	test_ns_trace_denial(_metadata, true, true);
++}
 +
- #endif /* CONFIG_TRACEPOINTS */
- 
- /*
-@@ -104,6 +111,8 @@ struct landlock_request {
- 		const struct landlock_ptrace_trace *trace_ptrace;
- 		/* Synchronous context for a signal denial. */
- 		const struct landlock_signal_trace *trace_signal;
-+		/* Synchronous context for a capability denial. */
-+		const struct landlock_cap_trace *trace_cap;
- 	};
- #endif /* CONFIG_TRACEPOINTS */
- };
-diff --git a/security/landlock/trace.c b/security/landlock/trace.c
-index 00cb497eaffb..a47fb10dec45 100644
---- a/security/landlock/trace.c
-+++ b/security/landlock/trace.c
-@@ -97,14 +97,21 @@ void landlock_trace_denial(
- 		break;
- 	case LANDLOCK_REQUEST_CAPABILITY:
- 		if (trace_landlock_deny_permission_capability_enabled()) {
-+			const struct landlock_cap_trace *const trace_cap =
-+				request->trace_cap;
- 			const struct landlock_blockers blockers = {
- 				.access = missing,
- 				.type = request->type,
- 			};
- 
-+			if (WARN_ON_ONCE(!trace_cap || !trace_cap->cred ||
-+					 !trace_cap->user_ns))
-+				return;
-+
- 			trace_landlock_deny_permission_capability(
- 				youngest_denied, same_exec, logged, &blockers,
--				request->audit.u.cap);
-+				request->audit.u.cap, trace_cap->cred,
-+				trace_cap->user_ns);
- 		}
- 		break;
- 	case LANDLOCK_REQUEST_FS_ACCESS:
+ /* clang-format off */
+ FIXTURE(ns_proc_open) {
+ 	/* clang-format on */
 -- 
 2.56.0
 
