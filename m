@@ -1,73 +1,45 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.77.101.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794917528;
-	b=LA9tnveJxO5j4WUrbrw0QdGfc1eMiEPg2G1LwdqaQcJTY7fvsPZi19EapAn0DHt/y2hu
-	 It81HDzc97kIAo5zik+lnHv7iQ3fK02NJd1JaQav6b4iNwljI04qCTNIrml3i7mKagC/Y
-	 bNQZW1G5eraC524+UfzT5VEc25v9vLkweYKKacY5rhH92BtiD7v7zD8Bp/+w+3euNK7nc
-	 xpg8f8QU1YtvovGs+XEUOCAat8GxWKvpiNyGqUGcUq0Wl0KkXtwnZofLx9970YHilGjxb
-	 64agNcqf50HrAxc3JtdZAVNlYxZ6OaW/FM7ALW8X1F7IJeK433BSZt5Vnbhrz8Go0UA==
+	t=1794918014;
+	b=fzqgc7AgFTc2Bc0ZflsOlSDvLnHv/iHjaKwnyPwsSAyKYmTGqU8RbJ/+Fi14mQbgkGvY
+	 R/gE8BvWKClzCkvbaD+0kndkWAiRzg7L0vN46/3t9ymDt1jQJ/RkS9Kj1kfeubMVLUfAy
+	 tfSWH0h9QUcywS1ow3tyr/0uYJQCR8EBCW0FuRkczwOphmroG+YMnal7h74n38CG9N4Wb
+	 IXRQIKtZgGd5NkezIxLfitcClxfgadARw39oHbiRUGaLbbKjT8UEWBq8yk8PvmXJnyiZP
+	 G607REziBX0Sbu0CkVYeol5yBFj7OgawA7Jr+EcJdKsrTTD2+I8o+N4NZAGOgDu8DNQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794917528;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-WP-MailID:X-WP-AV:X-WP-SPAM;
-	bh=lj9OagPSRJNvuPdGLWpYCPjIPPY/8eEyHeaFsrygvcA=;
-	b=XF99OwdL2Az63ywaowuWyuzEGNU9nzBIOx7pw3MjO87bWQd2AO+G12mfK5tyVudPN3jC
-	 kf2KWYF2h7xeYApWEErQqW89P2OEqO6l35p71IptLE+PQ0DUKALyNHYeRe57WTJYoppZj
-	 yZ/5H/pxKwzzfIF2tPCbPm/2KycqPdfS7LWFcwGwPK/h2kFEdkr7ahF3qULQKPdJhSE27
-	 Z9Iv+w/dftD7rRfUDLEe+XkWj1kkKu24tAPUGqVNJu6zyROfwcM84TBX+fKz1Pq90+a4A
-	 4w11ac+Px94dZu3N0ecBM2gfkjbHM/Y33I9zFt2YC9q0j0NOw9vTW9eSDRyRb0euJCw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794918014;
+	h=Received:DKIM-Signature:Content-Type:MIME-Version:Message-Id:
+	 In-Reply-To:References:Subject:From:To:Cc:Date;
+	bh=itS94mPURDHQuTgfMaOaJrPnv0UhhYADw1GfXqxCZ8U=;
+	b=3rCPS+z6lurTuH/80cOizMgYd1UHdjHFLk+W7kU64hxyI5ebFm7BZxiiLf3dYRgG0pLG
+	 PVJhswNx6nZsFuKFhlGPKlNV3wApaJPYkeIHoZjtgt6969HfnEEmRW152OoOleVXBE+ne
+	 /X72Rsgn+duRrIDEY9LuCtrrf4RCcFwDsXNdmz9oBxhAow4oKqWuUV41OMHaNMm5dt9+a
+	 w54CPuw4oVfaUL/mIpUopkuQijbl+jp+RNbs/OCFVjFANaohkwfGo0oemPFu+h698wXTG
+	 6GgTw5rEE1Y2Lwo+ft8iSmbCA5YwtykVRuMriN83Q6h2ggHVxWKK6ylzMR9txAcWnKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=wp.pl;
-	spf=pass smtp.mailfrom=wp.pl;
-	dkim=pass header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=jlgRi2Cz;
-	arc=none smtp.remote-ip=212.77.101.12
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z2OKohOS;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D122C606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 12:12:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D122C606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1911606A33A;
+	Tue, 17 Nov 2026 12:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=jlgRi2Cz
-Received: (wp-smtpd smtp.wp.pl 8210 invoked from network); 17 Nov 2026 13:12:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=s20261001;
-          t=1794917525; bh=lj9OagPSRJNvuPdGLWpYCPjIPPY/8eEyHeaFsrygvcA=;
-          h=From:To:Cc:Subject;
-          b=jlgRi2Cz/vVIwgREakUwVS49sHWLB7aN7h7CfhjIj8hgRoJdvFDpuemdEJaaQWwiy
-           dv6H+g5JUTUe7bna0U+ZEuLGGD3ivvaHT5aYkCLA37aVE0naYwhKWc+fMGMbJqvn4n
-           OY3PoxhoDsCkSAYYOx9wcabMT+LCqb6fRUmuLcF0bgz7bhUcmZa39D2UcyEuFwKdBj
-           gnKIWHao6SFiQh4sbj97f1n7eF9nY1RfajMxe/2eXHHo4MfMt0g85h6FC4grEYgvBz
-           +MT/z8JqAEQJ7MKF8RGMb5Rb7h/bmkkGJjN+aLVkyklihZhinWd3LFhUgRN4GYKugV
-           GP2gKmLvNH+aw==
-Received: from localhost (77-236-5-223.static.play.pl [77.236.5.223])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
-          for <pmladek@suse.com>; 17 Nov 2026 13:12:05 +0100
-Date: Tue, 17 Nov 2026 13:12:04 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Petr Mladek <pmladek@suse.com>
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Jordan Rome <linux@jordanrome.com>,
-	Viktor Malik <vmalik@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v2 2/2] module/kallsyms: sort function symbols and use
- binary search
-Message-ID: <avxElFF4GY1Jhk02@wp.pl>
-References: <20260327110005.16499-1-stf_xl@wp.pl>
- <20260327110005.16499-2-stf_xl@wp.pl>
- <afnhidn7K7dZ_cPh@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z2OKohOS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591CD1F000C6;
+	Tue, 17 Nov 2026 12:20:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794918013;
+	bh=itS94mPURDHQuTgfMaOaJrPnv0UhhYADw1GfXqxCZ8U=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=Z2OKohOSwtd5zMUEsHNR2U6BXCrVWD0SljcAPX4n85fTuiIEdyK9zZnxamd+Ttu7b
+	 qLA9U6LuJnvXV5ierKxnLDrRZDLWbHPoe4Q5JnBS2wyPbvRJyVlz6m+qtHW7ArxLBJ
+	 iR9U/KQRk5r+KS/9knuwmOWOHu0Z+v2WyMGSfi/1AxItZkQZBTajh0kBzIL8VUPEyp
+	 bQeJJPCpl5t7ZtYo8KesyOTOC+6zoto+7V4w1fdEEZx1XHMkWOxIrn69Hx13QgHqOH
+	 zoyl/PyrNc11Ls7i6Z39mcAnsvadAluOpWxlxcGQBDl1UgRIRw7Ll2gMqmU9vzBzSD
+	 SPrgeCWdYY+Sg==
+Content-Type: multipart/mixed; boundary="===============1081829159996909370=="
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -77,53 +49,113 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <afnhidn7K7dZ_cPh@pathway.suse.cz>
-X-WP-MailID: 53ea68bc8316ef981b297076ee5d6f3b
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [sTNU]                               
+Message-Id: <846b0937d121e4e7537851e6dd045c8045b721cbe06e8a22a66686e94b51006b@mail.kernel.org>
+In-Reply-To: <20261117-bpf-preempt-v2-r2-v3-3-586376ec3672@sentinelone.com>
+References: <20261117-bpf-preempt-v2-r2-v3-3-586376ec3672@sentinelone.com>
+Subject: Re: [PATCH bpf-next v3 3/4] bpf: Check program recursion per task via bpf_ctx
+From: bot+bpf-ci@kernel.org
+To: mikeba@sentinelone.com,bpf@vger.kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org
+Cc: martin.lau@linux.dev,eddyz87@gmail.com,memxor@gmail.com,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,john.fastabend@gmail.com,emil@etsalapatis.com,ihor.solodrai@linux.dev,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com,jp.kobryn@linux.dev,linux-trace-kernel@vger.kernel.org,linux-kernel@vger.kernel.org,mikeba@sentinelone.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
+Date: Tue, 17 Nov 2026 12:20:11 +0000 (UTC)
 
-Hi
+--===============1081829159996909370==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 05, 2026 at 02:24:41PM +0200, Petr Mladek wrote:
-> 2. Livepatches _rely on the sorting_ of symbols in the module.
->    The special relocation symbols might define a symbol position,
->    see
-> 
-> 	.klp.sym.objname.symbol_name,sympos
-> 
->    in the documentation. It defines the position of the symbol
->    when there are more symbols of the same name, see
->    klp_match_callback() in kernel/livepatch/core.c.
-> 
->    I am afraid that _this patch might break_ this when it moves
->    function symbols before non-funciton ones. I guess that
->    the symbols of the same name will not longer be groupped.
+> bpf: Check program recursion per task via bpf_ctx
 
-Thanks for pointing this out. It took me quite a while to understand
-the issue, but I finally got it.
+TL;DR: Commit message only: the trade-off list omits that attaching a marked
+freplace extension to an fmod_ret target now also fails with -EINVAL, a
+userspace-visible change.
 
-> Idea: Is the shufling really important for the performance, please?
+> bpf: Check program recursion per task via bpf_ctx
+>
+> Trampoline programs (fentry, fexit, fsession, fmod_ret and their
+> sleepable variants), raw tracepoint programs (raw_tp, raw_tp.s, tp_btf)
+> and tracepoint programs on syscall tracepoints run preemptibly, but
+> their recursion check is a per-CPU, per-program counter. When a task is
+> preempted inside a program, the counter stays raised, and every other
+> task that enters the program on that CPU is dropped and counted as a
+> recursion miss, although nothing recursed. A program can't avoid that:
+> the counter is checked before its first insn.
+>
+> Since commit 7dadeaa6e851 ("sched: Further restrict the preemption
+> modes") x86 and arm64 have only lazy and full preemption, so this
+> happens in normal operation. A security agent that pairs fentry and
+> fexit programs on inet_sendmsg() and inet_recvmsg() loses one half of a
+> pair with every drop. With 200,000 HTTP requests and four CPU-bound
+> tasks on a 4-CPU VM, 9,254 of 7,966,760 runs of these programs were
+> dropped on bpf-next, and none of 7,975,426 with this series.
+>
+> Check recursion per task instead. The runners already link a
+> stack-allocated bpf_run_ctx into current->bpf_ctx. Move saved_run_ctx
+> into struct bpf_run_ctx, so every frame links to the outer one, and
+> record in each frame the program it runs. A program is recursing if a
+> frame in the current task's chain already runs it. Interrupts and NMIs
+> run on top of the interrupted task's chain, so recursion through them
+> is still caught.
+>
+> bpf_prog_enter_run_ctx() and bpf_prog_exit_run_ctx() do the check for
+> all runners. The syscall tracepoint runner linked one frame around its
+> program array and now links one per program. bpf_set_run_ctx() accepts
+> a NULL ctx, which io_uring passes to hide the BPF context; the frames
+> below are not walked while it is hidden.
+>
+> Programs marked by the previous patch keep the per-CPU counter and
+> behave exactly as before, so no counted drop is traded for corrupted
+> per-CPU data or a renewed may_goto budget. An extension (freplace) runs
+> under the check of its target, so a marked one can't be attached to a
+> target that is checked per task.
+>
+> Trade-offs:
+>
+> - An unmarked program that keeps per-CPU slots of its own, see the
+>   previous patch, can have two runs use one slot, and nothing counts
+>   that.
+> - Marked programs lose runs to preemption as before.
+> - bench trig-rawtp is about 2% slower: 42.6 and 42.1 M/s on bpf-next,
+>   41.3 and 41.5 M/s with the series. trig-fentry and trig-fexit are
+>   not slower.
+> - Attaching a marked extension to an unmarked raw_tp, tp_btf or
+>   tracepoint program now fails with -EINVAL.
+>
+> Signed-off-by: Mike Bazov <mikeba@sentinelone.com>
+>
 
-One reason I wanted to shuffle the symbols was to also speed up
-name-based lookups, assuming that most lookups are for function
-symbols. Moving them to the beginning of the table reduces the
-number of entries that need to be scanned in the common case.
+The trade-off list says a marked extension fails with -EINVAL when
+attached to an unmarked raw_tp, tp_btf or tracepoint program.  Is the list
+complete?
 
-In my benchmarks, this reduced the average time spent in
-__find_kallsyms_symbol_value() from 16 us to 6 us. 
+bpf_prog_recur_per_task() returns bpf_prog_check_recur(prog) for
+BPF_PROG_TYPE_TRACING:
 
->    I would expect that binary search would have a good performance
->    even without the shuffling. It puts aside half of the symbols in
->    one cycle. 
+	case BPF_PROG_TYPE_TRACING:
+		return bpf_prog_check_recur(prog);
 
-I'm now going with a separate sorted index table, leaving the original
-symtab untouched.
+That is true for every expected_attach_type except BPF_TRACE_ITER, so it
+is also true for BPF_MODIFY_RETURN.  bpf_check_attach_target() only rejects
+an extension when the target is fentry, fexit, fsession or one of their
+_MULTI variants, so a non-sleepable fmod_ret program with a global subprog
+is a valid freplace target.
 
-I think the name lookup optimization could be revisited later by
-introducing a new function that uses the index table to search only
-text symbols, where appropriate.
+An extension that uses a per-CPU map, a tail call, timed may_goto or
+bpf_this_cpu_ptr()/bpf_per_cpu_ptr() could be attached to such a target
+before this patch.  It now hits the new check in bpf_tracing_prog_attach():
 
-Regards
-Stanislaw
+	if (prog->type == BPF_PROG_TYPE_EXT && prog->recur_per_cpu &&
+	    bpf_prog_recur_per_task(tgt_prog)) {
+		err = -EINVAL;
+		goto out_unlock;
+	}
+
+Should the commit message list fmod_ret targets next to raw_tp, tp_btf and
+tracepoint, since this is a userspace-visible attach failure?
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/44076814540
+--===============1081829159996909370==--
