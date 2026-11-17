@@ -1,64 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794959266;
-	b=YalJ4/RkOrQeGj5wxLo5UQQ7R9jr/R/61NibJRBHHi5VELDxCcCF3HdxynsjMJ8+Xze7
-	 VCB1M+m2Z2JikseqPNyF/Y0OSmn3ZlJitFrbRXfvRm5Uxoj4OlyH5acOnADY+Ao5Nu75r
-	 C2R6G1YY3Ebei0IdDvTzLshDEjdSeg1hHjy6fhJQTLxEGJTcQ9GRMJKGHSxlPxUEQtOuH
-	 TjS1ynnSi0/hu0iJ2XCWVumIpdQBBoUeVQb36cJU0rHlCmJcfFkOUXLjaiG7rSwoPcyfv
-	 XE5rLl4F5tJwhBw8twa94BEdD5+9QvfJKozFQindUiuzOCS79X6rLz/7DZ1AG/WV6Yw==
+	t=1794959818;
+	b=y1LKwrBjP+jOuuFqESuwjGSLy2ua4hdeBRevcTW8uJCOAqWK4fBHJ6XtBgN1p1HrUvHE
+	 CFEqhRQBBvAilcDILFtOXvc6BjCykvNVPl3+D6hvutFiMSxJPYfhrE80Qp8lzNo1IznEx
+	 mmTRUSIWaIFg0kGz7zfsgVAeCeOHT62X5aYd8vmvIWRSfRYCQcJu2jUW/EWxqRoiNBNQh
+	 93eP2NMyRTPgf8WNEoahIHZWPpMJaPvEDZ2FOPmY1yni0f96XIUXM7rbMrnOlLVRjqLiE
+	 +H+Jnd6XI/d4gR3zZEuOVmeTuQRbiXs1sgnQCmbvsQSE+gQHL01y49TTSNCj/n8FPrg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794959266;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=clyVU1pMhAE22NFzfWb5IrI08JmIOkEfpu4rJ6NQt6k=;
-	b=IB08brbXwbT9FpQsqfKxT4HDfEIQ+AZFF9MAorgQbMnzPBEQvzG2AYbyKJ9lFSZmSv7q
-	 iamOvcR1QG30tBBrMWUe6pPTBy+7KNHud2fY/LGU3qzzG928AsRhSq6ewbKNz4SxOxcaj
-	 EqBaobv4sQnb/qpQRX/Pc8PUBBucR53gmJ4Ew/jMscSPIUm28LF7ylk2OAJIfRRnsRc3s
-	 geTHhl7wc4tayctvdBQNVjQoXBTq/0+ceXsXN1B4cuuA9l2AeGueNiTERMxTMLSQPm+zQ
-	 wVDGR0MmPCmF+uKvaXygS8+zcHZS8EVE+FfwdCn521G014xA0tsS6F88x0Yd8FC4JWg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794959818;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=BO6rMpRO51+EmfR7Pq028wAz+MEmqHVgLskThE+WbsA=;
+	b=eU5FMZSTXJTN40y+/4G86C5Ip1AHypZinLPIX0h2UM7aiM/pKY6AiGoKAQGcRFDJwcy6
+	 fG0DmpVpK2MfZWIZFJuyFYElJneho3Omtk1K6+j8MCEF7lbSnFl1LI11b4tTtid06fVFn
+	 UxcPLGjuyqiFv0nyn2j+XnjwJFKLcqV2L5U6lKtiXKtT7GFoUo3Hmb18ou+tTe9VbyiAV
+	 h/Ulz1bJuaWI72QMjpwS5OPi1bqnwTtVkaATybpgPAzVWRHSeiru+vhZp6zGZ/Qdkjo+T
+	 S757PYbS69888CEfz8dnYpHV3HYFBF6RYolLxLcyXarwU+9toC791uVo1RGjb8CL+tg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SfOihrId;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=aFUgu0CI;
+	arc=none smtp.remote-ip=216.40.44.17
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5D7606A32C;
-	Tue, 17 Nov 2026 23:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBE0606A32A;
+	Tue, 17 Nov 2026 23:56:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EEBE0606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SfOihrId
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4821F000C5;
-	Tue, 17 Nov 2026 23:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794959266;
-	bh=clyVU1pMhAE22NFzfWb5IrI08JmIOkEfpu4rJ6NQt6k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SfOihrId0GRPuKiiehrSbXc8kTD81uHZ8r0pgtOO6qF6NeuAfAwkD9yejoFIfXb79
-	 BnWghAwQ2iixy01tdbMLXiUXD3s7o11ihBdyyGchXf6RN4UlPQfFdPz68S+a6n45C2
-	 TM2L6fU8WnuuaDkSo+nsEOEJ8+JqReJhPLTKl31/g3aMt2oW17OVL9uNqZ+496Nx7Y
-	 dbxpJEimYD7SgfZ1axHvLDEdtlnFAda0uarJ/fGD4+CFe6MmjHFQDSuajw6cl2jXch
-	 KQc4Gl9QKKxHFZNxGPqRDaKjb6kxviMBCcBblzwPHFdW4xWSs/gUNrg2BfY3BVUgOW
-	 w7lhBDCP6H78A==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Breno Leitao <leitao@debian.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 2/2] bootconfig: Free the initrd memory used by bootconfig
-Date: Wed, 18 Nov 2026 08:47:40 +0900
-Message-ID: <179495926058.237695.12800083196053168375.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <179495924003.237695.10973676765152260584.stgit@devnote2>
-References: <179495924003.237695.10973676765152260584.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=aFUgu0CI
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id DE449A81F2;
+	Tue, 17 Nov 2026 23:56:49 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 8905817;
+	Tue, 17 Nov 2026 23:56:47 +0000 (UTC)
+Date: Tue, 17 Nov 2026 18:56:45 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vineet Gupta <vineet.gupta@linux.dev>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, andrii@kernel.org, peterz@infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, kernel-team@meta.com, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] tracing: fgraph: allocate shadow stacks inline
+ with GFP_NOWAIT
+Message-ID: <20261117185645.628de864@gandalf.local.home>
+In-Reply-To: <20261021174406.2891598-2-vineet.gupta@linux.dev>
+References: <20261021174406.2891598-1-vineet.gupta@linux.dev>
+	<20261021174406.2891598-2-vineet.gupta@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -68,92 +63,54 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ebhdtjq8bkxbp74cuzpt8cmkerspa9aq
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 8905817
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX192K54KbB1eAfjdAUQhzeqxqYoG9GPiAkg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=BO6rMpRO51+EmfR7Pq028wAz+MEmqHVgLskThE+WbsA=; b=aFUgu0CIJQ8O5If31cC/ZhQJJ8i0ONW7MwaiF6rfM3wEOZooM1fzqoTQftjgx2kF4k7SUzBBKSVR52E/udV71n+PcQoXLsdWQ9X6IEXwT5KZDmulNB4ukaifEN5B6QpHeyHzwMgZz1pBMa3JFaf2aOmDhb8AcS8dWqU5+jsUf+A=
+X-HE-Tag: 1794959807-230204
+X-HE-Meta: U2FsdGVkX18ldEUQ80EyGDnP2dorXsVNfpKe2/+FA6c/0BQ5DsCLw4Xi4Y6HwE9QCrJxyW0oKpY4GrZLqvwgYZDEvvGSaJwzsOUCo/D+9b4Ia00MLTllhsg3vRZ+H11RgWes3m7AvwVJsq1Kx8YQt9iNdjQTukmKRSiJ2TJaZmErffuwx0VQaNY1hE9827YON+Yc4N4IgHkerPGK6mQTcnrG55kW2UAb52jfpITUjCOk/oSKM7nsoigyZ85RRIjhtMfM6tuvCbY59S2WzQn9pv/WLyRbm99CvAOt8f/OCmle+oxBSPA9drvajxn0VuGb
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, 21 Oct 2026 10:44:05 -0700
+Vineet Gupta <vineet.gupta@linux.dev> wrote:
 
-get_boot_config_from_initrd() removes the bootconfig from the initrd by
-decrementing initrd_end in place. However, the whole initrd including
-the bootconfig is reserved, e.g. reserve_initrd_mem() reserves
-[initrd_start, PAGE_ALIGN(original initrd_end)), and do_populate_rootfs()
-frees it with free_initrd_mem(initrd_start, initrd_end). Thus the full
-pages in [PAGE_ALIGN(new initrd_end), PAGE_ALIGN(original initrd_end))
-are never freed. This leaks up to 8 pages for a 32KB bootconfig.
+> smp_store_release() is a drop-in replacement for the smp_wmb() and
+> plain store it replaces.
 
-Save the original initrd_end in initrd_mem_end when trimming the
-bootconfig, and restore initrd_end before freeing the initrd memory.
-The bootconfig data has already been copied by xbc_init() at that point.
-The trimmed initrd_end is kept when the initrd is retained, so that
-/sys/firmware/initrd does not expose the bootconfig.
+This should be added with that, but I can just add it as a separate patch.
 
-Fixes: de462e5f1071 ("bootconfig: Fix to remove bootconfig data from initrd while boot")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- include/linux/initrd.h |    2 ++
- init/initramfs.c       |   10 ++++++++++
- init/main.c            |    8 +++++++-
- 3 files changed, 19 insertions(+), 1 deletion(-)
+-- Steve
 
-diff --git a/include/linux/initrd.h b/include/linux/initrd.h
-index 7e5d26c8136f..3086a462da76 100644
---- a/include/linux/initrd.h
-+++ b/include/linux/initrd.h
-@@ -17,6 +17,8 @@ extern unsigned long initrd_start, initrd_end;
- extern void free_initrd_mem(unsigned long, unsigned long);
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index bbf6e4e2da2d..d32160a6b835 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -568,7 +568,11 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	if (unlikely(ftrace_graph_is_dead()))
+ 		return -EBUSY;
  
- #ifdef CONFIG_BLK_DEV_INITRD
-+/* initrd_end before trailing data (e.g. bootconfig) was trimmed off */
-+extern unsigned long initrd_mem_end;
- extern void __init reserve_initrd_mem(void);
- extern void wait_for_initramfs(void);
- #else
-diff --git a/init/initramfs.c b/init/initramfs.c
-index ebddde9c8f0d..11030cc1f35d 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -582,6 +582,7 @@ char * __init unpack_to_rootfs(char *buf, unsigned long len)
- }
- 
- static int __initdata do_retain_initrd;
-+unsigned long initrd_mem_end __initdata;
- 
- static int __init retain_initrd_param(char *str)
- {
-@@ -750,6 +751,15 @@ static void __init do_populate_rootfs(void *unused, async_cookie_t cookie)
- 		security_initramfs_populated();
- 	}
- 
+-	if (!current->ret_stack)
 +	/*
-+	 * The bootconfig loader trims the bootconfig off initrd_end. Restore
-+	 * it to free the memory used by the bootconfig too, unless the initrd
-+	 * is retained (which must not expose the bootconfig).
++	 * We must make sure the ret_stack is tested before we read
++	 * anything else (See alloc_retstack_tasklist()).
 +	 */
-+	if (!do_retain_initrd && initrd_start && initrd_end < initrd_mem_end)
-+		initrd_end = initrd_mem_end;
-+	initrd_mem_end = 0;
-+
++	if (!smp_load_acquire(&current->ret_stack))
+ 		return -EBUSY;
+ 
+ 	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
+@@ -576,12 +580,6 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	/* Set val to "reserved" with the delta to the new fgraph frame */
+ 	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
+ 
+-	/*
+-	 * We must make sure the ret_stack is tested before we read
+-	 * anything else.
+-	 */
+-	smp_rmb();
+-
  	/*
- 	 * If the initrd region is overlapped with crashkernel reserved region,
- 	 * free only memory that is not part of crashkernel region.
-diff --git a/init/main.c b/init/main.c
-index 9471ece3d7d5..f14780345051 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -323,7 +323,13 @@ static void * __init get_boot_config_from_initrd(size_t *_size)
- 		return NULL;
- 	}
- 
--	/* Remove bootconfig from initramfs/initrd */
-+	/*
-+	 * Remove bootconfig from initramfs/initrd. Since the initrd memory
-+	 * (including the bootconfig) is freed with initrd_end, save the
-+	 * original end to free the whole region later.
-+	 */
-+	if (!initrd_mem_end)
-+		initrd_mem_end = initrd_end;
- 	initrd_end = (unsigned long)data;
- 	if (_size)
- 		*_size = size;
-
+ 	 * Check if there's room on the shadow stack to fit a fraph frame
+ 	 * and a bitmap word.
