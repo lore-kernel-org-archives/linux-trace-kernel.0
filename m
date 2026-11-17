@@ -1,67 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.157.188.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.77.101.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794910888;
-	b=a8GtO42Io06FxkO6bHYo4W01DRld11vBS/2XJUtF4LXLpNw8W8W92WgUN95JLgMLiPE0
-	 yblLhyVmDztt9ctQ3shrZmFhrtigmxtfhRjnvDtoW+xgQPVvcMKRoIVvPezujT2kEmeIi
-	 hL0+5qnWHQLKYvvED2LnfureWF//ch4SY2BezErCLcYz9hjIt8MFSefzQnC+FyrxBPx/w
-	 uG0ZPYPOKzb0Kj47XSjevEVAE2ffsADOMs+CO89kYeQTr5l19CL/NqLMJoDZTYnqI+CSI
-	 O3tlKqPahZ9a07y+5UEoYYS2X4B5qrGciVYeyT9pyHd2mu3ZHcsDpj6zQ1LhKYCFYKg==
+	t=1794914277;
+	b=IVmAermTLwq0yg13MzpSXFJyuYsXMx9l6Ekm0Fjd48sBOI24U+r+u25O12ghmHEneLoJ
+	 8YPdaEB1Iufy8R4fhG5Z3aU5fCbLPGylnH3bMTPRl6ETdAXQRibpNVt8zh4ZceDNuIkRB
+	 5SUAJcN+O5ycTDeM6VKm5UCRccawfy8QdVzMU40aqffzs+VeqpBmg49Z8bviAQhOWf9t4
+	 yzMUQ7khiRyqEskrXOUBthJaHC7EgJpZcFPDcDRKfj6eoKPfvVLxD8apkTjAkPwe2ZvZ/
+	 cmWYL18onDqqARnLs5fRU43ktsXgkQhZc8TJDspZmOr+Mnq2EWFi6twfu8EaH+7dSEQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794910888;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Infomaniak-Routing;
-	bh=bJZ0Ww4Ar7L3nO8DgwqHxjLH/zbKJodOo0TQzBotszQ=;
-	b=L7cPL/LcF9+0C9b2WBPZDZ4v9gzq1C/E/emymsCpeJmatv6Bz176+51ag2OLGR1WmE6d
-	 2Ypy5XXbBW+G6mq9kZfgE9g6RcS80PQvCLpt+C5mEVQierTBsakE0oVdQF00yL96a9Tb3
-	 1+9ILTYpJrNSgp9xGh7JamCzfZQnfIVm0TAcy6A1kYLlEZgWL5GPgmvXOn0KNlKcHsz3/
-	 hWvWRfVKYfUfHlH8x+bsXqFLtWmPoHzJ0YKVIxyXIBUjWP3TW3oY/6svIL+HVw8uSyupd
-	 q8gijaB+NFyqM7kCRIr+CBlInNwreEBDhtr89b01M5Cs0z0batYh9zn4/Xl1S+gw81A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794914277;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:X-WP-MailID:
+	 X-WP-AV:X-WP-SPAM;
+	bh=lacrfJAZc9PxSg1vvmhQyROqUQhgxiKoLysqHqcOGXI=;
+	b=t/Hg2OyxJ0xEmXyFJ8f2zMOlxRf98PonwLct3h5ByA3OGavAPYPRkrTpDmh9MiFjCR8P
+	 eGOcOMZR7VNUpc/0QxJIqqz+Q3ONkSv1XPC+wHN7jZT8w/AE+aL6csG1T5j9zs+4bgMXV
+	 gPsdUr63sLCftZuKuYeDFT7X0zCOWVFglEMBPXPEDEVQVcPz/toecAp+vAR5sc38V2TbS
+	 +Wgiv5yd6211Ir4HhWJP47QKdX2NStdrUAftf3mCaLzNpguR425+FsrTD4Lhu4U8D6sDH
+	 HpFPpQc+DcefsK37bxPGIL0/yRry0jcMts7GuatTc38ftl5P1B9xcyyRhRO1Gg/IK/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=digikod.net;
-	spf=pass smtp.mailfrom=digikod.net;
-	dkim=pass header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=GMsjFdfy;
-	arc=none smtp.remote-ip=45.157.188.11
-Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
+	dmarc=pass header.from=wp.pl;
+	spf=pass smtp.mailfrom=wp.pl;
+	dkim=pass header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=krDZcyq4;
+	arc=none smtp.remote-ip=212.77.101.12
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9B3606A333
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 10:21:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E9B3606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AC1606A323
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 11:17:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38AC1606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=GMsjFdfy
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jTLP15rlMzXWB;
-	Tue, 17 Nov 2026 11:21:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1794910885;
-	bh=bJZ0Ww4Ar7L3nO8DgwqHxjLH/zbKJodOo0TQzBotszQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GMsjFdfyyE7UiJe1mlHOEetQqHb6ar1pxxeq3qDVvCU7uE3IwvsVx0GF/QfDkhWtZ
-	 1qVimOnA1AP3SfICgCSwYE+6aBS/qsCWAWC0cj34ELFVg6gOyR1nzZ7BJefIRsxsI9
-	 bo8WQGaI/jBEksz/Z1472yBjJQFeAtXv+t1X5H+s=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4jTLP03lVkzLLh;
-	Tue, 17 Nov 2026 11:21:24 +0100 (CET)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Christian Brauner <brauner@kernel.org>,
-	Eric Paris <eparis@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Paul Moore <paul@paul-moore.com>,
+	dkim=pass (2048-bit key, unprotected) header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=krDZcyq4
+Received: (wp-smtpd smtp.wp.pl 27972 invoked from network); 17 Nov 2026 12:17:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=s20261001;
+          t=1794914273; bh=lacrfJAZc9PxSg1vvmhQyROqUQhgxiKoLysqHqcOGXI=;
+          h=From:To:Cc:Subject;
+          b=krDZcyq4M6w44sq/2G7++7hEuIo+5D8uenjztHEL3QyX5QpiXYR1+QDZTsEbKFx5A
+           zbDQ5lm6rswxursNM2fcLIX7id4AisJV+kPNkF/FOtwwtXPRGuswG3zF47VS7ZUmOt
+           GqygzPVKHffCad7cT5e1lxbat1NzHYjKsyz+8gAobfYm+sS8ZKDNSBjA+DvsPcqKnE
+           DSs95DOZ+X17zBaxfMcjt5vrfSG2LcpyLeM0K0LqDjlMbkUmyLnAHDMjxkrnTypxPy
+           hWYv8Y7QDHdkhyOH55CweX1lYo4P00iFpd31vgm9WKYtE8z3HGQoaHJosdPjy8/h4d
+           qbo6KSG9U52rg==
+Received: from localhost (77-236-5-223.static.play.pl [77.236.5.223])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
+          for <petr.pavlu@suse.com>; 17 Nov 2026 12:17:53 +0100
+Date: Tue, 17 Nov 2026 12:17:52 +0100
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Aaron Tomlin <atomlin@atomlin.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	audit@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 4/4] landlock: Document namespace denial operations
-Date: Tue, 17 Nov 2026 11:21:07 +0100
-Message-ID: <20261117102110.2524197-5-mic@digikod.net>
-In-Reply-To: <20261117102110.2524197-1-mic@digikod.net>
-References: <20261117102110.2524197-1-mic@digikod.net>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jordan Rome <linux@jordanrome.com>,
+	Viktor Malik <vmalik@redhat.com>, Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v2 2/2] module/kallsyms: sort function symbols and use
+ binary search
+Message-ID: <avw34F1WLGdyYUkN@wp.pl>
+References: <20260327110005.16499-1-stf_xl@wp.pl>
+ <20260327110005.16499-2-stf_xl@wp.pl>
+ <11c8e139-f9f3-4b22-863a-4e021a3947e7@suse.com>
+ <20260424091330.GA31168@wp.pl>
+ <88ae41dc-e5e0-442a-9b95-5125adf31e75@suse.com>
+ <20260428082330.GA2757@wp.pl>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -71,110 +78,93 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20260428082330.GA2757@wp.pl>
+X-WP-MailID: f9197c6689b43e0d8ad86c0c3de46d46
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [oaPU]                               
 
-Namespace denial records now distinguish creation from entry.  Document
-the namespace_op field in the audit and trace references, and clarify
-that it describes the semantic namespace hook rather than exact syscall
-provenance.
+Hi,
 
-Creation reports the ID allocated for a namespace that never becomes
-reachable, whereas entry reports the existing target ID.
+My apologies for the very long delay in responding.
 
-Cc: Günther Noack <gnoack@google.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
- Documentation/admin-guide/LSM/landlock.rst | 21 ++++++++++++---------
- Documentation/trace/events-landlock.rst    | 20 +++++++++++++-------
- 2 files changed, 25 insertions(+), 16 deletions(-)
+I wanted to understand the livepatch relocation issue before getting
+back to this patch, but I kept struggling with it and putting it off.
+Eventually, I got some help from AI to understand how livepatch
+relocations work and why reordering symtab entries breaks them.
 
-diff --git a/Documentation/admin-guide/LSM/landlock.rst b/Documentation/admin-guide/LSM/landlock.rst
-index 946f3bf89650..a79912e8a684 100644
---- a/Documentation/admin-guide/LSM/landlock.rst
-+++ b/Documentation/admin-guide/LSM/landlock.rst
-@@ -7,7 +7,7 @@ Landlock: system-wide management
- ================================
- 
- :Author: Mickaël Salaün
--:Date: October 2026
-+:Date: November 2026
- 
- Landlock can leverage the audit framework to log events.
- 
-@@ -72,10 +72,13 @@ AUDIT_LANDLOCK_ACCESS
-           :manpage:`unshare(2)`, :manpage:`clone(2)`, :manpage:`clone3(2)`,
-           :manpage:`open_tree(2)`, or :manpage:`fsmount(2)`, or joining via
-           :manpage:`setns(2)`);
--          ``namespace_type`` indicates the type (hex ``CLONE_NEW*`` bitmask),
--          and ``namespace_id`` identifies the target namespace (for a denied
--          creation, the namespace never becomes reachable so its ID is not
--          directly visible from user space)
-+          ``namespace_op`` is ``create`` for construction or ``enter`` for
-+          :manpage:`setns(2)`.  These values describe semantic namespace hooks,
-+          not exact system calls.  ``namespace_type`` indicates the type (hex
-+          ``CLONE_NEW*`` bitmask), and ``namespace_id`` identifies the namespace
-+          object.  For a denied creation, the new namespace never becomes
-+          reachable, so its ID is not directly visible from user space.  For a
-+          denied entry, this is the exact existing target ID.
- 
-     **capability.*** - Capability restrictions (ABI 12+):
-         - capability.use - Capability use was denied;
-@@ -86,10 +89,10 @@ AUDIT_LANDLOCK_ACCESS
-     in a directory that lacks both ``make_reg`` and ``refer`` rights would show
-     ``blockers=fs.make_reg,fs.refer``.
- 
--    The object identification fields depend on the type of access being blocked:
--    ``path``, ``dev``, ``ino`` for filesystem; ``opid``, ``ocomm`` for signals;
--    ``namespace_type`` and ``namespace_id`` for namespace operations;
--    ``capability`` for capability use.
-+    The operation and object context fields depend on the type of access being
-+    blocked: ``path``, ``dev``, ``ino`` for filesystem; ``opid``, ``ocomm`` for
-+    signals; ``namespace_op``, ``namespace_type``, and ``namespace_id`` for
-+    namespace operations; ``capability`` for capability use.
- 
- 
- AUDIT_LANDLOCK_DOMAIN
-diff --git a/Documentation/trace/events-landlock.rst b/Documentation/trace/events-landlock.rst
-index dc5f05a17c2c..b94ffa42678b 100644
---- a/Documentation/trace/events-landlock.rst
-+++ b/Documentation/trace/events-landlock.rst
-@@ -6,7 +6,7 @@ Landlock Trace Events
- =====================
- 
- :Author: Mickaël Salaün
--:Date: October 2026
-+:Date: November 2026
- 
- Landlock emits trace events for sandbox lifecycle operations and access
- denials.  These events can be consumed by ftrace (for human-readable
-@@ -186,13 +186,19 @@ known allowed and quiet member masks.  Capability masks and the raw
- therefore appears as zero while still advancing the ruleset version, and adding
- a member already present still emits an event.
- 
--``landlock_deny_permission_namespace`` reports the denied raw
--``CLONE_NEW*`` value.  ``namespace_id`` is the exact target namespace ID.  For
--a denied namespace creation, the namespace never becomes reachable so its ID
--is not directly visible from user space.
-+``landlock_deny_permission_namespace`` reports ``namespace_op`` as ``create``
-+for namespace construction, for example through :manpage:`clone(2)`,
-+:manpage:`clone3(2)`, :manpage:`unshare(2)`, :manpage:`open_tree(2)`, or
-+:manpage:`fsmount(2)`, and ``enter`` for :manpage:`setns(2)`.  These values
-+describe the semantic namespace hook, not the exact system call.
-+``namespace_type`` is the denied raw ``CLONE_NEW*`` value.  For a denied
-+creation, ``namespace_id`` is allocated for the new namespace, which never
-+becomes reachable, so its ID is not directly visible from user space.  For a
-+denied entry, ``namespace_id`` is the exact existing target ID.
-+
- ``landlock_deny_permission_capability`` reports the denied ``CAP_*`` number.
--Like every denial event, both include the denying domain, ``same_exec``, and
--``logged``.
-+Like every denial event, the namespace and capability events include the
-+denying domain, ``same_exec``, and ``logged``.
- 
- Per-member quiet masks suppress audit submission but never these trace events,
- which report ``logged=0``.
--- 
-2.56.0
+On Tue, Apr 28, 2026 at 10:23:30AM +0200, Stanislaw Gruszka wrote:
+> > >> I'm not sure if it is ok to limit the search only to function symbols
+> > >> when the address lies in MOD_TEXT. The text can theoretically contain
+> > >> non-function symbols.
+> > > 
+> > > Yes, the patch assumes that the only valid symbols in the MOD_TEXT
+> > > are functions. If there are defined OBJECT symbols in .text, the patch
+> > > would break lookup for those.
+> > > 
+> > > While it’s theoretically possible (e.g. hand-written assembly placing
+> > > data in .text ?), I’m not sure this is a practical concern. In general,
+> > > having data in executable segments is discouraged for security reasons. 
+> > > 
+> > >> Could this optimization be adjusted to sort all
+> > >> MOD_TEXT symbols (excluding anonymous and mapping symbols) and move them
+> > >> to the front of the symbol table?
+> > > 
+> > > That’s possible. We could track .text sections indices in
+> > > __layout_sections() and include all valid symbols from those sections,
+> > > and also reorder typetab accordingly.
+> > > 
+> > > However, this adds complexity. I would prefer to first confirm whether
+> > > OBJECT symbols in MOD_TEXT is a real issue before going in that direction.
 
+It turns out that identifying MOD_TEXT symbols is straightforward.
+The section's memory type is already encoded in
+sec->sh_entsize >> SH_ENTSIZE_TYPE_SHIFT, where sec is obtained from
+the symbol's st_shndx.
+
+> > I'm not aware of specific OBJECT symbols that end up in MOD_TEXT.
+> > Nonetheless, it is a valid case and it is preferable that an
+> > optimization doesn't break their lookup by address.
+> >
+> > In general, I'm worried about the several edge cases and inconsistencies
+> > that this optimization introduces. This also includes the fact that it
+> > doesn't work for livepatch modules.
+> > 
+> > An alternative could be to keep the symbol table untouched and have
+> > a separate array with symbol indexes that is sorted by their addresses,
+> > but it requires evaluation if the additional memory usage is worth it.
+
+I've implemented this approach. As a bonus, sorting during module
+loading is actually faster, since only the indexes need to be moved
+instead of entire symbol table entries.
+
+To get a rough estimate of the additional memory usage, I ran the
+following command on my system:
+
+awk 'NF == 4 && ($2 == "T" || $2 == "t")' /proc/kallsyms | wc -l
+
+It reports 83593 symbols, which would correspond to roughly 326kB
+of additional memory for 32-bit indexes across all loaded modules.
+
+For comparison, the total size of loaded modules on this system is:
+
+lsmod | awk 'NR > 1 { sum += $2 } END { printf "%.2f MB\n", sum / 1024 / 1024 }'
+49.74 MB
+
+Thus, the additional index would account for roughly 0.64% of the
+total memory occupied by modules.
+
+> I personally prefer not to over-engineer for cases that may never occur.
+> That said, your concerns about edge cases, consistency, and livepatch 
+> handling are valid.
+> 
+> Let me take some time to think this through and experiment with possible
+> solutions that handle these cases properly. I can’t work on this
+> immediately, but I’ll get back to it.
+
+I'll post v3 shortly. 
+
+Regards
+Stanislaw
