@@ -1,74 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.77.101.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794914277;
-	b=IVmAermTLwq0yg13MzpSXFJyuYsXMx9l6Ekm0Fjd48sBOI24U+r+u25O12ghmHEneLoJ
-	 8YPdaEB1Iufy8R4fhG5Z3aU5fCbLPGylnH3bMTPRl6ETdAXQRibpNVt8zh4ZceDNuIkRB
-	 5SUAJcN+O5ycTDeM6VKm5UCRccawfy8QdVzMU40aqffzs+VeqpBmg49Z8bviAQhOWf9t4
-	 yzMUQ7khiRyqEskrXOUBthJaHC7EgJpZcFPDcDRKfj6eoKPfvVLxD8apkTjAkPwe2ZvZ/
-	 cmWYL18onDqqARnLs5fRU43ktsXgkQhZc8TJDspZmOr+Mnq2EWFi6twfu8EaH+7dSEQ==
+	t=1794914786;
+	b=V2ikhVPyx7rN76A66H5irdcnCe0UMf/65RCsdUYRRFk0s9Mq5fxd26IoNqSaGb/5L+gn
+	 aHfDngEAJwl4I502tOK9DrXAAfV/yx/5WtHJEW2RvAowe13VY0G1tZYiagWWHaay0Y/76
+	 1sLRv8GD3mUt3J1p7+YEzW088ZL/yFm+AdB12FjG9uk8Oeuj0/2s2A3lutCDBh3aEK+04
+	 oqdpg+miybVbkd91lrKYwE9g2N8QeT+KSuC5WwFTTPFJ0VCYlc0E2DftDQA18OeFH85Dx
+	 fJAi4d4F4elohnBZK6FseYqc/9dCK+qeO2/G/642+t/RzNb8D0NOzzOvC/tM+s+oGhw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794914277;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:X-WP-MailID:
-	 X-WP-AV:X-WP-SPAM;
-	bh=lacrfJAZc9PxSg1vvmhQyROqUQhgxiKoLysqHqcOGXI=;
-	b=t/Hg2OyxJ0xEmXyFJ8f2zMOlxRf98PonwLct3h5ByA3OGavAPYPRkrTpDmh9MiFjCR8P
-	 eGOcOMZR7VNUpc/0QxJIqqz+Q3ONkSv1XPC+wHN7jZT8w/AE+aL6csG1T5j9zs+4bgMXV
-	 gPsdUr63sLCftZuKuYeDFT7X0zCOWVFglEMBPXPEDEVQVcPz/toecAp+vAR5sc38V2TbS
-	 +Wgiv5yd6211Ir4HhWJP47QKdX2NStdrUAftf3mCaLzNpguR425+FsrTD4Lhu4U8D6sDH
-	 HpFPpQc+DcefsK37bxPGIL0/yRry0jcMts7GuatTc38ftl5P1B9xcyyRhRO1Gg/IK/A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794914786;
+	h=Received:DKIM-Signature:From:To:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=+OycqK3cd+ZXVs2LMQfSxir1fD3j6jLIn0dT6Kkp2J8=;
+	b=YuNLO7wI9ytrNIb/R3z1ct+ijZtyBghDJPuC1dItBbsGLZo7efIgWpQjnl08CxVu5k7E
+	 NfTrTYTgoGbU93cwWEOH6eb+8VRzGv+UAsvtpxsxsxOndzpncViZgwP8Y78nYepDhfZZJ
+	 AR/ZqZIWgfwI7hrgbDcDxjuSNU7Olkg8qDLe1Y34F4brYkEEQ8j+klAkqPCAMDchY3CwA
+	 xlfvkJ46lKU7lCquousAG4RzEk9POPnNC5Lvjg6IcV2bEV8XHnTdUfWkCzz2wv4HOjlrG
+	 EwpN4eqijCfwBLcoVemreXaV9bBUI7eRP4VTWq1MQj1RePoPxValjUacou/fXUlhZBQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=wp.pl;
-	spf=pass smtp.mailfrom=wp.pl;
-	dkim=pass header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=krDZcyq4;
-	arc=none smtp.remote-ip=212.77.101.12
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jXYMiNh8;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AC1606A323
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 11:17:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38AC1606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793AE606A31C;
+	Tue, 17 Nov 2026 11:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=krDZcyq4
-Received: (wp-smtpd smtp.wp.pl 27972 invoked from network); 17 Nov 2026 12:17:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=s20261001;
-          t=1794914273; bh=lacrfJAZc9PxSg1vvmhQyROqUQhgxiKoLysqHqcOGXI=;
-          h=From:To:Cc:Subject;
-          b=krDZcyq4M6w44sq/2G7++7hEuIo+5D8uenjztHEL3QyX5QpiXYR1+QDZTsEbKFx5A
-           zbDQ5lm6rswxursNM2fcLIX7id4AisJV+kPNkF/FOtwwtXPRGuswG3zF47VS7ZUmOt
-           GqygzPVKHffCad7cT5e1lxbat1NzHYjKsyz+8gAobfYm+sS8ZKDNSBjA+DvsPcqKnE
-           DSs95DOZ+X17zBaxfMcjt5vrfSG2LcpyLeM0K0LqDjlMbkUmyLnAHDMjxkrnTypxPy
-           hWYv8Y7QDHdkhyOH55CweX1lYo4P00iFpd31vgm9WKYtE8z3HGQoaHJosdPjy8/h4d
-           qbo6KSG9U52rg==
-Received: from localhost (77-236-5-223.static.play.pl [77.236.5.223])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
-          for <petr.pavlu@suse.com>; 17 Nov 2026 12:17:53 +0100
-Date: Tue, 17 Nov 2026 12:17:52 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Jordan Rome <linux@jordanrome.com>,
-	Viktor Malik <vmalik@redhat.com>, Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2 2/2] module/kallsyms: sort function symbols and use
- binary search
-Message-ID: <avw34F1WLGdyYUkN@wp.pl>
-References: <20260327110005.16499-1-stf_xl@wp.pl>
- <20260327110005.16499-2-stf_xl@wp.pl>
- <11c8e139-f9f3-4b22-863a-4e021a3947e7@suse.com>
- <20260424091330.GA31168@wp.pl>
- <88ae41dc-e5e0-442a-9b95-5125adf31e75@suse.com>
- <20260428082330.GA2757@wp.pl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jXYMiNh8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA7F1F000C4;
+	Tue, 17 Nov 2026 11:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794914786;
+	bh=+OycqK3cd+ZXVs2LMQfSxir1fD3j6jLIn0dT6Kkp2J8=;
+	h=From:To:In-Reply-To:References:Subject:Date;
+	b=jXYMiNh80N2TnHcmikgLEQLZjaALXwTpK6B6sN25XBoNbpwjy6VMIeZsdrRRA0ACn
+	 eYFsynfF+mdQaGCcPQi45NrNWQ6ctTZnX20NdZZep9ISeupkKxPV5O6wVY9NwudvSM
+	 cH0bNTxlGv11yVcThvHcT6t0x1WTcUGWopvc6q1c5r47dtRphQ2ycabQR3H5aiUZF/
+	 BPD5WwgvQ24ZwVIgDFFhdooFHIBclnGW1gUcsn5dcJa505x5uTFpWkz+tJuu5gWjYt
+	 O4Vd6nskaAU/IOU+AjF2+oa5KRmG/O+JUAW5bUAHg+IsPLSLcSagXxOmXZzhoI4soW
+	 16gR+ed0B5Qfg==
+From: Mark Brown <broonie@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ =?utf-8?q?Amadeusz_S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>, 
+ Cezary Rojewski <cezary.rojewski@intel.com>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ Temitope obabi <obabitemitope765@gmail.com>
+In-Reply-To: <20261110132013.732-1-obabitemitope765@gmail.com>
+References: <20261110132013.732-1-obabitemitope765@gmail.com>
+Subject: Re: [PATCH] ASoC: Intel: Remove unused sst_ipc_inbox_rdata
+ tracepoint
+Message-Id: <179487776546.3663701.11916478949345242482.b4-ty@b4>
+Date: Tue, 17 Nov 2026 01:09:25 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -78,93 +63,46 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260428082330.GA2757@wp.pl>
-X-WP-MailID: f9197c6689b43e0d8ad86c0c3de46d46
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [oaPU]                               
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.17-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1134; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=pS4d9hwLwMRABav02cA/zMMbVL1fMwxfjoHAT3PllU0=;
+ b=owGbwMvMwCWm/754w+YLFp2Mp9WSGLL+WN77c7By258qu+vLVjuqsH4vySxb9cRd58tHT8sin
+ kNp/209O0pZGMS4GGTFFFnisrhf1pe8XsN3cGEbzBxWJpAhDFycAjCRf14M/0y87sQ/T1xs6Vl9
+ 8Bnvx7MnmzpNjZTn7LgoL7SqtPvOtYuMDG8FmhS26ejw/5EM3ci3/HeCx8276/wLWwJnbXzIWb4
+ 9gg8A
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hi,
+On Tue, 10 Nov 2026 15:20:07 +0200, Temitope obabi wrote:
+> ASoC: Intel: Remove unused sst_ipc_inbox_rdata tracepoint
 
-My apologies for the very long delay in responding.
+Applied to
 
-I wanted to understand the livepatch relocation issue before getting
-back to this patch, but I kept struggling with it and putting it off.
-Eventually, I got some help from AI to understand how livepatch
-relocations work and why reordering symtab entries breaks them.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.5
 
-On Tue, Apr 28, 2026 at 10:23:30AM +0200, Stanislaw Gruszka wrote:
-> > >> I'm not sure if it is ok to limit the search only to function symbols
-> > >> when the address lies in MOD_TEXT. The text can theoretically contain
-> > >> non-function symbols.
-> > > 
-> > > Yes, the patch assumes that the only valid symbols in the MOD_TEXT
-> > > are functions. If there are defined OBJECT symbols in .text, the patch
-> > > would break lookup for those.
-> > > 
-> > > While it’s theoretically possible (e.g. hand-written assembly placing
-> > > data in .text ?), I’m not sure this is a practical concern. In general,
-> > > having data in executable segments is discouraged for security reasons. 
-> > > 
-> > >> Could this optimization be adjusted to sort all
-> > >> MOD_TEXT symbols (excluding anonymous and mapping symbols) and move them
-> > >> to the front of the symbol table?
-> > > 
-> > > That’s possible. We could track .text sections indices in
-> > > __layout_sections() and include all valid symbols from those sections,
-> > > and also reorder typetab accordingly.
-> > > 
-> > > However, this adds complexity. I would prefer to first confirm whether
-> > > OBJECT symbols in MOD_TEXT is a real issue before going in that direction.
+Thanks!
 
-It turns out that identifying MOD_TEXT symbols is straightforward.
-The section's memory type is already encoded in
-sec->sh_entsize >> SH_ENTSIZE_TYPE_SHIFT, where sec is obtained from
-the symbol's st_shndx.
+[1/1] ASoC: Intel: Remove unused sst_ipc_inbox_rdata tracepoint
+      https://git.kernel.org/broonie/sound/c/c5afacef0c09
 
-> > I'm not aware of specific OBJECT symbols that end up in MOD_TEXT.
-> > Nonetheless, it is a valid case and it is preferable that an
-> > optimization doesn't break their lookup by address.
-> >
-> > In general, I'm worried about the several edge cases and inconsistencies
-> > that this optimization introduces. This also includes the fact that it
-> > doesn't work for livepatch modules.
-> > 
-> > An alternative could be to keep the symbol table untouched and have
-> > a separate array with symbol indexes that is sorted by their addresses,
-> > but it requires evaluation if the additional memory usage is worth it.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-I've implemented this approach. As a bonus, sorting during module
-loading is actually faster, since only the indexes need to be moved
-instead of entire symbol table entries.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-To get a rough estimate of the additional memory usage, I ran the
-following command on my system:
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-awk 'NF == 4 && ($2 == "T" || $2 == "t")' /proc/kallsyms | wc -l
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-It reports 83593 symbols, which would correspond to roughly 326kB
-of additional memory for 32-bit indexes across all loaded modules.
+Thanks,
+Mark
 
-For comparison, the total size of loaded modules on this system is:
-
-lsmod | awk 'NR > 1 { sum += $2 } END { printf "%.2f MB\n", sum / 1024 / 1024 }'
-49.74 MB
-
-Thus, the additional index would account for roughly 0.64% of the
-total memory occupied by modules.
-
-> I personally prefer not to over-engineer for cases that may never occur.
-> That said, your concerns about edge cases, consistency, and livepatch 
-> handling are valid.
-> 
-> Let me take some time to think this through and experiment with possible
-> solutions that handle these cases properly. I can’t work on this
-> immediately, but I’ll get back to it.
-
-I'll post v3 shortly. 
-
-Regards
-Stanislaw
