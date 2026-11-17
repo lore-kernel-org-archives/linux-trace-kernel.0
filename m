@@ -1,96 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794940487;
-	b=J0cHa47DTqp3i522I0T++g1NWOIUjECmzzXle5gQE8F7nXBB+1CMeutgBXEN/Kkhl2iW
-	 LTFfQWA3Or9Q/MKJBvcIio/46QtA9yM0yVXt4yszVQKrnFuAn2lytfi6F7fpUAZ0YRTK9
-	 FM2HyB/49vGkEDzp56hdXBcjV6ab4sQDMm+4YYN955QGXMeVK2X9zhnAwo4GDDN8cl9bC
-	 /vhBECA7NEm0wwIgtG4NpzTe9ESfqjVdMlb9i3b5BVGLPmsAn3cs11RathtPcWvBoRz6P
-	 1cSNOb+L4XHuOJEFQipHSQtez29ti72kkGZEv9Mltv0jrt2+6CFKXpEGyEOe+dVqidw==
+	t=1794940570;
+	b=lYejTuXVrjBCZD/xTMapGGtFCDatYXF1kDftC3CIxFX3bsItX3PC5NCGIG7v5KdUoXkm
+	 drDiBhZY+Bu+JjDJm1Ftp17XY5JLORRWDIZUPPSnS2sPpE6UNi+hv6za0/sp+jmN2eUQX
+	 Q0gFe61muxM5qnoBEUy8SUP0ImxGJhFOmFFWqQTffdmu+lyoUvEbDHS3vHVuJre7my28E
+	 05PlQJbUKTaVIknc4jXTJ/WgjLj4Div6P76TmSTNKgQRaL/XwjADWHSRtWtCkRd+s40GU
+	 fVGS7ahcYmo+oiBb24nWJaFdg2PTGBP7rEhfzaLrKeeIV1NLKc+BbuBvAWxHcvOUaUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794940487;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:Sender;
-	bh=bCqN24fhlU/vFMOwXW3CAsd4iYMzraL5WEN3Qxc6Tj0=;
-	b=ClK8Z7wjZ+3PzTokwV0IE6KdhBxJ293fT0Q/AMQXbbZvn9RB7XF0eHvvoqIl5uadFE0c
-	 fRyJmc6nuIQuxWP9T2LBX7Mmp7s/qRZ1SMqFuhB2lmXK6RIbKFr8pEWJNu0SisaBG6D7g
-	 G7Zc3zE+neMfmbaYVnR32xsIBPzfaUgq8zPvGMxC+ti4Zh6g9bSok/PB44KA9d8Azvjz/
-	 PA4bNm9RxhylZbdeptOljsU7xLGrpYD8qvfTomAJzdjK2J1gwClxdxihDH/K0p/r61mlh
-	 iUqxOA0ZKqn4PbnWtQry4k6vZHcLqJt7c6/Gt4QiKgcq3dbWQ1H4JqdkvC+6dU+6TBw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794940570;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=B4z0W62T/tkJurVdFIQKBfimJ7xquU/QIiCVTwGcqUI=;
+	b=2bmO/a7BFmS3SHdB/Z6pm155bQhZStnLrXZglJxE5loExdnYq90ABjxC/gLqLsLt9IGD
+	 mScbLU4ss43DII9k0fD1pVN5dfk9/9gZck1qfGT85qKk/uCMEpWFoc3mcYoJF6dGuAFnJ
+	 z1nC2JJhgtvUS57vJlCjGBRXenQxsrXya1GFCGo82b8q5WmZvqNg6EYCKWnJHJDGERUMX
+	 I6p+MjPFnNRrP+lXIQC07EwXNH2g8BvQH8e1ElA70NuhjIJ7KNRCGwcH2/XpHREtfbfG3
+	 vaL8nIdS2KWIpaaa4V58eoeiZlDM6MPXUnN5Po3Oxwei2qpWiPfKRaZjCQ9lLl+Mulg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zeniv.linux.org.uk;
-	spf=none smtp.mailfrom=ftp.linux.org.uk;
-	dkim=pass header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b="b4xkjYo/";
-	arc=none smtp.remote-ip=62.89.141.173
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oiV1yQUH;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E3E606A32C;
-	Tue, 17 Nov 2026 18:34:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75E3E606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92116606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 18:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=b4xkjYo/
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bCqN24fhlU/vFMOwXW3CAsd4iYMzraL5WEN3Qxc6Tj0=; b=b4xkjYo/irgxqXEeyvuS6RET2Q
-	Whn8EonVLrp0V9ItlQ0voD1HDID1cvVEpP7A3CfJTg6G51OusAOucbJ9vMuC+hwavs9aqumbwV1z6
-	uJCyMBPN4/7baj9nmdxiHNVKPt3jZOckq5vWJ+ySpASrwVz868UZS2e41eOZNnw1goYX5RDcNyRPP
-	rTVU/SAULfsU7iich6yV29MIYYq+nZApu6guoXj8p4xIjatJ2U6mzBQmkx8xbXMRyf4N7JaVOLGCI
-	E/e2O0QyfWY/guzEqwfbYXpbbPJldSiQm8KAz4X+FlxeHQW6Crnmj63J9lAWOshzxFC3oZeKQshJ8
-	4NuPWfgw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTO0u-00000002MNT-3B2S;
-	Tue, 17 Nov 2026 18:34:40 +0000
-Date: Tue, 17 Nov 2026 18:34:40 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Cai Xinchen <caixinchen1@huawei.com>
-Cc: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
-	brauner@kernel.org, jack@suse.cz, amir73il@gmail.com,
-	andrii@kernel.org, apparmor@lists.ubuntu.com, ast@kernel.org,
-	axboe@kernel.dk, bpf@vger.kernel.org, casey@schaufler-ca.com,
-	cel@kernel.org, cem@kernel.org, chenxiaosong@chenxiaosong.com,
-	code@tyhicks.com, corbet@lwn.net, Dai.Ngo@oracle.com,
-	dakr@kernel.org, daniel@iogearbox.net, dhowells@redhat.com,
-	dlemoal@kernel.org, dmitry.kasatkin@gmail.com,
-	driver-core@lists.linux.dev, dsterba@suse.com,
-	ecryptfs@vger.kernel.org, eddyz87@gmail.com, emil@etsalapatis.com,
-	eric.snowberg@oracle.com, exfat@lists.linux.dev,
-	georgia.garcia@canonical.com, gregkh@linuxfoundation.org,
-	hch@lst.de, hirofumi@mail.parknet.co.jp, hyc.lee@gmail.com,
-	ihor.solodrai@linux.dev, jlayton@kernel.org, jmorris@namei.org,
-	johan@kernel.org, john.fastabend@gmail.com,
-	john.johansen@canonical.com, jolsa@kernel.org, kpsingh@kernel.org,
-	linkinjeon@kernel.org, linux-api@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
-	linux-xfs@vger.kernel.org, liubaolin12138@163.com,
-	martin.lau@linux.dev, mason@kernel.org,
-	mathieu.desnoyers@efficios.com, matt@bobrowski.net,
-	memxor@gmail.com, mhiramat@kernel.org, miklos@szeredi.hu,
-	neil@brown.name, netfs@lists.linux.dev, ntfs@lists.linux.dev,
-	okorniev@redhat.com, omosnacek@gmail.com,
-	penguin-kernel@i-love.sakura.ne.jp, rafael@kernel.org,
-	rdunlap@infradead.org, roberto.sassu@huawei.com,
-	rostedt@goodmis.org, selinux@vger.kernel.org,
-	senozhatsky@chromium.org, serge@hallyn.com, sj1557.seo@samsung.com,
-	skhan@linuxfoundation.org, song@kernel.org,
-	stephen.smalley.work@gmail.com, takedakn@nttdata.co.jp,
-	tom@talpey.com, yonghong.song@linux.dev, yuezhang.mo@sony.com,
-	zohar@linux.ibm.com, utilityemal77@gmail.com, lujialin4@huawei.com
-Subject: Re: [PATCH -next -v4 01/17] fs: pass struct path to notify_change()
-Message-ID: <20261117183440.GQ989762@ZenIV>
-References: <20261117150542.1169451-1-caixinchen1@huawei.com>
- <20261117150542.1169451-2-caixinchen1@huawei.com>
- <20261117183059.GP989762@ZenIV>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oiV1yQUH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FC641F000C6;
+	Tue, 17 Nov 2026 18:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794940570;
+	bh=B4z0W62T/tkJurVdFIQKBfimJ7xquU/QIiCVTwGcqUI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=oiV1yQUHQST3nismIcobFjVG/4ldpi85GQ08nOGMZuotiF8LyEKr1qcf8WcdoeIJI
+	 2Xr1b37Cb4tePI2isMuJTmavmbw/XsCCGk97HX5AfWOgvkqCyxAL7Ryyj0Zyb0uKlY
+	 leixHmbiKomczMdwOnaUkEwdKFzmoEab1ccU11SQqyeO+XVD/scURDQJePhCttHoA1
+	 XADvExvT9NGWVYX/SwrBsuGlEPfck+Z5+2yRWI6MsAPBi0wcVSY2GQaCgvdNuIeTEf
+	 82fYRinKu/g/4VTBQ40uvVUzwFr5nGdh9/MdO/5HZIxHhIRmCmaDj9cWJIgHwctNL5
+	 NdB62zH6DGrLA==
+Message-ID: <sashiko-outbox-219362@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: 'select' GENERIC_TRACER, not 'depends'
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Brian Norris" <briannorris@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <avybp3O2zxcLozKB@google.com>
+References: <20261116144652.1.Iecb63200dd245f62032a3b1f60ae78cc48868094@changeid>
+ <sashiko-outbox-217828@kernel.org>
+ <20261117085552.0e4ef272@gandalf.local.home> <avybp3O2zxcLozKB@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 17 Nov 2026 18:36:09 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -99,32 +60,129 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261117183059.GP989762@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Nov 17, 2026 at 06:30:59PM +0000, Al Viro wrote:
-> On Tue, Nov 17, 2026 at 11:05:26PM +0800, Cai Xinchen wrote:
-> 
-> > +notify_change() and do_truncate() now take a const struct path * instead
-> > +of a struct dentry *.  They use path->dentry, so callers that only have a
-> > +dentry must provide a struct path.  struct iattr has a new ia_path member,
-> > +which notify_change() sets for the duration of the call; it must not be
-> > +stored beyond that.  Filesystems that forward a change to another inode
-> > +can use notify_change_target() to update the target dentry while keeping
-> > +the caller-supplied path in ia_path.
-> 
-> That needs a bit along the lines of "path MUST be consistent - don't combine
-> a dentry from one filesystem with mount of another".  All in-kernel callers
-> might have appropriate struct mount references on hand, but for out-of-tree
-> code that might be not true and we'd better be upfront about the headache
-> we are inflicting.
-> 
-> I'm not sure we really want to provide those mount references, TBH - it does
-> add a constraint not just on out-of-tree callers, but upon the future uses
-> in the kernel.  If NTFS is the only reason... ugh.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [High] tracing: missing Signed-off-by trailer and unformatted email
+  reply changelog
+- [Low] tracing: ENABLE_DEFAULT_TRACERS stays unselected for direct
+  TRACING selectors
+--
 
-Incidentally, will the mount reference you are supplying in case of overlayfs
-upper layer be any good for LSM users?
+commit 3e6de7d49bb4a2d1503d2aeab72b682a01dfe176
+Author: Brian Norris <briannorris@chromium.org>
+
+> tracing: 'select' GENERIC_TRACER, not 'depends'
+>
+> On Tue, Nov 17, 2026 at 08:55:52AM -0500, Steven Rostedt wrote:
+> > On Mon, 16 Nov 2026 22:58:01 +0000
+> > sashiko-bot@kernel.org wrote:
+> >
+> > > [Severity: Low]
+> > > Should FTRACE_STARTUP_TEST depend on TRACING (or select TRACING) inst=
+ead
+> > > of selecting GENERIC_TRACER?
+> > >
+> > > GENERIC_TRACER is meant only for full tracer options so that
+> > > ENABLE_DEFAULT_TRACERS is hidden when a full tracer is enabled:
+> > >
+> > > kernel/trace/Kconfig:
+> > >     # All tracer options should select GENERIC_TRACER. For those opti=
+ons that are
+> > >     # enabled by all tracers (context switch and event tracer) they s=
+elect TRACING.
+> > >     ...
+> > >     config ENABLE_DEFAULT_TRACERS
+> > >             bool "Trace process context switches and events"
+> > >             depends on !GENERIC_TRACER
+> > >             select TRACING
+> > >
+> > > Because FTRACE_STARTUP_TEST is a test option rather than a tracer, ha=
+ving
+> > > it select GENERIC_TRACER disables and hides ENABLE_DEFAULT_TRACERS wh=
+en no
+> > > full tracer is configured, and implicitly pulls in TRACING even when =
+all
+> > > tracers are disabled.
+> >
+> > Actually, the selftests should depend on TRACING and not GENERIC_TRACER=
+. It
+> > may have been that the self tests were added before the trace events.
+> >
+> > But it should not "select" a config. The selftest are only to be select=
+ed
+> > if there is something to test.
+>
+> OK, I can respin with 'depends on TRACING'.
+>
+> However, I think the Kconfig setup for kernel/trace/ is still a bit
+> haphazard. For example, it's reasonably common to want EVENT_TRACING but
+> not the more invasive tracing (like FUNCTION_TRACER; and therefore no
+> GENERIC_TRACER) -- this is how all Android kernels are built, for one.
+>
+> But there's no user-configurable way to enable EVENT_TRACING. We only
+> get it implicitly if something else inadvertently selects 'FTRACE'
+> (which selects EVENT_TRACING). For Android, that's CONFIG_KPROBES and
+> CONFIG_HIST_TRIGGERS.
+>
+> ...or is that what ENABLE_DEFAULT_TRACERS is? Its name doesn't really
+> suggest that, and it's mutually exclusive witih many other tracers, so
+> it's a bit awkward making choices, as the whole system appears much less
+> orthogonal than expected.
+>
+> Anyway, my point is that it's not exactly straightforward to enable the
+> features you want and get the tests you want.
+>
+> I've appended a diff that seems a bit more user-friendly to me. It
+> makes it more explicit in the menu how event-tracing is forced-on by
+> many other tracers, but is user-configurable when it's not forced. I can
+> formally submit it (in 2 patches) if you'd like.
+>
+> Brian
+
+[Severity: High]
+This commit is missing a Signed-off-by trailer, its body is an unedited
+mailing-list reply rather than a commit changelog, and the subject line
+states the opposite of the FTRACE_STARTUP_TEST change (which switches
+"depends on GENERIC_TRACER" to "depends on TRACING").
+
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index c41397eccee50..f49397f7c92d6 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -198,6 +198,7 @@ config TRACING
+>  config GENERIC_TRACER
+>  	bool
+>  	select TRACING
+> +	select ENABLE_DEFAULT_TRACERS
+> =20
+>  #
+>  # Minimum requirements an architecture has to meet for us to
+> @@ -595,7 +596,6 @@ config MMIOTRACE
+> =20
+>  config ENABLE_DEFAULT_TRACERS
+>  	bool "Trace process context switches and events"
+> -	depends on !GENERIC_TRACER
+>  	select TRACING
+>  	help
+>  	  This tracer hooks to various trace points in the kernel,
+
+[Severity: Low]
+Does ENABLE_DEFAULT_TRACERS remain unselected when TRACING is enabled by
+options that do not select GENERIC_TRACER?
+
+Options such as KPROBE_EVENTS and HIST_TRIGGERS select TRACING directly
+(which in turn selects EVENT_TRACING and CONTEXT_SWITCH_TRACER) without
+selecting GENERIC_TRACER.  When those options are enabled with
+GENERIC_TRACER=3Dn, event tracing is already forced on, but
+ENABLE_DEFAULT_TRACERS stays n and appears in menuconfig as a mutable
+toggle that has no effect on the build.
+
+Also, the comment above config TRACING still explains that GENERIC_TRACER
+and TRACING are separate so that ENABLE_DEFAULT_TRACERS is hidden when
+selected by another tracer, which no longer matches the Kconfig logic once
+"depends on !GENERIC_TRACER" is removed.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/avybp3O2zxcLozKB@go=
+ogle.com?part=3D1
