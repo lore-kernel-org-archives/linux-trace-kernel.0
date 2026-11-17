@@ -1,55 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794923608;
-	b=ZuwjsLYTd4g7CsO18t4ik2W/7ubElTcGCj7jY3u/SqAuz16ypvo7jwlW9J8OAcy/me2F
-	 VfnA87QFCWwhn9oUxq/462atTfuXXXGRs+pk5FocIK7cjaEWSY/XteILx5bcxPsT5GYOT
-	 rVUjE2w0yATabO8ExkbJT6mKa+G0NVA8zgGROCT7Ylareh+PDTvXggzT8joVa+VHgc7Xw
-	 qlSdhcoBYGFldKHihEmYUHWUwbbGLhLAaUYnkVt78e/Cl4KcXTIIDwwl7IcFAkwYSy4cJ
-	 kcmFXW4HlANv7U2s5kkOJeStLEU7s+V/mv1NVgvgkI9Z1ZPkaOge3nfiOEu9x9WxPkQ==
+	t=1794923762;
+	b=zmQCPDJ/n14VzvVJ4DfqWoHxji7C6ZKcVVGJTzbOk6E8Z+HZOob/tth/wtHv5SV1JqDi
+	 EjnUWEqJFOKoAs+c5jgJeLs1BG2aLWM+amEwhq2as9Nakqw9L0YgvzmvPb3YoGgp1zUgY
+	 G+tQ4x6qp2Fs7+LxyL9oCH92z5C96M042WuWanW4yNBPpT8bWJMA3zryxBjfz+U2yXPzj
+	 rPD/hR8/iH7CyTLEJgJiXD8RACgjzo+wEZv/I47V5ryroPJPAsRJ/P4sSz+pTjhrnsEC/
+	 d1o71THUPHpaPTxCRaNotrHcd8BOECyrBK1GWrVBtMmBdDMLgEdDhEQW/jzKKIEKyuQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794923608;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794923762;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Spam-Status:X-Rspamd-Server:
-	 X-Stat-Signature:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=7B+HFG/uo0rXqTIrxZdBFuO2sEUY7dew0bsrnvAF+V4=;
-	b=eO0kNDVBjIPy6H37Amlg2teNPx1keqxxsY6RpQm3sPK8o9NZKiM6356htD/WIrSaDOJS
-	 p8jt4yA52yx4oUaRpQVyCNb68xuv3TgTM+jw8xsD8MayjzGC5i8ZZmHabsd8MaTjraNdt
-	 Lpp4KCzjWyt8jtqTWArvS0SDeO/lmrtO1Ro4QO5apg82LnzAwwiBtHG2LfFhG+Hhhlbld
-	 iLmaKUGDQ+RwayrIZ2cF8JHk9P4lHo6JASg2LGv8gdCmR93WaQXZmLQHAYB7AX/aRG554
-	 OFWLk/nSheUYWgK5aHheeXOqRisayb4k35KuRnHHJNmcPGFrSvEtmJhXnA+IWev/xCw==
+	bh=zzBP/1lFP689iQiTx26pfYuVR9uMTcLu2GlrvrlpORo=;
+	b=cqsP+RAdqkI9dxK3Owy6dCseA4WaFG/v5rU29auupfRMeSR61p+zYVnqIdjm4hM8UvKf
+	 G7M3BGvHrZBOX393CAEI9MiHv50Te6vKudh+QuAbzFVtlIexJYOBbI54PxuQFCaDWuTDA
+	 VKZE3uyS+CBgYyEyoFbhe6ueoIQogpjb86GecwCfX3+Wqsf0eIB/xaVShN839TjsNCNCT
+	 F5SqWAjeL1mMSOP7tHNCLM8XLomoTw8yLbDPevvjqOeZQtld4Q5hca7crsPjlEooaSuPn
+	 Mer9fyN1L4lClEUQvu6m1kkjWuEIAI3DZC3gXwP0e+Khv+KIRv40kTke7UMQIE7PcbQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=gTN92v9w;
-	arc=none smtp.remote-ip=216.40.44.16
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=M19GYHaF;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAB1606A329;
-	Tue, 17 Nov 2026 13:53:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AEAB1606A329
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E9F606A329
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 13:56:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 04E9F606A329
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=gTN92v9w
-Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 13112C03F9;
-	Tue, 17 Nov 2026 13:53:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 5FAF430;
-	Tue, 17 Nov 2026 13:53:18 +0000 (UTC)
-Date: Tue, 17 Nov 2026 08:53:17 -0500
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=M19GYHaF
+Received: from omf16.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 237241A0457;
+	Tue, 17 Nov 2026 13:55:55 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 75D5720022;
+	Tue, 17 Nov 2026 13:55:53 +0000 (UTC)
+Date: Tue, 17 Nov 2026 08:55:52 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, "Brian Norris"
+ <briannorris@chromium.org>, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH] tracing: 'select' GENERIC_TRACER, not 'depends'
-Message-ID: <20261117085317.4ae87046@gandalf.local.home>
-In-Reply-To: <20261116144652.1.Iecb63200dd245f62032a3b1f60ae78cc48868094@changeid>
+Message-ID: <20261117085552.0e4ef272@gandalf.local.home>
+In-Reply-To: <sashiko-outbox-217828@kernel.org>
 References: <20261116144652.1.Iecb63200dd245f62032a3b1f60ae78cc48868094@changeid>
+	<sashiko-outbox-217828@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,36 +62,43 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: a16fe9eh5ozgbz593h91miaigkd8yrnu
-X-Rspamd-Queue-Id: 5FAF430
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 75D5720022
+X-Stat-Signature: segihranqx61rpith8nob1ptgkmwgkbp
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/n7jw1gWFbWF2vwEVkWYe5fzlESBZgxE8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=7B+HFG/uo0rXqTIrxZdBFuO2sEUY7dew0bsrnvAF+V4=; b=gTN92v9wG+/cynMvHkE2TRg5dNcmMG1Yzy40p25NFOJftrPNE7Orr2HEIwmNaHhuVSLjZjTgkdDZ+LFifsMS+cjWEN68peZw437cXQ8Wee8oHF14A2jA15eAqACuzfW1c9XAX3CLMXegkGZwxFNeU6KEeXFRczHztUQgqCUF9Nw=
-X-HE-Tag: 1794923598-850448
-X-HE-Meta: U2FsdGVkX1+F+BpsbDWn+m1keIOKFKxhbts+AWcW7s/A9UIDNVINO5Dgoj5ycU5S6z6DIIOT/jXxbfchFcu+5lKGlMqOPpHa9vCSL9iJDwUI/KN1ONfcx3ZBYtPYZ50BNjdG9vfTG8R9Kvi0CniQ+mWgBOI5HIpEAHdfpUVVwIZehmhpZN6CuLuQAt4bdhDt/1rhAbVRg/Ufeue67UQtIwNrxLh0zW6xXOuSmG0iqKCPY2imKlhDfU+aQhQ/6BCFuZTQoG+zz3rXq1Cv8hFVErKlO9jJsoQfrFYfxqdltsJqOdaaDwlcZO2op5+qbT82BhnSrNMv+PLaPGq/11XI4Sdu41sr6I4u
+X-Session-ID: U2FsdGVkX1+GYMpIqJozyOvIGiaQhChZ+p+RFrwgeAM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=zzBP/1lFP689iQiTx26pfYuVR9uMTcLu2GlrvrlpORo=; b=M19GYHaFrcVke/Z2rDO5WG5fxjC5tsgUpZyNaZeEgTLEAn8xY7NhoXiLuGSgW4GZZPiLoW5o6cD9n2rMFcCYNIUofkSL28K9qtyYG6Zf5mu0P1vMpCH1ZmFQzsSzp7y1geTNp31LLmTpG6gHOR4ZwS3cI71/Ux1xur6JOdQTqdQ=
+X-HE-Tag: 1794923753-243280
+X-HE-Meta: U2FsdGVkX1+Ir0A/HL7utVfV6e6ZMWglgs1V/OtpQJ4Ez6eND5lhuK6b+BGW7nl5sjAzqLwlKuM3Rw3+PsAknKXuvVQ9VLRoYe6kOvsLbWy/RNop74Uv62UvsIqF8DmrWzwMjP578ijQ2k/ARQfZcd576z2W8UBQ4pA258aJYlpiT0W4vtrx5EFjxuIG41chwtFYmt9jmV4l9CgWSogqMgEkpuGCG60YeNwqEJgrUqzgUmzAquvzqFAK/5aOER4UUBrma5xZ8bBMQxDX3FlxcEtsjV02kl029clNiEF3iy5hpwEXg8S7Dd81YR+fXIKvwkyo7BWTk10P2vMGleb+6fLfkb55yYBR
 
-On Mon, 16 Nov 2026 14:46:53 -0800
-Brian Norris <briannorris@chromium.org> wrote:
+On Mon, 16 Nov 2026 22:58:01 +0000
+sashiko-bot@kernel.org wrote:
 
-> GENERIC_TRACER is not a user-selectable symbol, so it's impossible to
-> enable FTRACE_STARTUP_TEST unless one also enables some other symbol
-> that 'selects' GENERIC_TRACER for us.
+> [Severity: Low]
+> Should FTRACE_STARTUP_TEST depend on TRACING (or select TRACING) instead
+> of selecting GENERIC_TRACER?
+> 
+> GENERIC_TRACER is meant only for full tracer options so that
+> ENABLE_DEFAULT_TRACERS is hidden when a full tracer is enabled:
+> 
+> kernel/trace/Kconfig:
+>     # All tracer options should select GENERIC_TRACER. For those options that are
+>     # enabled by all tracers (context switch and event tracer) they select TRACING.
+>     ...
+>     config ENABLE_DEFAULT_TRACERS
+>     	bool "Trace process context switches and events"
+>     	depends on !GENERIC_TRACER
+>     	select TRACING
+> 
+> Because FTRACE_STARTUP_TEST is a test option rather than a tracer, having
+> it select GENERIC_TRACER disables and hides ENABLE_DEFAULT_TRACERS when no
+> full tracer is configured, and implicitly pulls in TRACING even when all
+> tracers are disabled.
 
-I believe that was the way it was intended. The selftests are to test the
-things that select GENERIC_TRACER. Why would we enable tests for something
-that isn't enabled?
+Actually, the selftests should depend on TRACING and not GENERIC_TRACER. It
+may have been that the self tests were added before the trace events.
+
+But it should not "select" a config. The selftest are only to be selected
+if there is something to test.
 
 -- Steve
-
-
-> 
-> This very file also suggests:
-> 
->   All tracer options should select GENERIC_TRACER
-> 
-> So, use 'select', not 'depends on'.
-> 
-> Fixes: 60a11774b38f ("ftrace: add self-tests")
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
