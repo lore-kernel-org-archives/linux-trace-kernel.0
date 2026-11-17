@@ -1,50 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=83.166.143.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.157.188.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794910886;
-	b=3M0VH8rjcVlomlb9sg8SbWabm2a1iu26o/ZyeYulQ6BhIuJHZK9rvvWVFUdKfS56eBxl
-	 psueBT5SlC4Mw2XgIpQp/W5HX95wsZttGxw1ocXvXtFniF69upaOVtstyJz/g1rjfP3hy
-	 edcJiQx6HFDhe3rhk7SCOJqDOwEScYuCgRR+7mPmC3RrzCA6Ir2A0Kp30pGHUfpA8nA7A
-	 jtNEMsIaoE2wvIOmKECd3YRJm52xmLxi9lnIfwtDu55/4dO9EkwA9Kv7Y7rQgCd6gHBd8
-	 4JV53jGMXsx45g9yOEjAYm816d0rihZHlY55g9MwRSOnVh93HxYuuzUwSDZ/GnXhv4A==
+	t=1794910888;
+	b=a8GtO42Io06FxkO6bHYo4W01DRld11vBS/2XJUtF4LXLpNw8W8W92WgUN95JLgMLiPE0
+	 yblLhyVmDztt9ctQ3shrZmFhrtigmxtfhRjnvDtoW+xgQPVvcMKRoIVvPezujT2kEmeIi
+	 hL0+5qnWHQLKYvvED2LnfureWF//ch4SY2BezErCLcYz9hjIt8MFSefzQnC+FyrxBPx/w
+	 uG0ZPYPOKzb0Kj47XSjevEVAE2ffsADOMs+CO89kYeQTr5l19CL/NqLMJoDZTYnqI+CSI
+	 O3tlKqPahZ9a07y+5UEoYYS2X4B5qrGciVYeyT9pyHd2mu3ZHcsDpj6zQ1LhKYCFYKg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794910886;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794910888;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:From:To:Cc:Subject:
 	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding:X-Infomaniak-Routing;
-	bh=I+Dbrs3QptBZJl4e2yqTfL5XvkVcnY9GdfhfJ4l0xYg=;
-	b=u6rs4UUvFqFUOnAPUnAlsJyxmQwfDhDBGCt9fzKT6kfMKG6RRJocmHMAvkbQJb1YkCSx
-	 yWxTPIIaa4CMU0UFxYzt1sL/bNHJifPEFZ5hY4s1Two+jKey7kHtVY3seWJpnA9VM3VhX
-	 I+0vE53nOx+Rp/yIX+ClQdwCFqlxwfcRDkcnoTonlJ4j/W/Ja7Y+K6c4KUEth8/6qeROm
-	 bYdPL97MccAYARhvzToq+8yphg0NXqqj6DM80K1YKt9WrUcpcj+u9YOXUEo8XPGOXCJpZ
-	 5ChUAaqk6II7UDTP9DC1dRXH5gRKHc3TzEkG5lE8jSG0UUBCdBnFIuso5CF3RX+H5Cg==
+	bh=bJZ0Ww4Ar7L3nO8DgwqHxjLH/zbKJodOo0TQzBotszQ=;
+	b=L7cPL/LcF9+0C9b2WBPZDZ4v9gzq1C/E/emymsCpeJmatv6Bz176+51ag2OLGR1WmE6d
+	 2Ypy5XXbBW+G6mq9kZfgE9g6RcS80PQvCLpt+C5mEVQierTBsakE0oVdQF00yL96a9Tb3
+	 1+9ILTYpJrNSgp9xGh7JamCzfZQnfIVm0TAcy6A1kYLlEZgWL5GPgmvXOn0KNlKcHsz3/
+	 hWvWRfVKYfUfHlH8x+bsXqFLtWmPoHzJ0YKVIxyXIBUjWP3TW3oY/6svIL+HVw8uSyupd
+	 q8gijaB+NFyqM7kCRIr+CBlInNwreEBDhtr89b01M5Cs0z0batYh9zn4/Xl1S+gw81A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=digikod.net;
 	spf=pass smtp.mailfrom=digikod.net;
-	dkim=pass header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=1l53FVk6;
-	arc=none smtp.remote-ip=83.166.143.174
-Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
+	dkim=pass header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=GMsjFdfy;
+	arc=none smtp.remote-ip=45.157.188.11
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122E8606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 10:21:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 122E8606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9B3606A333
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 10:21:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E9B3606A333
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=1l53FVk6
-Received: from smtp-4-0001 (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jTLP02zFfz4RJ;
-	Tue, 17 Nov 2026 11:21:24 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=GMsjFdfy
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jTLP15rlMzXWB;
+	Tue, 17 Nov 2026 11:21:25 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1794910884;
-	bh=I+Dbrs3QptBZJl4e2yqTfL5XvkVcnY9GdfhfJ4l0xYg=;
+	s=20191114; t=1794910885;
+	bh=bJZ0Ww4Ar7L3nO8DgwqHxjLH/zbKJodOo0TQzBotszQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=1l53FVk6cRNQnBwUOQdyvZVIyOm1itgvF4DDsgaD0YVQJpEAKu4Qfs42uf3LnGYJb
-	 6x1+mUGE/zmjTlyD6w+GFk/W3RQoXlVSvyq9t1qDrqtnztc0rPEtF5R6BRWCqJXIZP
-	 u+K1uJuE09m6mdAB8+wttmNhMHPhbJbNyO8D8yDk=
-Received: from unknown by smtp-4-0001 (Postfix) with ESMTPA id 4jTLNz2jpczXZP;
-	Tue, 17 Nov 2026 11:21:23 +0100 (CET)
+	b=GMsjFdfyyE7UiJe1mlHOEetQqHb6ar1pxxeq3qDVvCU7uE3IwvsVx0GF/QfDkhWtZ
+	 1qVimOnA1AP3SfICgCSwYE+6aBS/qsCWAWC0cj34ELFVg6gOyR1nzZ7BJefIRsxsI9
+	 bo8WQGaI/jBEksz/Z1472yBjJQFeAtXv+t1X5H+s=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4jTLP03lVkzLLh;
+	Tue, 17 Nov 2026 11:21:24 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
 Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
@@ -57,9 +57,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 3/4] selftests/landlock: Test namespace denial operations
-Date: Tue, 17 Nov 2026 11:21:06 +0100
-Message-ID: <20261117102110.2524197-4-mic@digikod.net>
+Subject: [PATCH 4/4] landlock: Document namespace denial operations
+Date: Tue, 17 Nov 2026 11:21:07 +0100
+Message-ID: <20261117102110.2524197-5-mic@digikod.net>
 In-Reply-To: <20261117102110.2524197-1-mic@digikod.net>
 References: <20261117102110.2524197-1-mic@digikod.net>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -75,39 +75,106 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-The namespace trace tests cover creation and entry denials, but only
-creation exercises the quiet path.  This leaves the new ENTER request
-tag untested through quiet selection and trace dispatch when audit
-logging is suppressed.
+Namespace denial records now distinguish creation from entry.  Document
+the namespace_op field in the audit and trace references, and clarify
+that it describes the semantic namespace hook rather than exact syscall
+provenance.
 
-Add the missing quiet setns(2) case.  Together with the existing cases,
-this exercises all four combinations of CREATE and ENTER with logged and
-quieted denials, including each exact namespace_op value.
+Creation reports the ID allocated for a namespace that never becomes
+reachable, whereas entry reports the existing target ID.
 
 Cc: Günther Noack <gnoack@google.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
- tools/testing/selftests/landlock/ns_test.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/admin-guide/LSM/landlock.rst | 21 ++++++++++++---------
+ Documentation/trace/events-landlock.rst    | 20 +++++++++++++-------
+ 2 files changed, 25 insertions(+), 16 deletions(-)
 
-diff --git a/tools/testing/selftests/landlock/ns_test.c b/tools/testing/selftests/landlock/ns_test.c
-index d4a85cbebeae..52206ad94eca 100644
---- a/tools/testing/selftests/landlock/ns_test.c
-+++ b/tools/testing/selftests/landlock/ns_test.c
-@@ -2575,6 +2575,13 @@ TEST_F(ns_trace, deny_setns)
- 	test_ns_trace_denial(_metadata, true, false);
- }
+diff --git a/Documentation/admin-guide/LSM/landlock.rst b/Documentation/admin-guide/LSM/landlock.rst
+index 946f3bf89650..a79912e8a684 100644
+--- a/Documentation/admin-guide/LSM/landlock.rst
++++ b/Documentation/admin-guide/LSM/landlock.rst
+@@ -7,7 +7,7 @@ Landlock: system-wide management
+ ================================
  
-+TEST_F(ns_trace, deny_setns_quiet)
-+{
-+	if (!self->tracefs_ok)
-+		SKIP(return, "tracefs not available");
-+	test_ns_trace_denial(_metadata, true, true);
-+}
+ :Author: Mickaël Salaün
+-:Date: October 2026
++:Date: November 2026
+ 
+ Landlock can leverage the audit framework to log events.
+ 
+@@ -72,10 +72,13 @@ AUDIT_LANDLOCK_ACCESS
+           :manpage:`unshare(2)`, :manpage:`clone(2)`, :manpage:`clone3(2)`,
+           :manpage:`open_tree(2)`, or :manpage:`fsmount(2)`, or joining via
+           :manpage:`setns(2)`);
+-          ``namespace_type`` indicates the type (hex ``CLONE_NEW*`` bitmask),
+-          and ``namespace_id`` identifies the target namespace (for a denied
+-          creation, the namespace never becomes reachable so its ID is not
+-          directly visible from user space)
++          ``namespace_op`` is ``create`` for construction or ``enter`` for
++          :manpage:`setns(2)`.  These values describe semantic namespace hooks,
++          not exact system calls.  ``namespace_type`` indicates the type (hex
++          ``CLONE_NEW*`` bitmask), and ``namespace_id`` identifies the namespace
++          object.  For a denied creation, the new namespace never becomes
++          reachable, so its ID is not directly visible from user space.  For a
++          denied entry, this is the exact existing target ID.
+ 
+     **capability.*** - Capability restrictions (ABI 12+):
+         - capability.use - Capability use was denied;
+@@ -86,10 +89,10 @@ AUDIT_LANDLOCK_ACCESS
+     in a directory that lacks both ``make_reg`` and ``refer`` rights would show
+     ``blockers=fs.make_reg,fs.refer``.
+ 
+-    The object identification fields depend on the type of access being blocked:
+-    ``path``, ``dev``, ``ino`` for filesystem; ``opid``, ``ocomm`` for signals;
+-    ``namespace_type`` and ``namespace_id`` for namespace operations;
+-    ``capability`` for capability use.
++    The operation and object context fields depend on the type of access being
++    blocked: ``path``, ``dev``, ``ino`` for filesystem; ``opid``, ``ocomm`` for
++    signals; ``namespace_op``, ``namespace_type``, and ``namespace_id`` for
++    namespace operations; ``capability`` for capability use.
+ 
+ 
+ AUDIT_LANDLOCK_DOMAIN
+diff --git a/Documentation/trace/events-landlock.rst b/Documentation/trace/events-landlock.rst
+index dc5f05a17c2c..b94ffa42678b 100644
+--- a/Documentation/trace/events-landlock.rst
++++ b/Documentation/trace/events-landlock.rst
+@@ -6,7 +6,7 @@ Landlock Trace Events
+ =====================
+ 
+ :Author: Mickaël Salaün
+-:Date: October 2026
++:Date: November 2026
+ 
+ Landlock emits trace events for sandbox lifecycle operations and access
+ denials.  These events can be consumed by ftrace (for human-readable
+@@ -186,13 +186,19 @@ known allowed and quiet member masks.  Capability masks and the raw
+ therefore appears as zero while still advancing the ruleset version, and adding
+ a member already present still emits an event.
+ 
+-``landlock_deny_permission_namespace`` reports the denied raw
+-``CLONE_NEW*`` value.  ``namespace_id`` is the exact target namespace ID.  For
+-a denied namespace creation, the namespace never becomes reachable so its ID
+-is not directly visible from user space.
++``landlock_deny_permission_namespace`` reports ``namespace_op`` as ``create``
++for namespace construction, for example through :manpage:`clone(2)`,
++:manpage:`clone3(2)`, :manpage:`unshare(2)`, :manpage:`open_tree(2)`, or
++:manpage:`fsmount(2)`, and ``enter`` for :manpage:`setns(2)`.  These values
++describe the semantic namespace hook, not the exact system call.
++``namespace_type`` is the denied raw ``CLONE_NEW*`` value.  For a denied
++creation, ``namespace_id`` is allocated for the new namespace, which never
++becomes reachable, so its ID is not directly visible from user space.  For a
++denied entry, ``namespace_id`` is the exact existing target ID.
 +
- /* clang-format off */
- FIXTURE(ns_proc_open) {
- 	/* clang-format on */
+ ``landlock_deny_permission_capability`` reports the denied ``CAP_*`` number.
+-Like every denial event, both include the denying domain, ``same_exec``, and
+-``logged``.
++Like every denial event, the namespace and capability events include the
++denying domain, ``same_exec``, and ``logged``.
+ 
+ Per-member quiet masks suppress audit submission but never these trace events,
+ which report ``logged=0``.
 -- 
 2.56.0
 
