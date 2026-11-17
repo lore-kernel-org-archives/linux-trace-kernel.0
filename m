@@ -1,54 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794915065;
-	b=TYP+r64OE0R1W9+X/+pWHGwrOhK0OSAkRrXGQUwyqYrqmOtwRNugCPfVqEsau/XgBzDw
-	 9tgLIC1pdKelf+e7jhXXJHiBNjiXjyZ68DNos1l2qJSpo/sh6rsa4Taer6mQtw1NEPYW5
-	 NS2gr0xjNd3QoJKSGEVQvVkPwIsfyCVCZD8SoreqwSmv+RPP3YWREeBS6DAt6Xkg6loKs
-	 oBbD6/WpBgwgk+oOOXyCEmNbkDkKZP2wIdzgbgBRcCM3sI+3nWl+X1hu4DBwR9n/anuti
-	 +iIQSybR0hT3X2QHxnq6f7VD93OlIg1fX1VrZf54hNYMGTNs7bpy0d6tGDnTsT8i34g==
+	t=1794915845;
+	b=UWnUqV36J42jTrcEZq+Iujuwx3kQgu0QhlRg4dF9gp0CGboy3WEGjR8DyfSa5eNo+Zef
+	 jc/Cc6F390TKSw5vSDQSI0zjZfUViITQ89JT60LAkyX+h9omc1pYKfaV02dKpTYS6wxp8
+	 Ia+00e73dDVs476o6HHFrW2ZZuB4nB71SzasTHoIU+DF2p+4uqI41+sJGb4WhsIeNaUjR
+	 IdpmONpyPRg3Lsglnd6YxTTOVh0CPdD13kHvX9iFDdu3e3GMyPcB328ey6zy4mAbQGrqi
+	 P9mmHQPzo6Gq4jrdisz6x8E1XMMhjeVSotgZdHucxh0hmE10SBYTbNI2ugWnE59nuRw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794915065;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=cFiwaMcyT2NhQzY/X19yZaN2QhIktNOCHXJgqiZSLPs=;
-	b=Z8H7Hs0Yy3PJ1zR3Q6v6JJdFXX8OMOxcgNzNpB3+W9zan9m5z09v3nO8g9CMgg9vD896
-	 N9xxIqEnIQ/IXVD8QaR1is+kAamd+M+XqLy3UtbX0QmRVAO+f3JnXNRl4u9kHBzmZQN0x
-	 WDlbyI89zt1KIsi3JqIkkYRNl6jAyfuOO6MAUEwuHwHrU86mCAUX3WuWuUVI7cD892za/
-	 OLPbLwu3Vn9K0A4K0q9oKxVyiK1L6SmnGGs+GyeV5JALHxwxi0iMNVWquCrK6GyqSeDhB
-	 bvJfXgY6W9aMRP9jEvUwSXkZnaZFZNmuEanResf+66TWkDb105Qvkk0tX+6gnW93Ssw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794915845;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=ieN+TO1n4IB/ZKOl7F69AZAHpPBYXqZE4LxlRYEth50=;
+	b=IcwkAlpKefVkAtxwISJpqPDCX15gvzjSuIWI8BqPMIHbRBhsedIhuh9xjF+M2Ao9VxcL
+	 QQJwfRTVrkcdLx8Iv+4j3m587aBFKbL9NkeXpS77GCgKaWQanDUCDJJFS2jMVDxezHCsj
+	 pzKyW63Cn9vWnLZTTw1BjwSwTA+bgC7d2RAmRA5MIyEfeWIrrUaLCYkCo7GRTu7xvvmTC
+	 K2i0LgjxtatZVHLWXR1Eqd1+CSjeD4dR9usZdv5qoWeRjZvvzvOEvbuNuS+EYV8hepbQf
+	 wKcn6PPhcmShWCXKT6OQ3H4m/gDhx/KmugGXpGLDlT5mjDAr8aJFBE75LHspc54Sb6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=arrvKc5f;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=czqYB87R;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A7D606A32C;
-	Tue, 17 Nov 2026 11:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360A2606A31C;
+	Tue, 17 Nov 2026 11:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=arrvKc5f
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D594F1F000C4;
-	Tue, 17 Nov 2026 11:31:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=czqYB87R
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A25D1F000C4;
+	Tue, 17 Nov 2026 11:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794915065;
-	bh=cFiwaMcyT2NhQzY/X19yZaN2QhIktNOCHXJgqiZSLPs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=arrvKc5fGlsoWXWZpVbh3ZHSqdAXR/Mri4YTI4YbmiEJXdkhylgA7WNqWcMr5NPBv
-	 daG6GHfKtO63wI79zpSW+RZuF9dP57uYKdE4COg4X3Uj1v/VAzO27PUZrRYkDGGLsW
-	 V1YuXULqKZR1xGUtBcXKECMMH2yCtcwYZZHbd0yPvmr7s912ySkN/5JUejv1f175VF
-	 tVJyqUOwlZ+ZwC2DJ9w4ofmYle4rNRD4So7yKto3tGWcEPN2P86sskgs6WlvWzH2d9
-	 XYMA2AEJ9/lTve1ydLI3CSHLaS9Ca4oelCLHT9kWFY9QEkZdbAQFAUvW+WxjZxlaIt
-	 RpZmc5QIqDQJw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, kernel-team@android.com, linux-kernel@vger.kernel.org, Kyuwon Cho <kyuwoncho18@gmail.com>
-Subject: Re: [PATCH] tracing: Take trace_access_lock() in tracing_buffers_ioctl()
-Date: Tue, 17 Nov 2026 20:31:01 +0900
-Message-ID: <undine-1794915061850927775-e5dfd8cf943f5fce@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261117082932.3441173-1-vdonnefort@google.com>
-References: <20261117082932.3441173-1-vdonnefort@google.com>
+	s=k20260515; t=1794915844;
+	bh=ieN+TO1n4IB/ZKOl7F69AZAHpPBYXqZE4LxlRYEth50=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=czqYB87Rz7r4hHfDK+oinW4O3yisgEIjQt9IsziTSELpg8I7GK25iEtfqD9ZOQUAl
+	 PgqVeDOrYw9dGbhV8u24Qvpcfokbc6YoWpb+BMyUxgTDxHjWiXkc9eh80o0sHdAUAc
+	 6g+FsKo+q47rVTPVGCUmWS6aIWAvtXsj2UWKa8r/AcCicW4Q26vyDZ/rKtv2t9M0D4
+	 weYSrlCbfREhQ63yZH8J2LqqchJBNcLFZq0pN2CzP/+ITjjf3dhB/GGksBsujNHrrU
+	 1Vi+xUF0z/94roCi8eq4+xRugOjOgGfUv+juRjc527yPPbMlcWcF5MuUHzFnXmz2pP
+	 Rjscz6uG3xvqg==
+Message-ID: <sashiko-outbox-218720@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH bpf-next v3 1/4] bpf: Avoid per-CPU private stack in
+ preemptible tracing progs
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mike Bazov" <mikeba@sentinelone.com>, bpf@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261117-bpf-preempt-v2-r2-v3-1-586376ec3672@sentinelone.com>
+References: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com>
+ <20261117-bpf-preempt-v2-r2-v3-1-586376ec3672@sentinelone.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 17 Nov 2026 11:44:04 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,57 +60,59 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Nov 2026 08:29:32 +0000, Vincent Donnefort <vdonnefort@google.com> wrote:
-> tracing_buffers_ioctl() calls ring_buffer_map_get_reader() without
-> trace_access_lock, breaking concurrent readers. Take trace_access_lock()
-> around ring_buffer_map_get_reader(), matching the other consuming
-> readers.
-> 
-> Fixes: cf9f0f7c4c5b ("tracing: Allow user-space mapping of the ring-buffer")
-> Reported-by: Kyuwon Cho <kyuwoncho18@gmail.com>
-> Closes: https://lore.kernel.org/all/179485165154.2547186.6129837870360499372@gmail.com/
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] bpf: missing Fixes trailer for commit a76ab5731e32 in commit
+  message
+--
 
-Looks good to me.
+commit 3dec129be9ecaaef86d1be659b28f0d6ce4d6395
+Author: Mike Bazov <mikeba@sentinelone.com>
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> ---
->  kernel/trace/trace.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index e8c4efa8107b..456fc388a31f 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -7404,8 +7404,12 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
->  				return err;
->  		}
->  
-> -		return ring_buffer_map_get_reader(iter->array_buffer->buffer,
-> -						  iter->cpu_file);
-> +		trace_access_lock(iter->cpu_file);
-> +		err = ring_buffer_map_get_reader(iter->array_buffer->buffer,
-> +						 iter->cpu_file);
-> +		trace_access_unlock(iter->cpu_file);
-> +
-> +		return err;
->  	} else if (cmd) {
->  		return -ENOTTY;
->  	}
-> 
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-> -- 
-> 2.56.1.703.gf848ed807c-goog
-> 
+> bpf: Avoid per-CPU private stack in preemptible tracing progs
 >
+> A per-CPU private stack is only safe if a program never runs in two
+> tasks at once on one CPU. Commit a76ab5731e32 ("bpf: Find eligible
+> subprogs for private stack support") gave one to tracing, raw_tp and
+> tracepoint programs, but they run preemptibly, and two tasks can
+> already be inside one of them on a CPU:
+>
+> - Two raw_tp dispatchers that tail-call the same handler each pass
+>   their own per-CPU recursion check, so both tasks run the handler.
+> - A tracepoint program attached to a syscall tracepoint and to a
+>   regular tracepoint can be entered by a second task through the
+>   regular one, which only checks bpf_prog_active.
+>
+> The second task then overwrites the preempted task's stack. Neither
+> case can be seen when the program is loaded, so never give these
+> program types a private stack. The next patches make such overlap the
+> normal case.
+>
+> check_recursion() told tracing programs apart by whether they can get a
+> private stack. Make it check the program type instead, so that
+> recursive subprograms stay rejected in these program types.
+>
+> Move the selftests that relied on these program types having a private
+> stack to kprobe.multi and perf_event programs.
+>
+> Trade-offs:
+>
+> - These programs use the kernel stack again.
+> - A program with two 2000-byte frames no longer loads: "combined stack
+>   size of 2 calls is 4000. Too large".
+> - Unwinding on a private stack is no longer tested at run time: raw_tp
+>   was the only such program type that BPF_PROG_TEST_RUN runs.
+>
+> Signed-off-by: Mike Bazov <mikeba@sentinelone.com>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+[Severity: Low]
+Since this fixes per-CPU private stack corruption in existing tracing,
+raw_tp and tracepoint programs, should it include a Fixes: tag?
+
+  Fixes: a76ab5731e32 ("bpf: Find eligible subprogs for private stack suppo=
+rt")
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117-bpf-preemp=
+t-v2-r2-v3-0-586376ec3672@sentinelone.com?part=3D1
