@@ -1,101 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.251.105.195
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794953231;
-	b=qnrnMNmHYV1FBfZsnFCLnWt9bLBDQ4m3fSUkNAKoQ4WDS6sY0B76FZjG+VTxTL3B7R6B
-	 JczRbhzBP33rKUrYTm9SEcDOtGcJRSNcjEbMK9z4IoJ9hw7/WQnPaEUMK1AFqSWbzoYl2
-	 gRUo7PwE4/Bjpp+P7tUAkYPQpplttoW1Q5dIukgk+uSN9rQ4T5XXX+gr0oGzf2f1+DpKI
-	 szGNPa19axumM4qp9TESlvkiUebjvOUMbZ6tzBQjnVkABsqsf3KMgFDn/55y/4NXX9BPp
-	 lQtGoP33/fmJ68qAZwiWPRyhcxetmo18TAW97EgwiRsevTjQVk51Iftq8/ufdTo2zMw==
+	t=1794953315;
+	b=Mkdl2jJPAyXsDyjBUKNe0AoLUEL3scPlGxF+qu72XjE/uxjb0PqxLHAWQkW9wxv4aEwh
+	 oSbifRMmkFx0gRolem/XFnv8dFQWAbz5T2OZXvtosfT0cNKOiGGvXByVXl2j/uIVeTANb
+	 XnBdSXL3n5bPBLHsPVjGhtNvVBYt5a/1I1HtgdIfl7OCObkMn116klaq1gT45tBvoVXNB
+	 l3rKJ58hWBlHZMvTYfeuzHTTlhIOAP+DT30ARYPTJKEs1qn4zYDe6ND2Mi1Ia7vCNUeCt
+	 xd4B4qpjR3s0kQQASXGs7n5SUqJVpbqL0pkPoM/mW0i8YCiMt/IT6Br162yDCZHzAjg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794953231;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=2GBjuuLx2RWaDTkuZWX477BOGa5Oz0VCn9xw/zNR/10=;
-	b=RQBv2bC/yvtgtZ7PXpgGt7R2fVZ1+Hs9SSasORQEnuy7pu5qsz7F/Tls1YxQVIU9pv+Q
-	 VdXLThKpdGXJ3Guj5DrwyH3vDjou3+aABOU89Sp8IKaYg1cxJXb0IJ0AwAcOuFRQORihj
-	 6KFXPrX/ht8ujjG5pnfq+sBdy3CEI5IoaF3hXnlN28/cpbab9Ns+O98I/Vg/gGazBp3fl
-	 ur8NyZe3g3f4eCD8H1BW1ObXyQbJYUeOaPoj1pPsp87ZPYpsGwH1gPMtWasdcq5q9go88
-	 Pb46rUv9LdRI2jtUGvCO3dGS9iIt/jIffbh0rbBObveetont40OOVz5RdUmv1387/TQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794953315;
+	h=DMARC-Filter:DKIM-Signature:Received:Message-ID:Subject:From:To:Cc:
+	 Date:In-Reply-To:References:Autocrypt:Organization:Content-Type:
+	 User-Agent:MIME-Version;
+	bh=v0pad5rhFZNVf/DcwG2P+Ojp8s+P0GwyLe5Cg7QYVCI=;
+	b=r4A87QAYw0qA47dq2hxBcFCEF4Gb0tAOppo3jEuwJIA3RDK49+bErLLCXz2K8iApYzXZ
+	 Vicd8A3FcCvbhWyWWv3X2/q9u8mVfVAR5IEN9bLRaFujzMYMVEunTOiBeCLUxR+qYoJhD
+	 5doRxxAMeLA4OVeuLfaQaOKFfGXOIZm0MRPHR+Um51kZcH2n3dq9MFbSCfmYzOmjlKKjR
+	 TNA2XeqIff4kKWKjQ9VZr0zhKJTAHh1v9+3Jc19NdXo3wjCvPS23I/RXQxpX6iPH9Xhuk
+	 LxPNkfl0WvUeRCD360zMURFuxIiejBAOioBYVmj17yjesH+pqqbWjmOAUSvqkrphDAQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YjMcTPAa;
-	arc=none smtp.remote-ip=209.85.128.47
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=collabora.com;
+	spf=pass smtp.mailfrom=collabora.com;
+	dkim=pass header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=P17xzKtE;
+	arc=none smtp.remote-ip=148.251.105.195
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4A3606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 22:07:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA4A3606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9193E606A31C;
+	Tue, 17 Nov 2026 22:08:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9193E606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=YjMcTPAa
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4bb70074ab2so3650435e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 14:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794953229; x=1795558029; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=2GBjuuLx2RWaDTkuZWX477BOGa5Oz0VCn9xw/zNR/10=;
-        b=YjMcTPAaCNLwh8YsFsR8o8tzBojZaFxao/nIUzjkmHeCAnTlRnk18p8hhIrmyoFrb0
-         WY/MtG30d17cQePBcSMFTOf9TW5ckUX8s3qtayr3oPTvHhkOYgayFQeLgs2nU/NWw0hq
-         rXgqZRMiPeaA+mhjiJfK9Gs9lqp8vlL/AZanTe8OEw/GQzlFe+IXt/WBGsHQm/aVqHAH
-         fuO+GY3GFEDPNs1OiWvgGeQs8Z8MKNNrkZwTXxGj2sigIWdJaAzrdj+8loP05qbF257K
-         kC5VCdfiH/15c4x6wJBwoRdbu9dLVd7/yED+i1EnuKg6jeP8ScbCPhPN5rjuuF9q/QEc
-         WZgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794953229; x=1795558029;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=2GBjuuLx2RWaDTkuZWX477BOGa5Oz0VCn9xw/zNR/10=;
-        b=qfhhwvGb18lM0zfLaij+82eY8+ZFEsWE91FRkLNtXLQsOUMk/uRhHmVOQ9qC8SSamK
-         cnGUfi4rDRQ3ORoDn9E201twklLkf8zLauxy0qAfxER2e3fbFvQplM6XLTSnKF4Pr/n2
-         haw1a2gSLWKchgkPHjoaGD/R81A497B3EPg8q0ik+j7aaao3xKIJWlHarYCU7f//BqdW
-         mS3WBjitaxmupvbspxdkBazcvKi6FePC1ll0fEtVwdt1dVyoIgmMPD//UCo+kpSwatE2
-         ZN5G5npZujO3QNMu0h5+LuKkpbMBkLRx+z0rWbs/3wGYw7svXwSk0A7CqxFn+nPhEiWk
-         YZbw==
-X-Forwarded-Encrypted: i=1; AL+hErEb38BW6+Kp+WY8Y8HXQ0j7l9Q/YLJ2plT6SQdA4eeKgEg/Wb8syC+Htiv8RSMAWpBQYCovgMlPf2WaPgB8fx2C4Kc=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8w2jzjuRVB5i4YOAZgsKRmdRnOc0JPsSsPu08L1Czuut18NJNx
-	flBCv+LGNP53LX6dNk68yzmrvtWA7+8qme/WGIu4liY7oAYzlKuvX5Z0
-X-Gm-Gg: AYBFou1zrSzgQGu14fM+Pbd5tveM+vrEbEWdsL8Bbh5Yiey4ncrxMkS+ye6iXCcnnt/
-	pqPnH6ZdSGKPuPAq4s16bXawZ1XfMwK4O7xbujWk7I+/CrKlTwMebZqrqPcedQcJNhcNbgyogj2
-	bgMnnkFs0MfwZ9AJDuD7Io7pL4aDzphXbzzUPb1wXHjWKFYNfbGYgHoXSrXq+/XJT4aHZlfvKuw
-	RPI+QDjOhj233d8K0c/8CEStPLHVu4/6UsJ+/P0StoU6J7Sl/nbFzb/2hZmbB+n/gpwE3z3xqiV
-	tcUhOLHSnJoRgQhAQ0tWQPt+JK1eF2TBG6XvAJDnkPPzJvHsvRwJNjD4jwKTPhpIM0v0FL2T4Wg
-	AcdRlbOILuTeOcV9zW237BcKftputWG7aAgt/6ssh9Oyk1vSZJF/RxqR3pv3yBTWhKDEOGOQ5Lt
-	8T42P0m68VE/A6ZAfLxUmR3WTHqnDp6OYbKi9CJktYN58805epHVXRuVt/I8PfHWmFgqiSEAMS1
-	VWtM9thPzuCsSjO/WkV279RsDm95FC6XwgLvaffLDeemLIUhgYFypgwj5cSUwpY88s1giQVlKGN
-	lJH4sGtUn7OGCwaF0WWMu5pZKXRWzFjuWVNGEDpMa86NapYI6M6CCR5Ay3cAn0Erqb9EiBO1dE9
-	u0FkJ+s6Re1z3/dTaIePMTu8P/6E8s1wr8mQobQ==
-X-Received: by 2002:a05:600c:3e19:b0:4bb:659c:b8db with SMTP id 5b1f17b1804b1-4bb7da18500mr9671815e9.12.1794953228777;
-        Tue, 17 Nov 2026 14:07:08 -0800 (PST)
-Received: from DESKTOP-0KSTGNI.localdomain ([41.44.127.147])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb7d2b8032sm15360655e9.10.2026.11.17.14.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2026 14:07:08 -0800 (PST)
-From: Temitope obabi <obabitemitope765@gmail.com>
-To: broonie@kernel.org
-Cc: cezary.rojewski@intel.com,
-	amadeuszx.slawinski@linux.intel.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-sound@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Temitope obabi <obabitemitope765@gmail.com>
-Subject: [PATCH v3] ASoC: Intel: Remove unused intel-sst.h trace header
-Date: Wed, 18 Nov 2026 00:05:57 +0200
-Message-ID: <20261117220558.2702-1-obabitemitope765@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261111223102.1310-1-obabitemitope765@gmail.com>
-References: <20261111223102.1310-1-obabitemitope765@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=P17xzKtE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1794953312;
+	bh=YKI1+orUhC7UVyTNXTw2Fvdl/90JM9tFKLlKjK3PlCM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=P17xzKtEYoIkyovYIg//JNQKvg/4GEj5FVwp99jX0cDdTXC9lQb/W9EhSjy4qC5rs
+	 SWkD0sCZu5NTMCaxzxbsJL19dNuSkifRrI8fGB3BPCDj1XvojM2cG4QDqghRjwLaIu
+	 WTiessdUsZfL+VwYjKirmOfUXFqlqB5PGPdvMmVtjcQDYEDr5UvG6zzjlWgGO33Dvg
+	 LMPhArW19gbGU4LJpPydyQF9KKMw0CqrDVR0ciJLhS/nyPJR5GfoST5B90V96R/6IG
+	 DFRH4M2kpdKrojE9CszMkgTUQ6iEyN+G1hUOLh0K+s2tSgrKDzDD41OygH0Uq2jUjV
+	 qrnTFlt0Q+w2w==
+Received: from [100.64.0.214] (unknown [100.64.0.214])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EF37017E00E8;
+	Tue, 17 Nov 2026 23:08:30 +0100 (CET)
+Message-ID: <fa76c2a0093bc0c75702dcdbfacbf0b2adc8ad9c.camel@collabora.com>
+Subject: Re: [PATCH v2 0/9] v4l2: Add tracing for stateless codecs
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Detlev Casanova <detlev.casanova@collabora.com>, Daniel Almeida	
+ <daniel.almeida@collabora.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+  Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers	 <mathieu.desnoyers@efficios.com>,
+ Benjamin Gaignard	 <benjamin.gaignard@collabora.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>,  Heiko Stuebner	 <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+Date: Tue, 17 Nov 2026 17:08:30 -0500
+In-Reply-To: <20260610-v4l2-add-ftrace-v2-0-9756edf72ac1@collabora.com>
+References: <20260610-v4l2-add-ftrace-v2-0-9756edf72ac1@collabora.com>
+Autocrypt: addr=nicolas.dufresne@collabora.com; prefer-encrypt=mutual;
+ keydata=mDMEaCN2ixYJKwYBBAHaRw8BAQdAM0EHepTful3JOIzcPv6ekHOenE1u0vDG1gdHFrChD
+ /e0J05pY29sYXMgRHVmcmVzbmUgPG5pY29sYXNAbmR1ZnJlc25lLmNhPoicBBMWCgBEAhsDBQsJCA
+ cCAiICBhUKCQgLAgQWAgMBAh4HAheABQkJZfd1FiEE7w1SgRXEw8IaBG8S2UGUUSlgcvQFAmibrjo
+ CGQEACgkQ2UGUUSlgcvQlQwD/RjpU1SZYcKG6pnfnQ8ivgtTkGDRUJ8gP3fK7+XUjRNIA/iXfhXMN
+ abIWxO2oCXKf3TdD7aQ4070KO6zSxIcxgNQFtDFOaWNvbGFzIER1ZnJlc25lIDxuaWNvbGFzLmR1Z
+ nJlc25lQGNvbGxhYm9yYS5jb20+iJkEExYKAEECGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4
+ AWIQTvDVKBFcTDwhoEbxLZQZRRKWBy9AUCaCyyxgUJCWX3dQAKCRDZQZRRKWBy9ARJAP96pFmLffZ
+ smBUpkyVBfFAf+zq6BJt769R0al3kHvUKdgD9G7KAHuioxD2v6SX7idpIazjzx8b8rfzwTWyOQWHC
+ AAS0LU5pY29sYXMgRHVmcmVzbmUgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29tPoiZBBMWCgBBF
+ iEE7w1SgRXEw8IaBG8S2UGUUSlgcvQFAmibrGYCGwMFCQll93UFCwkIBwICIgIGFQoJCAsCBBYCAw
+ ECHgcCF4AACgkQ2UGUUSlgcvRObgD/YnQjfi4+L8f4fI7p1pPMTwRTcaRdy6aqkKEmKsCArzQBAK8
+ bRLv9QjuqsE6oQZra/RB4widZPvphs78H0P6NmpIJ
+Organization: Collabora Canada
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-+9L0I7/vQ9auKcdun9Ph"
+User-Agent: Evolution 3.62.1 (3.62.1-1.fc45) 
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,191 +91,125 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Commit 970d299b0a0a ("ASoC: Intel: Remove unused code") removed
-sound/soc/intel/common/sst-dsp.c, the only file that defined
-CREATE_TRACE_POINTS and included trace/events/intel-sst.h.
+--=-+9L0I7/vQ9auKcdun9Ph
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Nothing includes this header anymore, so none of its tracepoints are
-built. Remove the unused header.
+Hi,
 
-Fixes: 970d299b0a0a ("ASoC: Intel: Remove unused code")
-Signed-off-by: Temitope obabi <obabitemitope765@gmail.com>
-Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
----
+Le mercredi 10 juin 2026 =C3=A0 10:33 -0400, Detlev Casanova a =C3=A9crit=
+=C2=A0:
+> Hi !
+>=20
+> This patchset aims to improve codec event tracing in v4l2.
+>=20
+> The traces added in visl by Daniel Almeida are moved to the global trace
+> events.
+> They are adapted to trace each each field separately and not just the
+> whole struct so that userspace can filter on different fields and
+> libraries like libtracefs and libtraceevent can be used to list the
+> fields instead of parsing the trace printk's.
+>=20
+> The trace event templates are also reworked to avoid long lines, but
+> quoted string splits are kept as they don't cut words.
+>=20
+> To each trace event are also added a tgid and fd fields, helping
+> userspace track different decoding sessions (contexts) based on the given
+> file descriptor used by the given process id.
+>=20
+> Also for better tracking, stream on and stream off events are added as
+> well as HW run and HW done events to track decoder core usage.
+>=20
+> The main focus is to be able to generate perfetto traces to show VPU usag=
+e,
+> a perfetto producer using this can be found at [1] (it will be renamed to
+> match the more generic approach than hantro).
+> Other controls can be traced later as well, this patch set only focuses o=
+n
+> mem2mem type drivers.
 
-Notes:
-    Changes in v3:
-    
-    - Rebased on broonie/sound.git for-7.5, which already has the earlier sst_ipc_inbox_rdata patch applied.
-    
-    - Added Fixes tag.
-    
-    - Added Acked-by from Cezary.
-    
-    - Added the people from commit 970d299b0a0a to Cc.
-    
-    v2: https://lore.kernel.org/all/20261111223102.1310-1-obabitemitope765@gmail.com/
+This is getting old, can you rebase and fix all the checkpatch and smatch i=
+ssue.
+There might be some build issues too?
 
- include/trace/events/intel-sst.h | 148 -------------------------------
- 1 file changed, 148 deletions(-)
- delete mode 100644 include/trace/events/intel-sst.h
+https://gitlab.freedesktop.org/linux-media/users/patchwork/-/pipelines/1683=
+571/
 
-diff --git a/include/trace/events/intel-sst.h b/include/trace/events/intel-sst.h
-deleted file mode 100644
-index ae7c269b0824..000000000000
---- a/include/trace/events/intel-sst.h
-+++ /dev/null
-@@ -1,148 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#undef TRACE_SYSTEM
--#define TRACE_SYSTEM intel-sst
--
--/*
-- * The TRACE_SYSTEM_VAR defaults to TRACE_SYSTEM, but must be a
-- * legitimate C variable. It is not exported to user space.
-- */
--#undef TRACE_SYSTEM_VAR
--#define TRACE_SYSTEM_VAR intel_sst
--
--#if !defined(_TRACE_INTEL_SST_H) || defined(TRACE_HEADER_MULTI_READ)
--#define _TRACE_INTEL_SST_H
--
--#include <linux/types.h>
--#include <linux/ktime.h>
--#include <linux/tracepoint.h>
--
--DECLARE_EVENT_CLASS(sst_ipc_msg,
--
--	TP_PROTO(unsigned int val),
--
--	TP_ARGS(val),
--
--	TP_STRUCT__entry(
--		__field(	unsigned int,	val		)
--	),
--
--	TP_fast_assign(
--		__entry->val = val;
--	),
--
--	TP_printk("0x%8.8x", (unsigned int)__entry->val)
--);
--
--DEFINE_EVENT(sst_ipc_msg, sst_ipc_msg_tx,
--
--	TP_PROTO(unsigned int val),
--
--	TP_ARGS(val)
--
--);
--
--DEFINE_EVENT(sst_ipc_msg, sst_ipc_msg_rx,
--
--	TP_PROTO(unsigned int val),
--
--	TP_ARGS(val)
--
--);
--
--DECLARE_EVENT_CLASS(sst_ipc_mailbox,
--
--	TP_PROTO(unsigned int offset, unsigned int val),
--
--	TP_ARGS(offset, val),
--
--	TP_STRUCT__entry(
--		__field(	unsigned int,	offset		)
--		__field(	unsigned int,	val		)
--	),
--
--	TP_fast_assign(
--		__entry->offset = offset;
--		__entry->val = val;
--	),
--
--	TP_printk(" 0x%4.4x = 0x%8.8x",
--		(unsigned int)__entry->offset, (unsigned int)__entry->val)
--);
--
--DEFINE_EVENT(sst_ipc_mailbox, sst_ipc_inbox_wdata,
--
--	TP_PROTO(unsigned int offset, unsigned int val),
--
--	TP_ARGS(offset, val)
--
--);
--
--DEFINE_EVENT(sst_ipc_mailbox, sst_ipc_outbox_rdata,
--
--	TP_PROTO(unsigned int offset, unsigned int val),
--
--	TP_ARGS(offset, val)
--
--);
--
--DEFINE_EVENT(sst_ipc_mailbox, sst_ipc_outbox_wdata,
--
--	TP_PROTO(unsigned int offset, unsigned int val),
--
--	TP_ARGS(offset, val)
--
--);
--
--DECLARE_EVENT_CLASS(sst_ipc_mailbox_info,
--
--	TP_PROTO(unsigned int size),
--
--	TP_ARGS(size),
--
--	TP_STRUCT__entry(
--		__field(	unsigned int,	size		)
--	),
--
--	TP_fast_assign(
--		__entry->size = size;
--	),
--
--	TP_printk("Mailbox bytes 0x%8.8x", (unsigned int)__entry->size)
--);
--
--DEFINE_EVENT(sst_ipc_mailbox_info, sst_ipc_inbox_read,
--
--	TP_PROTO(unsigned int size),
--
--	TP_ARGS(size)
--
--);
--
--DEFINE_EVENT(sst_ipc_mailbox_info, sst_ipc_inbox_write,
--
--	TP_PROTO(unsigned int size),
--
--	TP_ARGS(size)
--
--);
--
--DEFINE_EVENT(sst_ipc_mailbox_info, sst_ipc_outbox_read,
--
--	TP_PROTO(unsigned int size),
--
--	TP_ARGS(size)
--
--);
--
--DEFINE_EVENT(sst_ipc_mailbox_info, sst_ipc_outbox_write,
--
--	TP_PROTO(unsigned int size),
--
--	TP_ARGS(size)
--
--);
--
--#endif /* _TRACE_SST_H */
--
--/* This part must be outside protection */
--#include <trace/define_trace.h>
--- 
-2.53.0
+cheers,
+Nicolas
 
+>=20
+> [1]:
+> https://gitlab.collabora.com/detlev/hantro-perf/-/tree/hantro-improved-in=
+fo
+>=20
+> Changes since v1:
+> - Don't modify the printk format
+> - Trace all fields of the structs instead of the whole struct as a buffer
+> - Remove fdinfo patches (they will come in another patch set)
+> - Fix long lines
+> - Rename v4l2_requests.h trace header to v4l2_controls.h
+> - Add basic documentation
+>=20
+> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> ---
+> Detlev Casanova (9):
+>       media: Move visl traces to v4l2-core
+>       media: Map each struct field to its own trace field
+>       media: Add tgid and fd fields in v4l2_fh struct
+>       media: Add tgid and fd to the v4l2-requests trace fields
+>       media: Add missing types to v4l2_ctrl_ptr
+>       media: Trace the stateless controls when set in v4l2-ctrls-core.c
+>       media: Add stream on/off traces and run them in the ioctl
+>       media: Add HW run/done trace events
+>       media: hantro: Add v4l2_hw run/done traces
+>=20
+>  drivers/media/platform/verisilicon/hantro.h        |    1 +
+>  drivers/media/platform/verisilicon/hantro_drv.c    |   10 +
+>  .../platform/verisilicon/rockchip_vpu981_regs.h    |    1 +
+>  .../media/platform/verisilicon/rockchip_vpu_hw.c   |    4 +
+>  drivers/media/test-drivers/visl/Makefile           |    2 +-
+>  drivers/media/test-drivers/visl/visl-dec.c         |   76 -
+>  drivers/media/test-drivers/visl/visl-trace-av1.h   |  314 ---
+>  drivers/media/test-drivers/visl/visl-trace-fwht.h  |   66 -
+>  drivers/media/test-drivers/visl/visl-trace-h264.h  |  349 ---
+>  drivers/media/test-drivers/visl/visl-trace-hevc.h  |  464 ----
+>  drivers/media/test-drivers/visl/visl-trace-mpeg2.h |   99 -
+>  .../media/test-drivers/visl/visl-trace-points.c    |   11 -
+>  drivers/media/test-drivers/visl/visl-trace-vp8.h   |  156 --
+>  drivers/media/test-drivers/visl/visl-trace-vp9.h   |  292 ---
+>  drivers/media/v4l2-core/v4l2-ctrls-api.c           |   10 +
+>  drivers/media/v4l2-core/v4l2-ctrls-core.c          |  114 +
+>  drivers/media/v4l2-core/v4l2-fh.c                  |    1 +
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |   37 +-
+>  drivers/media/v4l2-core/v4l2-trace.c               |   48 +
+>  include/media/v4l2-ctrls.h                         |   19 +
+>  include/media/v4l2-fh.h                            |    4 +
+>  include/trace/events/v4l2.h                        |   77 +
+>  include/trace/events/v4l2_controls.h               | 2708 ++++++++++++++=
+++++++
+>  23 files changed, 3033 insertions(+), 1830 deletions(-)
+> ---
+> base-commit: acb7500801e98639f6d8c2d796ed9f64cba83d3a
+> change-id: 20260608-v4l2-add-ftrace-aec6e7f60a6c
+>=20
+> Best regards,
+> -- =20
+> Detlev Casanova <detlev.casanova@collabora.com>
+>=20
+
+--=-+9L0I7/vQ9auKcdun9Ph
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTvDVKBFcTDwhoEbxLZQZRRKWBy9AUCavzQXgAKCRDZQZRRKWBy
+9O3jAQDZ8BZcn7gZDDvbPjsacktSHHnvBQ6sV6/UOIhaT59xmwD/dc0B0IzmagZI
+neZLwegym+RxxGBk7Fn60KARGmqsGgE=
+=eJc6
+-----END PGP SIGNATURE-----
+
+--=-+9L0I7/vQ9auKcdun9Ph--
