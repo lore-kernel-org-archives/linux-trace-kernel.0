@@ -1,104 +1,157 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.157
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795045830;
-	b=3pUXgS7ARJ4a0Ru1WYj3dwtC/LP51SkxOs0zkgWgAHqrzkew9P6COYtA5Hee51iQdVWf
-	 IDZVXVI5wnxZHSCyfxNMmj1a091DAAZ+Re3L98M30BlOxGzb4tt8QEXsVdK3Zpzng5jEi
-	 qOUTmezZKh1Rs7pCSgJObpn17IrAuFuROnmNAB/Z9OVbzZPyWraClpaueSC5ZHl+ydExe
-	 w5PhR3u4jfDtbEBI9ub/vnwzsBHfavkQFSEQtC5KcMQ40eEf75vLIE/IUKx9ljjdR9Xoo
-	 4/uLPtnv1enYmlVbSpvF9QiGUX53uGX6RamOVdlKOoRVE4wDDuAof9/tJTQ/thA0UaQ==
+	t=1795046245;
+	b=31Or7nFvVSbAB9n8rxxanBD7F/hixb1WHtIsJddRaUtF6cc5LboF6xVLNa9/hByy7Zdj
+	 1e3qYddobBzooBAyCU4CKTxguh/U50eBu/gEypi8YAMiqBPWUkz6bA0waHasdlNKPM0Hm
+	 SMRK99XpC5eZZBVBBFHRj14rskxmJQ21tFeBo4uzN1mnJQRjXVjORR1QamOs+bSKhuKsl
+	 MR1GrGA0Cy64/ovc/VzdFbtVSzCPawTsAKdRJrVS8vqE3Ga2N6StH/kPu1elJ4ZlCfaOm
+	 AidnhAVNF+mbDoai1vroBoSJ70DURMffVyiw11cNXSWy0yZCMVLs1n+9nHGhnmPmMdA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795045830;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=ubqPWeJTwTZYZ6JWo58kLzJgB3q5AxyjbXK9VjEgDRk=;
-	b=0y+ksIwHQjjkCZVt1Dl21htBYQ74/CDil34pm0SFYvF79z8ckZEE9BVZzyUba4mliwvJ
-	 tnkLQSXaeWZ2DQRnYYe1NJuTfYrDU7gZcLOToCkP/IzMxWfTxnC3vuOxzuUq7G5NSJSQi
-	 noXA2k6puvDvc1OIttxPtlrHKBbZDnluvpLcxut7y78pXp7zdgOWyn3gTgfFL5L+XpuAa
-	 1VhDs7UUxaDxrlHcCzJ0zXzk4a546Uej3Rr6YbV5gWfBD1tt/t/qFVXYmZ4xq8axJhgek
-	 tjyLo7o+iH/oO9vpBRP370uUfP/tKpVPu0Dz5rYwT6vimwattUaymRLQ95kPTevlPCg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795046245;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
+	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding;
+	bh=hGkc2X+O0aenFipJnJuCddUF3up8YjP06AEbn7gF8WU=;
+	b=o5RTo1W4B6yvZRoQI9iyxddsZZXSVu7YW78+xfSXn/IYXDxT+Y6Q3tyZTxBxKcsXI21O
+	 ZEqMvcpW5Ou1pCPdWfSu5hpgs0XigQEfbbdXeS+qUYTVAjDsXONbrs9szMVmqb0bu7Dca
+	 pM82v4UdBmIKIQTmlL6j725PJXhl4Wcmwd4eMiXYJOqewJFC4NZoL0Ril3yrpIpsUMjo+
+	 ziZ4bb1VsF0Kfs0GCpTcDlmM7g/kT9ZoKav9ZOnTGPWq4Afm7ijXB1A0AAIN1W9GbDQ6M
+	 oHPNqMD+4IyiNeaG8Xvu6gme8G6IpZ9tFyLq+E1EqHdmv4gCfn8K1cLh6QswSrHMPeg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=LYRTzxuC;
-	arc=none smtp.remote-ip=209.85.210.51
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=shazbot.org;
+	spf=pass smtp.mailfrom=shazbot.org;
+	dkim=pass header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=A7foanMU;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=3RkSpiOv;
+	arc=none smtp.remote-ip=103.168.172.157
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475BD606A332
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 23:50:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 475BD606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF55606A320
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 23:57:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8FF55606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=LYRTzxuC
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-86288992de5so292190a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 15:50:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795045829; x=1795650629; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ubqPWeJTwTZYZ6JWo58kLzJgB3q5AxyjbXK9VjEgDRk=;
-        b=LYRTzxuCbuF3jxZspOIrUliZwI5TbKqNalpuAbdLkvX5n63pZyStvF+GmWdcyegdQl
-         /ACtj+R8aFsPHyLkCJ7qZZFm6ugLgJPEx98LcKCe16kwGONA3z8YcnHoxfSWlxoidqRS
-         sjFgoOWJ047Nhf4eXxOH2XW0kjr/BoXhTboP1EhMxU64piB+hA5v9eTY3B4AF0x3Xfu4
-         IoLYauYPeJhN3ujc2nB3VLpXmbbpXG19lEKLttFNxMj1C6osaKimsJ+i3FpRPIzpXtll
-         d4B7Leca7kxcc0BxSanYk5KugpNWxZxMaNSoaPnl1SMwm0+7SFcWubVj031N7H5pTeOl
-         4mww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795045829; x=1795650629;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ubqPWeJTwTZYZ6JWo58kLzJgB3q5AxyjbXK9VjEgDRk=;
-        b=EkJKSFGto558RxcOLetV3iIK8PBJ3MK856h1w2ABjUK/oMPWWg+hzEYSvi5+c9qTZQ
-         1QDcsoam2AmO5bRTWhE64hys2OvN82o5qgJmmaIjB+ASh2q4Hke41hurXnpDaGK5HI6b
-         1HOw7ynzLlHYERcJVKux2vMy6DjLheEVhNz7NA++agEruY6PKaNDwZ8tNFmy7qO6M6Ge
-         DRH1/SV3Yu14fBn3+1goQXnaMfTTst5yRjaMZIevQJH6JRahj0cNuShuJKFkSOq4AL7C
-         /WOitoJKvAQWBnH3HXnWaYiU9JBd+l2cp3JLfddIYhOHXvCF+HbzT6203pplvh6uVDZz
-         LoVg==
-X-Forwarded-Encrypted: i=1; AL+hErGVulqkVWHGw+dgxO96yINnvo0PrcSZ4OlBhxuO8xZfQ+SXeTKU/Ow6nakiNYMBVSXhVpuXdfgBffl/MVauAHv0Nso=@vger.kernel.org
-X-Gm-Message-State: APuU4Z94YqXH8qTSjrZlvFFOka8UYi48kq5TArfqFXnNLSU2lGCmYAJx
-	FzP8CxqxGxkZwUkaCBBAKQxH6D7vsP9blztqOSFWxLbHdAcXEDSbYuNs
-X-Gm-Gg: AYBFou01Q5dUfzm/4vTvhvPc/IyKfh845gqB6GtAhLcdX820DuKqAYp4ewX2+tQpNv+
-	zPWm7tJdgXlRArc5J84kYSZ8sqfZOGiKByRNkeS76qLZKPWjQjbNxbReFwc3ikp+BVBj7qChUbe
-	rX1A/SFLmrJFQZ0GY1yTOclTyLgfYJ/8axtYweZZdfD2TN0Yje7ISFFn2fSbVR9EVjQ3DgDB2ub
-	Rj6R4n17v2Ph0uR4bKROGaVqAh3sGLKOkc8+adVt8bHx6s8LCos/RTGKssoYS1B98v0lmCHsWyu
-	dWt2ni7zA64aU8jSfR6TXdMwNDsLHTtUIVAG52DgxfvbXmp29WCytGDc0zCHNi3VbnpEx1sfnE9
-	PKtvnAS8Nhetlpa4rzfLCsS1P1Hsw4af6q4fRdopSRzoxssDbNk5/U1LRhZc5oGS6MdfcEClrOo
-	ItZQwfpP5PcU/IlZn0k6NWc7CJn6S053EYU6CqQDjIrN0Vmupvv7Pp0jR543+qD/9y+k4SuZ4Ew
-	eCevg6/mcG/gddPQI/1m29Fyr76Evm1y3KR0noa0Cw5WbahxtvzFHi2crynu+d6wu3QOgb98LL9
-	eNOGN4eyZb8mVAJ+75U8JPrIgPozHzLI+S19gqQkXbJ0URAZowxGfrsz4ZJpZRNT21fAe0O/3Ra
-	Fh1IPO2mfMKsVjF/n4ZG07bsDecOuxa2CbLLAUQ==
-X-Received: by 2002:a05:6830:6413:b0:85c:e511:ee04 with SMTP id 46e09a7af769-863040ea2e9mr131360a34.16.1795045829136;
-        Wed, 18 Nov 2026 15:50:29 -0800 (PST)
-Received: from FKXX2DL94F.bytedance.net ([72.29.204.230])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-862f00891e6sm3102871a34.0.2026.11.18.15.50.25
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 18 Nov 2026 15:50:27 -0800 (PST)
-From: Yifan Feng <evanfengff@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key, unprotected) header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=A7foanMU;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=3RkSpiOv
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8FA7B14001AF
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 18:57:22 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Wed, 18 Nov 2026 18:57:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1795046242; x=
+	1795132642; bh=hGkc2X+O0aenFipJnJuCddUF3up8YjP06AEbn7gF8WU=; b=A
+	7foanMUPUfxIv3H1FmDkyuzbxOrNYzCiiZ1by2+ly7U+jwKgB8zqOVvB8DqS36ZQ
+	R3qPvZIBwJKODFDu2VYsWrK7VmPWVmovNW6ZCYul36VhEfNiFfTwFZS4q556SiL5
+	4pkgJFO0WYEy0L6IPx1HWyEnIaEyBR9jZnhIydDB1gv+ELprFrrGx+Y/DMGN+rFC
+	USlQZqu7pIZMbDsRRWCMgA0JOYrNI3gzmFXNMWojNRsPqIINo9FXCfRTho4RP/Kn
+	vB4pp9XdjdWQxG8YT8sID4mBgYbB3jvJ1JPxzkOtLv4BWE1VP+scZBYJEAqMZYQb
+	sJgAS0KEmf5EMVhHEskag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1795046242; x=1795132642; bh=h
+	Gkc2X+O0aenFipJnJuCddUF3up8YjP06AEbn7gF8WU=; b=3RkSpiOv7+ef9rqjv
+	rUUw5AIdUVO9YnKOv9jpRW3jXFfL+v5kVXGl5r6lg6DCOpT4FLTy9XvTF5Kv7+Ei
+	glf0F1W9yeskG8xBGIhcZdOzNFtpbdyUJZ8+flQVYEbbCgcZkFAr/7S3DOc8inrr
+	m8IY59bG+8dixNFIK+Tc9WSWv8seByDZlMc5QR+QHjDQ0GfQ6Ha9RCz0gr0OR68l
+	W75Gm1m3pF0AFgYJzRp4GSm+Wj/CBrtZF0H6qIYO4Tbk45PP0XVmi+upkVgP230l
+	t6YHRy47ziF3z38GE8z8Z5ohy7+mKqmgQv9he2yqpZ4ck2+KlFshq/UIRE/q10RU
+	9h+KQ==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=shazbot.org a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795046242; d=shazbot.org;
+	mf=PGFsZXhAc2hhemJvdC5vcmc+;
+	rt=PGxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+;
+	s=fm2:rsa-sha256:jywsr0kdIFrwoINcdUT9u2Ib+Jws5RQYRRCkhCVhMyx1FvL
+	6U+3Gk/jYDa+VwD44gixwberPWl6ekD67h0WHER6jtcMIDHRKBHB6I+lKBa44KUw
+	IYBrFB6Ec1mjVH9KzN65sDZhlipOXdij1+xYfS+WfFstOVQG8NHLR2RYQQ3yS3Vx
+	O7DXwPOQ/Bkj2kBKUraKnUzgPIRuudl8zrxgm3arvUHTQf9AfUSNUymwYHgOHk46
+	jglz7VRfILDRxNS7aErYinl4Qfn7s+t9a5RBm908BvgGkvHpBCV8i6gARkBtjNth
+	mE2kH2gjjGf4+G5FbUbLOivmW6zrl3sn1VAWWpg==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=11;
+	hn=cc,content-transfer-encoding,date,feedback-id,from,
+	in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:G6j1WEbAHIq8tWmPJmZZjibdOMkBo5R3V8kRbHFfYgk=:TQvuQbnPhs7gSThCadxJaJQQTnwfP3uEZUne5G+6jaY=;
+X-ME-Sender: <xms:Xzv-aiHQ9j-S5ueg19b6lfr9ws1pGbGaGXHq0zE10VzWphYwHGk-5Q>
+    <xme:Xzv-akm4VSOI6jDqluwD8uyXoVA4t5iYF3643I2IuE22ruPOAyl-OrwiLWUTZruUW
+    XNuW-3qoq3jVDNoMAaLfev-2vB38C5o9ExK4Og-WH06U0C-9nWrq38>
+X-ME-Received: <xmr:Xzv-apNqb9sRFzfeQ0TObntKdaVhKxHsPsSsfhYT6wfrXfbVxXxSm_4vBPDF3B7e9ZixTC2uvb0>
+X-ME-Proxy-Cause: dmFkZTE0Qtik2h0LMLqrIgUWaI4CB2p93T0f1m2Kzl/l87lwNGBwuAOgQ+AfXvskrVJH2i
+    p6ljHDZzG0CdtMT8T/gJ0T/Ti8sgeV3YeHpVIWrG+q0gmcN+rSNf86o5eLrSjjxw191yW8
+    QIuwzR2/xbFWQj1RjX6bpXbsd5hi5tlZCTkPfY+KJY0UFP3Mvtfj1CKS2rlcsiSjEsKO6w
+    cb1dgXvYDD+YDFjqo7iv6CO6NMKEUTzrEzlD1WbyPxC8PcFVxrf+LToTyWzvM6ACXwfG6h
+    SY+FoWkIfjoa+LvWm3E3FkRmWzkd0723UYoRV8j3fBKkHkovoceJNgnLcDQpOIPuy/7Nqx
+    ygevKGMYWzOodp2z/0YktPtXaILj/vFOCX20D35s3gJpaq9mBVH3cxqskd5V1crriXXNK6
+    eEdtcVEJ1nzEs6LC/9cx8cg6p37d/t4I7m1EbbqJsLK0kC2O+eSuaR9EW1VqIwUmAlCFm4
+    /GRq2UggEiJ4QZXe+/bW+PRDGg+48u60CZqg/FNZn+63LgWYsJZIw+93AHFDyYkrOg4LSG
+    nAB92UkBH5u7VgvifKkxVw1/+aV0Kq7r1B9PA8G/LFV7IdgCLinBNWI9N5zCca4vKisFtW
+    aeFstJ+I6b50r2tMGDdMpGqSQlLGgCG9Fq54GgbgrzWbuNVj8VkjaYbDrwwg
+X-ME-Proxy: <xmx:Xzv-avF02BQ8n4g73EHJJZjI-AJeyThCD84z6V54fKZOR8AoSQdkCA>
+    <xmx:Xzv-alvipkmumC-NaUJOo3495pRv7sntm5o3p2h1ZXEwlG6Path3ug>
+    <xmx:Xzv-aqShcvD4y1hQxHNj8CA0rCwg-4ve_VylLntsHl7LcbLLyKFmGQ>
+    <xmx:Xzv-agFZFdSGyJcdd6rw4KKEQxNavsCB5hTfO7O0NwRBN-MqZQkHFg>
+    <xmx:Yjv-apYnMgJzheWFzJ63cPRZHEGj_u_5UGJwkguoka3gsS9UsFzZK2Va>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 18 Nov 2026 18:57:16 -0500 (EST)
+From: Alex Williamson <alex@shazbot.org>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Alex Williamson <alex@shazbot.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Johan Hovold <johan@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Karl Mehltretter <kmehltretter@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
 	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-trace-kernel@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Marco Elver <elver@google.com>,
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Bradley Morgan <brads@mainlining.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Pnina Feder <pnina.feder@mobileye.com>,
+	Mete Durlu <meted@linux.ibm.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Rio <rioo.tsukatsukii@gmail.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Yifan Feng <evanfengff@gmail.com>
-Subject: [PATCH] x86/fgraph: Fix the unwind hint at the end of return_to_handler()
-Date: Wed, 18 Nov 2026 15:50:23 -0800
-Message-Id: <20261118235023.14978-1-evanfengff@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Allow untainted driver_override for PCI stub drivers
+Date: Wed, 18 Nov 2026 16:56:43 -0700
+Message-ID: <20261118235645.2907908-1-alex@shazbot.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
+References: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -110,49 +163,59 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-return_to_handler() reserves 8 bytes of stack for the return address
-and marks that with UNWIND_HINT_FUNC. The hint stays in effect after
-"addq $(FRAME_SIZE) + 8, %rsp" has dropped the slot again, so the ORC
-entry of the following call has CFA = sp+0:
+As the name suggests, the pci-stub driver is only a stub, it performs
+no hardware access and is typically used only to prevent other drivers
+from binding to the device.
 
-  return_to_handler+0x41: sp+0	call .Ldo_rop
-  return_to_handler+0x46: (und)	int3
-  return_to_handler+0x47: sp+8	mov %rdi, (%rsp)
+Similarly, pci-pf-stub only interacts with devices through the SR-IOV
+capability, and may be used to create VFs on any PF that otherwise does
+not require a PF driver.
 
-A stack trace taken from an interrupt which hits the call or the mov
-ends up at that entry, the stack pointer does not advance and the
-unwinder prints:
+Both of these are often used with driver_override, as this is our
+standard, non-racy mechanism for associating a driver to a device.
+With the introduction of support_driver_override in driver core, this
+use case needs to be explicitly flagged as safe or else the bind will
+be denied or taint the kernel.  Declare these drivers as safe for use
+with driver_override.
 
-  WARNING: stack going in the wrong direction? at return_to_handler+0x46/0x50
-
-The return address is only in %rdi at that point. Mark the code as
-UNWIND_HINT_UNDEFINED again, as it was before the hint was added, so
-that the unwinder stops there without the warning.
-
-Fixes: 20a0bc10272f ("x86/fgraph,bpf: Fix stack ORC unwind from kprobe_multi return probe")
-Signed-off-by: Yifan Feng <evanfengff@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Alex Williamson <alex@shazbot.org>
 ---
-QEMU, function_graph + 20 kHz perf callchains: warning in 2s before, none in 10 min after.
-Found and written with the help of an AI coding assistant.
 
- arch/x86/kernel/ftrace_64.S | 2 ++
- 1 file changed, 2 insertions(+)
+Uwe, both these PCI stub drivers should allow driver_override use cases.
+Thanks,
 
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 4b20673a3395..8b488f99de02 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -387,6 +387,8 @@ SYM_CODE_START(return_to_handler)
- 	movq RAX(%rsp), %rax
+Alex
+
+ drivers/pci/pci-pf-stub.c | 1 +
+ drivers/pci/pci-stub.c    | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/pci/pci-pf-stub.c b/drivers/pci/pci-pf-stub.c
+index da4db4928907..328fb4a57092 100644
+--- a/drivers/pci/pci-pf-stub.c
++++ b/drivers/pci/pci-pf-stub.c
+@@ -36,6 +36,7 @@ static struct pci_driver pf_stub_driver = {
+ 	.id_table		= pci_pf_stub_whitelist,
+ 	.probe			= pci_pf_stub_probe,
+ 	.sriov_configure	= pci_sriov_configure_simple,
++	.driver.support_driver_override = true,
+ };
+ module_pci_driver(pf_stub_driver);
  
- 	addq $(FRAME_SIZE) + 8, %rsp
-+	/* The return address is only in %rdi now, the unwinder cannot follow. */
-+	UNWIND_HINT_UNDEFINED
+diff --git a/drivers/pci/pci-stub.c b/drivers/pci/pci-stub.c
+index 9bc478df4e8f..acbd43c17adc 100644
+--- a/drivers/pci/pci-stub.c
++++ b/drivers/pci/pci-stub.c
+@@ -37,6 +37,7 @@ static struct pci_driver stub_driver = {
+ 	.id_table	= NULL,	/* only dynamic id's */
+ 	.probe		= pci_stub_probe,
+ 	.driver_managed_dma = true,
++	.driver.support_driver_override = true,
+ };
  
- 	/*
- 	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
-
-base-commit: 20eef29b7c8465ac98d7dd6d6f2ac07a8d8056ca
+ static int __init pci_stub_init(void)
 -- 
-2.39.3 (Apple Git-146)
+2.54.0
 
