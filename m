@@ -1,58 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795010709;
-	b=JxP8W6+nfLdpE9EhCDymTfnJU4XwlCLvSaAiGPSUIG6kUZMqYRFdRLJ1HddbTRMB12YS
-	 Fd0Y9AAe5y9bQX4NmNu3ow7mSC5iuQPW8wDKpYGM8swHDmkgXyfaLm/HY97ixDF2fwrP7
-	 urdoFWMY+xy1eCVmIzMcqxsoDu5f4+nwVCBmJvnKmeusawiLfOkvAcBAD/l/BMWxz9lwA
-	 ln4flV8oymBqbi7ieiRH2IQK2ZGPLN2LrhuuKfX4uPz3P+OW3GbdjsUI/hHJbMnY6UeLy
-	 cBj/mRq18mJOwxrowpXPAMO52kwx1XQNTTDg48zrRJ6c6Pqgv7xOewbSpWR+l+tFkDg==
+	t=1795011077;
+	b=sfAmPb0HD4FVeJliJnCRijNqmCVqtndZEaJCLtFhRaUJjIM1z7DVq0N6h8+Z527Iuiqu
+	 uCLxy9HIrbHcvhyk66LHtPgChj1EdiYIdkMyJFFaITz/PEW+8Rww+cpRkAeqDuTN9NrpO
+	 bUWRU6qOWOUELsSFxNPZKAGczq65avPJNIOVEw9GFEVQCggenGxJ1uk+BvFBCHIA3a92R
+	 7nydcG5bNe3hd+x+diHcq/wNcMs6OLo0z/eC4D1azhz7sxrAgryspuk6/yZiXPBEdjgIK
+	 HRaraU4wM5XeixxS94H+0M90ZGiZOso9EKVl4faM9SekdWFDQ3am5IWtsxkJmOytwvw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795010709;
-	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
-	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Mailer;
-	bh=uaDb0isELu5PLoVKQvnokJQeD7Li1NqZKmsijy7vVTk=;
-	b=hI/TEDS1h8ZLi0L77Z6zChG44eCGqVhJapyiZ21J1k3+zqiqqbx2LiBWDgeDqnBZe9th
-	 x2f1GKCMF37RPUVkwmH+dpLkE/gtd5cArfxM9/OxlWpUKYQtnbZB0ImITkCElmdY9v6tD
-	 ld57VpzaKC08mMVAonCebsEWwhyREPaoLduXroet33P1IX3qGZff5jSQVaWxB9UtjdTYo
-	 cJCB5/gpD6wWXN09HkrYY/p4By+uBWFV7OeP5/SfYa+EqhN3QC1slixHNKSzLjZ1jtfc1
-	 szZ53Z6XBZ1mvyUNYdu2pPJYZvTEyxZJe9HC9DxWxGMHBSmHihfQOySOU9DM1kEZqSg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795011077;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=ZIcVPPdd1ul3QLvQ9/6HmRta6O+OVRN79c1UOyY9zsc=;
+	b=PIIdwLwA5ewB7vF29ZLv77WJfPdqt959lsMcD9uGhbpLv/1l6VfsTeFk1fteV5WDK6oq
+	 BSGdcEs2D8yRdPMgbcmQrqEZxGex8xg1sknXsUUhVk3vfEAi7Ys7b8VfrFEVCbt5c2DvN
+	 sYOCPUij58rmZ2HUqt4lX4gmaFDtyveEOeEBALpYycf2SsDIrbwI4vY9fHHtK0iZ8cmnO
+	 G0MGFSlADk9uR7PVvvn/maEV5KOmyYHqlME66PzPbzPa34HVkLmGnG62Xba65QIAQ1AKP
+	 8xoHTEt6DhFgKHtK8ycFCZ0Xxx66xomYyiSn4621axNE7/3OCL+QRWsQs22z3CHIz9g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QDvrB844;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=w0ULYOG2;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB19A606A32C;
-	Wed, 18 Nov 2026 14:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044BD606A33A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 14:11:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 044BD606A33A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QDvrB844
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CCDE1F000C4;
-	Wed, 18 Nov 2026 14:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795010709;
-	bh=uaDb0isELu5PLoVKQvnokJQeD7Li1NqZKmsijy7vVTk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=QDvrB844BBPr7XtlzoGEhcoeWnNClJMe/gpwzT5ROskG7xbTZn2Y4krNleHTOvudS
-	 ek9YIcSN3yWOkjtK67+z/DPTyBFhnf8rXbRasJjXuMgZ3HvAt7ZcgretsZarFbTgpB
-	 /w7nGP/YCa0RxKPpa/P2MKxY0nRLjauZzkqGnS7fpCkgwaFxtHtP2z7l/5ARXrLvI0
-	 Oi9BrwHhydcXUHyLq/X4pbf478XjWKwSlXx26lZcy/0keyDcKcgYquRjRF/Kzl3NsH
-	 r5GA1MbOLwJ2CKgnXXlj5FZVOC386fbjZVE1qyzSm3Fl2X0v+k83ehbdegDRtbY/hH
-	 l8U/NH2Bk7Oag==
-From: Christian Brauner <brauner@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Chaosheng Qu <quchaosheng000406@163.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <1793157924.328974.4869096@163.com>
-References: <1793157924.328974.4869096@163.com>
-Subject: Re: [PATCH v2] tracing: record jiffies in writeback events instead
- of computing age
-Message-Id: <20261118-hochland-hockt-lidschatten-3b0491c4fbc5@brauner>
-Date: Wed, 18 Nov 2026 15:05:04 +0100
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=w0ULYOG2
+Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 64CA0120777;
+	Wed, 18 Nov 2026 14:11:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 958663B;
+	Wed, 18 Nov 2026 14:11:12 +0000 (UTC)
+Date: Wed, 18 Nov 2026 09:11:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Brian Norris <briannorris@chromium.org>, sashiko-bot@kernel.org,
+ sashiko-reviews@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: 'select' GENERIC_TRACER, not 'depends'
+Message-ID: <20261118091110.4b7db7da@gandalf.local.home>
+In-Reply-To: <undine-1794963487554690675-818c80e274af2040@undined.local>
+References: <20261116144652.1.Iecb63200dd245f62032a3b1f60ae78cc48868094@changeid>
+	<sashiko-outbox-217828@kernel.org>
+	<20261117085552.0e4ef272@gandalf.local.home>
+	<avybp3O2zxcLozKB@google.com>
+	<20261117142203.72235895@gandalf.local.home>
+	<20261117142310.4f440b3f@gandalf.local.home>
+	<undine-1794963487554690675-818c80e274af2040@undined.local>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,37 +65,92 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.17-dev-04696
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 958663B
+X-Stat-Signature: f59t838u8jo639pqxwbdu6n4f7e9kj5k
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18JpwyJ8CSB5WMkhwY9eikviK8wuaI1678=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ZIcVPPdd1ul3QLvQ9/6HmRta6O+OVRN79c1UOyY9zsc=; b=w0ULYOG2ZIX1Km3FvFSzv9++ZoZ07iw3qKJtjXfp8AYm2GrJiVzsI7kd5r9qJhKjfnXtFASV2vGRc2r/VRgS2qA0NAzoJETQZF05sPyuYiWpzoqR7m0dIooTTGs2Mg9thzMRR7OG7X6ZXqxgKGdojfv2wQ/dS7PsuF0UrP48Mvo=
+X-HE-Tag: 1795011072-286018
+X-HE-Meta: U2FsdGVkX19GDo1ZgRRKfMiS3Bqso7z/WGEq8EdpWz4UApNb7io3eAkJr9ojEgBck8G9g/XWGOxM/61rFGTXFM1RaevEy9s4SMBnoQRhQpzn1wJRVWRao5Q6/w6Mxmtd1RZEjMcbvzvi1qMT3IvJ9ZQkLop/Io+laoeVeg7p1uH+Wllp3oLzK9noKpEvxBWtCsya+RjoTPUmKHgCUZSLVhRzEwsMx3Y40wwPAw/ZaylzYX7fThGEIwaLulKHB3WoHn0QKldgfV4jQWFJ5kNQHzQh8dyZuuMCslSEnFXAPb39j33jIhO5h1nLU35bFhgFgagFBR9yaRU5tkHcB4uEIAS1pVExvUoNlRpAQybwVEaAJeR+3JN7w0M5I1I0uo7VKHCwgyXZA8pyCYUTvJYV/Q==
 
-On Wed, 28 Oct 2026 11:25:24 +0800, Chaosheng Qu wrote:
-> From 677560a14dae0d9581effc5cdb9375052902bb21 Mon Sep 17 00:00:00 2001
-> From: Chaosheng Qu <quchaosheng000406@163.com>
-> Date: Tue, 27 Oct 2026 14:28:09 +0800
-> Subject: [PATCH] tracing: record jiffies in writeback events instead of
->  computing age
+On Wed, 18 Nov 2026 09:58:07 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> On Tue, 17 Nov 2026 14:23:10 -0500, Steven Rostedt <rostedt@goodmis.org> wrote:
+> > On Tue, 17 Nov 2026 14:22:03 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > As it doesn't need to be visible let's still have:
+> > 
+> >   
+> > > config ENABLE_EVENTS
+> > > 	bool "Enable trace events"  
+> > 	depends on !GENERIC_TRACER
+> > 	select TRACING  
 > 
-> writeback_sb_inodes_requeue and writeback_single_inode_start/() compute
-> the inode age with:
+> I don't like these changes. I think TRACING should be kept "depends on"
+> for this.
 > 
-> [...]
+> If a proper hierarchical structure of dependencies is in place,
+> visibility may seem unimportant. (especially, "!GENERIC_TRACER" may
+> just hide the option instead of indicating "Trace events are enabled")
 
-Applied to the vfs-7.5.writeback branch of the vfs/vfs.git tree.
-Patches in the vfs-7.5.writeback branch should appear in linux-next soon.
+The GENERIC_TRACER meant everything but the "nop" tracer.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+That is, everything in the available_tracers:
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+ ~# cat /sys/kernel/tracing/available_tracers 
+timerlat osnoise hwlat blk mmiotrace function_graph wakeup_dl wakeup_rt wakeup preemptirqsoff preemptoff irqsoff function
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-7.5.writeback
+> 
+> FTRACE ("Tracing" menu)
+>  L_ FUNCTION_TRACER
+>  |   L_ FUNCTION_TRACER_SELFTESTS
+>  |   L_ FUNCTION_GRAPH_TRACER
+>  |   ...
+>  L_ TRACE_EVENTS (can be hidden)
+>  |   L_ SYSCALL_EVENTS
+>  |   L_ KPROBE_EVENTS
+>  |   L_ HIST_TRIGGERS
+>  |   ...
+>  L_ GENERIC_TRACER
+>  |   L_ IRQSOFF_TRACER
+>  |   L_ SYSCALL_TRACER (selects TRACE_EVENTS and SYSCALL_EVENTS)
+>  L_ TRACE_OPTIONS(can be hidden)
+>      L_ SNAPSHOT
+>      L_ ...
+>      L_ 
+> 
+> Maybe something like above?
 
-[1/1] tracing: record jiffies in writeback events instead of computing age
-      https://git.kernel.org/vfs/vfs/c/ea7c5843e798
+It would be:
 
+  FTRACE
+   L_ GENERIC_TRACER
+   |   L_ FUNCTION_TRACER
+   |   L_ FUNCTION_GRAPH_TRACER
+   |   L_ PREEMPTIRQSOFF_TRACER
+   |   L_ HWLAT_TRACER
+   |   L_ OSNOISE_TRACER
+   |   L_ MMIO_TRACER
+   |   [..]
+   |
+   L_ TRACE_EVENTS
+       L_ SYSCALL_EVENTS
+       L_ KPROBE_EVENTS
+       L_ HIST_TRIGGERS
+
+
+As the Generic tracers always enable trace events, but the trace events do
+not enable the tracers.
+
+I think we can start to separate ftrace and fgraph from the tracers too,
+but that will take more than just modifying the config files. That is,
+ftrace is the function hook mechanism and and fgraph is the return side.
+Neither are dependent on the tracers, but the tracers are dependent on them.
+
+-- Steve
