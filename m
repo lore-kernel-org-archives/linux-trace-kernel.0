@@ -1,88 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795001215;
-	b=sQfs0aMjuvN9Srw8sIh66hJsCW56dH8NzjkSkTYXn4/nMoz/8mc08ebUKD1Hw9oV7+Tr
-	 Hyacl/hAR6BzgxXZ9aVhMeyzXbVzUfRJfwh9ikUYUZjNniL4B3LUtnp+94I59dud0RzUl
-	 SA8htmbT5L67AVaCW4cMBYLkOOi9HgGYNXci+IfLZ8EjKEc8oqDdBeuj6zebqrUW+Q9Y7
-	 JntWgt4uDDovou5wEleLv6Bc/zNP+HaNkXeiZZHKT83I9DthY+tuT44qOxW3qoc8SD6Fs
-	 gXu42V+e3JnuukQFBraZOTuKNZTA9aJpj2UpEJGCcCFWJtuvBCfEPgWttNAQsNE7svw==
+	t=1795001563;
+	b=E90JBh9ApHs5avVD4p8BPNbM4Gat/7zDBlF26pjrcr8+AWQtdqGbzsiiC8A6kzivkpDU
+	 ZUL4dToz79EthknrDf4AFDWBTUXpz016ugHy3J42F8z/hydED+IL8c8bMIMyKHK86WkIx
+	 yLHti8gA/VLxzXnhjIBNqdH6e/rIoOcHQLNS7iZzNDFF8QonW1b8L9W+qxv113ddLj+l9
+	 k6KmnN7HaL8vbgWN21JNXKelCcjDNrL7bS2N985gtP2MktuR2vp68yIMVyMPqFV54SdaX
+	 sjvCEPQLoPg2xafNU3W+q4vOBkpBcs37dIAniSWXVqytUQdUhuMX0BPTPfkBBRxbkiA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795001215;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795001563;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
 	 Content-Language:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=msXJndjH6JzkweLBaiGxmBinT8C/Wtkx/0H1bh3p3rU=;
-	b=R0XCXwlRUGHMqrPcXiEpXzH4KsyRxHBcJmWwrB+phfBCKgUfGyB7/+ZZXo4FxBgbC78E
-	 InbmCxYxueNlisx5AhOOkjYSEMkwvqBYrKypf+HwFhSKzQ9De/M8T3BOe4Z9OybxlHIQ1
-	 5DIecpNBIZ7lo1U6NRNebth/VN0kDFuu1gNrWyt87X3LutJjsOtPxMBC5wgFw7kf7oYmo
-	 nsnlHJYXKmM92N2ZG5tZcWVEReGGBKqvBxA80noX8MExYodb59FT4zd/ZtOCmx7FbaG/v
-	 YxAcwcrjqh5U8itZXsSaZBuio4g6Ob32npvAHN+Hr9jN9+/lDVoqc/bLlPYUhLfNVLA==
+	bh=H9Cu/kf3uQAfc3wOhY3cicQG45Gk9MDAfDaeHK7X00E=;
+	b=wEfXMN3/S3aghiJy6mvJakE9xqwbnS1uybD7LmDvI6uDJSFAiEqQLNuPdI+yLd+KjjOV
+	 I2RZXTTxf9cVvOPqHAeDZNb86HL8Qs598u/odSF1vVJYYEutpQkB7oJ59UZI35XV9qETU
+	 VomvLwyZLWgjcJ5jU6LXniapAcFE8NwEWQnnPnG60SBCgx1fDvhqfenJSLi9Pa01uKE2Z
+	 u03486W8iKr6S1xCGK1PJfKydeaMOj6mWzgN6mRDOE0SxCNbnz4z0+AZcW7LmqYuC8bH0
+	 +Ylrg6WoKFtW7pQ6hpXvUtZnGrjnL88SBAFAR/DG7p4ynrhRUs8q4W6dfVMnbBEf66w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=P5otasT3;
-	arc=none smtp.remote-ip=209.85.215.177
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MiO4jiOS;
+	arc=none smtp.remote-ip=209.85.215.173
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5B760A2620
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 11:26:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5B5B760A2620
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76B8606A331
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 11:32:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A76B8606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=P5otasT3
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cdab938dc83so467938a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 03:26:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MiO4jiOS
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-cc751eddf25so661566a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 03:32:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795001210; x=1795606010; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795001562; x=1795606362; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=msXJndjH6JzkweLBaiGxmBinT8C/Wtkx/0H1bh3p3rU=;
-        b=P5otasT3x0KiFi3TS4Vwf6vtcEOMgiVWP29dcN/e9s7NBmiEG7HdrHGZImmidMDo5o
-         5xU+BvlKcj0+KXFWFEC6gq77MtAhKse1eou1ji4Zd3lSWe8x2gQiVXGBx0eaaDdXC3I3
-         wD/SMzHcbNyQGxuokrJROPQ7UU26BYymJf6lubkRav7AWx7Vn2P5Vi6z94wCSxUojU+s
-         +xApZYHKHYnFFfeCQ7t+Q6hM32sj+uTaXL5J+NtlmYzf2R1JsVDdgFZqZiRmPH4jyDNX
-         TVXJxEdQW6qA8P98NZx6jAwMpmvFTLN8U3ybDvWsif3nBIrOCjLrCqyesYadO329VCr+
-         tBpw==
+        bh=H9Cu/kf3uQAfc3wOhY3cicQG45Gk9MDAfDaeHK7X00E=;
+        b=MiO4jiOSh+izPlb/pD5mMnf6E+AnfPUK+Am2VeZt4OkNeOu10ClNnidnE8xaC0lGWQ
+         nGA4z/X3MtrsrTxY0gMXenchWlLtDIfK9w3NuHacwElr4aGbwDyHz3j6B5DBapuOeYKo
+         jcWdB9dWo24fWmVq/yEdw5/qWKypllnpF1UiFVz3ICLySzOFgv7jZNUzh4q+YLgYCa5z
+         UPa4IlxYIHYHXHEwlJHRQ6GiLHAHs+LI7rzenJjJy128WSdLTlw/VGgGi5PgmJuh66Wo
+         2eDao3w7OZYB79Y59lJIYxfqi7nhB8xAFUks+IWy5HoY1T0syiXMCDJ9Q1ZkFmkIP9MG
+         Fymg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795001210; x=1795606010;
+        d=1e100.net; s=20260707; t=1795001562; x=1795606362;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=msXJndjH6JzkweLBaiGxmBinT8C/Wtkx/0H1bh3p3rU=;
-        b=l7GkHlvj74lgpSoAVSMei1qyMsMbFxVbewc9X+gqe9r+15EcEzZk6UI3Jtjuabl74f
-         3CGZHGpf2+jwV98ubz/BgdJhOMisrUIdFzAxT6Tzr6dzRJ7trAGDvLbv1JHJ3JK3NH51
-         ZbtjinO9ra4RJKv1prPoPXcL0/Netfn+qUH7K7TLLijH6RN/1xHb7Ed/kQjG8hJtjaJ4
-         0AJsw14okujd6Rx4cv71mNij5/3q5Ar2ITrtdbc4FjgXTyEI/cc+JR5S+MlCafIDove2
-         doh1gt9nj96H2My5INS8MkbOxZYzdLPOmw5Jh1dHy1ZODV61wTgLPeL9v7496EeFKDxW
-         TmXw==
-X-Forwarded-Encrypted: i=1; AL+hErEF8TLgn27fkk6y5EAf5BiVUzLBtHLjVyZdsAVpdLkp8x1VwX65oMLT+PJllKqm3taBOJt+xg4pN7WLFDYsJatcaVk=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9gIpWdBcZMjRhX+LwO+S0KAaK18CwT4cbXoqa1Rf9638FqDuHH
-	WO9PzkrM/Km2vcONUgQW3Fd+lMgyWs5rwHsb7oLcihwStXPYErl7HuSW
-X-Gm-Gg: AZFdTZf9oFAqW1vJS8XnrjTXCyGGXkeUF2+vCj4TcwURFIFokTgEstN/jc0Sr/GNyoV
-	X5D5E/Q7nfV711H89bNTHQSjoHmLo3sNmRO7Qv2yHMIK9qWsxwULBRQCq10So37O4H6oZL2t0QS
-	7SUJEV4abMXxy1O3FwMkqed2LgLOlnVE67ZvJgdAG1eo4ch60QF+IF6PCsQ6wHxdTDCNPBjrWLu
-	2HNUJ2n7inCYqQ5u9tyLFLGiKc3zEGDUoRwEyqWBVrqrtHXIU+BTpZYe2+gU/kJGXDeqq0lyc+O
-	eQ66QjDSNS9c8jdbzC2uab7Qv3V64Fu/6dkK0gf7JoI4WC7f02gwTutDlJ7wgJJ7qvcx0U10Ewx
-	5DkwJ5ZWbwsLwSSNuUAzOQwqf/4toHtpCNXPkVrapBt/0nK3P6nqmVVVsKQo25OTR/NuTBVV5N9
-	uRb/oZ0K3EZIIrjrvF2U/qqqaCkX+OSezuvVhDmTww/Z353cK8pneh4JjPUbeSAu0r/MIx/WTwd
-	OMGiMegxwCyFhKm1lG37HKxIV8POiSeB1T3Djf23ObgCp7cI8H7PUh6UUvrFaZ+EXTv/x9bwGc6
-	0zUBFtHLRTA34eWNBdUwa9xgws3n+Frne373ySO98s/Ngv+M3TVfgDMe+XK1E0o/4wp1
-X-Received: by 2002:a17:90b:440b:b0:3a6:f1d2:57f3 with SMTP id 98e67ed59e1d1-3b3d07e3950mr2232429a91.58.1795001208717;
-        Wed, 18 Nov 2026 03:26:48 -0800 (PST)
+        bh=H9Cu/kf3uQAfc3wOhY3cicQG45Gk9MDAfDaeHK7X00E=;
+        b=Q5SE/oRzONgjTpSsflPGlie/xuaal583hX0uU7ezeb8G0RGcQjus6vTjUmjKNqvrtX
+         YOfgvYMJH6X5TIuSlXDYYDTxoljMS9TZRimS0PhkBoDwd5RCwiZzRkFpJ3bUp/YdhlFF
+         n6zql8SiKRsrxTlkiPD6G104DsuyujylGWNUZ39WqQMd02jhvDsSllqMzkbzxWUHTOCc
+         cispwylLnt4EMTR0EYdctIR/AJPmZkbsQUSYG8NPQzEVf7MEnNyjdJYGJ4NUwerqJeWb
+         6KSceLqBYQChsY0VFoSlrnChZVSpiiASNhKRuYvJVCLqE3/iGzC3rL9seA7Rt5+y51TY
+         II/Q==
+X-Forwarded-Encrypted: i=1; AL+hErHcoyA851rkUI6dZsAVfI8uNOOBbemR2oOrmD7wTWnXQ1HmZk6Ljnl5wKR1ijXhjQP/zX5cz9xJNG3oSJFEFxuN494=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8gwMXX5cLE8QrL/Z1aJVqS/Vxh77vgJhAlmFEkSGpy4IYj9R7Z
+	sc0M30vZX2QlRhV8G0upvhop+E5nEGNJRyyoYZJsDOt/JixOakb7sXxW3reXnw==
+X-Gm-Gg: AZFdTZeacCKW8phpelhP1mOq306xLklMz6y2tfMxaIrNPZWQxKq5/JAbriC1Zeix7NM
+	QeWn2gQyN53ChbiBw4QTvPJwMzUTB2DYL9o1NJvPkTezJm12xkwzLy6A/pM6ihtelw8XLXmRTKH
+	gL5f00v14vhROKRq5Eiw5ItlDFGgq0Pn9jDxWs7JucT1uaRGjiCNWeMxlhwt3qUk0alcHVMDsug
+	623OXyQHWI3X+M75nL3FRsAYSO9XBWNVEB+qo54yLYN4U8P0da/eVbSLRNXoTfELtF3zMUoCmu7
+	rX1+IkBEI+67Qxie4EyULypNcDCpjdeZJo66Gt3Bkuop5oGEFgzTHzLh7OdtZTyIJZHqYMG5Jq/
+	JfWJe6NtpM1TiWb3WIwPyIKkoy+rZO9x4T22HN2B30y0N2lbhdVTVlI5b1Y1gsDk6vCNQ4XcD/D
+	KiWLDpKByukh4gc4a5r3XDjqmFdvnmjVUF0PFm0FaKtKm6OKdVqhkhgZ9nwnHTahWhWBC3JAvrZ
+	AaZajH7R2KZmwT+X6J9La792kgvIUhPhG4QctSUj9FzTEsl+FF8KmfH72CWAo1SuIvNVDJ1PO72
+	vhxfmKvTp78gRRmbZe8ah6AG1PmyxKvxAXLcujQjEzPY1iXztIZ2ipb4UGfqcdxaR6ZRKA==
+X-Received: by 2002:a17:90b:4fd1:b0:3ac:8ee9:c8ed with SMTP id 98e67ed59e1d1-3b3d074e3dcmr2653572a91.13.1795001561953;
+        Wed, 18 Nov 2026 03:32:41 -0800 (PST)
 Received: from ?IPV6:2401:4900:1c43:8cbf:33a7:8ddc:7a9c:40f7? ([2401:4900:1c43:8cbf:33a7:8ddc:7a9c:40f7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3d1acd118sm3997301a91.12.2026.11.18.03.26.43
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3d1acd118sm4024123a91.12.2026.11.18.03.32.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Nov 2026 03:26:48 -0800 (PST)
-Message-ID: <fe93e84a-1876-4416-b3cc-547b9816c865@gmail.com>
-Date: Wed, 18 Nov 2026 16:56:41 +0530
+        Wed, 18 Nov 2026 03:32:41 -0800 (PST)
+Message-ID: <0c859418-ef73-4870-a45d-66137882ab74@gmail.com>
+Date: Wed, 18 Nov 2026 17:02:35 +0530
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -93,7 +93,7 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] openrisc: Add unit tests for KProbes on branch
+Subject: Re: [PATCH v3 1/4] openrisc: Add utilities and clean up simulation of
  instructions
 To: Stafford Horne <shorne@gmail.com>
 Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, naveen@kernel.org,
@@ -102,61 +102,104 @@ Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi, naveen@kernel.org,
  linux-openrisc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20260930202744.50489-1-sahilcdq0@gmail.com>
- <20261026201240.107462-4-sahilcdq0@gmail.com> <avAsy43KVO-7Nm9z@antec>
- <dbfe2a41-c99d-4f00-ac0d-2b2b31a72986@gmail.com> <avkQctt0CKt3YcsH@antec>
+ <20261026201240.107462-2-sahilcdq0@gmail.com> <au7I8FNoMcsoh54X@antec>
+ <52c3ae66-4165-4fc3-a440-fcb76931382a@gmail.com> <avkHMp3Qa_C01Nd8@antec>
 Content-Language: en-US
 From: Sahil <sahilcdq0@gmail.com>
-In-Reply-To: <avkQctt0CKt3YcsH@antec>
+In-Reply-To: <avkHMp3Qa_C01Nd8@antec>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 11/15/26 7:22 AM, Stafford Horne wrote:
-> On Fri, Nov 13, 2026 at 10:45:03PM +0530, Sahil wrote:
->> On 11/8/26 1:33 PM, Stafford Horne wrote:
->>> On Tue, Oct 27, 2026 at 01:42:39AM +0530, Sahil Siddiq wrote:
->>>> Tests already exist lib/tests to verify the generic functionality of
->>>> KProbes. Add unit tests to verify that KProbes work on instructions
->>>> that require simulation in the OpenRISC ISA, and that the corresponding
->>>> delay slots are handled correctly.
->>>>
->>>> Signed-off-by: Sahil Siddiq <sahilcdq0@gmail.com>
+On 11/15/26 6:43 AM, Stafford Horne wrote:
+> On Fri, Nov 13, 2026 at 10:41:56PM +0530, Sahil wrote:
+>> Hi Stafford,
+>> 
+>> On 11/7/26 12:15 PM, Stafford Horne wrote:
+>>> Hi Sahil,
+>>>
+>>> Thanks for your patches, sorry its taken me time to get around to them, my year
+>>> since summer has been quite hectic.
+>>
+>> No worries. I completely understand :)
+>>
+>>> I will do the review in chunks so give me some time.
+>>
+>> Thank you for the review.
+>>
+>>> On Tue, Oct 27, 2026 at 01:42:37AM +0530, Sahil Siddiq wrote:
+>>>> Introduce new instruction-related utilities and macros for OpenRISC.
+>>>> This is in preparation for patches that add tracing support such as
+>>>> KProbes and Kretprobes.
 >>>> [...]
 >>>> +
->>>> +SYM_FUNC_START(test_kprobes_j)
->>>> +test_kprobes_j_addr1:
->>>> +	l.addi	r11,r0,0
->>>> +	l.j	2f
->>>> +	l.nop
+>>>> +void simulate_branch(struct pt_regs *regs, unsigned long jmp_insn)
+>>>> +{
+>>>> +	int displacement;
+>>>> +	unsigned int rb, op, link_offset, temp;
+>>>> +
+>>>> +	displacement = sign_extend32(
+>>>> +		((jmp_insn) & OPENRISC_JUMP_IMM_MASK) << OPENRISC_JUMP_IMM_SHIFT, 27);
+>>>> +	rb = (jmp_insn & OPENRISC_JUMP_REG_MASK) >> OPENRISC_JUMP_REG_SHIFT;
+>>>> +	op = get_6_bit_opcode(jmp_insn);
+>>>> +	link_offset = OPENRISC_INSN_SIZE;
+>>>> +
+>>>> +	if (static_branch_likely(&delay_slot))
+>>>> +		link_offset <<= 1;
 >>>
->>> Just a tiny comment here about indenting the delay slots.
+>>> Why do shift left here instead of += OPENRISC_INSN_SIZE? Since logically we are
+>>> adding one more insn for the delay slot, not doubling.
 >>
->> Got it, I'll indent this.
+>> Since link_offset is initialized to OPENRISC_INSN_SIZE, shifting it to the left by 1 would
+>> update link_offset to 2 * OPENRISC_INSN_SIZE. This is a little more obscure than explicitly
+>> setting it to 2 * OPENRISC_INSN_SIZE. Initially, I thought the left shift operator might be
+>> less expensive than multiplying.
 >>
->>> You could also use the delayslots here, for example:
+>> I was going through mor1kx's design and noticed there's also a pipelined implementation for
+>> the multiplier [1]. But it looks like the implementation for shifting is simpler and can be done
+>> in one cycle. Please let me know if my understanding is incorrect here.
+> 
+> That's correct, but my suggestion was to use += OPENRISC_INSN_SIZE instead of
+> 2 *.
+> 
+>>> However, It may be more efficient to avoid using the alu and write as:
 >>>
->>> 	l.j	2f
->>> 	 l.addi	r11,r0,0
+>>>          if (static_branch_likely(&delay_slot))
+>>>                  link_offset = 2 * OPENRISC_INSN_SIZE;
+>>>          else
+>>>                  link_offset = OPENRISC_INSN_SIZE;
+>>>
+>>> what do you think?
 >>
->> I initially thought of that too. But then I thought by keeping l.addi
->> before l.j, I would also be able to test this for the case when
->> there are no delay slots. I can reshuffle the instructions if that
->> test isn't required. Please let me know what your thoughts are.
+>> I am not sure if I have understood the alu part. WIll it be more efficient because 2 * OPENRISC_INSN_SIZE
+>> will be optimized by the compiler to simply be a single number? So no alu operation will be required,
+>> just one store operation?
 > 
-> I don't think it matters either way since these are tests.  But, it would be good
-> to note that in a comment at the top of the files where you want to maintain
-> that convention.
+> Yup, since 2 * OPENRISC_INSN_SIZE is a constant expression the compiler
+> will replace it with 8.  Then the above code would be just one store operation,
+> something like:
 > 
-> However, thinking a bit further that may be hard to enforce down the line just
-> for a handful of files.  We should assume the kernel code uses delayslots.
+>      if (static_branch_likely(&delay_slot))
+> 	    link_offset = 8;
+>      else
+> 	    link_offset = 4;
+> 
+Got it. Thank you for the clarification. Based on our conversation in commit #3
+regarding delay slots, it should now be fine to remove the static key and handle
+delay slots unconditionally.
 
-I agree. Since "head.S" and "entry.S" already use delay slots, I don't think the
-kernel will work with a CPU config that has delay slots disabled. Also, there
-should now be no need to have a static key for "delay_slot".
-
+>>
+>>>> +	switch (op) {
+>>>> +	case OPENRISC_OPCODE_J: /* l.j */
+>>>
+>>> I think these comments (/* l.j */) are no longer needed sinc you have
+>>> the named macros.
+>>
+>> Got it, I'll remove the comments.
 > 
-> -Stafford
+> [snip]
 > 
+> Thanks,
+>   -Stafford
 
 Thanks,
 Sahil
-
