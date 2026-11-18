@@ -1,64 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795030231;
-	b=qz3J0a08WzvYJve+k6yb569tE4PkyYBxHdUpGKiAH6DQHTUqZZZnW0oSPO/QzU5nvb86
-	 PWywV46wvvUxD1i2yzd3SrZ651uoAPK1m7349iiWqrRNfb130f4HtFZoHIWMojra8Nfnn
-	 t6gP4SrRajqwFFVDTvdYakFYcaJmPgAUI+YSdJKCguMW/MeGEnWVLNOPXE4oBsAonEgI4
-	 Y2VU+/Ww7Cafl/jZTydi2mG10fRGSOaMnm9gNv5nhTCLvqeP8DGCFXSVTnHSHoiu4yP+R
-	 +dFObS2bz4ssMIVoUcz7EWhn3SNJ3CMAa0qIX+YmuSJ/w9zfTXufimI4YGTmma8pdXA==
+	t=1795030232;
+	b=Wnqf1JdPtFoKPob9VNnT3hcxT5YuNUxIj57i6eztFmjovMqQK8iz2JIsG5EMQS6hGQGg
+	 D7cLSIcYDIMck0i5ZCfcsi7a7R3VQMGwnE56vvLpqriYY8MSsEkV/n3zvj9j1s+/Tp+9W
+	 SxaqLHBw6Qp53miaqXHUBDnQ8Rdf31bSJkbu++X/7z/mG7OyhcDQwKJ2rxh+FueMUruDv
+	 C9A+2xBM9sSOj9WxDwEAQ9SWmSDenGMGVjUGCPDafIxxuiyZ4uaQ73LChmImkeSiA9l2a
+	 V08+ciUgMga7lVLmfz6axKhhupFM1SRZqbyn/VEaT2ps3pljx7NyMSsuTl9KgBJm7Og==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795030231;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795030232;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=jO09XBskkDpbk/KzoSDF2MXrlaEtBxnmQAnn10uJib4=;
-	b=2B94LrJGrmxpRGubLp1CJsyAtk4caujT/w3OaTwdd6id/MAPyHzDddvKbEdKU8zL61uI
-	 oySVSWTdUzC9jDH6N0G+bE8z/0wEeP99ajFrdsVJaf2in9RHKgV+pQtazpvYeIBDoHfs/
-	 K81uX0Gp462O/lVWJ0XvRK7xhEyweqqJkKb4rGP1zEg69Xk3MUNOzez8uMHKKz2RCy5rp
-	 eXtgm4UvLBakCrUBLynfo2VKCgcBmuTP1sdBaDHusJxL0kR/MOEG3Qdm7jtQ4P57+ZYia
-	 LXZcYbU87Ee9aluNA1bfb+nn8jC7CyDIEpImLTNPTojKtUCJsdxXhAjIv+uz5dJ6hOQ==
+	bh=n4PNeEybZpAW0mC0xqJL3DdhIkHCnBiTLB4/1PvHJhQ=;
+	b=yp99HyYTvmyIju26SQnfWJF+o1Kwta3cDgvlJmJbdpmOp1vsRzkOT81unfmEGDGKD3+5
+	 A5NRlJ2EBxnIwW+iuFcsP+bVUY6HuWgE2cYXQ0c8WzXjHER4LVA57jdY0HM/EqToGAEuX
+	 JeDcFOV6QKuqUMVaTbd982zyQsPtQt+KUTk0g2EyEAVXxh3EVuxtccel9tonMVefW6JQm
+	 TwQa2HsUEet6FShbYVGNkJe9aKepz+H+glIZyNK6PY+BoOrBI8CEQ1e5EuF0rXqHy+DCY
+	 FR9mZkUtwnIHFzAMtPcUIv++T8ECkFOdJldxcexAl0oarCB2Z2hQ2USX8Ss5JBYjhgw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E8ui3g5L;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MWwm5eVP;
 	arc=none smtp.remote-ip=192.198.163.11
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AE660A5BE6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F96607E70D;
 	Wed, 18 Nov 2026 19:30:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32AE660A5BE6
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98F96607E70D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=E8ui3g5L
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MWwm5eVP
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795030231; x=1826566231;
+  t=1795030232; x=1826566232;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=N1GZLWe8lJFeg/LwOvudrBIHsGKhEM6gK23TFz2GvQE=;
-  b=E8ui3g5L6SqO/melvYvaWeebvBp+YqZWuasZtAeauSTI3rutx6eM93/y
-   yQXmx8AMe4Gl4rS3QlYjTnvTf+Ab1kPQxTEjFNtk04nPhFtDNICY+yfxB
-   JeXWMoQiIAVPFcjfAJnDsPcJPLAsa3ewBO08fK7ffclQs+YAIxkV9V97j
-   1ujkFXWM3nXyKTcTWJq1xPguM05m/Qx4HaVMu68W/PTk7ZZrDGbYoi9GK
-   V8qliXWeQ7Uz5rCXVHPwIO8FeWhw8h6Mg4RuwaYO585gviE9OcQ906tNr
-   r0DaTRGLRORqnwLid+5Gr42xHkFCKhLSwwHDpZ/tQQybJ/75kaSC4V1aX
-   w==;
-X-CSE-ConnectionGUID: BZ4FkXItT4q778l90fIegA==
-X-CSE-MsgGUID: cCElCTKaTk2HpGH0JGKC4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3781321"
+  bh=P6kLXifl5/11T6GIbDHV5075zKSPQDKq9/6zWzb2fSM=;
+  b=MWwm5eVPyTgTPu02X9CfghCu/DHVEAQ9ElNUPE2lXsPlG7dGPBcpv2NN
+   FGbTHkCLcSP1WxbaqpBFJATUhjYejCfOfPFaRbg57f8Cpn3NINYZyYnLc
+   4GZ/LNjVIScJR0i8GuWRmmSrQTtINbDxb0jrTE9sRMk1IdxrUX9Zqx6xT
+   mEqvkqgOdPQcDkCUZOH6620dZzCDS9K+yaUnVCDzuuLi6HHs/f+uDlm3J
+   mbX7zmKVAwhHiUZCcWDrWX+vCjQLb4WDKA7GoDA6S2nsJPyO7ztToHG+P
+   wOozvPUb6p/cZJAzCZ0v3A4u6Q57OBZFwC25kv/1xOuLxuk6n0usmDAJP
+   g==;
+X-CSE-ConnectionGUID: FkgZfaW0T72rS8uR40OaPw==
+X-CSE-MsgGUID: PWTHsgMxSECMXCsBLeU4wA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3781330"
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3781321"
+   d="scan'208";a="3781330"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
   by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 11:30:31 -0800
-X-CSE-ConnectionGUID: N7Qa/gTFSN6Fb+fAY8Hu+w==
-X-CSE-MsgGUID: iwG5HqsFQtqRRxP8VK1zPA==
+X-CSE-ConnectionGUID: r0whFGCgT4SwQ1qzBMs0mg==
+X-CSE-MsgGUID: dnQXkmqkTBGxU10WNAw1Gw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="10468132"
+   d="scan'208";a="10468135"
 Received: from jf.intel.com ([10.165.154.102])
   by fmviesa008.fm.intel.com with ESMTP; 18 Nov 2026 11:30:31 -0800
 From: Ehab Ababneh <ehab.ababneh@intel.com>
@@ -82,9 +82,9 @@ Cc: ashok.raj.linux@gmail.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	pengfei.xu@intel.com,
 	ravi.v.shankar@intel.com
-Subject: [PATCH v2 15/17] platform/x86/intel/ifs: Remove limit on number of batch files
-Date: Wed, 18 Nov 2026 12:32:57 -0700
-Message-ID: <20261118193259.519568-16-ehab.ababneh@intel.com>
+Subject: [PATCH v2 16/17] platform/x86/intel/ifs: Update IFS documentation
+Date: Wed, 18 Nov 2026 12:32:58 -0700
+Message-ID: <20261118193259.519568-17-ehab.ababneh@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261118193259.519568-1-ehab.ababneh@intel.com>
 References: <20261118193259.519568-1-ehab.ababneh@intel.com>
@@ -99,57 +99,142 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Tony Luck <tony.luck@intel.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-Writing to the current_batch sysfs file rejects batch numbers above
-0xff. That limit was expected to be enough, but Diamond Rapids needs
-more than 256 IFS test image (batch) files.
+Update the simultaneous IFS testing domain in the IFS documentation from
+a core to a group that shares the same SCAN engine, which works for both
+the traditional Hyper-Threading (HT) systems and the Dual-Core Module (DCM)
+based systems (e.g., Diamond Rapids).
 
-Remove the limit check on the batch number supplied by the user.
+Add documentation for the new sysfs interfaces {status, details,
+addnl_details, cpus_ran}_list.
 
-[ Qiuxu: Update IFS ABI documentation to reflect the change. ]
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
 Tested-by: Yi Lai <yi1.lai@intel.com>
 ---
- Documentation/ABI/testing/sysfs-platform-intel-ifs | 9 ++++++---
- drivers/platform/x86/intel/ifs/sysfs.c             | 2 +-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel/ifs/ifs.h | 66 ++++++++++++++++++----------
+ 1 file changed, 44 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-intel-ifs b/Documentation/ABI/testing/sysfs-platform-intel-ifs
-index 11cd2f412d81..22430926ceaa 100644
---- a/Documentation/ABI/testing/sysfs-platform-intel-ifs
-+++ b/Documentation/ABI/testing/sysfs-platform-intel-ifs
-@@ -46,9 +46,12 @@ What:		/sys/devices/virtual/misc/intel_ifs_<N>/current_batch
- Date:		Nov 16 2022
- KernelVersion:	6.2
- Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
--Description:	Write a number less than or equal to 0xff to load an IFS test image.
--		The number written treated as the 2 digit suffix in the following file name:
--		/lib/firmware/intel/ifs_<N>/ff-mm-ss-02x.scan
-+Description:	Write a number to load an IFS test image.
-+		The number written is used as the <batch> suffix in the following file name:
-+		/lib/firmware/intel/ifs_<N>/ff-mm-ss-<batch>.scan
-+		where ff, mm and ss are the CPU family, model and stepping, and <batch> is
-+		the number written, in lowercase hex, zero-padded to at least 2 digits
-+		(e.g. 02, ff, 100).
- 		Reading the file will provide the suffix of the currently loaded IFS test image.
- 		This file is present only for device instances where a test image is applicable.
- Devices:	intel_ifs_0
-diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
-index 1a111e6101d8..1a0bfa2a2821 100644
---- a/drivers/platform/x86/intel/ifs/sysfs.c
-+++ b/drivers/platform/x86/intel/ifs/sysfs.c
-@@ -91,7 +91,7 @@ static ssize_t current_batch_store(struct device *dev,
- 	int rc;
- 
- 	rc = kstrtouint(buf, 0, &cur_batch);
--	if (rc < 0 || cur_batch > 0xff)
-+	if (rc < 0)
- 		return -EINVAL;
- 
- 	if (down_interruptible(&ifs_sem))
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index 10eea2c6b871..46461cc69f94 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -14,11 +14,11 @@
+  * Introduction
+  * ------------
+  *
+- * In Field Scan (IFS) is a hardware feature to run circuit level tests on
+- * a CPU core to detect problems that are not caught by parity or ECC checks.
+- * Future CPUs will support more than one type of test which will show up
+- * with a new platform-device instance-id.
+- *
++ * In-Field Scan (IFS) is a hardware feature that runs circuit-level tests on
++ * all CPUs in a group, where all CPUs share the same SCAN test engine to
++ * detect problems that are not caught by parity or ECC checks. Future CPUs
++ * will support more than one type of test, which will show up with a new
++ * platform-device instance-id.
+  *
+  * IFS Image
+  * ---------
+@@ -59,19 +59,19 @@
+  * Running tests
+  * -------------
+  *
+- * Tests are run by the driver synchronizing execution of all threads on a
+- * core and then writing to the ACTIVATE_SCAN MSR on all threads. Instruction
+- * execution continues when:
++ * Tests are run by the driver synchronizing execution of all CPUs in a group
++ * that share the same SCAN test engine, then writing to the ACTIVATE_SCAN MSR
++ * on all CPUs. Instruction execution continues when:
+  *
+  * 1) All tests have completed.
+  * 2) Execution was interrupted.
+  * 3) A test detected a problem.
+  *
+- * Note that ALL THREADS ON THE CORE ARE EFFECTIVELY OFFLINE FOR THE
++ * Note that ALL CPUs IN THE GROUP ARE EFFECTIVELY OFFLINE FOR THE
+  * DURATION OF THE TEST. This can be up to 200 milliseconds. If the system
+- * is running latency sensitive applications that cannot tolerate an
++ * is running latency-sensitive applications that cannot tolerate an
+  * interruption of this magnitude, the system administrator must arrange
+- * to migrate those applications to other cores before running a core test.
++ * to migrate those applications to other CPUs before running a group test.
+  * It may also be necessary to redirect interrupts to other CPUs.
+  *
+  * In all cases reading the corresponding test's STATUS MSR provides details on what
+@@ -81,30 +81,52 @@
+  * The IFS driver provides sysfs interfaces via /sys/devices/virtual/misc/intel_ifs_<n>/
+  * to control execution:
+  *
+- * Test a specific core::
++ * Test a specific group::
+  *
+  *   # echo <CPU#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
+  *
+- * when HT is enabled any of the sibling CPU# can be specified to test
+- * its corresponding physical core. Since the tests are per physical core,
+- * the result of testing any thread is same. All siblings must be online
+- * to run a core test. It is only necessary to test one thread.
++ * Any CPU in the same group that shares the same SCAN test engine can be
++ * specified to test its corresponding group. Offline CPUs in the group do
++ * not take part in the test; if the test then does not pass, the driver
++ * warns. It is only necessary to test one CPU in the group.
+  *
+- * For e.g. to test core corresponding to CPU5
++ * For e.g. to test a group corresponding to CPU5
+  *
+  *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
+  *
+- * Results of the last test is provided in /sys::
++ * The result of the last test for the primary CPU in the group is provided in /sys::
+  *
+  *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/status
+  *   pass
+  *
+- * Status can be one of pass, fail, untested
++ * Status can be one of pass, fail, untested.
+  *
+- * Additional details of the last test is provided by the details file::
++ * Additional details of the last test for the primary CPU in the group are provided in /sys::
+  *
+  *   $ cat /sys/devices/virtual/misc/intel_ifs_<n>/details
+- *   0x8081
++ *   0x7f0080
++ *
++ * For intel_ifs_0, there are following additional sysfs files:
++ *
++ * All CPUs in the same group that ran the test are provided in /sys::
++ *
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/cpus_ran_list
++ *   5,149
++ *
++ * The results of the last test for all CPUs in the same group are provided in /sys::
++ *
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/status_list
++ *   pass pass
++ *
++ * Additional details of the last test for all CPUs in the same group are provided in /sys::
++ *
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/details_list
++ *   0x7f0080 0x7f0080
++ *
++ * More additional details of the last test for all CPUs in the same group are provided in /sys::
++ *
++ *   $ cat /sys/devices/virtual/misc/intel_ifs_0/addnl_details_list
++ *   0xc44191a 0xc44191a
+  *
+  * The details file reports the hex value of the test specific status MSR.
+  * Hardware defined error codes are documented in volume 4 of the Intel
+@@ -125,7 +147,7 @@
+  * uses the subrange feature to restart an interrupted test.
+  *
+  * 2) Hardware allows for some number of cores to be tested in parallel.
+- * The driver does not make use of this, it only tests one core at a time.
++ * The driver does not make use of this, it only tests one group at a time.
+  *
+  */
+ #include <linux/device.h>
 -- 
 2.43.0
 
