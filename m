@@ -1,55 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795033946;
-	b=YKS4vMDc+bAByx/DWBYLR5Az/cfVdLRwLJuO/4/+ViVmGaojaf/2rzGPmS+GHReUAkCm
-	 choiMcNXW4Mrnp2rGQHAtg+T76JutzKSLLVbNWCldx5MkexgzPnzHg9zVRUusLRrVyf6P
-	 V1gac6GmAtuTGyZGKClMYsWtwpQkNGYO6wiEFdwhO2/JTmlvny7qL2rzpem+uUqsBxeS1
-	 oPuWAF3iVcUfcuCmGE7zLaGSg1OJCvONrqWzbPilPm5OJQo2eVr26aSpvt5oYYxUa0oJj
-	 8MfimsAXFMTWrPiI082epAqR2KHX38jTUn1nfy8GdHMQG1zCx8N+Mvpj85iDysgNRIw==
+	t=1795035384;
+	b=GN522hLl9P3fodBPAj7ug4YBbKc09Z1q4vtohvM602xi12ocV8EuyQSGMyoTC2nozqad
+	 FBsJYbjroUkw+dswuwforZCNeAs23NC6hHbRL6Qk1pD8eQ2SqVdobCl3SHfsr8WAm0Lny
+	 O41WpO3thov//BbQ+n0B5RFoAGxPd1gQDW1Uaoy/Htcqa/NrqILkdTRVwDU6WaHA//HTv
+	 FTqLng03A7FC4CzNAGHxmbeeP+TybN+mv+MLrUi9LsALkJ0MxRIf2kEi1sTIeXx3WNmJy
+	 ydzLrwX8GQ77jd6yUMvZBXaokynwmAGWPPORnGYvbB35Ff0D+ZqAmtb9qjLXgybZXrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795033946;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795035384;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Spam-Status:
+	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=oKvaPy0lIh3ckFW6p5LBHOOwcup0EIqtLrLFD9khroo=;
-	b=1pjv6VcjZvj6rOWZE+k9G5kTkjP73ARJTpPcHQXf+QvrnmK6Cs/3a4RvIju0py7DxiII
-	 UzSpMfpLHfqYzNMJwg0pAr6B9y4zx3hvN/RyIX5DsIYf6cPcaw4RrzWqgpfsJiudaSfDV
-	 XZtwVcDa7B9NTm/d42NMRWEbdhocqTs8KkuEee1IPZpkmwtceimmA/ZQc4WYzJdiNUXvo
-	 q2+xVoO3zFTCXo4h4CujKmqri+Spa2gZ5E2XNRJN+Mt4sstNqyBLVrChzbzaYvK9+7Ly7
-	 WqFHBXTNa3w/GF4qWoxbfG4So296DrPXPer/D7WohDXjaxg286W6Z0w8lebTpFSG3VA==
+	bh=/w5gM9JlgSieIjqZ52kZRMIYLrdxxdSRHqJypDDCvPg=;
+	b=SHqhX97Wajtti3znm5Etqlcd1MIFmUkI15YpePTKTCh214LLhc75OB3+kyCtPP8dAo7h
+	 BENsX5/HDXQJAk/TOc9l5CisYv/kfdK8esIZPUwcByLhJIVVhEyLHkHWDuAtTrHxGsrR3
+	 YnGyj4hZtPfmPGdyj6BYWRSkOXuPxW0u7gNWl4jfMjHqOGeaX3anmbwyiUM8ol+qJHZY7
+	 kuXjn1XF3tHmQkygdp4ejn93XMcO6wANyLFJO246+3VD6kO6Ye3rTgW4BbbSv0fhZq4+E
+	 pQ9s9wxwLCG5lqllUDLnQ3ElEB6qsMTqG04iTQ0+uAJbgC8hWio7EIp1yPjTMHJ5s0Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=h8EKwDq7;
-	arc=none smtp.remote-ip=216.40.44.13
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=xzENGHEz;
+	arc=none smtp.remote-ip=216.40.44.12
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C16E606A31C;
-	Wed, 18 Nov 2026 20:32:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2C16E606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526F4606A31C;
+	Wed, 18 Nov 2026 20:56:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 526F4606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=h8EKwDq7
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 8410C4086E;
-	Wed, 18 Nov 2026 20:32:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id B1A7833;
-	Wed, 18 Nov 2026 20:32:21 +0000 (UTC)
-Date: Wed, 18 Nov 2026 15:32:20 -0500
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=xzENGHEz
+Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 06179A08C3;
+	Wed, 18 Nov 2026 20:56:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 4157E2002C;
+	Wed, 18 Nov 2026 20:56:20 +0000 (UTC)
+Date: Wed, 18 Nov 2026 15:56:19 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: David Carlier <devnexen@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] tracing: Reject .function on the function trace event
-Message-ID: <20261118153220.15542786@gandalf.local.home>
-In-Reply-To: <20261114195914.2678414-1-devnexen@gmail.com>
-References: <20261114195914.2678414-1-devnexen@gmail.com>
+To: Yifan Feng <evanfengff@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: Do not WARN on a function probe glob that
+ starts with '!'
+Message-ID: <20261118155619.4d465f3c@gandalf.local.home>
+In-Reply-To: <20261118032637.80038-1-evanfengff@gmail.com>
+References: <20261118032637.80038-1-evanfengff@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,68 +63,58 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: B1A7833
-X-Stat-Signature: q9faisecotch4ibgz7tjniy1wnrgd7ko
+X-Stat-Signature: t3obshratx3dt7edp8q6odctuzomtmtp
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 4157E2002C
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/AM9kBChS00RDKpvMDzSCB8eK9Xxc9hgk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=oKvaPy0lIh3ckFW6p5LBHOOwcup0EIqtLrLFD9khroo=; b=h8EKwDq73i9O4XxvjwmIisd2ObSMhM/rCdn2aNwHMwiaUBUVzd1xnIYak7UjweEGnrw9AB964qLOmc172QNEB3tE11E9FSkk98njsbGZPQs1ARZS6hNvl6Fmy+QUk7M5EdPHLcRh8LX/SI40JU7btkc2DhyrykM1SodiaVyVmfk=
-X-HE-Tag: 1795033941-994633
-X-HE-Meta: U2FsdGVkX18+9pwbS/sGlAPJpJbi0SLDIvZuhM7I8xhRlVTz292KWaqeIr2lUnAb5eEZQT0JqEo8i//AakzknduJOD3KTyvskFDnzHEJWQZBBn6AoxR4wI3NLt/maduHUMOUpWRP8y4EIKTv9rNYKrpPmcWUXajl2SM0nmWoW1ivc1ebwUXXHx7Sn2DZvsJllRepfhBWqCuOpKGj71ZiF6K4D1cTE9enzEvruWQRHv5YuY3uBIwg7kWHJu4hJopxMjgargA72phWfYX6afM76rNvJj7ReZZsQgsQbt5AvhJzAYj3Fr8VRWUxNghDggTQvKEce+i1qyitC2LizOfq8S+eU5x8vAUGQ7iELSx+UtJoMw9qaW7ZV7ggrA/6k2X+KIFbnMTiBCs=
+X-Session-ID: U2FsdGVkX1/G/b9WkT65oSjyk5g56uOSRgjldkM2Ep4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=/w5gM9JlgSieIjqZ52kZRMIYLrdxxdSRHqJypDDCvPg=; b=xzENGHEzcRBTCyQMM3bxo+nGZ64M/ojZMxJOJVetXmdQkChnfgt7s/b44RrcSM+aDYWhGZkDPAkwHKRGC3hBId6vShCT1Ugxzp8ejWQqzEuQmSJZtZLvinY3TO09Amb2Z55HV0UCiD4gXPjMGpowYOurPbS4dLCU+S8rS42zNGk=
+X-HE-Tag: 1795035380-573014
+X-HE-Meta: U2FsdGVkX1/uFm17/g4Vz3c9gTo7yILL6XbPYwQocIHyEz1XnGo47Ch3gpWXN9VvIBMN6I6E8RdSUC3j02nDEMtC6P6iINw3BpuCH+v0TYsJXGMLwVz1jUp5Bo7WJeZ6musfi5jBP3Eyt0HecO3RQ1aNY9yH0qPX2qsLCRv/rKMDxX+mJ6JPa4gAzCdLjQt99s2VRFeLLOFqcD6teTRUIlhwaBSZSNpzqs+d2KNVVBLykRqg3F+xyVa3Bm3YZX/kfdW4RkfB3QoaOPvn+o4ooE2Q6wF9gKfQye8c7SaRW+xnB5pXcYjj9AyWwbHN07XG9kiW9JOv8vQ544aRQGJnxzaWu8kYF2QXbMobfsSVV07rLb+AnjpNPw==
 
-On Sat, 14 Nov 2026 19:59:14 +0000
-David Carlier <devnexen@gmail.com> wrote:
+On Tue, 17 Nov 2026 19:26:37 -0800
+Yifan Feng <evanfengff@gmail.com> wrote:
 
-> For the function event, parse_pred() handles the .function suffix
-> before the ftrace_event_is_function() case, so "ip.function == schedule"
-> builds a predicate with no regex. Setting it through perf then
-> dereferences the NULL pred->regex in ftrace_function_set_filter_pred().
+> Removing a function probe with a second '!' in front of the glob
+> triggers a WARN_ON() in unregister_ftrace_function_probe_func():
 > 
-> The "ip" field of that event already takes a function name, so reject
-> the suffix there.
+>   # echo '!!vfs_read:traceoff' >> set_ftrace_filter
+>   WARNING: kernel/trace/ftrace.c:5675 at unregister_ftrace_function_probe_func+0x662/0x870
 > 
-> Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: David Carlier <devnexen@gmail.com>
-> ---
->  kernel/trace/trace_events_filter.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index c10951bcfc5f..11bb751c4388 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -1743,6 +1743,12 @@ static int parse_pred(const char *str, void *data,
->  	pred->op = op;
->  
->  	if (function) {
-> +		/* Function events already take a function name on 'ip' */
-> +		if (ftrace_event_is_function(call)) {
-> +			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-> +			goto err_free;
-> +		}
-> +
->  		/* The field must be the same size as long */
->  		if (field->size != sizeof(long)) {
->  			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
+> The callback strips the first '!' and filter_parse_regex() then reports
+> the second one as a negated glob. This is plain bad input from user
+> space, so return -EINVAL without the warning.
 
-Instead of rejecting it, why not just ignore it?
+I still want the warning because that should never happen.
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index a1c298210059..e64c44ab3ee5 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1742,7 +1742,9 @@ static int parse_pred(const char *str, void *data,
- 
- 	/* See if the field is a kernel function name */
- 	if ((len = str_has_prefix(str + i, ".function"))) {
--		function = true;
-+		/* Ignore if event is already a function */
-+		if (!ftrace_event_is_function(call))
-+			function = true;
- 		i += len;
- 	}
-
-The above fixes the issue as well, and allows things to work as expected. 
+The real fix is to make "!!" return -EINVAL immediately.
 
 -- Steve
+
+
+> 
+> Fixes: 23b4ff3aa479 ("ftrace: add traceon traceoff commands to enable/disable the buffers")
+> Signed-off-by: Yifan Feng <evanfengff@gmail.com>
+> ---
+> Tested on v7.4-rc3 in QEMU: WARNING and taint before, -EINVAL only after.
+> Found and written with the help of an AI coding assistant.
+> 
+>  kernel/trace/ftrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index c7d74b33d36d..04ea82a18601 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -5672,7 +5672,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+>  		func_g.len = strlen(func_g.search);
+>  
+>  		/* we do not support '!' for function probes */
+> -		if (WARN_ON(not))
+> +		if (not)
+>  			return -EINVAL;
+>  	}
+>  
+> 
+> base-commit: 7ccb044c27720d48175577080b851f047ddcfd1c
+
