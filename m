@@ -1,62 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.157.188.9
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795019066;
-	b=Ia2YEsTtN/F+2V1yb8doNCbD48/8Pfq+71FtLY7lbkE/3Ud7vJW6RsRx49JWr3N4hrL2
-	 X5seRT0LcV0E0/wDapcGPLQabW+eNn5XyLRj0FEYKyiy7vaZ4noqzn4A6UlB8pZy+wD2M
-	 7qlON1IsJAOJvllB9Bnine06rOGH0D0q8Ko3XyKzQPckzpzBSytvFlh7hWnfrpbWAtC6R
-	 qfy1yL2qLv9r140UBEznkdFm1y70pYMQJvUb8EKNVgDbOP0NX62RS4un5FjEcuOTcSYaa
-	 2VJX9PgiW5YnLwgCUDxElTe+YET1C4Gr53xUOoInMpnJVmI57F7t5LytTPms1KLWRbg==
+	t=1795019591;
+	b=ccntI55m0zr4uR1HFKtWnQJICUwHg+vYMZalFfZe2+vC9aVIphqKTedG4JycO+5bcvSe
+	 u5e3jXrLFUBsSqQ87/Gnj/92fIcg2k+Xd7R21HCG4qKPi+XwoYWp10FH48XXRgtf/WIe8
+	 SMfr558ClWPKau0bTqDD8Enx8fbBEtmZalclcYDXCANXm3DQxUjY1YRHLApEwCvebvJhF
+	 oPGBwQ5htch1NpzIlHW2skRdpmlIecVC4qNYy9Jt5Oe1K/VZngnt8mfFsInT2qypAm/Fk
+	 tQLcsEwEk16eXYcwZwIrYLCyyHuuM2UywSnEU8ArnDoHj1uiy50R0XwNT6JWmCsBm8g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795019066;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer;
-	bh=epw40gqFNMQYvZnO9gjc/yFbb5OVshwH0E59eB6Rr/E=;
-	b=Ind1sg1GvYXavplNXueLol2PInQ5IyU1ZavARU6qvkEMAZ4bGyFKFHIyvGmPcL3v644h
-	 lWk/4VOOAdB2FfyKcrZfSWzT+UxesDv9d2aNOD9qkh4Dckj7apUdr4d1MoeTYQygv2A56
-	 NBukWmDQ9E0Qurd7n5QqOlCEiXej4IP5uZtdfDDmxghJl43oh5194yjYsUpEhp1TqA5kC
-	 L6xh2dCYdy4qklsX3AdLiJjzjA1gzVVocGjTq5p3Je5+nZEohjQ6nI29S88spnZylobFw
-	 xYxvgrouJY+XIEg5ISbkurHt1CaD+zrJNC2BkSPUdSDU9bAsChlrs+1cmlkAf+eUjCw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795019591;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:From:To:Cc:Subject:
+	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Infomaniak-Routing;
+	bh=ntwRtha26cu9+6nMcPdfX0yLKMxHwh5Vp3GAIdX+Bhs=;
+	b=Rv9dnIFqdy5Qh9rLMgRaloazQ0NOoq0oT1z0abwGZhxdh2R68ot1Z0V1nDp+1Exw30tO
+	 w90yzVEPSpGyXXZIgZ8ZBMxPLucAJD4KqZUzioPOG6kzxwGz5t9EvM94A43f6chTtjuEC
+	 96zT7LkrrRWS4GxYBPdUD1hD8fYoTMPZoM6gTfwAUNqozfIqeMPyesr+S+hPvhWLHVyn6
+	 /fqKjt7qqYWuo4urq+VpkMmNZ+L4pKDwkPRlKZTZoqH+N07yzLkamBWuS1Y29zAi1sddg
+	 lUZR17PTABGoJViGpTH2ijyPYQY141vqfXGe54Czbc4ANUpsQZMFZkXesbE3gTXpvLA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=207.54.77.171
-Received: from esa4.hc555-34.eu.iphmx.com (esa4.hc555-34.eu.iphmx.com [207.54.77.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7771860A2603;
-	Wed, 18 Nov 2026 16:24:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7771860A2603
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1795019065; x=1826555065;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=yr2kQJNeyn3uaFWqSqXQR1aynTUwhHQ6ShSXTCKHmRc=;
-  b=ORj1hlbkFZTzzClZ9oySWJncyBD2b1IFylD0U3oUnbquNQyv1fHsYuYg
-   BKzqhgPjGm1ZHlbPe69+pOiCOMZOlSAG2LFohqLbB8j8H2NippaypkCKO
-   UkoUV9LMaHJ7O2rIjGBZJsz1sSVsNpf6SmPCVdyb+FCJeXBEHiS64WbIi
-   61fRNMl0N2YUyFFFqwGAONcpEkjfeBM8qZ0FvUg2NGQ5JDC9D5X7af2uu
-   SBBibreIy1lyxSSB6XB5Bh5gZJt8oc4uiBrz/arQmQGevHOd3J47999Tm
-   agka4H7FIrLM3DQ8Id2MP2woNgMPVlifN6B3vEguhLyk+RBfS3BHaZgCq
-   A==;
-X-CSE-ConnectionGUID: nDk3mj84QFyg03/Gd69Mxw==
-X-CSE-MsgGUID: f2OLKYUpRsGfiJ06uMaswg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa4.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 18:24:16 +0200
-X-CSE-ConnectionGUID: FrFXV3NYTwCT7xQ0UBOVZg==
-X-CSE-MsgGUID: ON26Kt2CQbOpeTJvDmw0/A==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.3])
-  by ces02_data.me-corp.lan with SMTP; 18 Nov 2026 18:32:30 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Wed, 18 Nov 2026 18:24:14 +0200
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Wed, 18 Nov 2026 18:24:02 +0200
-Subject: [PATCH v7 6/6] riscv: hwprobe: report whether AMO is faster than
- LR/SC
+	dmarc=none header.from=digikod.net;
+	spf=pass smtp.mailfrom=digikod.net;
+	dkim=pass header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=02jqntJq;
+	arc=none smtp.remote-ip=45.157.188.9
+Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [45.157.188.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA6606A7EE
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 16:33:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6DFA6606A7EE
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.a=rsa-sha256 header.s=20191114 header.b=02jqntJq
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4jV6bR6dmXzGqR;
+	Wed, 18 Nov 2026 17:33:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1795019587;
+	bh=ntwRtha26cu9+6nMcPdfX0yLKMxHwh5Vp3GAIdX+Bhs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=02jqntJqgfacC2Kq/A6IhDNSFxUEmfWsB1ErvG2FLsJHTFx+FZpNDlbXwbFoP9TMk
+	 VaKoIfh5Gb3VO+THe2l21WtJrC42+2s+U8XQX8RUTnYYvi1nlRxYZL9U6OxaZHyQHj
+	 jpBWToMznhS6/3BCkkQac7cE9iZdCNm2KITj/mbE=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4jV6bQ3tfnzktj;
+	Wed, 18 Nov 2026 17:33:06 +0100 (CET)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Christian Brauner <brauner@kernel.org>,
+	Eric Paris <eparis@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	audit@vger.kernel.org,
+	kernel-team@cloudflare.com,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2 2/4] landlock: Add capability objects to denial tracing
+Date: Wed, 18 Nov 2026 17:32:50 +0100
+Message-ID: <20261118163254.2554413-3-mic@digikod.net>
+In-Reply-To: <20261118163254.2554413-1-mic@digikod.net>
+References: <20261118163254.2554413-1-mic@digikod.net>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -66,496 +72,296 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261118-lrsc-only-v7-6-602dcf4c1921@mobileye.com>
-References: <20261118-lrsc-only-v7-0-602dcf4c1921@mobileye.com>
-In-Reply-To: <20261118-lrsc-only-v7-0-602dcf4c1921@mobileye.com>
-To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Mark Rutland <mark.rutland@arm.com>, Gary Guo <gary@garyguo.net>, 
- Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Chao-ying Fu <chao-ying.fu@globalfoundries.com>, 
- Conor Dooley <conor.dooley@microchip.com>, torvalds@linux-foundation.org, 
- olof@lixom.net, aleksa.paunovic@htecgroup.com, arikalo@gmail.com, 
- Boqun Feng <boqun@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Eduard Zingerman <eddyz87@gmail.com>, 
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
- Emil Tsalapatis <emil@etsalapatis.com>, 
- Ihor Solodrai <ihor.solodrai@linux.dev>, 
- Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>, 
- =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
- Pu Lehui <pulehui@huawei.com>, Puranjay Mohan <puranjay@kernel.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Miguel Ojeda <ojeda@kernel.org>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@kernel.org>, 
- Alexandre Courbot <acourbot@nvidia.com>, 
- =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, 
- Andrew Jones <ajones@ventanamicro.com>, Boqun Feng <boqun@kernel.org>
-Cc: Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Vladimir.Kondratiev@mobileye.com, 
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
- Charlie Jenkins <thecharlesjenkins@gmail.com>, 
- Nam Cao <namcao@linutronix.de>, rust-for-linux@vger.kernel.org, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Jesse Taube <jtaubepe@redhat.com>
-X-Mailer: b4 0.16.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On a CPU that traps AMO instructions into firmware and emulates them
-there, such as MIPS P8700, an uncontended AMO costs about 600 cycles
-where the equivalent LR/SC sequence costs about 40. Userspace built for
-the A extension uses AMO for every atomic and pays that on every one.
-It cannot tell from the ISA string: such a CPU still has Zaamo, and
-correctly so.
+The capability denial tracepoint identifies the capability number but
+not the credentials or user namespace against which it was checked.
+Typed BPF consumers therefore cannot reconstruct the authoritative hook
+context, especially when a check targets a user namespace other than the
+caller's current namespace.
 
-Give userspace the same kind of hint the kernel gives for misaligned
-access. At boot, time AMO_SPEED_ITERS amoadd.w against the same number
-of lr.w/addi/sc.w loops on each CPU, take the best sample from an 8 ms
-window of each, and report the result through a new hwprobe key,
-RISCV_HWPROBE_KEY_AMO_PERF:
+Carry the exact cred and user_ns used by each commoncap check through
+check_cap() to the tracepoint's BTF prototype.  The capable hook
+forwards its arguments.  Other callers mirror old->user_ns for
+CAP_SETPCAP, and init_user_ns for CAP_SYS_RAWIO and CAP_SYS_ADMIN.  The
+latter checks protect global hardening and the global admin memory
+reserve, so nested user-namespace capabilities must not authorize them.
 
-  RISCV_HWPROBE_AMO_FAST         AMO is at least as fast as LR/SC
-  RISCV_HWPROBE_AMO_SLOW         LR/SC is faster; use it where possible
-  RISCV_HWPROBE_AMO_UNSUPPORTED  the CPU has no Zaamo
-  RISCV_HWPROBE_AMO_UNKNOWN      not measured, or differs across CPUs
+Keep these pointers out of TP_STRUCT__entry and TP_printk so the raw
+ring-buffer layout and textual format remain unchanged.  They provide
+context only and do not participate in Landlock's verdict.
 
-Only the direction of the difference is reported, not its size: the
-question a program can act on is which sequence to pick. Each CPU logs
-its ratio, and a kernel whose own atomics are AMO warns once when the
-CPU turns out to be slow, pointing at RISCV_ISA_ZAAMO.
+Do not carry the capability options.  CAP_OPT_NOAUDIT already suppresses
+the complete denial record, and the remaining option bits do not explain
+the checked security relationship.
 
-The amoadd.w is spelled with .insn through a new AMOADD_W() in
-insn-def.h, so the file assembles when -march has no Zaamo, and the
-probe is skipped on a CPU whose ISA lacks the extension. CPUs that come
-online later are measured by a hotplug callback. amo_speed={slow|fast}
-on the command line skips the measurement, as unaligned_scalar_speed=
-does; a CPU without Zaamo is reported unsupported either way. The
-probe runs at the same initcall level as the misaligned access probe,
-for the same reasons, and refreshes the vDSO hwprobe data when done.
+Cc: Günther Noack <gnoack@google.com>
+Fixes: 97c8386f1d74 ("landlock: Enforce capability restrictions")
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
 
-Tested on the eyeq7h hardware, with the DT advertising "a":
-
-  [    0.163714] cpu10: AMO speed is 0.07x LR/SC speed (slow)
-  [    0.163727] cpu11: AMO speed is 0.07x LR/SC speed (slow)
-  [    0.163724] cpu6: AMO speed is 0.07x LR/SC speed (slow)
-
-and, with CONFIG_RISCV_ISA_ZAAMO set:
-
-  [    0.163729] AMO is slow but kernel atomics use it, consider disabling RISCV_ISA_ZAAMO
-
-Reviewed-by: Jesse Taube <jtaubepe@redhat.com>
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |   7 +
- Documentation/arch/riscv/hwprobe.rst            |  18 +++
- arch/riscv/Kconfig                              |  13 ++
- arch/riscv/include/asm/cpufeature.h             |   4 +
- arch/riscv/include/asm/hwprobe.h                |   2 +-
- arch/riscv/include/asm/insn-def.h               |   5 +
- arch/riscv/include/uapi/asm/hwprobe.h           |   5 +
- arch/riscv/kernel/Makefile                      |   1 +
- arch/riscv/kernel/amo_speed.c                   | 183 ++++++++++++++++++++++++
- arch/riscv/kernel/sys_hwprobe.c                 |  37 +++++
- 10 files changed, 274 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index e75344f4e0cd..9bc5baff20ff 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -513,6 +513,13 @@ Kernel parameters
- 			Format: <a>,<b>
- 			See also Documentation/input/joydev/joystick.rst
+Changes since v1:
+https://patch.msgid.link/20261117102110.2524197-3-mic@digikod.net
+- Adapt check_cap() callers on landlock-next to forward the exact target
+  user namespace used by commoncap.
+- Document why global checks target init_user_ns and identify the new
+  standard BTF objects as commoncap check context.
+---
+ Documentation/trace/events-landlock.rst |  6 ++--
+ include/trace/events/landlock.h         | 11 ++++--
+ security/landlock/cap.c                 | 45 ++++++++++++++++++-------
+ security/landlock/log.h                 |  9 +++++
+ security/landlock/trace.c               |  9 ++++-
+ 5 files changed, 61 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/trace/events-landlock.rst b/Documentation/trace/events-landlock.rst
+index dc5f05a17c2c..1ddc123df59e 100644
+--- a/Documentation/trace/events-landlock.rst
++++ b/Documentation/trace/events-landlock.rst
+@@ -303,9 +303,9 @@ event prototypes in `Event reference`_ document their argument layouts.
+ The arguments include both standard kernel objects and Landlock-internal
+ objects:
  
-+	amo_speed=	[RISCV]
-+			Format: {slow | fast}
-+			Allow skipping the AMO instruction speed test. This is
-+			useful for testing alternative code paths and to skip
-+			the test in environments where it runs too slowly. All
-+			CPUs must have the same AMO speed.
-+
- 	analog.map=	[HW,JOY] Analog joystick and gamepad support
- 			Specifies type or capabilities of an analog joystick
- 			connected to one of 16 gameports
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index 63d7ef028bf8..84aef6a0a79c 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -425,3 +425,21 @@ The following keys are defined:
-   * :c:macro:`RISCV_HWPROBE_EXT_ZA64RS`: The Za64rs extension is supported,
-     as defined in the RISC-V Profiles specification starting from commit
-     b1d80660 ("Updated to ratified state.")
-+
-+* :c:macro:`RISCV_HWPROBE_KEY_AMO_PERF`: An enum value describing the
-+  performance of the AMO instructions of the Zaamo extension, relative to
-+  the equivalent LR/SC sequence, on the selected set of processors.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_UNKNOWN`: The performance of AMO instructions
-+    is unknown.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_SLOW`: An uncontended AMO instruction takes
-+    longer than the equivalent LR/SC sequence. This is the case when AMO
-+    instructions are trapped and emulated by firmware. Code that can choose
-+    should use LR/SC.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_FAST`: An uncontended AMO instruction is at
-+    least as fast as the equivalent LR/SC sequence.
-+
-+  * :c:macro:`RISCV_HWPROBE_AMO_UNSUPPORTED`: AMO instructions are not
-+    supported, the Zaamo extension is absent.
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 3c3679701a60..dfd6237f879b 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -764,6 +764,19 @@ config RISCV_ISA_ZAAMO
+-- Standard kernel objects (``struct task_struct``, ``struct sock``,
+-  ``struct path``, ``struct dentry``) can be used with existing BPF
+-  helpers.
++- Standard kernel objects (for example ``struct task_struct``, ``struct cred``,
++  ``struct user_namespace``, ``struct sock``, ``struct path``, and
++  ``struct dentry``) can be used with existing BPF helpers.
+ - Landlock-internal objects (``struct landlock_domain``,
+   ``struct landlock_ruleset``, ``struct landlock_rule``,
+   ``struct landlock_hierarchy``) can be read via ``BPF_CORE_READ``.
+diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
+index 9b3e24a613d8..09e90e4a9cd7 100644
+--- a/include/trace/events/landlock.h
++++ b/include/trace/events/landlock.h
+@@ -21,6 +21,7 @@
+ #include <net/af_unix.h>
  
- 	  If you don't know what to do here, say Y.
+ enum landlock_request_type;
++struct cred;
+ struct dentry;
+ struct landlock_blockers;
+ struct landlock_domain;
+@@ -30,6 +31,7 @@ struct landlock_ruleset;
+ struct path;
+ struct sock;
+ struct task_struct;
++struct user_namespace;
  
-+config RISCV_PROBE_AMO_SPEED
-+	bool "Probe AMO instruction speed at boot"
-+	default y
-+	help
-+	  During boot, time an uncontended AMO instruction against the
-+	  equivalent LR/SC sequence on every CPU, and report which one is
-+	  faster to userspace through the hwprobe syscall, as
-+	  RISCV_HWPROBE_KEY_AMO_PERF. On a CPU that traps AMO instructions
-+	  into firmware and emulates them there, LR/SC is much faster, and
-+	  code that can choose should use it.
-+
-+	  If you don't know what to do here, say Y.
-+
- config TOOLCHAIN_HAS_ZBB
- 	bool
- 	default y
-diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-index 5efa72823475..92cab4a7a0f1 100644
---- a/arch/riscv/include/asm/cpufeature.h
-+++ b/arch/riscv/include/asm/cpufeature.h
-@@ -83,6 +83,10 @@ static inline bool unaligned_ctl_available(void)
- }
- #endif
+ static_assert(sizeof(access_mask_t) <= sizeof(u64));
  
-+#ifdef CONFIG_RISCV_PROBE_AMO_SPEED
-+DECLARE_PER_CPU(long, amo_speed);
-+#endif
-+
- #if defined(CONFIG_RISCV_MISALIGNED)
- DECLARE_PER_CPU(long, misaligned_access_speed);
- bool misaligned_traps_can_delegate(void);
-diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
-index 1cc83cecbc05..a7eb17c8180f 100644
---- a/arch/riscv/include/asm/hwprobe.h
-+++ b/arch/riscv/include/asm/hwprobe.h
-@@ -8,7 +8,7 @@
+@@ -1046,6 +1048,9 @@ TRACE_EVENT(landlock_deny_permission_namespace,
+  * @logged: Whether this denial was selected for audit logging.
+  * @blockers: Request type and final missing permission subset (never NULL).
+  * @capability: CAP_* number that was denied.
++ * @cred: Credentials used by commoncap's capability check (never NULL).
++ * @user_ns: Target user namespace used by commoncap's capability check (never
++ *           NULL).
+  *
+  * Emitted when a Landlock domain denies capability use, except for checks
+  * made with CAP_OPT_NOAUDIT, which are denied without emitting this event.
+@@ -1054,9 +1059,11 @@ TRACE_EVENT(landlock_deny_permission_capability,
  
- #include <uapi/asm/hwprobe.h>
+ 	TP_PROTO(const struct landlock_hierarchy *hierarchy, bool same_exec,
+ 		 bool logged, const struct landlock_blockers *blockers,
+-		 int capability),
++		 int capability, const struct cred *cred,
++		 const struct user_namespace *user_ns),
  
--#define RISCV_HWPROBE_MAX_KEY		16
-+#define RISCV_HWPROBE_MAX_KEY		17
+-	TP_ARGS(hierarchy, same_exec, logged, blockers, capability),
++	TP_ARGS(hierarchy, same_exec, logged, blockers, capability, cred,
++		user_ns),
  
- static inline bool riscv_hwprobe_key_is_valid(__s64 key)
+ 	TP_STRUCT__entry(
+ 		__field(	u64,		domain_id	)
+diff --git a/security/landlock/cap.c b/security/landlock/cap.c
+index caf514be3df0..ae3acd13a367 100644
+--- a/security/landlock/cap.c
++++ b/security/landlock/cap.c
+@@ -28,6 +28,10 @@ static const struct access_masks cap_permission = {
+  * check_cap - Check a capability use against the domain of @cred
+  *
+  * @cred: Credentials being checked.
++ * @ns: Target user namespace used by commoncap's capability check, which is
++ *      not necessarily @cred->user_ns.  It is forwarded unchanged to typed
++ *      trace context but is not used for the verdict (policy depends on @cred
++ *      and @cap).
+  * @cap: Capability number (CAP_*).
+  * @opts: Capability check options.  CAP_OPT_NOAUDIT skips the denial record:
+  *        no audit record, no trace event, and no denial count.
+@@ -38,7 +42,8 @@ static const struct access_masks cap_permission = {
+  *
+  * Return: 0 if allowed, -EPERM if capability use is denied.
+  */
+-static int check_cap(const struct cred *const cred, const int cap,
++static int check_cap(const struct cred *const cred,
++		     struct user_namespace *const ns, const int cap,
+ 		     const unsigned int opts)
  {
-diff --git a/arch/riscv/include/asm/insn-def.h b/arch/riscv/include/asm/insn-def.h
-index 8fcc848c196e..5ca5c0b8ad66 100644
---- a/arch/riscv/include/asm/insn-def.h
-+++ b/arch/riscv/include/asm/insn-def.h
-@@ -219,6 +219,11 @@ ALTERNATIVE("nop", "fence rw, rw", SIFIVE_VENDOR_ID,			\
- 	__ASM_STR(.error "hlv.d requires 64-bit support")
- #endif
+ 	const struct landlock_cred_security *subject;
+@@ -64,6 +69,13 @@ static int check_cap(const struct cred *const cred, const int cap,
+ 				.permission =
+ 					LANDLOCK_PERMISSION_CAPABILITY_USE,
+ 				.layer_plus_one = denied_layer,
++#ifdef CONFIG_TRACEPOINTS
++				.trace_cap =
++					&(struct landlock_cap_trace){
++						.cred = cred,
++						.user_ns = ns,
++					},
++#endif /* CONFIG_TRACEPOINTS */
+ 			});
  
-+/* Spelled out so that it assembles when -march lacks Zaamo */
-+#define AMOADD_W(dest, addr, val)				\
-+	INSN_R(OPCODE_AMO, FUNC3(2), FUNC7(0),			\
-+	       RD(dest), RS1(addr), RS2(val))
-+
- #define LB_AQ(dest, addr)					\
- 	INSN_R(OPCODE_AMO, FUNC3(0), FUNC7(26),			\
- 	       RD(dest), RS1(addr), __RS2(0))
-diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-index e6a394fbe7fc..a5f726f94204 100644
---- a/arch/riscv/include/uapi/asm/hwprobe.h
-+++ b/arch/riscv/include/uapi/asm/hwprobe.h
-@@ -122,6 +122,11 @@ struct riscv_hwprobe {
- #define		RISCV_HWPROBE_EXT_ZICCIF	_BITULL(3)
- #define		RISCV_HWPROBE_EXT_ZICCRSE	_BITULL(4)
- #define		RISCV_HWPROBE_EXT_ZA64RS	_BITULL(5)
-+#define RISCV_HWPROBE_KEY_AMO_PERF	17
-+#define		RISCV_HWPROBE_AMO_UNKNOWN	0
-+#define		RISCV_HWPROBE_AMO_SLOW		1
-+#define		RISCV_HWPROBE_AMO_FAST		2
-+#define		RISCV_HWPROBE_AMO_UNSUPPORTED	3
- 
- /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
- 
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index ebe1c3588177..fc935c877e82 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -79,6 +79,7 @@ obj-$(CONFIG_RISCV_MISALIGNED)	+= traps_misaligned.o
- obj-$(CONFIG_RISCV_MISALIGNED)	+= unaligned_access_speed.o
- obj-$(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)		+= copy-unaligned.o
- obj-$(CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS)	+= vec-copy-unaligned.o
-+obj-$(CONFIG_RISCV_PROBE_AMO_SPEED)	+= amo_speed.o
- 
- obj-$(CONFIG_FPU)		+= fpu.o
- obj-$(CONFIG_FPU)		+= kernel_mode_fpu.o
-diff --git a/arch/riscv/kernel/amo_speed.c b/arch/riscv/kernel/amo_speed.c
-new file mode 100644
-index 000000000000..8cd66941c3a6
---- /dev/null
-+++ b/arch/riscv/kernel/amo_speed.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Measure whether AMO instructions are faster than the equivalent LR/SC
-+ * sequence. They are not on a CPU that traps them into firmware and
-+ * emulates them there, such as MIPS P8700, where an AMO costs hundreds of
-+ * cycles and LR/SC tens. The result goes to userspace through hwprobe,
-+ * so code that can choose between the two knows which one to use.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/smp.h>
-+#include <linux/timekeeping.h>
-+#include <asm/cpufeature.h>
-+#include <asm/hwprobe.h>
-+#include <asm/insn-def.h>
-+#include <asm/timex.h>
-+
-+/* Time window for each measurement, and atomics per sample within it */
-+#define AMO_SPEED_NS		8000000
-+#define AMO_SPEED_ITERS		1024
-+
-+DEFINE_PER_CPU(long, amo_speed) = RISCV_HWPROBE_AMO_UNKNOWN;
-+
-+static DEFINE_PER_CPU_ALIGNED(u32, amo_speed_word);
-+static long amo_speed_param = RISCV_HWPROBE_AMO_UNKNOWN;
-+
-+static void amo_speed_amo(u32 *word, unsigned long n)
-+{
-+	unsigned long tmp;
-+
-+	asm volatile(
-+		"1:\n"
-+		AMOADD_W(%[tmp], %[word], %[one])
-+		"	addi %[n], %[n], -1\n"
-+		"	bnez %[n], 1b\n"
-+		: [tmp] "=&r" (tmp), [n] "+&r" (n), "+m" (*word)
-+		: [word] "r" (word), [one] "r" (1UL)
-+		: "memory");
-+}
-+
-+static void amo_speed_lrsc(u32 *word, unsigned long n)
-+{
-+	unsigned long tmp;
-+
-+	asm volatile(
-+		"1:	lr.w %[tmp], (%[word])\n"
-+		"	addi %[tmp], %[tmp], 1\n"
-+		"	sc.w %[tmp], %[tmp], (%[word])\n"
-+		"	bnez %[tmp], 1b\n"
-+		"	addi %[n], %[n], -1\n"
-+		"	bnez %[n], 1b\n"
-+		: [tmp] "=&r" (tmp), [n] "+&r" (n), "+m" (*word)
-+		: [word] "r" (word)
-+		: "memory");
-+}
-+
-+/*
-+ * For a fixed amount of time, repeatedly run func and take the best time
-+ * in cycles as the measurement.
-+ */
-+static u64 amo_speed_measure(void (*func)(u32 *word, unsigned long n),
-+			     u32 *word)
-+{
-+	u64 start_cycles, end_cycles, cycles = -1ULL;
-+	u64 start_ns;
-+
-+	/* Do a warmup. */
-+	func(word, AMO_SPEED_ITERS);
-+
-+	preempt_disable();
-+
-+	start_ns = ktime_get_mono_fast_ns();
-+	while (ktime_get_mono_fast_ns() < start_ns + AMO_SPEED_NS) {
-+		start_cycles = get_cycles64();
-+		/* Ensure the CSR read can't reorder WRT to the atomics. */
-+		mb();
-+		func(word, AMO_SPEED_ITERS);
-+		/* Ensure the atomics end before the end time is snapped. */
-+		mb();
-+		end_cycles = get_cycles64();
-+		if ((end_cycles - start_cycles) < cycles)
-+			cycles = end_cycles - start_cycles;
-+	}
-+
-+	preempt_enable();
-+
-+	return cycles;
-+}
-+
-+/*
-+ * Settle the speed of one CPU: unsupported without Zaamo, the command
-+ * line value if one was given, otherwise measure. Runs on that CPU.
-+ */
-+static void check_amo_speed(void *unused)
-+{
-+	int cpu = smp_processor_id();
-+	u32 *word = this_cpu_ptr(&amo_speed_word);
-+	u64 amo_cycles, lrsc_cycles;
-+	long speed;
-+	int ratio;
-+
-+	if (per_cpu(amo_speed, cpu) != RISCV_HWPROBE_AMO_UNKNOWN)
-+		return;
-+
-+	if (!riscv_cpu_has_extension_unlikely(cpu, RISCV_ISA_EXT_ZAAMO)) {
-+		per_cpu(amo_speed, cpu) = RISCV_HWPROBE_AMO_UNSUPPORTED;
-+		return;
-+	}
-+
-+	if (amo_speed_param != RISCV_HWPROBE_AMO_UNKNOWN) {
-+		per_cpu(amo_speed, cpu) = amo_speed_param;
-+		return;
-+	}
-+
-+	amo_cycles = amo_speed_measure(amo_speed_amo, word);
-+	lrsc_cycles = amo_speed_measure(amo_speed_lrsc, word);
-+
-+	/* Don't divide by zero. */
-+	if (!amo_cycles || !lrsc_cycles) {
-+		pr_warn("cpu%d: rdtime lacks granularity needed to measure AMO speed\n",
-+			cpu);
-+		return;
-+	}
-+
-+	if (amo_cycles <= lrsc_cycles)
-+		speed = RISCV_HWPROBE_AMO_FAST;
-+	else
-+		speed = RISCV_HWPROBE_AMO_SLOW;
-+
-+	ratio = div64_u64(lrsc_cycles * 100, amo_cycles);
-+	pr_info("cpu%d: AMO speed is %d.%02dx LR/SC speed (%s)\n",
-+		cpu, ratio / 100, ratio % 100,
-+		speed == RISCV_HWPROBE_AMO_FAST ? "fast" : "slow");
-+
-+	per_cpu(amo_speed, cpu) = speed;
-+
-+	if (speed == RISCV_HWPROBE_AMO_SLOW && IS_ENABLED(CONFIG_RISCV_ISA_ZAAMO))
-+		pr_warn_once("AMO is slow but kernel atomics use it, consider disabling RISCV_ISA_ZAAMO\n");
-+}
-+
-+static int amo_speed_online_cpu(unsigned int cpu)
-+{
-+	check_amo_speed(NULL);
-+	return 0;
-+}
-+
-+static int __init set_amo_speed_param(char *str)
-+{
-+	if (!strcmp(str, "slow"))
-+		amo_speed_param = RISCV_HWPROBE_AMO_SLOW;
-+	else if (!strcmp(str, "fast"))
-+		amo_speed_param = RISCV_HWPROBE_AMO_FAST;
-+	else
-+		return 0;
-+
-+	return 1;
-+}
-+__setup("amo_speed=", set_amo_speed_param);
-+
-+static int __init check_amo_speed_all_cpus(void)
-+{
-+	if (amo_speed_param != RISCV_HWPROBE_AMO_UNKNOWN)
-+		pr_info("AMO speed set to '%s' (%lu) by command line\n",
-+			amo_speed_param == RISCV_HWPROBE_AMO_FAST ? "fast" : "slow",
-+			amo_speed_param);
-+
-+	on_each_cpu(check_amo_speed, NULL, 1);
-+
-+	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:amo_speed",
-+				  amo_speed_online_cpu, NULL);
-+
-+	/* The vDSO was filled before the probe ran; give it the result. */
-+	riscv_hwprobe_update_vdso_data();
-+
-+	return 0;
-+}
-+
-+/*
-+ * Same level as the unaligned access probe: after clocksource_done_booting()
-+ * so that amo_speed_measure() uses a stable clocksource, but before
-+ * rootfs_initcall() enables usermode helpers that can reach hwprobe.
-+ */
-+fs_initcall_sync(check_amo_speed_all_cpus);
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index 2c64a13c5155..32ce3ac8bc4a 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -269,6 +269,39 @@ static u64 hwprobe_misaligned(const struct cpumask *cpus)
- }
- #endif
- 
-+#ifdef CONFIG_RISCV_PROBE_AMO_SPEED
-+static u64 hwprobe_amo(const struct cpumask *cpus)
-+{
-+	int cpu;
-+	u64 perf = -1ULL;
-+
-+	for_each_cpu(cpu, cpus) {
-+		int this_perf = per_cpu(amo_speed, cpu);
-+
-+		if (perf == -1ULL)
-+			perf = this_perf;
-+
-+		if (perf != this_perf) {
-+			perf = RISCV_HWPROBE_AMO_UNKNOWN;
-+			break;
-+		}
-+	}
-+
-+	if (perf == -1ULL)
-+		return RISCV_HWPROBE_AMO_UNKNOWN;
-+
-+	return perf;
-+}
-+#else
-+static u64 hwprobe_amo(const struct cpumask *cpus)
-+{
-+	if (!hwprobe_ext0_has(cpus, RISCV_HWPROBE_EXT_ZAAMO))
-+		return RISCV_HWPROBE_AMO_UNSUPPORTED;
-+
-+	return RISCV_HWPROBE_AMO_UNKNOWN;
-+}
-+#endif
-+
- #ifdef CONFIG_RISCV_VECTOR_MISALIGNED
- static u64 hwprobe_vec_misaligned(const struct cpumask *cpus)
+ 	return -EPERM;
+@@ -73,8 +85,7 @@ static int check_cap(const struct cred *const cred, const int cap,
+  * hook_capable - Deny capability use for Landlock-sandboxed processes
+  *
+  * @cred: Credentials being checked.
+- * @ns: Target user namespace (intentionally ignored; policy depends on the
+- *      acting credentials and @cap, not namespace ownership).
++ * @ns: Target user namespace, used only as typed trace context.
+  * @cap: Capability number (CAP_*).
+  * @opts: Capability check options, see check_cap().
+  *
+@@ -88,7 +99,7 @@ static int check_cap(const struct cred *const cred, const int cap,
+ static int hook_capable(const struct cred *cred, struct user_namespace *ns,
+ 			int cap, unsigned int opts)
  {
-@@ -345,6 +378,10 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
- 		pair->value = hwprobe_vec_misaligned(cpus);
+-	return check_cap(cred, cap, opts);
++	return check_cap(cred, ns, cap, opts);
+ }
+ 
+ /**
+@@ -118,7 +129,7 @@ static int hook_capset(struct cred *new, const struct cred *old,
+ 			 cap_combine(old->cap_inheritable, old->cap_permitted)))
+ 		return 0;
+ 
+-	return check_cap(old, CAP_SETPCAP, CAP_OPT_NONE);
++	return check_cap(old, old->user_ns, CAP_SETPCAP, CAP_OPT_NONE);
+ }
+ 
+ /**
+@@ -127,8 +138,11 @@ static int hook_capset(struct cred *new, const struct cred *old,
+  * @addr: Address of the new mapping.
+  *
+  * cap_mmap_addr() requires CAP_SYS_RAWIO to map below dac_mmap_min_addr, but
+- * calls cap_capable() directly, which skips hook_capable().  Check the same
+- * condition against the domain.  commoncap runs first, so this only sees
++ * calls cap_capable() directly, which skips hook_capable().  It checks the
++ * acting task's credentials against init_user_ns because this global limit must
++ * not be bypassed with a capability only held in a nested user namespace.
++ * Mirror the condition, using the same credential for the domain check and both
++ * objects for typed trace context.  commoncap runs first, so this only sees
+  * mappings that commoncap allowed.
+  *
+  * Return: 0 if allowed, -EPERM if CAP_SYS_RAWIO use is denied.
+@@ -138,7 +152,8 @@ static int hook_mmap_addr(unsigned long addr)
+ 	if (addr >= dac_mmap_min_addr)
+ 		return 0;
+ 
+-	return check_cap(current_cred(), CAP_SYS_RAWIO, CAP_OPT_NONE);
++	return check_cap(current_cred(), &init_user_ns, CAP_SYS_RAWIO,
++			 CAP_OPT_NONE);
+ }
+ 
+ /**
+@@ -148,10 +163,13 @@ static int hook_mmap_addr(unsigned long addr)
+  * @pages: Number of pages being charged (unused).
+  *
+  * cap_vm_enough_memory() lets CAP_SYS_ADMIN use the vm.admin_reserve_kbytes
+- * reserve, but calls cap_capable() directly, which skips hook_capable().  Check
+- * the same capability against the domain.  commoncap runs first, so this only
+- * sees tasks that commoncap let use the reserve.  Like commoncap, do not log
+- * denials: this only selects a memory limit.
++ * reserve, but calls cap_capable() directly, which skips hook_capable().  It
++ * checks the acting task's credentials against init_user_ns because a
++ * capability only held in a nested user namespace must not grant access to the
++ * global reserve.  Mirror the check, using the same credential for the domain
++ * check and both objects for typed trace context.  commoncap runs first, so
++ * this only sees tasks that commoncap let use the reserve.  Like commoncap, do
++ * not log denials: this only selects a memory limit.
+  *
+  * Return: 0 if the domain does not withhold the reserve, -EPERM if
+  * CAP_SYS_ADMIN use is denied.  An error does not fail the allocation by
+@@ -159,7 +177,8 @@ static int hook_mmap_addr(unsigned long addr)
+  */
+ static int hook_vm_enough_memory(struct mm_struct *mm, long pages)
+ {
+-	return check_cap(current_cred(), CAP_SYS_ADMIN, CAP_OPT_NOAUDIT);
++	return check_cap(current_cred(), &init_user_ns, CAP_SYS_ADMIN,
++			 CAP_OPT_NOAUDIT);
+ }
+ 
+ static struct security_hook_list landlock_hooks[] __ro_after_init = {
+diff --git a/security/landlock/log.h b/security/landlock/log.h
+index 641a2c3c78ed..5ca87870c7b7 100644
+--- a/security/landlock/log.h
++++ b/security/landlock/log.h
+@@ -13,10 +13,12 @@
+ 
+ #include "access.h"
+ 
++struct cred;
+ struct landlock_cred_security;
+ struct landlock_hierarchy;
+ struct sockaddr;
+ struct task_struct;
++struct user_namespace;
+ 
+ enum landlock_request_type {
+ 	LANDLOCK_REQUEST_PTRACE = 1,
+@@ -54,6 +56,11 @@ struct landlock_signal_trace {
+ 	int signal;
+ };
+ 
++struct landlock_cap_trace {
++	const struct cred *cred;
++	const struct user_namespace *user_ns;
++};
++
+ #endif /* CONFIG_TRACEPOINTS */
+ 
+ /*
+@@ -104,6 +111,8 @@ struct landlock_request {
+ 		const struct landlock_ptrace_trace *trace_ptrace;
+ 		/* Synchronous context for a signal denial. */
+ 		const struct landlock_signal_trace *trace_signal;
++		/* Synchronous context for a capability denial. */
++		const struct landlock_cap_trace *trace_cap;
+ 	};
+ #endif /* CONFIG_TRACEPOINTS */
+ };
+diff --git a/security/landlock/trace.c b/security/landlock/trace.c
+index 00cb497eaffb..a47fb10dec45 100644
+--- a/security/landlock/trace.c
++++ b/security/landlock/trace.c
+@@ -97,14 +97,21 @@ void landlock_trace_denial(
  		break;
+ 	case LANDLOCK_REQUEST_CAPABILITY:
+ 		if (trace_landlock_deny_permission_capability_enabled()) {
++			const struct landlock_cap_trace *const trace_cap =
++				request->trace_cap;
+ 			const struct landlock_blockers blockers = {
+ 				.access = missing,
+ 				.type = request->type,
+ 			};
  
-+	case RISCV_HWPROBE_KEY_AMO_PERF:
-+		pair->value = hwprobe_amo(cpus);
-+		break;
++			if (WARN_ON_ONCE(!trace_cap || !trace_cap->cred ||
++					 !trace_cap->user_ns))
++				return;
 +
- 	case RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE:
- 		if (hwprobe_ext0_has(cpus, RISCV_HWPROBE_EXT_ZICBOZ))
- 			pair->value = riscv_cboz_block_size;
-
+ 			trace_landlock_deny_permission_capability(
+ 				youngest_denied, same_exec, logged, &blockers,
+-				request->audit.u.cap);
++				request->audit.u.cap, trace_cap->cred,
++				trace_cap->user_ns);
+ 		}
+ 		break;
+ 	case LANDLOCK_REQUEST_FS_ACCESS:
 -- 
-2.43.0
+2.56.0
 
