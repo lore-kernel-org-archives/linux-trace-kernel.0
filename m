@@ -1,94 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794961984;
-	b=fLvNGc/pdicvMIBy0XWiCmCS53iob2AvMhaeSaa1TfmVRNSUHmPlPEjm4tvgoEs8ywCI
-	 Uk6GGECF5pDVEqqsCiIs5KGcqIqx/wXfVFSbizKVF7HbAvDJR+Lq/Tn8oS60+9qP+HBt/
-	 8bR8WagpAG7d1Ca2kgaUrDlspj0dEQ4WC1Gz5vEiuTkZ25UWxv+02MXg7HAHkU77u17Wr
-	 PHSka6LPSKuNu7ivKIhe8IVhO3W5qlxxHmGJ+bwC9XUPoMS6GWLjinm2x8ie/DOCtwTyP
-	 i9cCmKh53zJMuy8/uvxp8EdGki3a14FbEoGtTXjiDuPrjrYzZc76fFLIYitosb4nkNA==
+	t=1794962406;
+	b=FNUu1T3GggO9yYYqXWNkuKMHvO8Aw+jx8N2nJvaJ878jgqfO1vwgceCTLhGgtstlgkT3
+	 C8gcTN3SHIm0/gA3b4gsxyUWp5suXDgNM6iA/IevqP0p4ACjr1p22+3LhXas+SY35EEcE
+	 MYleX3FvsD1qngpsmupTuFAEBO+x9TMcflSPHTgh/8UPRL85Uuz8HAgpWn3GBxoeJ7lkw
+	 ZScY8LNvZS9VQ+kRFE+RsU3TBzTBYDtKdGj/jxkoTFWhuH+6PCDPURKJPhBjas9ubJYE6
+	 Vgo7Y4esxjXqMHT/I72U72439p8Jfy56XVrzMF+DAyiYCfbOPNGKUB8cgd4n/p+P65g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794961984;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=gjGQXw/70DbXqpjUFfZeDZh2w0sbpZHOaCdTp2IlGvk=;
-	b=O38X01MKZhpWeSP7YIoUGeaikULtCzjazM+F159Eift2p2ES6JdYYjS19AJfaOVtCHL+
-	 Ge8NDl87N3wEPpM1ReZI+JGnCbUIQzEHdYLLwdg+nDwhN2qNIe1ZryZ1xNStzBJpiE5yx
-	 EO0DzNDwK6+73AUWce2l9t34BvhLoe5RzYkpnmVqGRP00lLaEJODqbT0wANUroCsZASGN
-	 atJaYgQbIcMg0KPiJI3WraJJJmH3XS/5Cse4oYSP+Ey0ZRdWW/HCLymsz7ieuwS3ByCs4
-	 7cwwbOXeXsFIlr0mUoVBMzlpAFZNz/A99XpGKFBuVZ7ZZh/i5qR0ii/htVV27fQezlw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794962406;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=RBhP2efSbh5Qx8vYvyeSrs3pfaq2wVW5VxT9IjZRr/s=;
+	b=3JAgOb0NvVe6tddGrrzXGPk2G++rnzstiJICGwHgFu3o2wIjKk0m3k7gZfB0RfvIP2e/
+	 PfmG8wme2sQy7juIOKaKIkW8G7lmbKxVn/nrsL/w9gAMMXL4mHKmsR9+1dUVLjLXQxXzb
+	 emhYzmhiyltdMkMOxEOrsMLxpVmgXwf/HFY/ukI+sB5g1KvoU4xmkTsjfmfv+Fh0MTulV
+	 WoX6Pgup8N9yN7vY7s6Z8u44I+U10n/CnjdL2M3F22KZ5xKwvzz82VdQC6whXquvahjv4
+	 MboprHQCz2xNx3aS/LGvkvss9RUDgg6e0mXtGuavH0PqzVRv+7DRJmCJVAwVDLv9rjw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yBYHROdA;
-	arc=none smtp.remote-ip=209.85.161.44
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g8uivWgp;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090BC606A33B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 00:33:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 090BC606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C29606A88A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 00:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=yBYHROdA
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-70b875f6f13so375393eaf.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Nov 2026 16:33:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794961983; x=1795566783; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gjGQXw/70DbXqpjUFfZeDZh2w0sbpZHOaCdTp2IlGvk=;
-        b=yBYHROdA5yxM+zOO0I5PPRFs+Aa/f417+NndZoLS8vVqf9QiD9JYsEW96INWoEPPHM
-         q3FXykjJiSrgC2Wbg3zqcCPN/2wBZ63EXOzPqdg9VxpXb0OrwFHTU4MW/veMVcIy7pPe
-         3XxJ5YE3gtJn3hKpfc6c+Sjdp0no9Y0i+iND5TEJayZWLJOvn9gqe7BgVPOpN5IhWwYV
-         vSX+iBwZjLA6G4aTjVdhXfdqfOkPrCr7fP9osC/xqVQhoPlXVIbGF5Jb2tlWsERnpeIl
-         MO4Ghvt4ibd4jjUSKCRsJWNeMN0WrKdXvwgG96zoK8OxovB9izrc8LpAv1p3yj1oJFRg
-         ew7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794961983; x=1795566783;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=gjGQXw/70DbXqpjUFfZeDZh2w0sbpZHOaCdTp2IlGvk=;
-        b=CEn+CGOCwxSwuOq+rktFJhEomSWtNIhxB+Hqez44o6lTpb/T+gqCEPJmBhuDhqEclJ
-         Tc8eJWHY2q6eAx+F4z/3eQM1F59uDk3y2JBYPHs4uxg25mE7xzbZ/YIhC12h7UMOKaNE
-         8b5C3np1I7/gmXP/Wwd7gGgnpnJ+D2audH23q0HjhL6yKJIOLe7GH0NzMBSDByVaIrvM
-         bJeyHgEc45mxdhIVru2ns2jZeohPK0uh4DrojzxxVKU/fY8D+KEJ4uOzTzKvrXvJTXM5
-         2nUaOcR9zp3bPJKhYAeGRdjiAivYYYPBnfrKX4IM2RcUnKMWLo3WAfMCMgyldXnyERm4
-         OQ3A==
-X-Forwarded-Encrypted: i=1; AL+hErHH0JGc4bi8F4DE2BD8jucsqOVy6gAl9rGpmbAGUe23Hkf045uviupsq7ZDs0o+18xDQ8GFiSnUFXX79Ljv/2qWQfg=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9Ry+h2ThYWGFUYEw789Gv0YYWjL0XFGJbNcAbO9BD+jhu9w4Pk
-	7PGQdQKdX/Y7hGrcMi8VVy7NLz6tBmX9SsVo9UhABJh5LZO6IDdCYjos
-X-Gm-Gg: AYBFou2h1zESHINdlnQen2pAJaPNzwRvGwUTy8BdmSvyIBKSjtjF8JX6XJQlC5UDjET
-	+D//m0qRjdlPrtky54HtjEFzQ4JR0PFIn3HtleTxbHfgI2410THdxHNmsUP5w6s23trn8z/cHAW
-	XoIkHNd1v3wVrSdeBB+MGiCbgtV/HaD5VhNnDNB+7izcS4U4esyvZuQyI4t5rJ6wJDm3PYenT3Y
-	fDtRHy9wP7RzYcKkD0c4+r4exgp035w1jgljBRkPVPSFA/UC5NwU1D67YS8sSmtlmXDip9+fDOO
-	7v3PXHibLuBbakpPIiENHGrBdcuhIo/qMedbaTtfR7QXesadO6g0KlvvArNxmvVaPLP5vgGy73U
-	l2Vb4T9Zbgr3Pldz9TME5Se+V3xxuImxUiKMSfMEwzC23JFga2FfDh+0u7Q8T3KCqX3up/Eq3tu
-	2CQvW0yUUObtEjgzBJgLh2sC8ftEAch8TulDILMRre8Mq8I0O/cmfz+cBlZy1lor86oEkuRA6K4
-	asqZp3sqY1vlBD/+NjfC7DNHAreZZ7ZlrNOzs9h4y7lHaVxiuBlFxJ0xG8yiPFB2UMsADSs5R/q
-	A01TyaW+52wkrgqKRHguJEnsfzQrpBWseJdTwKTj8AL2q7aA3b7BJKO23QGYxQNCvQFe9/yGhR2
-	6Bbt6XlnoA+JGVtam///GZV83MGQL3JpUcozWdg==
-X-Received: by 2002:a05:6820:178f:b0:6fd:4277:16e7 with SMTP id 006d021491bc7-71b18476f7emr825396eaf.23.1794961982890;
-        Tue, 17 Nov 2026 16:33:02 -0800 (PST)
-Received: from FKXX2DL94F.bytedance.net ([72.29.204.230])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-71b19229f3csm736942eaf.1.2026.11.17.16.33.01
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 17 Nov 2026 16:33:02 -0800 (PST)
-From: Yifan Feng <evanfengff@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yifan Feng <evanfengff@gmail.com>
-Subject: [PATCH] tracing/fprobe: Do not let KASAN check the $stackN read
-Date: Tue, 17 Nov 2026 16:32:05 -0800
-Message-Id: <20261118003205.59804-1-evanfengff@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g8uivWgp
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9D11F000C5;
+	Wed, 18 Nov 2026 00:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794962405;
+	bh=RBhP2efSbh5Qx8vYvyeSrs3pfaq2wVW5VxT9IjZRr/s=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=g8uivWgpD+pjX5nHzwLebzvDQz2NSuZtjBg+yGgU7LA+AFGXCp958n+2Z1ytgan7I
+	 tTACPYzRRfNcovjPYYF9D9oKdH9s/pQxv7rCg3lsejEia3lR11pTzT6ouwm24IRtx0
+	 s7bSqI20L36FLcYy7/+EmotaPzQoKxhLUwPP8PCU2jMCCtEz5eutNCqA2nYS88pfgK
+	 tyzcW8qpb+jn66rbitqyB0IF+QQlB4rXQ5IrdsltAaZo2WaeENWv1FB8OzFTgNRryn
+	 7WcVDcoy5/LbGZgeHnZ42jyH6NbKnppVVdO4T0CGAu4RmQYxvoQcV3LjLC2+QxZ0r7
+	 H86ASj0w8xVCg==
+Message-ID: <sashiko-outbox-219864@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] fgraph: Read the task->ret_stack with a
+ smp_load_acquire()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Steven Rostedt" <rostedt@goodmis.org>, "Linux Trace Kernel" <linux-trace-kernel@vger.kernel.org>
+In-Reply-To: <20261117193007.6ee9f605@gandalf.local.home>
+References: <20261117193007.6ee9f605@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Nov 2026 00:40:05 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -97,45 +58,85 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-ftrace_regs_get_kernel_stack_nth() reads the Nth entry of the kernel
-stack for the $stackN argument of fprobe and tracepoint probe events.
-That entry can be in the redzone of another stack frame, so with
-CONFIG_KASAN_STACK every hit of such an event is reported:
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] fgraph: missing smp_store_release() conversion for
+  task->ret_stack writers
+--
 
-  # echo 'f:fp_read vfs_read $stack10' >> dynamic_events
-  # echo 1 > events/fprobes/fp_read/enable
-  BUG: KASAN: stack-out-of-bounds in process_fetch_insn+0xac9/0xcb0
+commit b7c8f41f039b807327203effc627ecc71bfa14c8
+Author: Steven Rostedt <rostedt@goodmis.org>
 
-Use READ_ONCE_NOCHECK(), as arm64 does in regs_get_kernel_stack_nth()
-for kprobe events.
+fgraph: Read the task->ret_stack with a smp_load_acquire()
 
-Fixes: 0566cefe73b9 ("tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS")
-Signed-off-by: Yifan Feng <evanfengff@gmail.com>
----
-Tested on v7.4-rc3 in QEMU with KASAN: 6 reports before, 0 after.
-Found and written with the help of an AI coding assistant.
+This commit replaces the plain read of current->ret_stack and subsequent
+smp_rmb() in ftrace_push_return_trace() with smp_load_acquire().
 
- include/linux/ftrace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Link: https://lore.kernel.org/all/20261021174406.2891598-2-vineet.gupta@lin=
+ux.dev/
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 1c2056a1a68b..bdb6ee6bc3b9 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -270,7 +270,7 @@ ftrace_regs_get_kernel_stack_nth(struct ftrace_regs *fregs, unsigned int nth)
- 	stackp = (unsigned long *)ftrace_regs_get_stack_pointer(fregs);
- 	if (((unsigned long)(stackp + nth) & ~(THREAD_SIZE - 1)) ==
- 	    ((unsigned long)stackp & ~(THREAD_SIZE - 1)))
--		return *(stackp + nth);
-+		return READ_ONCE_NOCHECK(*(stackp + nth));
- 
- 	return 0;
- }
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index ed455b53513be..eaa8d6aadb0e8 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -568,7 +568,11 @@ ftrace_push_return_trace(unsigned long ret, unsigned=
+ long func,
+>  	if (unlikely(ftrace_graph_is_dead()))
+>  		return -EBUSY;
+> =20
+> -	if (!current->ret_stack)
+> +	/*
+> +	 * We must make sure the ret_stack is tested before we read
+> +	 * anything else (See alloc_retstack_tasklist()).
+> +	 */
+> +	if (!smp_load_acquire(&current->ret_stack))
+>  		return -EBUSY;
+> =20
+>  	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
+> @@ -576,12 +580,6 @@ ftrace_push_return_trace(unsigned long ret, unsigned=
+ long func,
+>  	/* Set val to "reserved" with the delta to the new fgraph frame */
+>  	val =3D (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFS=
+ET;
+> =20
+> -	/*
+> -	 * We must make sure the ret_stack is tested before we read
+> -	 * anything else.
+> -	 */
+> -	smp_rmb();
+> -
 
-base-commit: 63fdb511c27afcebce797e3db580b3534ddfa639
--- 
-2.39.3 (Apple Git-146)
+[Severity: Medium]
+Should alloc_retstack_tasklist() and graph_init_task() also be updated to
+use smp_store_release() when assigning t->ret_stack?
 
+The commit message notes that setting task->ret_stack was switched from
+smp_wmb() to smp_store_release(), and the new comment points to
+alloc_retstack_tasklist().  However, both alloc_retstack_tasklist() and
+graph_init_task() still use smp_wmb() followed by a plain store to
+t->ret_stack:
+
+kernel/trace/fgraph.c:alloc_retstack_tasklist() {
+	...
+			/* Make sure the tasks see the 0 first: */
+			smp_wmb();
+			t->ret_stack =3D ret_stack_list[start++];
+	...
+}
+
+kernel/trace/fgraph.c:graph_init_task() {
+	...
+	/* make curr_ret_stack visible before we add the ret_stack */
+	smp_wmb();
+	t->ret_stack =3D ret_stack;
+	...
+}
+
+Without converting those writers to smp_store_release(&t->ret_stack, ...),
+the store side remains an unmarked plain assignment when racing with
+smp_load_acquire(&current->ret_stack).
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117193007.6ee9=
+f605@gandalf.local.home?part=3D1
