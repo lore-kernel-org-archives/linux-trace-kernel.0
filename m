@@ -1,11 +1,11 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795030227;
-	b=Bsp2iNb/KykZa0n+xw4XNDce/HI0H1NTfhMeDjgSaB2AyyHnl7ol1jL8jhRqCu3trFo0
-	 zKkkwiKvQ0xkXk2I55ax1Cm0Q9LCEu4ouo75GEUTGWsy0PpRKyE/ErtxzU7i1kRfsAjfx
-	 IV6M8l9G4ASm9cC8A8SVYEjPvtJ0ETJcoaAJ2xlJUnvfheOHMUzCWKVjKbHoCkLWdvxCy
-	 OBe+8ip2JqWcnUifu/UBvOT2x+YKJQnw9pRjM8mmvTM+hLh5Yway/HOzw1vyPVAS4EcVk
-	 AtByKCkP1UmhkhIunU5lXO3eBHRdeXmFnX58ejlLADRSrg8XLT/Gn4BPpkeEPI/uXxg==
+	b=i6YngkvGPNY5DWqMiBBeyhr18HBKTDoKsZSyzdArZfFckoJ+VOGyS23F/QW2cIH7Z/zG
+	 f3H+91Ebt43K2Su8YlyT4Ntsb803YZIiVK/nVsfEiSpg2C26/toOvLe23s87xW+lDz1fW
+	 0HX63dGJTNe4NtCpXV0s+UQ8cz6ngfNLNzd06JpaTXsvj/uR3AtaDWoPcUyWHnsP34zwt
+	 zS3ik/hyLYkhoWxJFBiROPdtpEZzL72tmjnbRXJ5Nlcglh+ENsDzk75BUZHV8xIhB3k09
+	 csr3OmxnXW+PoU1kCS5Z/yD0JvRp+nq/hX5vIi8zZAFC59iYS/Paut9EmzqGTAL7izA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795030227;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,52 +13,52 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=gL8WpIgQ36vCPAYIYJZB9KCJJBB718sye55u4y1ovpU=;
-	b=aUxJEMA5KunF1542iBhCu/l529F4BBZXw4bJlqcIa/YC8QD1XBmPIfNqbfoQiKnGr4W4
-	 6zMv7cbpXI4p/9wqQOJT3UNDPBophp2CBpeXVJK6hTrEhmYZQ/rplSRs5MjAA0457NuIy
-	 d88sxELJjs6GAYhN4Ajlg5opbTG37/2uW2rBJqsu9o3Sg0l3a/AXOFKVXJblTkcNg57mf
-	 bHKyxrZj38aHab0oJnyB8s6b5akPWGjzlrHRty+aUPonJBW7eyQHEVol0cl0t/ousLKWX
-	 M0rAKD1Cmk/yIMVOpeViyTEHNIh97PEWPJFIu2pM4N6s5AkZSeF0oOeHOc36bi7l7XA==
+	bh=fIALKS6j1QHbo6lCje8nv06Y9CozFk03PXZTpPMpa3M=;
+	b=JDThN1wvnSmdCrwemx+HDhSum0UmVksMlIe9cSIWVmfr6RWcMfgAWisbKjwrAmyITt2S
+	 vmswWAvi8zaoxjNfN0sG7nyBIrTgAge9hIwKCRut9XK8bJo9Sdb4R/oJA5eajpZFxuNA0
+	 5YpmqpUDQ4sK3julzZjVNap/h5RHqFhmhaZXCJqH5lfI8eATQz+BEK1B+V8LObyOnVqt0
+	 6DQfS+S09jrLqrNLAOw8mMoph/8cY68CxMDlEx6gRf9WKC8Ijkluu3ke8vMuEMWsDH1AF
+	 BlbZDg6RUi46XgX8d/r7s4xreUObiaqIAGfDqO39QRbqlKYA57lBkJ1A52To4Y91cLQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FepESh23;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MI2JYmrl;
 	arc=none smtp.remote-ip=192.198.163.11
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B03606DD26;
-	Wed, 18 Nov 2026 19:30:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B5B03606DD26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273E8606DD31;
+	Wed, 18 Nov 2026 19:30:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 273E8606DD31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FepESh23
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MI2JYmrl
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1795030227; x=1826566227;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=k/CbGNg9sKfFv56tzoARlw8/HM9hrb5vTSwcjPJlytk=;
-  b=FepESh23yso+JvUEFQNdm6At+xVpjtNSQg9OMq7oBV2/V23tdcEtxtkC
-   Gma+zOee3fVobC8wBUk/thFS3rfXIGJx/eBElsFwyfFrhdq1+uwkebcLw
-   /EiJ0DdiqoXVbbIlycvqDPTQAM0zxVFchvtOWjE4IsKGX+3hlQtr0fuKW
-   4VIifVsqfYKq3WKUsIqJnYyCgcZwsnpQBtnvQcJL1+QD7honVK825v8ZZ
-   UGfXFLAz/A7QeAm+LUFPHJQh4YkkBm3ZxYXMJuU8lbxuvB4mkcCSeK+qc
-   XYORBvu40tXT8UFfg3npn8+WOwbSKseeHMHJZ5wH8dVXMvyA90aYv7Yhs
+  bh=QLwZ1mSEPrbAIFjkVbImtbWEdEayXGy0Zjs+ER9nAf4=;
+  b=MI2JYmrl8pLokFveGIiiXRfLYE0PB5qjMBj4dm+/9i51mUNhoZCWdpfF
+   D2xcFHqWCUkHQ0ftMUcm4BT2tBqOGuQRA9ISokP8TeB579mBwuZtpdrUi
+   e16peb7hpnPcne37rZcI14TpqvuUZqoJfQAEUotSx0hYJ8+yuRorAtTTb
+   eHBZyxmCK82yocFl+2MDrrJq8bmEB4EYCHwooEJ/asewuzSECVyRDOZPA
+   PV8TWnx0Qbl3IgCe6fZYGmwr8fbVhtb9DWTkNk1W5efzuNWOaY2TB7juz
+   JtJp3ZmlCwl1pCdtgsNhr4NckmiKSZ/gbJIJat+lIQsRP9PI3/e9a1Kxu
    Q==;
-X-CSE-ConnectionGUID: MHNxV/xSRJO1RS1ktDuEbQ==
-X-CSE-MsgGUID: gyn39h1ZSoiKUFnwL3bM0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3781222"
+X-CSE-ConnectionGUID: OYaegU9CRIGp2kcs/0jQ3Q==
+X-CSE-MsgGUID: HY8Tzi2JS7GesmkjradO2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3781225"
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3781222"
+   d="scan'208";a="3781225"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 11:30:26 -0800
-X-CSE-ConnectionGUID: V5Y849akRu6I6knC3IdvAQ==
-X-CSE-MsgGUID: wzuXr2+4TLCd/sJIXBqYmg==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 11:30:27 -0800
+X-CSE-ConnectionGUID: EypiLkAhR9WpaiW+0QVHsA==
+X-CSE-MsgGUID: OCHzS0LFSkaQUyEcE/cfSw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="10468078"
+   d="scan'208";a="10468082"
 Received: from jf.intel.com ([10.165.154.102])
   by fmviesa008.fm.intel.com with ESMTP; 18 Nov 2026 11:30:26 -0800
 From: Ehab Ababneh <ehab.ababneh@intel.com>
@@ -82,9 +82,9 @@ Cc: ashok.raj.linux@gmail.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	pengfei.xu@intel.com,
 	ravi.v.shankar@intel.com
-Subject: [PATCH v2 04/17] platform/x86/intel/ifs: Use u64 to define the bits of IFS MSR registers
-Date: Wed, 18 Nov 2026 12:32:46 -0700
-Message-ID: <20261118193259.519568-5-ehab.ababneh@intel.com>
+Subject: [PATCH v2 05/17] platform/x86/intel/ifs: Early return on the IFS image hash/chunk error
+Date: Wed, 18 Nov 2026 12:32:47 -0700
+Message-ID: <20261118193259.519568-6-ehab.ababneh@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261118193259.519568-1-ehab.ababneh@intel.com>
 References: <20261118193259.519568-1-ehab.ababneh@intel.com>
@@ -101,137 +101,106 @@ Content-Transfer-Encoding: 8bit
 
 From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-The IFS (In-Field Scan) related MSR registers are all 64-bit wide.
-Use a single u64 within a struct to define the bits of an IFS MSR
-register in a more compact form, instead of using {u16, u32} for
-each bit, to enhance readability.
+Return immediately upon encountering a hash error or chunk error in the
+IFS (In-Field Scan) test image to avoid meaningless assignments following
+these errors.
 
-No functional changes.
+Additionally, assign the boolean value 'true' instead of '1' to the
+boolean variable 'ifs_pkg_auth', and use SZ_1K macro instead of '1024'
+for better readability.
 
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
 Tested-by: Yi Lai <yi1.lai@intel.com>
 ---
- drivers/platform/x86/intel/ifs/ifs.h | 66 ++++++++++++++--------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
+ drivers/platform/x86/intel/ifs/load.c | 34 ++++++++++++---------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 0f5cdc1ad14d..f52287745366 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -156,26 +156,26 @@
- union ifs_scan_hashes_status {
- 	u64	data;
- 	struct {
--		u32	chunk_size	:16;
--		u32	num_chunks	:8;
--		u32	rsvd1		:8;
--		u32	error_code	:8;
--		u32	rsvd2		:11;
--		u32	max_core_limit	:12;
--		u32	valid		:1;
-+		u64	chunk_size	: 16,
-+			num_chunks	:  8,
-+			rsvd1		:  8,
-+			error_code	:  8,
-+			rsvd2		: 11,
-+			max_core_limit	: 12,
-+			valid		:  1;
- 	};
- };
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index dde3f5eb379f..0edbf9eedc12 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -123,7 +123,6 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+ 	int i, num_chunks, chunk_size;
+ 	struct ifs_data *ifsd;
+ 	u64 linear_addr, base;
+-	u32 err_code;
  
- union ifs_scan_hashes_status_gen2 {
- 	u64	data;
- 	struct {
--		u16	chunk_size;
--		u16	num_chunks;
--		u32	error_code		:8;
--		u32	chunks_in_stride	:9;
--		u32	rsvd			:2;
--		u32	max_core_limit		:12;
--		u32	valid			:1;
-+		u64	chunk_size		: 16,
-+			num_chunks		: 16,
-+			error_code		:  8,
-+			chunks_in_stride	:  9,
-+			rsvd			:  2,
-+			max_core_limit		: 12,
-+			valid			:  1;
- 	};
- };
+ 	ifsd = ifs_get_data(dev);
+ 	msrs = ifs_get_test_msrs(dev);
+@@ -131,17 +130,16 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+ 	wrmsrq(msrs->copy_hashes, ifs_hash_ptr);
+ 	rdmsrq(msrs->copy_hashes_status, hashes_status.data);
  
-@@ -183,21 +183,21 @@ union ifs_scan_hashes_status_gen2 {
- union ifs_chunks_auth_status {
- 	u64	data;
- 	struct {
--		u32	valid_chunks	:8;
--		u32	total_chunks	:8;
--		u32	rsvd1		:16;
--		u32	error_code	:8;
--		u32	rsvd2		:24;
-+		u64	valid_chunks	:  8,
-+			total_chunks	:  8,
-+			rsvd1		: 16,
-+			error_code	:  8,
-+			rsvd2		: 24;
- 	};
- };
+-	/* enumerate the scan image information */
+-	num_chunks = hashes_status.num_chunks;
+-	chunk_size = hashes_status.chunk_size * 1024;
+-	err_code = hashes_status.error_code;
+-
+ 	if (!hashes_status.valid) {
+ 		ifsd->loading_error = true;
+-		hashcopy_err_message(dev, err_code);
++		hashcopy_err_message(dev, hashes_status.error_code);
+ 		goto done;
+ 	}
  
- union ifs_chunks_auth_status_gen2 {
- 	u64	data;
- 	struct {
--		u16	valid_chunks;
--		u16	total_chunks;
--		u32	error_code	:8;
--		u32	rsvd2		:24;
-+		u64	valid_chunks	: 16,
-+			total_chunks	: 16,
-+			error_code	:  8,
-+			rsvd2		: 24;
- 	};
- };
++	/* enumerate the scan image information */
++	num_chunks = hashes_status.num_chunks;
++	chunk_size = hashes_status.chunk_size * SZ_1K;
++
+ 	/* base linear address to the scan data */
+ 	base = ifs_test_image_ptr;
  
-@@ -216,8 +216,8 @@ union ifs_scan {
- 				u16	stop;
- 			} gen2;
- 		};
--		u32	delay	:31;
--		u32	sigmce	:1;
-+		u32	delay	: 31,
-+			sigmce	:  1;
- 	};
- };
+@@ -153,14 +151,13 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+ 		wrmsrq(msrs->copy_chunks, linear_addr);
+ 		rdmsrq(msrs->copy_chunks_status, chunk_status.data);
  
-@@ -236,10 +236,10 @@ union ifs_status {
- 				u16	chunk_stop_index;
- 			} gen2;
- 		};
--		u32	error_code		:8;
--		u32	rsvd2			:22;
--		u32	control_error		:1;
--		u32	signature_error		:1;
-+		u32	error_code		:  8,
-+			rsvd2			: 22,
-+			control_error		:  1,
-+			signature_error		:  1;
- 	};
- };
+-		ifsd->valid_chunks = chunk_status.valid_chunks;
+-		err_code = chunk_status.error_code;
+-
+-		if (err_code) {
++		if (chunk_status.error_code) {
+ 			ifsd->loading_error = true;
+-			auth_err_message(dev, err_code);
++			auth_err_message(dev, chunk_status.error_code);
+ 			goto done;
+ 		}
++
++		ifsd->valid_chunks = chunk_status.valid_chunks;
+ 	}
+ done:
+ 	complete(&ifs_done);
+@@ -199,16 +196,15 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
+ 		wrmsrq(msrs->copy_hashes, ifs_hash_ptr);
+ 		rdmsrq(msrs->copy_hashes_status, hashes_status.data);
  
-@@ -247,10 +247,10 @@ union ifs_status {
- union ifs_array {
- 	u64	data;
- 	struct {
--		u32	array_bitmask;
--		u16	array_bank;
--		u16	rsvd			:15;
--		u16	ctrl_result		:1;
-+		u64	array_bitmask		: 32,
-+			array_bank		: 16,
-+			rsvd			: 15,
-+			ctrl_result		:  1;
- 	};
- };
++		if (!hashes_status.valid) {
++			hashcopy_err_message(dev, hashes_status.error_code);
++			return -EIO;
++		}
++
+ 		/* enumerate the scan image information */
+ 		chunk_size = hashes_status.chunk_size * SZ_1K;
+-		err_code = hashes_status.error_code;
+-
+ 		num_chunks = get_num_chunks(ifsd->generation, hashes_status);
  
+-		if (!hashes_status.valid) {
+-			hashcopy_err_message(dev, err_code);
+-			return -EIO;
+-		}
+ 		ifsd->loaded_version = ifs_header_ptr->rev;
+ 		ifsd->chunk_size = chunk_size;
+ 	} else {
+@@ -344,7 +340,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+ 			ret = -EIO;
+ 			goto out;
+ 		}
+-		ifs_pkg_auth[curr_pkg] = 1;
++		ifs_pkg_auth[curr_pkg] = true;
+ 	}
+ 	ret = 0;
+ 	ifsd->loaded_version = ifs_header_ptr->rev;
 -- 
 2.43.0
 
