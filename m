@@ -1,95 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795026785;
-	b=brxp0GRUTJhOrCfDrAPIquf2uWaTgdvgRndxi/h4c2G4j+h74CGuEO9mqE381XsLJnYm
-	 R601syfkByPdT0vqvTgKCQ+h7hbuOT/+9oInmW9nCuGI77nZIjGFZoTBWinlg2l22bWN1
-	 Co8BBgWzYxI7Mg9Xgs5D0jYQYcGDv+W9o0U0paKidiwCaj+OHqHK8wXVktqr5qDMt3gP5
-	 0vem2hIByj70MXhd1noPRsQjj22azenpnaeO3CGaB0N/j8ZGv9FNwePfh4Vzja3QwBPmB
-	 KDiLOPtyxPRV4oBISUwcvfh8JckXyYXhDPRD/Hnq0jnHJJg7oRD6jzQ3kVNC6x1wLvQ==
+	t=1795026883;
+	b=lnB1wW9MQpzMefKlyp7B7o92qzpTPlhDy1uFdxdGiXNYq6b3u6BL1O3lM15POwu5DSR5
+	 qeJ4f/566LvFryYCgmnHBPUgEsA7UGN64kh7RlVqeCEx3U1CYxh51C+tKWD+oZE4fw2SB
+	 P1hOXa+LPSA4NbXEBZ11mRyXCi7g6EMwVkXV8qZrBn5JNJ037nJqMHhvEKZWWQya+pwQT
+	 koAEEJwG9UgPDjJziPxlP+67SX85sc8YK+/wV74yGI7uAJCtNLeaSxeKg8bzepfKgF782
+	 Gbeqz+LzIKGxoJAiR1CrV6DqqfPqvX3xoXxPOt6Rqn36Q9ev9JN2rHZcryV5mJoHf0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795026785;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-TM-AS-GCONF:X-Proofpoint-Reinject:
-	 X-Proofpoint-GUID:X-Authority-Analysis:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=rhEN0h7wX2c8+mVN5T2q/8hdxoSKBQZF1DPC1+vTOL4=;
-	b=KDSUKEcfKh+v7YDxW0onzfGBMvfG34VHRMcAeZPWF5IDAip93ie3+pYIwJP+IvkOOS+W
-	 W3dHKFnIW1IehuALeN5PIWuIJlmY/u1An4HCaKekCJo6lzfq5SwY1oxHnqZXhByqAF58C
-	 iLt1n0R8T7vkutsP8m895vfEf6xOIsngq02tFmB/CCLNEdDgb81T9gh549f+ma+k1yVer
-	 gh6IeVQ+MZSxS3X8HCxW803Y++hMRmNXFCpi+ywvmp4/ZwzjMgkq5fmOTpoe1Jly3trYE
-	 RdZEDUp2cEE0T7LzrZHS0ZtXHOXmFvaGjuz6UeuxMeq24PWGWNLgw4+ODGUC+7SaTOg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795026883;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Spam-Status:X-Rspamd-Server:
+	 X-Stat-Signature:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=V5uRR0fGp6Mv5MkEfq++LiSH5VSoFNbj1ogiDg+BVL8=;
+	b=ZTNJNBDgF6jzzpzjoSYzSOm/5XLgI53uV/t0IKkyGNJBIRz0p0ui5WdXjtz7OxpuMrCU
+	 ImKpIdxG+s1C5jkBmad7IpJx6mwuq/M0PlXO31ASjgdcoNZRPjtw/76cvB8cwKa5RP2+5
+	 SoiWpaqQjYygDAh5snwjP0zv5CJXMYJx8a0fw00YzVltkofEwgBd2mNC1+3VVuG3VvojO
+	 XrhKcpHGvF5Qe1T8b5VnWXocypgJ1WrxbLAgE73KSzJFcLL5cLSLKQgEbW3Ii40lh1rMO
+	 3J175uNBQulQ3RZktpiao87+zbNPDqE3Q4tmu5p4MTIRnY+5Rbt9PoSkNHy7QBWZ3ug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=jVddyxAL;
-	arc=none smtp.remote-ip=148.163.156.1
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=u1LcPahT;
+	arc=none smtp.remote-ip=216.40.44.12
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BA7606A332;
-	Wed, 18 Nov 2026 18:33:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70BA7606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2594606A32C;
+	Wed, 18 Nov 2026 18:34:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D2594606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=jVddyxAL
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AIHPwu2077471;
-	Wed, 18 Nov 2026 18:32:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=rhEN0h7wX2c8+mVN5T2q/8hdxoSK
-	BQZF1DPC1+vTOL4=; b=jVddyxALvzL/c5K2zFqAji+Zyrs7C+BQB3lcWn4yBqd2
-	+qriZLansAV8er08U+RIxN+ndkplbrJ1CUGE9yf6kvqu7lHPcfMJ8fOt4A1KlEec
-	kFj0VvHXSvRPX+Bpsvbl0zgNIKUvftwuB9Pmu5fhjReBL2MbN9N+2rqold9NrUGf
-	pOpHfCJQ7AZ8kv1u6hIYifMdtJ0+ynwu1nluJUkVnLjZq+LnOcHPcwoYLYQ7uZrF
-	LzgGR6m6YEpxA8cb6O0uCmV6BYUI6WXn12XO3dn9Mxh3q3IFtlyfzWA7UklswEP+
-	DkoDYl/j2gDAykAnQhOB126DKS4icN6gBXf5IYM1yw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j105rm0x8-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 18 Nov 2026 18:32:51 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AIHK3T03429607;
-	Wed, 18 Nov 2026 18:32:50 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4j02juhau6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Nov 2026 18:32:50 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AIIWkZs28377350
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Nov 2026 18:32:47 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CC3202004B;
-	Wed, 18 Nov 2026 18:32:46 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4239E20043;
-	Wed, 18 Nov 2026 18:32:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.39.19.69])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 18 Nov 2026 18:32:43 +0000 (GMT)
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: Amit Machhiwal <amachhiw@linux.ibm.com>,
-        =?UTF-8?q?Michal=20Such=C3=A1nek?= <msuchanek@suse.de>,
-        Vincent Donnefort <vdonnefort@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Harsh Prateek Bora <harshpb@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH v5] ring-buffer: Do not check si_mem_available() before deferred init completes
-Date: Thu, 19 Nov 2026 00:02:35 +0530
-Message-ID: <20261118183235.63310-1-amachhiw@linux.ibm.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=u1LcPahT
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 55DB5A0866;
+	Wed, 18 Nov 2026 18:34:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 7EBAA30;
+	Wed, 18 Nov 2026 18:34:34 +0000 (UTC)
+Date: Wed, 18 Nov 2026 13:34:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Yifan Zhang <yfzhang23@stu.pku.edu.cn>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing/user_events: validate dynamic cpumask
+ size
+Message-ID: <20261118133432.47caf6c6@gandalf.local.home>
+In-Reply-To: <20261104213929.GA65-beaub@linux.microsoft.com>
+References: <179367391951.8187.1770217673912340635@stu.pku.edu.cn>
+	<179367391951.8187.4749000539954371762@stu.pku.edu.cn>
+	<20261104213929.GA65-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -99,131 +63,50 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: UoNsp9KWx-lIKmVcQS8oRuIY9Bxh663p
-X-Authority-Analysis: v=2.4 cv=e8uT2qp/ c=1 sm=1 tr=0 ts=6afdef54 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=TAdDoJc28zNiS-eFyzwA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE4MDA3MyBTYWx0ZWRfX6xos6IAaNQhP
- BlSiuJhmSXzFi/6ZDuVDrWH70Vc2Zb16jqNhiJLgoq/pwX0dzPtKJt8VHins2xknSrA3NVqTFE1
- iGgI1XqH9rSyluG6FE7pyQnCOr1b1xw=
-X-Proofpoint-ORIG-GUID: 7Zi_ebJ6DCZ_bAp5rDfkW3mCgJgcv37y
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE4MDA3MyBTYWx0ZWRfX3Fgejk2yJ4oI
- Ms64VVCgf4dYSfKPP7NkQbhjz5xj9VOzLFbpA/sMvrMsbwWEbltUTqzx4V1wVq/GjDdrQc/MvOL
- M2eEXKIgfCwcVhZybH+/NA8xFDbSvupUa5x4mYwrXO/Msrj+lgnKE64zoBXonUdq3MGqA99SOVj
- oTJB+1Pq/k9vi7D6zrrdn8PDXMzoFJTTEYenfY9Kbk616x7AH4pBFOUeh95Nl6y/cevHFGMO0J8
- voxsF11pruZIDyHzDuuXqL9d9aDqeopxtFZjwlOYpzmY+6gL0ZdOEB1eRTCbtysgOAxieMkrhDE
- 8DMY5p6RENpazt1KachLQZG2SRSRSSDsOd/w/C14JkKBhvJvoFDadkfxIqfR8asNnq3RxccJY67
- jWAX3yo7eLI3GDKO5JV6KCo9qK+5jb353QxpPQwmGnbztygzW8vGmGzy5/yC9Dy+J/JdzWBu2sM
- kQb7CPfKrf+HsjqA+jw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-18_05,2026-11-16_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 suspectscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0 malwarescore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
- definitions=main-2611180073
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: inj3q51u48ztu6cbpspy7cjxirg9huq3
+X-Rspamd-Queue-Id: 7EBAA30
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/L/GYM1ZreQ9Y5WZnD86syELvVxtWQgq4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=V5uRR0fGp6Mv5MkEfq++LiSH5VSoFNbj1ogiDg+BVL8=; b=u1LcPahTzJ8TzQT7ZAqv66Q/NJGMxQ2Oo/3rbrpbsLHIQwD4obSD0I3fELf1b+qKBlGtRZMDbdfoml3ifOxoj+f9fOIi+V0+sW7t6E9KzEYs2rdcPniOiA4qb4lwAlGGCu6eDLefHXGkimr6KYDT13fm2cYI7mPsgBn7EdCGDQA=
+X-HE-Tag: 1795026874-124051
+X-HE-Meta: U2FsdGVkX1+fsSbsdzc/vfgkOTzWDC2shMd89wmRa/Aaa4AT/Cn6rY99DvLHfTabFtwvA+pdeVxW0gS9VR/jsmFBs8XxvWMQkFcs+jDvwL25p+AORCM8LLvzHMCFsZ5cJFCsuCgcgSVIRIjWWuY38mgTT3BbATY9E1WqfkWfmBvuS8ibSC8BN3cs7fqE5+6ijDUHGJuW3ss+mIB+kWRZhVKw7V1+6JRwKmxHdALdyX6wE0DufYtBx5fgsSoIkMSkyaytsHHKkUnYavXkTHniEAvIgzJKFig2QluWvdpcGCeM42DSPJ65xnzUDiYjJn7OVDOimoRGimaxVRyr0NABshh5SzLHGYvV
 
-With CONFIG_DEFERRED_STRUCT_PAGE_INIT=y, only about one memory section
-per node is initialized early in boot (16 MiB on powerpc).  The rest is
-initialized on demand by deferred_grow_zone() when an allocation would
-otherwise fail, or later by page_alloc_init_late().
+On Wed, 4 Nov 2026 21:39:29 +0000
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-Until then NR_FREE_PAGES can be close to zero, because early allocations
-(SLUB, vmalloc, ftrace records) use up the first section.
-si_mem_available() is derived from NR_FREE_PAGES, so it under-reports.
+> 
+> Hey Yifan,
+> 
+> In the V1 there was a repro case where this value was a __data_loc,
+> which defines where the actual data (and it's size) is in the payload.
+> 
+> There isn't a type min-size requirement when __data_loc is used, this
+> seems like the bug resides possibly in filter_match_preds for
+> __data_loc cases? See comments futher down.
+> 
+> Steve, do you think this is the case?
 
-__rb_allocate_pages() returns -ENOMEM when si_mem_available() is below
-the requested size.  This check wrongly fails the buffers allocated for
-the boot CPU in early_trace_init() and for secondary CPUs in smp_init(),
-both of which run before page_alloc_init_late().  The resulting boot log
-shows:
+Yes, this patch appears to be addressing one of the symptoms of the bug but
+not the bug itself. I ran the repro.c from v1 and the format file has this:
 
-  ERROR: Failed to allocate trace buffer
-  ERROR: tracer: failed to allocate ring buffer!
+name: ue_short_cpumask
+ID: 1969
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
 
-Skip the check until SYSTEM_FREEING_INITMEM on
-CONFIG_DEFERRED_STRUCT_PAGE_INIT kernels.  The allocation itself still
-fails if memory really is short.
+	field:__data_loc cpumask_t mask;	offset:8;	size:4;	signed:1;
 
-This is the second half of the fix for the early boot crash reported on
-ppc64le KVM guests.  Commit b3b974008388 ("tracing: Do not initialize
-tracefs work if tracing is disabled") stopped the NULL pointer
-dereference in __find_event_file() that followed the failed allocation.
-This patch fixes the allocation failure itself.
+print fmt: "mask=%llu", REC->mask
 
-Fixes: 2a872fa4e9c8 ("ring-buffer: Check if memory is available before allocation")
-Cc: stable@vger.kernel.org
-Reported-by: Michal Suchánek <msuchanek@suse.de>
-Closes: https://lore.kernel.org/all/arYskzbiaNzBR9MD@kunlun.suse.cz/
-Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
-Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
----
-Changes since v4:
- - v4: https://lore.kernel.org/all/20261023145459.47516-1-amachhiw@linux.ibm.com/
- - Rewrote commit message for clarity and conciseness (Vincent, Steven).
- - Structure the deferred init check using if/else with unlikely() (Steven).
- - Added Vincent's R-b.
+The key is the "__data_loc" which means at offset 8, there's a 4 byte
+metadata which has the real location of the data and the size of that data.
 
-Changes since v3:
- - v3: https://lore.kernel.org/all/20261022181817.49717-1-amachhiw@linux.ibm.com
- - Replace #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT / #else / #endif with
-   IS_ENABLED() + i = LONG_MAX to avoid duplicating the threshold check.
-   (Vincent Donnefort)
- - Trim the in-code comment to one sentence. (Vincent Donnefort)
+The bug is real, but this doesn't look like the fix.
 
-Changes since v2:
- - v2: https://lore.kernel.org/all/20261016134247.70722-1-amachhiw@linux.ibm.com
- - Rebase on top of upstream ring_buffer.c changes from Vincent Donnefort;
-   update threshold to i < (nr_pages << subbuf_order). (Michal Suchánek)
-
-Changes since v1:
- - v1: https://lore.kernel.org/all/20261009163557.88467-1-amachhiw@linux.ibm.com
- - Extend the guard to cover SYSTEM_SCHEDULING as well: smp_init() calls
-   trace_rb_cpu_prepare() -> __rb_allocate_pages() before page_alloc_init_late()
-   completes, so the false negative window spans both SYSTEM_BOOTING and
-   SYSTEM_SCHEDULING. Use system_state >= SYSTEM_FREEING_INITMEM as the correct
-   boundary. (Sashiko, Vincent Donnefort)
- - Wrap in #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT to preserve the original
-   check unchanged on non-deferred kernels. (Vincent Donnefort)
- - Drop Tested-by: guard condition changed, requesting fresh test.
-
- kernel/trace/ring_buffer.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 75cd8df23c1b..98e8a02b7c43 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2468,8 +2468,17 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 		 * memory. It may not be accurate. But we don't care, we just want
- 		 * to prevent doing any allocation when it is obvious that it is
- 		 * not going to succeed.
-+		 *
-+		 * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, si_mem_available()
-+		 * will reflect the actual available memory only after
-+		 * SYSTEM_FREEING_INITMEM.
- 		 */
--		i = si_mem_available();
-+		if (IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT) &&
-+		    unlikely(system_state < SYSTEM_FREEING_INITMEM))
-+			i = LONG_MAX;
-+		else
-+			i = si_mem_available();
-+
- 		if (i < (nr_pages << subbuf_order))
- 			return -ENOMEM;
- 
-
-base-commit: 20eef29b7c8465ac98d7dd6d6f2ac07a8d8056ca
--- 
-2.54.0 (Apple Git-157)
-
+-- Steve
