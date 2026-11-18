@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795030225;
-	b=hCRnmll9QaGKiDGUsll6H5DUaUXjVn8kpqxF5BjrSGSFhAL/L/SvVMJMRm1GtUOIyFow
-	 7N8+CWi0TN2vDRvpLzSRqlXgwDNjQKA2bvKVKENuG8gqj4n7Eu76avXGWccJwJkYcQSxu
-	 REDjSZJQzlFLPg8n4MtUMxR9704d8zKLGaqP7urDIL7r2ksgkZE/q1mNqR2MRcL9cHu3M
-	 7zpkPbr1B5p90wzcmf2jKKZHRAuw9xgwB69+MpDHFyHPqBnmx4XoVSiGR3rQ2lrqTG0Ge
-	 5+WBornDe/gaBD+3tc4ztHKsgQj9YGZAZiM8qgxZSkUPhyv5rEvghtpGcc7lkuuEp2g==
+	t=1795030226;
+	b=bVobFmT0NHhhVXof4+aW+qTTWqrjmaLS0+Yx79TL4duSMSxJMqQ3ytQW197oYMkJFNgi
+	 RSnpC8GSIX+ZEdGMeu1tM9Qmvii4UiS7sOxq2FuAu/4VSchZPqbom1XMc92wlB8UBwr9n
+	 /kliDHAdOe2L7/JQMf1G1J8+OTni0pEkSK+CvrYSxQE7JPHgU3IRCXkgFBVi3otPdC5lI
+	 6tz3chhKWWPpGWR6aPkF8067EOpTMNcW/Ar7SnbZRC+Zl1xrIa7RGbSEroOErkvuQ/6aI
+	 7GeKcUcNO+gilrUjNeEGaYEM6lCJEcBRONQmn4aZpy8TT7JNKFVmHkm9BLYnKGJdopA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795030225;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795030226;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=TiKCTQwI498M+zPJy/UReFz64BjTVYGFPlsNBrp4k5s=;
-	b=Jpr+R/nEGb1glvI/8pd2SzdeF4zHDw5Q1oIwiHSMsWrqx5DytH51eqUX2uHZFoi2YAve
-	 4yemo++LL/D280ZLrmDfLlBfW0XVXipkN5/h7Yx4Yt5fj6DjnsbyUijiSQ/SvK5B46Czd
-	 sJKcNYkJDmE8hVPjsNYmojdyFLlyRx41kjplHMzvvqs0QUS7oZs5M4okbKZDxMSA5DBkq
-	 r8YvtytILds4GPscu2a6pu4mZoQ7/HHFb2Xtuo/AF/JRcRMGYslngqvYkIVpQgy8j/x0p
-	 iKQhjQ4HpXZO5BkHjO3cMnKdR5Uj+ccDEBLjov8OM7lP0k1/0lxk4DjLXcKG/lTzv8A==
+	bh=QuaN7qklmtATNr9a9/BzpxIEd+K2ItM/GVGUPmcIjnc=;
+	b=tPxwllGM+tKtsaoeGKBDlm5cJdygx9ProacQ8K2E18Lde85YO5OQyn+05TCCmAKHCbn0
+	 aV66HahKi+S1elmWkSZL7/WHDhDjgzUm/46faOmmaCgCagZ3Pyo8Wamcob4flQGA36CTz
+	 eQMpucEidi0fOUD+MvfiFaM0OEbWAbqO/BvrTWGPYc1XfzAoK37uzEwRJlUMP+NxNuIxk
+	 lvdf7jyw9o+IW9F/xOZM4ZgRcGpfLMk42eZucA7h5SlXjCXR/5Wzp/Gqsl4BwArDVbkE+
+	 ZYQaI/HOGS/QQS6+dk+I8LKzqkmaq+/ySbfujjUA70aDt4OcHTw1jmWzCyEhT5j11zQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mKz90UKO;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=EsYhmlOp;
 	arc=none smtp.remote-ip=192.198.163.11
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019D0606DD0E;
-	Wed, 18 Nov 2026 19:30:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 019D0606DD0E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0312606DD0A;
+	Wed, 18 Nov 2026 19:30:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F0312606DD0A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mKz90UKO
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=EsYhmlOp
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795030225; x=1826566225;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BJ0fotAq/M8m1ArkEbvyP0Mk3dq+2UrG44ML+IBS0zo=;
-  b=mKz90UKOZsvKoJ4EfO34yHAniDoMFGdH9JYjO7Zn0DtJpjzXMyI/7LWP
-   +b+grK5ukWQR7/jGQPxuRXrSHfbi153hWyMWIZDaLpn9eI+fz1eGANPCq
-   j6EQxgTbqy92LpAiafDsjj/HOVafdhfMEhwMiaeAluiy23r0MyQmmlKhW
-   dC17JrH4m31u/BjHOBtkQ+iULnS5fZ2Kpjs3B6UvPdANQAhLhu6VKhfV7
-   827kKPG73bw9TTlZRKHi+X6osAeeZISY+tazQeTDc9u3jVv2w/TcRwO1S
-   LmTVlARXzWEPpPrayQKUZG3jmkmC+RcAwyQRRrJ8TGb6K9HcRtD7PIiEV
+  t=1795030226; x=1826566226;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5JBtHZxCiUk913vGpVvkg5wusS9sFbDkF78zR4yXjtA=;
+  b=EsYhmlOpyUU1JuttkpqfvCD4EfbkHhGUhPvumiLmY9PHgCWkU0AKj1/z
+   u++BTTIci51pjt9uBJjCP8S73V70YmncnKQFfk8X5AlbumxsIt3NG7d57
+   /4uE2dKftD6UjaUFLROdH5ddE1CtZTPuiLLyjgIR8uQRKGSRebrYERdWs
+   tIl0ETyTTyfN1EWhBV1uzqVwGWWHuRwx7wYwAnzbQ65c2JbLMHUxAqNNu
+   kTrEqG61vM0Y7bFQiag7HWcqXVGEQJI73O3qI4LpIY8y2OKjAcyc5Lep2
+   sapvAY0YnvLvYNNUV6rXr7hJckSqhX6JXL9XBInveKufmOWVw361RCkqH
    Q==;
-X-CSE-ConnectionGUID: U4ihUUVxRqSPeJy8MdYCXg==
-X-CSE-MsgGUID: nPAJv6q9SSezXKLOhQj93w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3781175"
+X-CSE-ConnectionGUID: rnlTrQuETD6JSxkeR4RLyg==
+X-CSE-MsgGUID: TRdyzopSSOWx9lytd2NpNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3781194"
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3781175"
+   d="scan'208";a="3781194"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 11:30:24 -0800
-X-CSE-ConnectionGUID: p+7tQvU2SD+OhHIXRzPzJg==
-X-CSE-MsgGUID: cwEt8V/aTsmViOJfLMHDLg==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 11:30:25 -0800
+X-CSE-ConnectionGUID: 9J3EF8kwSuiyxCtznoEZ4g==
+X-CSE-MsgGUID: h72qnCxrSw26Wt2saeYABQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="10468060"
+   d="scan'208";a="10468068"
 Received: from jf.intel.com ([10.165.154.102])
-  by fmviesa008.fm.intel.com with ESMTP; 18 Nov 2026 11:30:24 -0800
+  by fmviesa008.fm.intel.com with ESMTP; 18 Nov 2026 11:30:25 -0800
 From: Ehab Ababneh <ehab.ababneh@intel.com>
 To: ilpo.jarvinen@linux.intel.com,
 	hansg@kernel.org,
@@ -82,10 +82,12 @@ Cc: ashok.raj.linux@gmail.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	pengfei.xu@intel.com,
 	ravi.v.shankar@intel.com
-Subject: [PATCH v2 00/17] platform/x86/intel/ifs: Support group-based In-Field Scan and Diamond Rapids
-Date: Wed, 18 Nov 2026 12:32:42 -0700
-Message-ID: <20261118193259.519568-1-ehab.ababneh@intel.com>
+Subject: [PATCH v2 02/17] platform/x86/intel/ifs: Fix IFS sysfs interfaces in the comments
+Date: Wed, 18 Nov 2026 12:32:44 -0700
+Message-ID: <20261118193259.519568-3-ehab.ababneh@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261118193259.519568-1-ehab.ababneh@intel.com>
+References: <20261118193259.519568-1-ehab.ababneh@intel.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -95,142 +97,171 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Some Intel Xeon processors, starting with Diamond Rapids (DMR), share
-one SCAN test engine between multiple CPU cores in a module (Dual-Core
-Module, DCM), instead of only between the threads of a single core. All
-logical processors that share an engine must start the In-Field Scan
-(IFS) test at the same time. The current driver assumes the sharing
-domain is cpu_smt_mask(), which does not hold on these systems. Also,
-although the cores in a module are tested together, each core gets its
-own result: on a DCM, one core can pass while the other fails.
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-This series:
+The sysfs interfaces in the comments in sysfs.c are incorrect. Fix them.
+Additionally, improve some IFS comments and fix some typos in the comments
+such as: s/cpu/CPU, s/intel/Intel, s/ifs/IFS.
 
- - Patch 1 removes the SBAF test, which is not planned for any CPU and
-   whose test images were never published.
+No functional changes.
 
- - Patches 2-6 are cleanups and preparatory refactoring (comment fixes,
-   clearer MSR bit names, u64 MSR bitfields, early return on image
-   errors, a generic Array BIST parameter struct). Patches 2-4 have no
-   functional change.
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
+Tested-by: Yi Lai <yi1.lai@intel.com>
+---
+ drivers/platform/x86/intel/ifs/ifs.h     | 16 ++++++++--------
+ drivers/platform/x86/intel/ifs/load.c    |  2 +-
+ drivers/platform/x86/intel/ifs/runtest.c |  8 ++++----
+ drivers/platform/x86/intel/ifs/sysfs.c   | 23 +++++++++++------------
+ 4 files changed, 24 insertions(+), 25 deletions(-)
 
- - Patch 7 adds stop_cluster_cpuslocked(), the cluster-level counterpart
-   of stop_core_cpuslocked(), so that all threads of a cluster can
-   rendezvous and issue WRMSR at the same time.
-
- - Patches 8-10 enumerate ALL_LP_JOIN_NEEDED, select the CPUs to test
-   together from topology_cluster_cpumask(), and warn when a group test
-   does not pass while some of the logical processors sharing the scan
-   engine (per TID_BIT_SHIFT) were not in the group.
-
- - Patches 11-13 record per-CPU results for group tests and expose them
-   through new sysfs files (status_list, details_list, cpus_ran_list,
-   addnl_details_list). The existing status and details files remain,
-   but now report the result of the CPU written to run_test rather than
-   the first CPU in the group.
-
- - Patch 14 adds Diamond Rapids to the CPU match table.
-
- - Patch 15 removes the 256 limit on the batch file number.
-
- - Patches 16-17 update the IFS documentation and ABI document.
-
-Most of this series was developed by Jithu Joseph and Qiuxu Zhuo, who
-have both since left Intel. I have taken over upstreaming it, so please
-send questions and review comments to me. The patches keep their
-original authorship and Signed-off-by tags, except patch 10, which I
-rewrote for v2 (Qiuxu is credited as co-developer). Where Qiuxu
-changed a patch written by someone else, the change is noted in
-brackets in the commit message, and I have added my Signed-off-by to
-every patch.
-
-Changes in v2:
-- Rebased onto v7.4-rc1.
-- Tested on Emerald Rapids, Granite Rapids, Clearwater Forest and
-  Diamond Rapids (Tested-by: Yi Lai on all patches).
-- Patch 9: build the CPU group mask only after the CPU online and image
-  loaded checks pass, so a rejected run_test write no longer changes
-  the group reported by the *_list files (Sashiko).
-- Patch 10: reworked, with a new title (was "Validate TID_BIT_SHIFT
-  matches topology_cluster_cpumask()"). The check at driver init is
-  gone: it failed driver load on Sapphire Rapids and Emerald Rapids,
-  which don't enumerate TID_BIT_SHIFT, when a CPU in the group was
-  offline, and on parts that expose only one core per module. Now
-  TID_BIT_SHIFT is read at init and, if a test does not pass, the
-  driver warns when not all logical processors in the TID_BIT_SHIFT
-  range were in the group. The test always runs (Sashiko, suggested by
-  Tony Luck). Author changed to me, with Qiuxu as Co-developed-by.
-- Patch 11:
-  - clear the per-CPU results of the group at the start of each test,
-    and clear them in ifs_init() before the devices are registered
-    (Sashiko);
-  - restart an interrupted test from the lowest chunk reached by any
-    CPU in the group (Sashiko);
-  - don't overwrite error codes reported by the hardware with the
-    driver's timeout or partial-completion code; report a CPU that
-    stopped early without an error code as partially completed
-    (Sashiko);
-  - the patch 10 warning checks the results of all CPUs in the group;
-  - commit message: explain that cores in a group can report
-    different results.
-- Patches 12, 13: read the CPU group mask only once in the *_list show
-  functions (Sashiko).
-- Patch 16: fix typos; say "group" instead of "core"; use the real
-  attribute name addnl_details in the commit message; describe what
-  happens with offline CPUs instead of requiring all CPUs in a group
-  to be online (Sashiko).
-
-v1: https://lore.kernel.org/all/20261026183820.129459-1-ehab.ababneh@intel.com/
-
-Ehab Ababneh (1):
-  platform/x86/intel/ifs: Warn if a group test fails with CPUs missing
-
-Jithu Joseph (7):
-  platform/x86/intel/ifs: Refactor Array BIST function interface
-  platform/x86/intel/ifs: Enumerate the bit to determine if CPUs need to
-    join for IFS tests
-  platform/x86/intel/ifs: Select CPUs from topology_cluster_cpumask()
-    for simultaneous IFS tests
-  platform/x86/intel/ifs: Track and report scan results on a per-CPU
-    basis
-  platform/x86/intel/ifs: Add new sysfs interfaces {status, details,
-    cpus_ran}_list
-  platform/x86/intel/ifs: Add additional details sysfs interface
-  platform/x86/intel/ifs: Add Intel Diamond Rapids server support
-
-Qiuxu Zhuo (8):
-  platform/x86/intel/ifs: Revert SBAF feature
-  platform/x86/intel/ifs: Fix IFS sysfs interfaces in the comments
-  platform/x86/intel/ifs: Clarify In-Field Scan MSR bit macro
-    definitions
-  platform/x86/intel/ifs: Use u64 to define the bits of IFS MSR
-    registers
-  platform/x86/intel/ifs: Early return on the IFS image hash/chunk error
-  stop_machine: Add stop_cluster_cpuslocked() for per-cluster operations
-  platform/x86/intel/ifs: Update IFS documentation
-  Documentation/ABI: Update IFS ABI doc
-
-Tony Luck (1):
-  platform/x86/intel/ifs: Remove limit on number of batch files
-
- .../ABI/testing/sysfs-platform-intel-ifs      |  33 +-
- arch/x86/include/asm/msr-index.h              |  17 +-
- drivers/platform/x86/intel/ifs/core.c         |  59 ++-
- drivers/platform/x86/intel/ifs/ifs.h          | 229 ++++-----
- drivers/platform/x86/intel/ifs/load.c         |  52 +-
- drivers/platform/x86/intel/ifs/runtest.c      | 450 ++++++++----------
- drivers/platform/x86/intel/ifs/sysfs.c        | 109 ++++-
- include/linux/stop_machine.h                  |  15 +
- include/trace/events/intel_ifs.h              |  27 --
- kernel/stop_machine.c                         |  35 +-
- tools/arch/x86/include/asm/msr-index.h        |  14 +-
- 11 files changed, 531 insertions(+), 509 deletions(-)
-
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index f55528ac517b..0f5cdc1ad14d 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -35,10 +35,10 @@
+  * IFS Image Loading
+  * -----------------
+  *
+- * The driver loads the tests into memory reserved BIOS local to each CPU
+- * socket in a two step process using writes to MSRs to first load the
+- * SHA hashes for the test. Then the tests themselves. Status MSRs provide
+- * feedback on the success/failure of these steps.
++ * The driver loads the tests into memory reserved by BIOS, local to each CPU
++ * socket in a two-step process. It first writes to MSRs to load the SHA hashes
++ * for the test, followed by the tests themselves. Status MSRs provide feedback
++ * on the success or failure of these steps.
+  *
+  * The test files are kept in a fixed location: /lib/firmware/intel/ifs_<n>/
+  * For e.g if there are 3 test files, they would be named in the following
+@@ -83,14 +83,14 @@
+  *
+  * Test a specific core::
+  *
+- *   # echo <cpu#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
++ *   # echo <CPU#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
+  *
+- * when HT is enabled any of the sibling cpu# can be specified to test
++ * when HT is enabled any of the sibling CPU# can be specified to test
+  * its corresponding physical core. Since the tests are per physical core,
+  * the result of testing any thread is same. All siblings must be online
+  * to run a core test. It is only necessary to test one thread.
+  *
+- * For e.g. to test core corresponding to cpu5
++ * For e.g. to test core corresponding to CPU5
+  *
+  *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
+  *
+@@ -284,7 +284,7 @@ struct ifs_test_msrs {
+ };
+ 
+ /**
+- * struct ifs_data - attributes related to intel IFS driver
++ * struct ifs_data - attributes related to Intel IFS driver
+  * @loaded_version: stores the currently loaded ifs image version.
+  * @loaded: If a valid test binary has been loaded into the memory
+  * @loading_error: Error occurred on another CPU while loading image
+diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+index 329400908cb2..dde3f5eb379f 100644
+--- a/drivers/platform/x86/intel/ifs/load.c
++++ b/drivers/platform/x86/intel/ifs/load.c
+@@ -108,7 +108,7 @@ static void auth_err_message(struct device *dev, u32 err_code)
+ }
+ 
+ /*
+- * To copy scan hashes and authenticate test chunks, the initiating cpu must point
++ * To copy scan hashes and authenticate test chunks, the initiating CPU must point
+  * to the EDX:EAX to the test image in linear address.
+  * Run wrmsr(MSR_COPY_SCAN_HASHES) for scan hash copy and run wrmsr(MSR_AUTHENTICATE_AND_COPY_CHUNK)
+  * for scan hash copy and test chunk authentication.
+diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
+index 1762eab7fe5c..96b538c665f4 100644
+--- a/drivers/platform/x86/intel/ifs/runtest.c
++++ b/drivers/platform/x86/intel/ifs/runtest.c
+@@ -149,7 +149,7 @@ static atomic_t array_cpus_in;
+ static atomic_t scan_cpus_in;
+ 
+ /*
+- * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
++ * Simplified CPU sibling rendezvous loop based on microcode loader wait_for_cpus()
+  */
+ static void wait_for_sibling_cpu(atomic_t *t, long long timeout)
+ {
+@@ -389,8 +389,8 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
+ }
+ 
+ /*
+- * Initiate per core test. It wakes up work queue threads on the target cpu and
+- * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
++ * Initiate per core test. It wakes up work queue threads on the target CPU and
++ * its sibling CPU. Once all sibling threads wake up, the scan test gets executed and
+  * wait for all sibling threads to finish the scan test.
+  */
+ int do_core_test(int cpu, struct device *dev)
+@@ -403,7 +403,7 @@ int do_core_test(int cpu, struct device *dev)
+ 	cpus_read_lock();
+ 
+ 	if (!cpu_online(cpu)) {
+-		dev_info(dev, "cannot test on the offline cpu %d\n", cpu);
++		dev_info(dev, "cannot test on the offline CPU %d\n", cpu);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
+index 01b7502f46b0..287f96bb033e 100644
+--- a/drivers/platform/x86/intel/ifs/sysfs.c
++++ b/drivers/platform/x86/intel/ifs/sysfs.c
+@@ -10,14 +10,14 @@
+ #include "ifs.h"
+ 
+ /*
+- * Protects against simultaneous tests on multiple cores, or
+- * reloading can file while a test is in progress
++ * Protect against simultaneous tests on multiple cores and prevent
++ * the reloading of IFS image file while a test is in progress.
+  */
+ static DEFINE_SEMAPHORE(ifs_sem, 1);
+ 
+ /*
+- * The sysfs interface to check additional details of last test
+- * cat /sys/devices/system/platform/ifs/details
++ * The sysfs interface to check additional details of the last test:
++ * cat /sys/devices/virtual/misc/intel_ifs_<n>/details
+  */
+ static ssize_t details_show(struct device *dev,
+ 			    struct device_attribute *attr,
+@@ -37,9 +37,8 @@ static const char * const status_msg[] = {
+ };
+ 
+ /*
+- * The sysfs interface to check the test status:
+- * To check the status of last test
+- * cat /sys/devices/platform/ifs/status
++ * The sysfs interface to check the last test status:
++ * cat /sys/devices/virtual/misc/intel_ifs_<n>/status
+  */
+ static ssize_t status_show(struct device *dev,
+ 			   struct device_attribute *attr,
+@@ -53,12 +52,12 @@ static ssize_t status_show(struct device *dev,
+ static DEVICE_ATTR_RO(status);
+ 
+ /*
+- * The sysfs interface for single core testing
+- * To start test, for example, cpu5
+- * echo 5 > /sys/devices/platform/ifs/run_test
++ * The sysfs interface for single-core testing.
++ * To start a test, for example on CPU5:
++ * echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
+  * To check the result:
+- * cat /sys/devices/platform/ifs/result
+- * The sibling core gets tested at the same time.
++ * cat /sys/devices/virtual/misc/intel_ifs_<n>/status
++ * The sibling thread gets tested at the same time.
+  */
+ static ssize_t run_test_store(struct device *dev,
+ 			      struct device_attribute *attr,
 -- 
 2.43.0
 
