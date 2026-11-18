@@ -1,61 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.77.101.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795011077;
-	b=sfAmPb0HD4FVeJliJnCRijNqmCVqtndZEaJCLtFhRaUJjIM1z7DVq0N6h8+Z527Iuiqu
-	 uCLxy9HIrbHcvhyk66LHtPgChj1EdiYIdkMyJFFaITz/PEW+8Rww+cpRkAeqDuTN9NrpO
-	 bUWRU6qOWOUELsSFxNPZKAGczq65avPJNIOVEw9GFEVQCggenGxJ1uk+BvFBCHIA3a92R
-	 7nydcG5bNe3hd+x+diHcq/wNcMs6OLo0z/eC4D1azhz7sxrAgryspuk6/yZiXPBEdjgIK
-	 HRaraU4wM5XeixxS94H+0M90ZGiZOso9EKVl4faM9SekdWFDQ3am5IWtsxkJmOytwvw==
+	t=1795013495;
+	b=cf9yurrCrFJZQ4uYTkWPFmJLYBTVNWoWHBh7HBdqC2B7p9Eb7CwazTdzowU39e8k9qm7
+	 yjL0I2F6k+wAwNo5EpXgi9Ac9TOGwVde0byTtclENvxJEMZr4z7riDd9Wm1hZYRF4l0NW
+	 o17Ni3+QWc3/eRBXe+dOWXF3z4DPbngvO3VIQETqm4vZQ1NAoXuQEFftmccocY8l28WLW
+	 ZViXYMc+SjWRGrGHp2Q5F7XHXO+MQG0W2uJqAXGjUGibGXpo0+yLqUAIpPRnN2EaLsUhq
+	 FxSj95CAAfeN1QrwkXrbg2xT4L78naWkEbJ3BLVpwWpu90r5919rYBA9RN2cPHfMdkg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795011077;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=ZIcVPPdd1ul3QLvQ9/6HmRta6O+OVRN79c1UOyY9zsc=;
-	b=PIIdwLwA5ewB7vF29ZLv77WJfPdqt959lsMcD9uGhbpLv/1l6VfsTeFk1fteV5WDK6oq
-	 BSGdcEs2D8yRdPMgbcmQrqEZxGex8xg1sknXsUUhVk3vfEAi7Ys7b8VfrFEVCbt5c2DvN
-	 sYOCPUij58rmZ2HUqt4lX4gmaFDtyveEOeEBALpYycf2SsDIrbwI4vY9fHHtK0iZ8cmnO
-	 G0MGFSlADk9uR7PVvvn/maEV5KOmyYHqlME66PzPbzPa34HVkLmGnG62Xba65QIAQ1AKP
-	 8xoHTEt6DhFgKHtK8ycFCZ0Xxx66xomYyiSn4621axNE7/3OCL+QRWsQs22z3CHIz9g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795013495;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-WP-MailID:X-WP-AV:X-WP-SPAM;
+	bh=4RxBtY9vxc+Kp6wVwu6gxnSGPF/eTmawoe5vFTJzFaQ=;
+	b=gHZbILiFK0cOc/YTWL5atEBJeclaF+FcuRkDefJYjTroey4HlWYKtMc6r9VSy8GiHI4E
+	 KYytZo4A8rkBuTadW63RQXaCVovmxU4hXB55bU1Kjme63mV9KoMFxl4sb8JYkGGvybDDt
+	 0dOBP9hnsuQlRZeN9rcunEDOoIJ8v36yuTQVJOfT8jDbkDZqPLK4dQ/fD83oClLFxkdda
+	 MCCIDebujNd7h7G0pjlOerODa34Bwnc+ZMIe8wd/8ant3sirz5O1kaACEgPo+3JbWQoi0
+	 V6S88MUcfR+Cfc0tEScTa0EwKEoxlZGGwg/Q6o8rhakOwUhleCG74BZLOtSPoYiTTOw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=w0ULYOG2;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dmarc=pass header.from=wp.pl;
+	spf=pass smtp.mailfrom=wp.pl;
+	dkim=pass header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=V152Dstj;
+	arc=none smtp.remote-ip=212.77.101.11
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044BD606A33A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 14:11:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 044BD606A33A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCA1606A320
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 14:51:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0DCA1606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=w0ULYOG2
-Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 64CA0120777;
-	Wed, 18 Nov 2026 14:11:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 958663B;
-	Wed, 18 Nov 2026 14:11:12 +0000 (UTC)
-Date: Wed, 18 Nov 2026 09:11:10 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Brian Norris <briannorris@chromium.org>, sashiko-bot@kernel.org,
- sashiko-reviews@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: 'select' GENERIC_TRACER, not 'depends'
-Message-ID: <20261118091110.4b7db7da@gandalf.local.home>
-In-Reply-To: <undine-1794963487554690675-818c80e274af2040@undined.local>
-References: <20261116144652.1.Iecb63200dd245f62032a3b1f60ae78cc48868094@changeid>
-	<sashiko-outbox-217828@kernel.org>
-	<20261117085552.0e4ef272@gandalf.local.home>
-	<avybp3O2zxcLozKB@google.com>
-	<20261117142203.72235895@gandalf.local.home>
-	<20261117142310.4f440b3f@gandalf.local.home>
-	<undine-1794963487554690675-818c80e274af2040@undined.local>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=V152Dstj
+Received: (wp-smtpd smtp.wp.pl 21108 invoked from network); 18 Nov 2026 15:51:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=s20261001;
+          t=1795013485; bh=4RxBtY9vxc+Kp6wVwu6gxnSGPF/eTmawoe5vFTJzFaQ=;
+          h=From:To:Cc:Subject;
+          b=V152DstjlIjXzLnu8NjZyYwreeWqWXoXKShNNSeIv3bo67RwR+wEVyqN4g9YsFjFI
+           xOmptL4yTOchd1zAlsCZR5W+LyTQf6U65AKe2Ww47a6mQTgWXtAew+s42fK1qnKo7A
+           0Ztcn/8a00QwX2omBLvASgTLVrr4rhA36zEExBxXyGpigEmXrSC7NcPzc24EeIGRvb
+           9Jen104NvxdwGozEgTC0ATVLys69IPg53+uhuDb18aP8EGJtgi6fBrMhS/RItLECac
+           f/JoCv5FsdZaU/JA2zqrsq3gA6Jjzyd9A8PMdpRV8YB8aNR4z60wKnxRbGGydOd74M
+           moEIyAmrEqtmA==
+Received: from localhost (77-236-5-223.static.play.pl [77.236.5.223])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
+          for <linux-modules@vger.kernel.org>; 18 Nov 2026 15:51:25 +0100
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: linux-modules@vger.kernel.org,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jordan Rome <linux@jordanrome.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v3 0/3] module/kallsyms: sort function symbols and use binary search
+Date: Wed, 18 Nov 2026 15:51:22 +0100
+Message-ID: <20261118145125.29399-1-stf_xl@wp.pl>
+X-Mailer: git-send-email 2.52.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -65,92 +75,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 958663B
-X-Stat-Signature: f59t838u8jo639pqxwbdu6n4f7e9kj5k
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18JpwyJ8CSB5WMkhwY9eikviK8wuaI1678=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ZIcVPPdd1ul3QLvQ9/6HmRta6O+OVRN79c1UOyY9zsc=; b=w0ULYOG2ZIX1Km3FvFSzv9++ZoZ07iw3qKJtjXfp8AYm2GrJiVzsI7kd5r9qJhKjfnXtFASV2vGRc2r/VRgS2qA0NAzoJETQZF05sPyuYiWpzoqR7m0dIooTTGs2Mg9thzMRR7OG7X6ZXqxgKGdojfv2wQ/dS7PsuF0UrP48Mvo=
-X-HE-Tag: 1795011072-286018
-X-HE-Meta: U2FsdGVkX19GDo1ZgRRKfMiS3Bqso7z/WGEq8EdpWz4UApNb7io3eAkJr9ojEgBck8G9g/XWGOxM/61rFGTXFM1RaevEy9s4SMBnoQRhQpzn1wJRVWRao5Q6/w6Mxmtd1RZEjMcbvzvi1qMT3IvJ9ZQkLop/Io+laoeVeg7p1uH+Wllp3oLzK9noKpEvxBWtCsya+RjoTPUmKHgCUZSLVhRzEwsMx3Y40wwPAw/ZaylzYX7fThGEIwaLulKHB3WoHn0QKldgfV4jQWFJ5kNQHzQh8dyZuuMCslSEnFXAPb39j33jIhO5h1nLU35bFhgFgagFBR9yaRU5tkHcB4uEIAS1pVExvUoNlRpAQybwVEaAJeR+3JN7w0M5I1I0uo7VKHCwgyXZA8pyCYUTvJYV/Q==
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 113bda48f6e52cef21e1ab72afaf099d
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000B [0RNE]                               
 
-On Wed, 18 Nov 2026 09:58:07 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+This series enables binary search over a separate index of core text
+symbols, preserving symbol-table order and supporting livepatch modules.
 
-> On Tue, 17 Nov 2026 14:23:10 -0500, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Tue, 17 Nov 2026 14:22:03 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > As it doesn't need to be visible let's still have:
-> > 
-> >   
-> > > config ENABLE_EVENTS
-> > > 	bool "Enable trace events"  
-> > 	depends on !GENERIC_TRACER
-> > 	select TRACING  
-> 
-> I don't like these changes. I think TRACING should be kept "depends on"
-> for this.
-> 
-> If a proper hierarchical structure of dependencies is in place,
-> visibility may seem unimportant. (especially, "!GENERIC_TRACER" may
-> just hide the option instead of indicating "Trace events are enabled")
+v3:
+ - preserve core symtab order by sorting a separate index array
+ - index core text symbols rather than only function symbols
+ - enable indexed text lookup for livepatch modules
+ - rebase and update commit messages and subjects
+ - sort equal-address by descending symbol index so binary search
+   selects the same alias as linear search
 
-The GENERIC_TRACER meant everything but the "nop" tracer.
+v2: https://lore.kernel.org/linux-modules/20260327110005.16499-1-stf_xl@wp.pl/
+ - fix searching data symbols for CONFIG_KALLSYMS_ALL
+ - use kallsyms_symbol_value() in elf_sym_cmp()
 
-That is, everything in the available_tracers:
+v1: https://lore.kernel.org/linux-modules/20260317110423.45481-1-stf_xl@wp.pl/
 
- ~# cat /sys/kernel/tracing/available_tracers 
-timerlat osnoise hwlat blk mmiotrace function_graph wakeup_dl wakeup_rt wakeup preemptirqsoff preemptoff irqsoff function
+Stanislaw Gruszka (3):
+  module/kallsyms: include empty names in is_ignored_kernel_symbol()
+  module/kallsyms: sort text symbol indices and use binary search
+  module/kallsyms: enable indexed text lookup for livepatch modules
 
+ include/linux/module.h        |   2 +
+ include/linux/module_symbol.h |   6 +-
+ kernel/module/internal.h      |   2 +
+ kernel/module/kallsyms.c      | 202 +++++++++++++++++++++++++---------
+ scripts/mod/modpost.h         |   2 +-
+ 5 files changed, 161 insertions(+), 53 deletions(-)
 
-> 
-> FTRACE ("Tracing" menu)
->  L_ FUNCTION_TRACER
->  |   L_ FUNCTION_TRACER_SELFTESTS
->  |   L_ FUNCTION_GRAPH_TRACER
->  |   ...
->  L_ TRACE_EVENTS (can be hidden)
->  |   L_ SYSCALL_EVENTS
->  |   L_ KPROBE_EVENTS
->  |   L_ HIST_TRIGGERS
->  |   ...
->  L_ GENERIC_TRACER
->  |   L_ IRQSOFF_TRACER
->  |   L_ SYSCALL_TRACER (selects TRACE_EVENTS and SYSCALL_EVENTS)
->  L_ TRACE_OPTIONS(can be hidden)
->      L_ SNAPSHOT
->      L_ ...
->      L_ 
-> 
-> Maybe something like above?
+-- 
+2.52.0
 
-It would be:
-
-  FTRACE
-   L_ GENERIC_TRACER
-   |   L_ FUNCTION_TRACER
-   |   L_ FUNCTION_GRAPH_TRACER
-   |   L_ PREEMPTIRQSOFF_TRACER
-   |   L_ HWLAT_TRACER
-   |   L_ OSNOISE_TRACER
-   |   L_ MMIO_TRACER
-   |   [..]
-   |
-   L_ TRACE_EVENTS
-       L_ SYSCALL_EVENTS
-       L_ KPROBE_EVENTS
-       L_ HIST_TRIGGERS
-
-
-As the Generic tracers always enable trace events, but the trace events do
-not enable the tracers.
-
-I think we can start to separate ftrace and fgraph from the tracers too,
-but that will take more than just modifying the config files. That is,
-ftrace is the function hook mechanism and and fgraph is the return side.
-Neither are dependent on the tracers, but the tracers are dependent on them.
-
--- Steve
