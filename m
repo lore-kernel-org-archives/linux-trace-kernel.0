@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795046609;
-	b=RlhGn3fpQwMZcrmMyhsl7X1BfKVj6VLwGjNI5hoZ8I0aKSZ9UJvmQ670nv5t9Z3D6TOd
-	 0STDzpIwoElPAZ7AqMH8RJYlGOIZdpKvcPPLvgi7YwZOiN0jBZksiPkodgUpwC3DnTVEa
-	 TtZLEVqj2FPnskYf08XREHHnMCQH9yyR5emp9y1OPbg27kkc4qztLzJP1JRW0LpqRHoI/
-	 +j1EqYzgHfyRUH1HlDH6fI5YGtGrZ4Sb7iswB6xHsoWtN1Db5sAiwK5oivvCWoGWyHd7O
-	 VVxIG6qAgTGw+P0K8L09rnkd1qFKeWvwfmevSEhgfiyDvh6BTEMSpCMqqGZEMM5ciXQ==
+	t=1795046963;
+	b=pqZ1ZEmiXG5zNTL3w2RGTfdh72pB71qVaDUpz+0C7Q7FF8CXmOHpCamTzShuOaxaBfdh
+	 3ZajSFbSd2g0TLs4zZI2bBmZoKbmHSYVDlnzfPbQ6c7YlFtG0y1p70/KtrmwfgVXQMDn6
+	 cR4PUg0dby0WghQh8oH4akfk2mPQ/KjFyuNFLSkJfikHLpW8EuCsa4TtwESex8K83I8hZ
+	 e/KYccqbMTMBeK6CmPDhayuGV2Pex2G9guGPjCwn3QKTebFVkp7mIInR9q+vv5yPHcEdy
+	 4Ttr+iPDsd4xy/ZtWO+LPwpuGkmxHREOSVvxuD+IUeYlWNdM36jJEwyJsf0MioJMfEA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795046609;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795046963;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=FOFDr8n8TB8S8y+m70XapMjZP433H0c7qz4MC5pIS8g=;
-	b=gxqmYZrB9TodjtQ4llzWfyuUlCXWzS8T7hFQqe4d6D8upFtQyBChK+gb8nikYTwAVuP3
-	 BG91srhFYEO0WuN858pM9wNsOXxamW5r3egIUX8iO/onliUNCwETqgoLGMm1EQh2WyZW8
-	 1jBAbio6aluZx55j51bz81J4RaOjhB/VfkVyUqWkxniZkOr1UYbzHmZ4FlBWGmcxdAR1t
-	 B9DKVy2XGMvIQHAMVSmfFuCXTSy8DQEuRGMCDbYUEbIaWfayawTmiQJp+tKUj92vpL8KC
-	 qGW725QabpuQ6GXQSs7mNiBrfIS03prhYrW1zk9QYV29Xt6jOXkeqTz7ypbnQufux4g==
+	bh=dXWPAd34kgxbyGowuwR2K6K9x5gIy8WAMudygfgqw5I=;
+	b=tRxw7+WkPvxu5yloSlbqgao8FN3fhAi9cJ7OdK0DwAre7PokFMCfyG2HIzxvdgR7MQlf
+	 zRY73RI47NMUqNviQyZF9T8yqV8c3hoQahwyGVtjRoJwXRXbfULy60j4RAjxnGhNCBW14
+	 fcqviGH1nm5a8j09YiAG+J8DtEqj1MndDpLyvUF3o8EKHfrUdo/yzX+yzgB/h6hzyuzCp
+	 lhqLSlR7Phl3kGovSCXZQc75KZlNGsLB0ArF88exSIekbgv/1JCn5Fbv45N0Q4rHdWML6
+	 LUsFLr9/c2zDBa2ATYAQCK7njX1Lqtj+WLQUr8Qzvl3CXU2zUzq7xJJE2AigCUCrzlQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="M/lP0Nvr";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=On50cq4E;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8597606A32A;
-	Thu, 19 Nov 2026 00:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C532606A31C;
+	Thu, 19 Nov 2026 00:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M/lP0Nvr
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F68E1F000C4;
-	Thu, 19 Nov 2026 00:03:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=On50cq4E
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20F91F000C4;
+	Thu, 19 Nov 2026 00:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795046609;
-	bh=FOFDr8n8TB8S8y+m70XapMjZP433H0c7qz4MC5pIS8g=;
+	s=k20260515; t=1795046963;
+	bh=dXWPAd34kgxbyGowuwR2K6K9x5gIy8WAMudygfgqw5I=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=M/lP0NvrPCKtpcarKRT+2c3sNGjiqI1MRFKqap7+WQidMl/GIVty908ykdLe2tDxE
-	 CIvuMllzMLJJFYCKTHgfcxtve6JfFO7f3fo3uXKt/amC0VgFWc2+Zp2k+7n3T1rbqB
-	 KwaNiMFia4wXLwtS1qLzJ1HBDXeSoEcb+qAbEv+2dAIN/YI3TFssTAbjM9Wd6MT49T
-	 /wTSsrCo3G5FM1mcs/9mkmfz0pESOcuwSS9Qi70E8TrMGG0RJiwkVbNJ12+85ltCsk
-	 4TQfNmNaBv7to+mw+S6lFVQdJLCoZZAZ83xeHSH57jWlqOWgnAfVA4J+wszen9wvyM
-	 XQKf95UOxHQkA==
-Message-ID: <sashiko-outbox-222222@kernel.org>
+	b=On50cq4EQg2XuJ/k/TfG9lAUXvmXHBUBuSa4qvdIHxVQH+dXD5QYecZ4OrMs8+AFA
+	 MLccB8B5Zd5Hwf/WlxxA+DGTgW98S3cx0KvCBR7r4p4956XtNj89Ae/e9i+HPPA0iG
+	 ygs6ThB8PkNEF7pBSU8uAunpDTjAqnCWVxCE/WTy0TcPdeydG1jTy/Reh9iFqk3Uaq
+	 tsALcxR0oCAGosPJ3NP3WD5OrPaCurq37BgI7/abVym8J742TN3JL9xVov4SRnz4b7
+	 uAjlCvTMupkO2AsvqPvePBO8Q6hrweKuTTCTJhz6VwxdXWwAMC62ZZwYnvQ+bGivxQ
+	 zMsPuc4+TBo1A==
+Message-ID: <sashiko-outbox-222233@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] PCI: Allow untainted driver_override for PCI stub
- drivers
+Subject: Re: [PATCH] vfio: Allow untainted use of driver_override
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Alex Williamson" <alex@shazbot.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20261118235645.2907908-1-alex@shazbot.org>
+Cc: linux-trace-kernel@vger.kernel.org, virtualization@lists.linux.dev, intel-xe@lists.freedesktop.org, kvm@vger.kernel.org, "Michael
+ S. Tsirkin" <mst@redhat.com>, "Eugenio Perez" <eperezma@redhat.com>
+In-Reply-To: <20261118235645.2907908-2-alex@shazbot.org>
 References: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
- <20261118235645.2907908-1-alex@shazbot.org>
+ <20261118235645.2907908-2-alex@shazbot.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 00:03:27 +0000
+Date: Thu, 19 Nov 2026 00:09:22 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,52 +61,56 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [High] PCI: build failure due to missing support_driver_override in
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [High] vfio: build failure due to missing support_driver_override in
   device_driver
+- [Medium] vfio: missing support_driver_override on s390 vfio_ccw and
+  vfio_ap drivers
 --
 
-commit 6d515d8bf97cee4e2be39125c16fa6391240af86
+commit e1a4bdaaf4e34e9a150096261c67507d2bd63625
 Author: Alex Williamson <alex@shazbot.org>
 
-PCI: Allow untainted driver_override for PCI stub drivers
+vfio: Allow untainted use of driver_override
 
-This commit sets .driver.support_driver_override =3D true on pf_stub_driver=
- and
-stub_driver to declare them safe for driver_override bindings.
+This commit sets the support_driver_override flag on the embedded device
+driver structures across vfio drivers so that binding devices via
+driver_override continues to work without tainting the kernel.
 
-> diff --git a/drivers/pci/pci-pf-stub.c b/drivers/pci/pci-pf-stub.c
-> index da4db4928907e..328fb4a57092c 100644
-> --- a/drivers/pci/pci-pf-stub.c
-> +++ b/drivers/pci/pci-pf-stub.c
-> @@ -36,6 +36,7 @@ static struct pci_driver pf_stub_driver =3D {
->  	.id_table		=3D pci_pf_stub_whitelist,
->  	.probe			=3D pci_pf_stub_probe,
->  	.sriov_configure	=3D pci_sriov_configure_simple,
-> +	.driver.support_driver_override =3D true,
->  };
->  module_pci_driver(pf_stub_driver);
-> =20
-> diff --git a/drivers/pci/pci-stub.c b/drivers/pci/pci-stub.c
-> index 9bc478df4e8f0..acbd43c17adc7 100644
-> --- a/drivers/pci/pci-stub.c
-> +++ b/drivers/pci/pci-stub.c
-> @@ -37,6 +37,7 @@ static struct pci_driver stub_driver =3D {
->  	.id_table	=3D NULL,	/* only dynamic id's */
->  	.probe		=3D pci_stub_probe,
+> Set the support_driver_override flag on the driver struct across all
+> vfio drivers.
+
+[Severity: Medium]
+Should the s390 vfio drivers outside drivers/vfio/ also set
+support_driver_override?
+
+Both vfio_ccw_sch_driver in drivers/s390/cio/vfio_ccw_drv.c and
+vfio_ap_drv in drivers/s390/crypto/vfio_ap_drv.c bind to devices via
+device_match_driver_override() on css_bus_type and ap_bus_type, so
+omitting them will deny or taint driver_override bindings for vfio_ccw
+subchannels and vfio_ap queues.
+
+> diff --git a/drivers/vfio/cdx/main.c b/drivers/vfio/cdx/main.c
+> index 28dc8c8256006..fb7679bf92fd3 100644
+> --- a/drivers/vfio/cdx/main.c
+> +++ b/drivers/vfio/cdx/main.c
+> @@ -358,6 +358,7 @@ static struct cdx_driver vfio_cdx_driver =3D {
+>  	.match_id_table	=3D vfio_cdx_table,
+>  	.driver	=3D {
+>  		.name	=3D "vfio-cdx",
+> +		.support_driver_override =3D true,
+>  	},
 >  	.driver_managed_dma =3D true,
-> +	.driver.support_driver_override =3D true,
 >  };
-> =20
->  static int __init pci_stub_init(void)
 
 [Severity: High]
-Does this fail to build when CONFIG_PCI_PF_STUB or CONFIG_PCI_STUB is
-enabled?  struct device_driver in include/linux/device/driver.h has no
-support_driver_override member in this tree, as the prerequisite driver-core
-patch introducing it is missing.
+Is this missing the prerequisite driver-core patch that adds
+support_driver_override to struct device_driver?  In this tree, struct
+device_driver in include/linux/device/driver.h has no
+support_driver_override member, so building any of the 13 modified vfio
+drivers fails with an unknown field in initializer error.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118235645.2907=
-908-1-alex@shazbot.org?part=3D1
+908-2-alex@shazbot.org?part=3D1
