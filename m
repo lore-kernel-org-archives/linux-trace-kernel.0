@@ -1,114 +1,137 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795098871;
-	b=nbg2pTqK+X1rGcCYjvGFOFXFhuIXQQvmHn6p2wJ6BzkOYEAV3MIqTZQ1lXCfYavtigxb
-	 f+kMHdWpL8A2DTdH21bR1MXiInG6LlVXzPRnoop3D4GkjsOm+4Too2X9PaqY9DDjItpt5
-	 QRJ8nrVw6zoP+905O7Ysps1WUwYNzvvxAUms9SNVfSXHP84Zn09ezjfAnWhkbHNMMlIcD
-	 dbeeCTrSpI8zT++b1/ZgA32NMDE83GOwaRjSIZ2op5xH/EuqJpLJPqLBxDndWm8kZyuxM
-	 cXDmvitbpftEEEWYZu5sMkxoCNE9wZQ599cFQgBuNdw3+seKfS0c6KNumQ4V4hS2Clw==
+	t=1795100186;
+	b=l1yqR0c+Oa/FNpQCEmxpTUm1q/CQnuudZW43BE72aSM4yggCp+l1tSFphr9fhP9+SLC7
+	 +9U1GYJZu2L3UtCTWaZriniLyZUUgx93CbSPS3d911Um78Jgn3pHbDNL1SQ/LOrWXl1A/
+	 lIGBkFK7aMUZ58F3v2vcFbXquc7ekODj95r27oSHGFCHrLbAgxxa1qR5+lb4dnuryA6Gv
+	 0kOjdjVCBQhOqrbCV/gAOj5m1I1Mi8bM9Q7cVWXTwJnHETrhN+oF+5Gc78Ke6wDK0g70P
+	 QyO2NSt7vlzF8i8C4JEonB3q4zXmm00AEvEM+1CM8fgZoAEOeOBQh0tGa2H2FdAiyog==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795098871;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=pRSb81b3SBt/FIt43Arxg2bmJQWR+BvxXkEGFDTOslw=;
-	b=MgCuVgfs4ZaBTuf2MhP2atNhMiY58xaqgjZeZn6+00nc3EwQrlLSOikRwnd5PswbYlLU
-	 DDhSyZNk5mO5CBDRhYOQtZ+oa+HW94VPyN+s05OgxuSlTr9X127Du081Be3CXIOsvGNY8
-	 Z5gFLHtQXPTa2XyNmx9cX6jWibMdPPAuBClcKX73MGLDXsA/ZU1NIQATNZogPR7kWXLxs
-	 5O2uiL0E6BnkBoSLU1J0rj09GZR0I9CFvRdGIJ+LIHppq2KLYuWmEEdQV0TIiC0Q1FBuC
-	 tfJxj0dLkFC7VWB7uaEOphl+LmXpjzV5neAf5g7ynBTNHxZIJiBzU2INDlmOWtKEJww==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795100186;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To;
+	bh=bMbyjACtLzAau3mHjynkxDTW6eWUIU5ieVZSzXwOIHE=;
+	b=lXVnkKtzRcJnoBsHeINgWqqvM0qtPFoZtGJq9pX+HgFCRhupMtUZzvYSZvvvAAI10RLs
+	 4N2nPnpDeY1vq0qXdmVyjnaqMopHhGbtCUedRonJBzGFPKklWGIDNLNoGRzKtb/sviWqz
+	 ZBZsgcbCw2soahICP8fSX7S6FKd/cOQ/PDEgMfjN1c9YFVuNrlFXG8cqo0wbWQTTjMjN9
+	 BlE2rJWRuzPK6v2BaySB9TdDTWAf6uO9RLYu1WNy1i94IyXxdTn6elySrudlUrVJhDCRu
+	 PJ060Hvu8VjmkgnoNWVHKgDFyOlKolp3qBd3LZYZb+3ZY8NvItS4hfXbgHPjvYhSOJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="DeBd/wuP";
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=b5TUgwvF;
+	arc=none smtp.remote-ip=209.85.128.54
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36734606A320
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 14:34:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 36734606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B51606A320
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 14:56:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D7B51606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=DeBd/wuP
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795098870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=pRSb81b3SBt/FIt43Arxg2bmJQWR+BvxXkEGFDTOslw=;
-	b=DeBd/wuP6GFoeqiWksBJbRHUtd4jLZNQ6eeNefUnXAivZU7FZNWkZm1htBhB5/woTQwYQi
-	1KkQaPEOzWVVUryJk3tO3cwhcN9iRS3wwF79xxJ/ltXGFu8YfAlX0R++X9v8OzTfoNOoOi
-	UiU84bCJIiReE6FCyRsIam7LstTA1Vw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-eQuGNH2AO0qDpFuWPhNPZA-1; Thu, 19 Nov 2026 14:34:28 +0000
-X-MC-Unique: eQuGNH2AO0qDpFuWPhNPZA-1
-X-Mimecast-MFC-AGG-ID: eQuGNH2AO0qDpFuWPhNPZA_1795098867
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4ba01393800so15128955e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 06:34:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=b5TUgwvF
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4bb5b33e2ffso44555e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 06:56:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795100184; x=1795704984; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=bMbyjACtLzAau3mHjynkxDTW6eWUIU5ieVZSzXwOIHE=;
+        b=b5TUgwvFYcVrC0LOg2IULJtqFlnDVpcYRRC0cTfg9QswAYhwPZPDrcQIrzjwvc0wn5
+         EzRGpwmbzA4Xmk7HpuJ8jv+2WMpZDpPgeKn3UJNXnnlXY0qdnMCWJfehEc5j9Ljb2oMs
+         3IzLQXakIPjzLFv/aL8+6AkfgnY0SvdM93E0JAw3YXjYdV3REyGnxAXXJgAiEQW7ijix
+         R1LQpKuwdNosskHSJKsqlyFrXAbR8Ot53tL0esWuTGOnAU94+vKQfiDR+Uju/SvWhVQz
+         BYoUvJHfHGz2Xt+gabEjfbYvc16kUz2ROiveyuaRLmHo2qjBMzm9u24OULe1pgf0W0Lm
+         E0OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795098867; x=1795703667;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20260707; t=1795100184; x=1795704984;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=pRSb81b3SBt/FIt43Arxg2bmJQWR+BvxXkEGFDTOslw=;
-        b=dTxbpAxgwABXKTKBBUM/9m4FggB5gRE8Fcn2awJu0mKBd5jypLoSTj2fYVKEUzC0Go
-         K5KP4jV72wt+d8iwq/xj1uSdPqeIHPFEt5xr+v1mZIefGB/CROvvbAPCP2uQwvDiwUsR
-         Lkj8F0t3QHXeD0AIih9DSel0mbIlynVqdg+4gmG9PeYWUmcT4EnjDQqPQIQb4hOOAkod
-         U1qC2wX6nY/BldV9AE1hRKqQ6EwMstVh7z/B+2/GITzjF/i989bFInDEDFAULzcZNNbH
-         Y18IffgjLYJG5RBM/JvdDhfCktK80C48OByoV8NeNkApikYt/ZmybkmuihOR7xvkZDJT
-         iXkg==
-X-Forwarded-Encrypted: i=1; AL+hErEPAlR1gp7fDPaP7S4GqYHOdPwTttADe0/VFKK4MzMlwZr3KmyjNhp93dNYuv2FVJ4HCgfbA8jjaEdkP9oopiVCWlg=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+3hyrH8DCbO2NLfWdr9ogAhvzmNXqKzfZ5h+5dA2aP9qaSWf4K
-	VhOOoAp42Lh1uT/cfYJXNC6I/FFzIqw3E8zPbFQkUn0hNYalAtTaJPuuCybxL5GeCeUFgpgOqSr
-	G7VV4zciLFQL+xhlKDEzfFA3Lz846HpmTMA2HWVU2trrbmpW8qAago+j42OUxqLq/g04gMuKPpA
-	==
-X-Gm-Gg: AYBFou3bN+EMmSRFCaBAzAQZutg9+KrVGfXRlyGzCBTE+fghZ/kyOTjdQS4Ln5ySn8h
-	ao1rJxf0A4be1LBuyiLfDRsMNbO0UCycvmXJ+hTACF5D4jx6F2iYAHPTmiWYkREgU9mgD5jnWsN
-	lxMGzK+42+wtN4R02XTDMFnLbKOImYGcIwiJEotAAOKEoJZEIkL8vygGxcVS3fbxMtNTy8k9igG
-	C2aGGbUkk4PtH/jtbw7UPcX3bp8520jIuROZeg8eTLTvNHFXSQ4JikvNEOFM/UyHqgnC4eIrP/v
-	Xi4ol9mKTkGezfE4n1qQJp2thJRjYJDMBsHq7HU2RF4tbJzKOBNqDzlSIT1Vo2+j8ExNb7Fqap8
-	dIdK+HLEoomAh9a4Xdx209WFKOKt+l9GSrDGb1JrTnunILwemLcIvb5SH5q7MaJt1CLfME5596G
-	li
-X-Received: by 2002:a05:600c:19d2:b0:4bb:647d:dabe with SMTP id 5b1f17b1804b1-4bb7d5d65ffmr131047155e9.3.1795098866816;
-        Thu, 19 Nov 2026 06:34:26 -0800 (PST)
-X-Received: by 2002:a05:600c:19d2:b0:4bb:647d:dabe with SMTP id 5b1f17b1804b1-4bb7d5d65ffmr131046695e9.3.1795098866415;
-        Thu, 19 Nov 2026 06:34:26 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8526cbd0sm52062595e9.0.2026.11.19.06.34.25
+        bh=bMbyjACtLzAau3mHjynkxDTW6eWUIU5ieVZSzXwOIHE=;
+        b=nqMxwuYwgbITInaRIjQDxZXl1vRV69WGDiXh/QEVaQfrz1zgrsu7gLic6HxCnWk9aL
+         wk4LbLoGXzBQEG2nXqEpl33NRQ9Es5W8DQi8L7pL1MGG9svjjjAGgiTSjXUvN3IYr4k0
+         VxmtfsH27mpGJoUH9B9kmsfcDsG2nP7LGUr3yDK2qOqz1mMn8d+bdgAmrAAXL8KsEvsk
+         6QjW5t7TW0Npfhoq69h7zcq+kgk8fRAQpwlHWhHYJ54RCR+KkZjl9BOFGE24tq5J3oBM
+         ENmXx3garT4ipcqGZxTtt73wfO5CEorLp3BfHDXjtRSaWKI5/lUCB7p52qWJuv5VY7W9
+         NmkQ==
+X-Forwarded-Encrypted: i=1; AL+hErG9wL60LIqYkiiytumJWrhbvj7H541NTnyjy04BEDoqB1p1lCTmG2ZKUgPQs1RPsQ5kxuaszTz/NRRF6quOf56ScIs=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9eBZ32WeSar+pvBxpOA5YsRU3jJovNJOiQJc+ZKP/gvY7oXhg5
+	X8ORb2yQullTscCBSEPVDWgfPTOa4DPT2GpOBKa8wwTQ+HCD3kozIhcZQiL+5/uxzQ==
+X-Gm-Gg: AYBFou34XGZL+qVz8rbTPM5Qe33iPQloVrtqKU8owFIErEVWPjmND+x3YrSxChi9LE7
+	DA3gHO3ViFLLvulklFpAL3ksABU26XD+sN2ZuFQqLZOwdyUTyjVtNVkBo+j6so6p4LV6SdYz7Wd
+	s8GTdpq/m66JyVxL5QANwWi3yB/H0xtqiMVJB+p8EhjFLMkM8Z0052esLvE2ZOQFrhld7oUbRNd
+	gsTdiWjRZjlMXv89YK0MPeUd/JWFRwkXCXudafqyNNMhiY+6/wfLZPLOTv7sjJYm1PXju2oC8Wx
+	RojsGta4mMK9R5DGP6Ewp8azDLabFgtcYrqhoO3IIgb+aOhn7rFdHeLk6Wk9im65TJ+oFYYzFeZ
+	ZiGW4yp9Yg20a5EjG1xSGg6CJ3gSRh+J1jX2Mu7NPSzeh/ai402JIRbGahxBr+hGU9qeaZSclgR
+	7/8oUHKPC0147ehXot1J7CK3mHf5JwL+ZRyysh50u9/+3uU3KePac74Ljdz2pc8XT11IztObXVK
+	Poes5tBC3R2OMo/jelB2vXBJDXTjXwpNxuIWIOmxGNOpoKf0hsjlmm3GjfQ4SPnLAgHh9Maz/ok
+	aU0q7w0cikHByjI5WrNstmA0JSDNGuYje5YNF/0fihmedSIqhX7bh2VJDm0e76espH821Z4=
+X-Received: by 2002:a05:600c:1d01:b0:4a1:e384:5e12 with SMTP id 5b1f17b1804b1-4bb85193dc1mr748295e9.7.1795100183663;
+        Thu, 19 Nov 2026 06:56:23 -0800 (PST)
+Received: from google.com (160.193.189.35.bc.googleusercontent.com. [35.189.193.160])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853b216esm43338685e9.12.2026.11.19.06.56.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Nov 2026 06:34:25 -0800 (PST)
-Message-ID: <825843fdfe962bc03b360d686773ca82f2502d60.camel@redhat.com>
-Subject: Re: [PATCH v8 02/14] rv: Fix ha_monitor timer and invariant
- underflow
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: wen.yang@linux.dev
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
- linux-kernel <linux-kernel@vger.kernel.org>
-Date: Thu, 19 Nov 2026 15:34:23 +0100
-In-Reply-To: <f373c9fd1652b4c5789fddd83a18b9e6e350c588.1793900349.git.wen.yang@linux.dev>
-References: <cover.1793900349.git.wen.yang@linux.dev>
-	 <f373c9fd1652b4c5789fddd83a18b9e6e350c588.1793900349.git.wen.yang@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
+        Thu, 19 Nov 2026 06:56:22 -0800 (PST)
+Date: Thu, 19 Nov 2026 14:56:18 +0000
+From: Mostafa Saleh <smostafa@google.com>
+To: Alex Williamson <alex@shazbot.org>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	David Lechner <dlechner@baylibre.com>, Armin Wolf <W_Armin@gmx.de>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Karl Mehltretter <kmehltretter@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Marco Elver <elver@google.com>,
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Bradley Morgan <brads@mainlining.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Pnina Feder <pnina.feder@mobileye.com>,
+	Mete Durlu <meted@linux.ibm.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Rio <rioo.tsukatsukii@gmail.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Brett Creeley <brett.creeley@amd.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	Julian Ruess <julianr@linux.ibm.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>, qat-linux@intel.com,
+	virtualization@lists.linux.dev, intel-xe@lists.freedesktop.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH] vfio: Allow untainted use of driver_override
+Message-ID: <av8OEgaW0jEJC1OF@google.com>
+References: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
+ <20261118235645.2907908-2-alex@shazbot.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -118,164 +141,241 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 1hXZNcjskNAEMGzI_XKGKBf90vR-EUNwVa46q-BZA7A_1795098867
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261118235645.2907908-2-alex@shazbot.org>
 
-On Fri, 2026-11-06 at 01:49 +0800, wen.yang@linux.dev wrote:
-> From: Wen Yang <wen.yang@linux.dev>
->=20
-> ha_start_timer_ns() and ha_start_timer_jiffy() compute the remaining
-> budget as expire - passed.=C2=A0 Once the elapsed time passed exceeds the
-> budget expire (e.g. a state transition after the invariant should have
-> fired, before the timer callback ran), the unsigned subtraction
-> underflows to a huge value and the timer is scheduled far into the
-> future instead of expiring immediately, so the monitor stops enforcing
-> the budget.
->=20
-> ha_check_invariant_ns() computes store >=3D time_ns - expire_ns, which
-> underflows when the system uptime is still below expire_ns (a monitor
-> armed early in boot with a large budget), reporting a false violation.
->=20
-> Clamp the timer remainder to 0 (fire immediately) when passed >=3D expire=
-,
-> and rewrite the invariant check as store + expire_ns >=3D time_ns so
-> neither side can underflow.=C2=A0 Both timer flavours (jiffy and hrtimer)=
- are
-> fixed.
->=20
-> Fixes: f5587d1b6ec9 ("rv: Add Hybrid Automata monitor type")
-> Fixes: ab2900ae252b ("rv: Simplify hybrid automata monitors's clock
-> variables")
-> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-> Signed-off-by: Wen Yang <wen.yang@linux.dev>
-> ---
+On Wed, Nov 18, 2026 at 04:56:44PM -0700, Alex Williamson wrote:
+> Driver overrides are the standard mechanism for binding vfio drivers
+> to devices.  With the introduction of the support_driver_override flag
+> in the core driver struct, it's now required for drivers to declare
+> themselves as driver_override compatible, otherwise driver_override
+> bindings will be denied or generate a kernel taint.
+> 
+> Set the support_driver_override flag on the driver struct across all
+> vfio drivers.
+> 
+> Cc: Yishai Hadas <yishaih@nvidia.com>
+> Cc: Longfang Liu <liulongfang@huawei.com>
+> Cc: Ankit Agrawal <ankita@nvidia.com>
+> Cc: Brett Creeley <brett.creeley@amd.com>
+> Cc: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+> Cc: Michał Winiarski <michal.winiarski@intel.com>
+> Cc: Julian Ruess <julianr@linux.ibm.com>
+> Cc: Nipun Gupta <nipun.gupta@amd.com>
+> Cc: Nikhil Agarwal <nikhil.agarwal@amd.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Mostafa Saleh <smostafa@google.com>
+> Cc: Pranjal Shrivastava <praan@google.com>
+> Cc: Ioana Ciornei <ioana.ciornei@nxp.com>
+> Cc: qat-linux@intel.com
+> Cc: virtualization@lists.linux.dev
+> Cc: intel-xe@lists.freedesktop.org
+> Cc: kvm@vger.kernel.org
+> Signed-off-by: Alex Williamson <alex@shazbot.org>
 
-Minor nits on the comments that you added since last time, you can keep my
-review tag.
-
-> =C2=A0include/rv/ha_monitor.h | 29 ++++++++++++++++++++++++-----
-> =C2=A01 file changed, 24 insertions(+), 5 deletions(-)
->=20
-> diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-> index 93ac99ff7f1d..ebb7f91e3447 100644
-> --- a/include/rv/ha_monitor.h
-> +++ b/include/rv/ha_monitor.h
-> @@ -351,7 +351,11 @@ static inline void ha_reset_clk_ns(struct ha_monitor
-> *ha_mon, enum envs env, u64
-> =C2=A0static inline bool ha_check_invariant_ns(struct ha_monitor *ha_mon,=
- enum envs
-> env,
-> =C2=A0=09=09=09=09=09 u64 time_ns, u64 expire_ns)
-> =C2=A0{
-> -=09return READ_ONCE(ha_mon->env_store[env]) >=3D time_ns - expire_ns;
-> +=09/*
-> +=09 * Compare as store + expire >=3D time to avoid underflow when the
-> +=09 * system uptime is still below expire_ns (early boot, large budget).
-> +=09 */
-
-This comment isn't necessary, please instruct your LLMs not to mention how =
-the
-code use to look before they touched it. There are commit messages for that=
-. And
-I wouldn't get too technical on the code there, the diff speaks clearly eno=
-ugh.
-
-> +=09return READ_ONCE(ha_mon->env_store[env]) + expire_ns >=3D time_ns;
-> =C2=A0}
-
-Why don't you do the same in ha_check_invariant_jiffy() ?
-
-> =C2=A0/*
-> =C2=A0 * ha_invariant_passed_ns - prepare the invariant and return the ti=
-me since
-> reset
-> @@ -410,6 +414,17 @@ static inline void ha_inv_to_guard(struct ha_monitor
-> *ha_mon, enum envs env,
-> =C2=A0=09WRITE_ONCE(ha_mon->env_store[env], READ_ONCE(ha_mon->env_store[e=
-nv])
-> - value);
-> =C2=A0}
-> =C2=A0
-> +/*
-> + * ha_time_left - time left before expire, 0 once it already passed
-> + *
-> + * A plain expire - passed underflows and would arm the timer far in the
-> + * future.=C2=A0 Unit-agnostic: callers pass ns or jiffies consistently.
-
-This second paragraph is also redundant. It's clear what you aim to do and =
-I'd
-say the fact it doesn't have a unit in the name means it doesn't require on=
-e
-(from the code it's fairly obvious anyway).
+Reviewed-by: Mostafa Saleh <smostafa@google.com>
 
 Thanks,
-Gabriele
+Mostafa
 
-> + */
-> +static inline u64 ha_time_left(u64 passed, u64 expire)
-> +{
-> +=09return passed < expire ? expire - passed : 0;
-> +}
-> +
-> =C2=A0#if HA_TIMER_TYPE =3D=3D HA_TIMER_WHEEL
-> =C2=A0/*
-> =C2=A0 * Helper functions to handle the monitor timer.
-> @@ -439,15 +454,17 @@ static inline void ha_start_timer_jiffy(struct
-> ha_monitor *ha_mon, enum envs env
-> =C2=A0{
-> =C2=A0=09u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, time_ns);
-> =C2=A0
-> -=09mod_timer(&ha_mon->timer, get_jiffies_64() + expire - passed);
-> +=09mod_timer(&ha_mon->timer,
-> +=09=09=C2=A0 get_jiffies_64() + ha_time_left(passed, expire));
-> =C2=A0}
-> =C2=A0static inline void ha_start_timer_ns(struct ha_monitor *ha_mon, enu=
-m envs
-> env,
-> =C2=A0=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 u64 expire, u64 time_ns)
-> =C2=A0{
-> =C2=A0=09u64 passed =3D ha_invariant_passed_ns(ha_mon, env, time_ns);
-> +=09u64 delay =3D ha_time_left(passed, expire);
-> =C2=A0
-> =C2=A0=09ha_start_timer_jiffy(ha_mon, ENV_MAX_STORED,
-> -=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 nsecs_to_jiffies(expire - passed + TIC=
-K_NSEC -
-> 1), time_ns);
-> +=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0 nsecs_to_jiffies(delay + TICK_NSEC - 1=
-),
-> time_ns);
-> =C2=A0}
-> =C2=A0/*
-> =C2=A0 * ha_cancel_timer - Cancel the timer
-> @@ -494,7 +511,8 @@ static inline void ha_start_timer_ns(struct ha_monito=
-r
-> *ha_mon, enum envs env,
-> =C2=A0
-> =C2=A0=09if (RV_MON_TYPE =3D=3D RV_MON_PER_CPU)
-> =C2=A0=09=09mode |=3D HRTIMER_MODE_PINNED;
-> -=09hrtimer_start(&ha_mon->hrtimer, ns_to_ktime(expire - passed), mode);
-> +=09hrtimer_start(&ha_mon->hrtimer,
-> +=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ns_to_ktime(ha_time_left(passed, ex=
-pire)), mode);
-> =C2=A0}
-> =C2=A0static inline void ha_start_timer_jiffy(struct ha_monitor *ha_mon, =
-enum envs
-> env,
-> =C2=A0=09=09=09=09=09u64 expire, u64 time_ns)
-> @@ -502,7 +520,8 @@ static inline void ha_start_timer_jiffy(struct ha_mon=
-itor
-> *ha_mon, enum envs env
-> =C2=A0=09u64 passed =3D ha_invariant_passed_jiffy(ha_mon, env, time_ns);
-> =C2=A0
-> =C2=A0=09ha_start_timer_ns(ha_mon, ENV_MAX_STORED,
-> -=09=09=09=C2=A0 jiffies_to_nsecs(expire - passed), time_ns);
-> +=09=09=09=C2=A0 jiffies_to_nsecs(ha_time_left(passed, expire)),
-> +=09=09=09=C2=A0 time_ns);
-> =C2=A0}
-> =C2=A0/*
-> =C2=A0 * ha_cancel_timer - Cancel the timer
-
+> ---
+> 
+> Uwe, this should cover all the vfio drivers that expect to use
+> driver_override.  Thanks,
+> 
+> Alex
+> 
+>  drivers/vfio/cdx/main.c                        | 1 +
+>  drivers/vfio/fsl-mc/vfio_fsl_mc.c              | 1 +
+>  drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c | 3 ++-
+>  drivers/vfio/pci/ism/main.c                    | 3 ++-
+>  drivers/vfio/pci/mlx5/main.c                   | 3 ++-
+>  drivers/vfio/pci/nvgrace-gpu/main.c            | 3 ++-
+>  drivers/vfio/pci/pds/pci_drv.c                 | 3 ++-
+>  drivers/vfio/pci/qat/main.c                    | 3 ++-
+>  drivers/vfio/pci/vfio_pci.c                    | 3 ++-
+>  drivers/vfio/pci/virtio/main.c                 | 3 ++-
+>  drivers/vfio/pci/xe/main.c                     | 3 ++-
+>  drivers/vfio/platform/vfio_amba.c              | 1 +
+>  drivers/vfio/platform/vfio_platform.c          | 1 +
+>  13 files changed, 22 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/vfio/cdx/main.c b/drivers/vfio/cdx/main.c
+> index 28dc8c825600..fb7679bf92fd 100644
+> --- a/drivers/vfio/cdx/main.c
+> +++ b/drivers/vfio/cdx/main.c
+> @@ -358,6 +358,7 @@ static struct cdx_driver vfio_cdx_driver = {
+>  	.match_id_table	= vfio_cdx_table,
+>  	.driver	= {
+>  		.name	= "vfio-cdx",
+> +		.support_driver_override = true,
+>  	},
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> index 15b05b8c0c90..1603f81e0257 100644
+> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+> @@ -597,6 +597,7 @@ static struct fsl_mc_driver vfio_fsl_mc_driver = {
+>  	.remove		= vfio_fsl_mc_remove,
+>  	.driver	= {
+>  		.name	= "vfio-fsl-mc",
+> +		.support_driver_override = true,
+>  	},
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> index c82c59246a3f..5c56aff8db01 100644
+> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> @@ -1737,7 +1737,8 @@ static struct pci_driver hisi_acc_vfio_pci_driver = {
+>  	.id_table = hisi_acc_vfio_pci_table,
+>  	.probe = hisi_acc_vfio_pci_probe,
+>  	.remove = hisi_acc_vfio_pci_remove,
+> -	.driver = { .pm = pm_ptr(&hisi_acc_vf_pm_ops) },
+> +	.driver = { .pm = pm_ptr(&hisi_acc_vf_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &hisi_acc_vf_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/ism/main.c b/drivers/vfio/pci/ism/main.c
+> index cce3bdf1f070..263b377e87c4 100644
+> --- a/drivers/vfio/pci/ism/main.c
+> +++ b/drivers/vfio/pci/ism/main.c
+> @@ -399,7 +399,8 @@ static struct pci_driver ism_vfio_pci_driver = {
+>  	.id_table = ism_device_table,
+>  	.probe = ism_vfio_pci_probe,
+>  	.remove = ism_vfio_pci_remove,
+> -	.driver	= { .pm = pm_ptr(&ism_vfio_pm_ops) },
+> +	.driver	= { .pm = pm_ptr(&ism_vfio_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &ism_vfio_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/mlx5/main.c b/drivers/vfio/pci/mlx5/main.c
+> index 18a6d224b1fd..63c89e461be8 100644
+> --- a/drivers/vfio/pci/mlx5/main.c
+> +++ b/drivers/vfio/pci/mlx5/main.c
+> @@ -1451,7 +1451,8 @@ static struct pci_driver mlx5vf_pci_driver = {
+>  	.id_table = mlx5vf_pci_table,
+>  	.probe = mlx5vf_pci_probe,
+>  	.remove = mlx5vf_pci_remove,
+> -	.driver	= { .pm = pm_ptr(&mlx5vf_pm_ops) },
+> +	.driver	= { .pm = pm_ptr(&mlx5vf_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &mlx5vf_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/nvgrace-gpu/main.c b/drivers/vfio/pci/nvgrace-gpu/main.c
+> index 5ddec340b73b..946da32c61ff 100644
+> --- a/drivers/vfio/pci/nvgrace-gpu/main.c
+> +++ b/drivers/vfio/pci/nvgrace-gpu/main.c
+> @@ -1438,7 +1438,8 @@ static struct pci_driver nvgrace_gpu_vfio_pci_driver = {
+>  	.id_table = nvgrace_gpu_vfio_pci_table,
+>  	.probe = nvgrace_gpu_probe,
+>  	.remove = nvgrace_gpu_remove,
+> -	.driver = { .pm = pm_ptr(&nvgrace_gpu_pm_ops) },
+> +	.driver = { .pm = pm_ptr(&nvgrace_gpu_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &nvgrace_gpu_vfio_pci_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/pds/pci_drv.c b/drivers/vfio/pci/pds/pci_drv.c
+> index cf7e33d4d17b..1fcef987f1b0 100644
+> --- a/drivers/vfio/pci/pds/pci_drv.c
+> +++ b/drivers/vfio/pci/pds/pci_drv.c
+> @@ -184,7 +184,8 @@ static struct pci_driver pds_vfio_pci_driver = {
+>  	.id_table = pds_vfio_pci_table,
+>  	.probe = pds_vfio_pci_probe,
+>  	.remove = pds_vfio_pci_remove,
+> -	.driver = { .pm = pm_ptr(&pds_vfio_pm_ops) },
+> +	.driver = { .pm = pm_ptr(&pds_vfio_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &pds_vfio_pci_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/qat/main.c b/drivers/vfio/pci/qat/main.c
+> index 69448fa57df4..8a616f9b6494 100644
+> --- a/drivers/vfio/pci/qat/main.c
+> +++ b/drivers/vfio/pci/qat/main.c
+> @@ -695,7 +695,8 @@ static struct pci_driver qat_vf_vfio_pci_driver = {
+>  	.id_table = qat_vf_vfio_pci_table,
+>  	.probe = qat_vf_vfio_pci_probe,
+>  	.remove = qat_vf_vfio_pci_remove,
+> -	.driver	= { .pm = pm_ptr(&qat_vf_pm_ops) },
+> +	.driver	= { .pm = pm_ptr(&qat_vf_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &qat_vf_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index e7c012febe91..fde2c3fc88eb 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -260,7 +260,8 @@ static struct pci_driver vfio_pci_driver = {
+>  	.remove			= vfio_pci_remove,
+>  	.sriov_configure	= vfio_pci_sriov_configure,
+>  	.err_handler		= &vfio_pci_err_handlers,
+> -	.driver		= { .pm = pm_ptr(&vfio_pci_pm_ops) },
+> +	.driver		= { .pm = pm_ptr(&vfio_pci_pm_ops),
+> +			    .support_driver_override = true },
+>  	.driver_managed_dma	= true,
+>  };
+>  
+> diff --git a/drivers/vfio/pci/virtio/main.c b/drivers/vfio/pci/virtio/main.c
+> index 123ff5193812..1e02a8fd4a61 100644
+> --- a/drivers/vfio/pci/virtio/main.c
+> +++ b/drivers/vfio/pci/virtio/main.c
+> @@ -222,7 +222,8 @@ static struct pci_driver virtiovf_pci_driver = {
+>  	.id_table = virtiovf_pci_table,
+>  	.probe = virtiovf_pci_probe,
+>  	.remove = virtiovf_pci_remove,
+> -	.driver = { .pm = pm_ptr(&virtiovf_pm_ops) },
+> +	.driver = { .pm = pm_ptr(&virtiovf_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &virtiovf_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/pci/xe/main.c b/drivers/vfio/pci/xe/main.c
+> index 7dab3e024aa8..e0ab61f604de 100644
+> --- a/drivers/vfio/pci/xe/main.c
+> +++ b/drivers/vfio/pci/xe/main.c
+> @@ -592,7 +592,8 @@ static struct pci_driver xe_vfio_pci_driver = {
+>  	.id_table = xe_vfio_pci_table,
+>  	.probe = xe_vfio_pci_probe,
+>  	.remove = xe_vfio_pci_remove,
+> -	.driver = { .pm = pm_ptr(&xe_vfio_pm_ops) },
+> +	.driver = { .pm = pm_ptr(&xe_vfio_pm_ops),
+> +		    .support_driver_override = true },
+>  	.err_handler = &xe_vfio_pci_err_handlers,
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/platform/vfio_amba.c b/drivers/vfio/platform/vfio_amba.c
+> index fa754f203b2d..2c87caf1b7f7 100644
+> --- a/drivers/vfio/platform/vfio_amba.c
+> +++ b/drivers/vfio/platform/vfio_amba.c
+> @@ -137,6 +137,7 @@ static struct amba_driver vfio_amba_driver = {
+>  	.id_table = vfio_amba_ids,
+>  	.drv = {
+>  		.name = "vfio-amba",
+> +		.support_driver_override = true,
+>  	},
+>  	.driver_managed_dma = true,
+>  };
+> diff --git a/drivers/vfio/platform/vfio_platform.c b/drivers/vfio/platform/vfio_platform.c
+> index a4d3ace3e02d..93d06032cdde 100644
+> --- a/drivers/vfio/platform/vfio_platform.c
+> +++ b/drivers/vfio/platform/vfio_platform.c
+> @@ -116,6 +116,7 @@ static struct platform_driver vfio_platform_driver = {
+>  	.remove		= vfio_platform_remove,
+>  	.driver	= {
+>  		.name	= "vfio-platform",
+> +		.support_driver_override = true,
+>  	},
+>  	.driver_managed_dma = true,
+>  };
+> -- 
+> 2.54.0
+> 
