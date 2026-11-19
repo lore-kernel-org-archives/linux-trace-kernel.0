@@ -1,58 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=62.89.141.173
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795065775;
-	b=IIv7vPBU3EEpE8/UlZ3ntjot4/IVVOQzPXe5CS57Hp5uWEHLJKnRLCuh7OXOHaqRJYCD
-	 Bv2e8XRR1wIrPZ3tnyjkU8ENT/KbJjZd54CEUcCzAW6OfQmsP8eg7TB+jvqNuiFh7526v
-	 wP3M8DGOwqYFKqAxn4vZaZI9IjTYCnzZlCt8fYPVM6cH/hOf9N+scBCy/Tb5fuTgTkW2J
-	 JhOX+u68dAE4jmS0JvjjYPWrJpAzCpg+SM73kRMrrMKN27txh3V5z7zI0T42sySsCt8cr
-	 xJkjp2w6Ys5mUAmuT5y95DhK7ZNBTKIYgNz454LReM/wIcuq0LbsR+jHxIhjmC1T6hQ==
+	t=1795065850;
+	b=WVcoqzNjdtF171AniYQPhukiXAmZ0zmxrJyA+UgMeVYQzDD1brHJgjqKd9vk+TRpjHMz
+	 yyC2gRnRtCdTK8JIGeOYGZNvBylY+chXpg+JGCJQS4NtzEY+y4c6l9JnP6i6cZ3Klskk+
+	 6vtdnam3h5HqFQWKjr1OA7j8/FaJ+WTff56e66BkxXz1Eo/Up1bitufgf6FGNRQU0MZFS
+	 9/kjA8YWQQ+uwWj8sa+mcOvN25OcTTBsZwyuJEcLBhQBrWOMP8xWgVhQH7bicNvj+zlXj
+	 pNzGZVce1dwfoltaicWKOpHn63ZZHtMmPHduN/IcgoZYakZabRvYijAoS7X1a7Fex2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795065775;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=pe74ZXYn2WDsw3Ol33eh4++aTps2Da/80GDrdZC3gDk=;
-	b=U5x+CBhoVYAY0fsnB/2vGpOydN+zIEND9KOMX9zTEfAdPHKGpLK4JgD2N82KyGeZqjqi
-	 ywcyDl/VXeG3sa47amfOgCGNloDPQIZlORFLBHtCIW4EgIzEWgkEUvUg4Ju0MM5h1RBWF
-	 IKhMIQtJWpyJ/9+ospquxPQ2Fc6S4wO9wpfN11Ypy7dWwG8AERcj38kigD45V5RW10b4X
-	 BMzVwvoNeB5K7HTjMfJ1+hrWceNKbAR+bLoeU2FT0yGj2io58Sw+LUcSULqUQzt23SRT5
-	 15F0gKH1vWxfv/qqBK3ZNv/Jrta8pPqgw6F72EnklizduDLnujxzjzTOLPfslAUs4ow==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795065850;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:Sender;
+	bh=4wIPBSNjEoWaDOrCHG3/HEZVU2V/dMehfnugzAp7piY=;
+	b=gUOzS6gIvkvy/YE9lSFm9kAtiIU9DUh+mNYp0EJOM+zJE16NyXY137SOBf0QsvchVxEb
+	 UnpccoEDHV7lms5WNroJw1k7OboDkzRdUBKwfH2pDu0Qi6OzkH3WDTTInx53l0OBayhT+
+	 r3eoE2bq1fuLIeO2EmpSR7sVjPKmenVrPXBtiFB6s3xt3qGZbiWyNQXkhLKiYuECnaW9D
+	 ODmOzB2F2RxxQPFNMtzGD4kwJyR4khAV1nAP/IiqYeiQMpKUMEKqgbb9cttc1T54UnwQo
+	 59FUboI5gc7/GDJ8CTf58UeHTEZqS7VZ+UCnqrszGTqLClle/xtEKP7KB0WCEoaDCkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SUU17zE8;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=zeniv.linux.org.uk;
+	spf=none smtp.mailfrom=ftp.linux.org.uk;
+	dkim=pass header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=XTj4OJNT;
+	arc=none smtp.remote-ip=62.89.141.173
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5202A606A320;
-	Thu, 19 Nov 2026 05:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E7D606A325;
+	Thu, 19 Nov 2026 05:24:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A1E7D606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SUU17zE8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D16461F000C4;
-	Thu, 19 Nov 2026 05:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795065775;
-	bh=pe74ZXYn2WDsw3Ol33eh4++aTps2Da/80GDrdZC3gDk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SUU17zE8VpihVtbndd7sY+fXqYy6N3WSv0yJc7A5PDv4B/3tUtdtoqZGPLDr8vlUn
-	 j7AD1Gc/hXQKbGBmXmg6Vh5bwZV9Ivkpg6wNnxgXitHoGQiEPFfewqwwoLiA2rKFLq
-	 hg97ESfJscX9f3SUZAAuoTZ8j/4f4+kmMVvJ4h9ATRJcObNUBYru4yJKOBHzJ7cW6V
-	 jQWnOMKZu0B85eoOxFtOC2f7J3lzHtCRnyu3X79C3aH8Xaj2QWGgfaWsg0dN0jpZHe
-	 n8tJKFbKCsS7KmElKp9NTS+e2ox/6mtZZynHCzU/cnduplZ/OHRQooOAbQPpKWUcsU
-	 /UKC0GS0N5z5A==
-Message-ID: <sashiko-outbox-222474@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] s390/vfio: Allow untainted use of driver_override
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alex Williamson" <alex@shazbot.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Christian Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20261119051507.3306075-1-alex@shazbot.org>
-References: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
- <20261119051507.3306075-1-alex@shazbot.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 05:22:54 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=XTj4OJNT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4wIPBSNjEoWaDOrCHG3/HEZVU2V/dMehfnugzAp7piY=; b=XTj4OJNT5IuDqV/yIcnzKva4nx
+	pocorNO75aqnFm9/1Ze9bHSwKOfz5CS4qaLbAtUnG13eC9jQJed2MGMyOeWGA3C4Zb6Es3Dg8EZqJ
+	8O3GXDLjd7n4E+68EzDacDIjDIC/pXlb2rpz3kkFNt2pdRMiuDG5jFCy5tJJZRMrQJ1g1Supi6ilv
+	8jzkSvOLaf4yvqj1FdnScIn03dupGsH/g5ozR/EgMqAQZbnhAFd/n0pmpOM26Qp1zPMkmnHeOTQlm
+	l5+iRyWJ8N1Wbkl9GJhAZqkw141ykK1gb1FM1Wk9sFq85ig69qtmoNp6dFkz8syOpiUBbRIX/NHR9
+	Z1CRIKfQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xTucV-00000005d11-45eR;
+	Thu, 19 Nov 2026 05:23:40 +0000
+Date: Thu, 19 Nov 2026 05:23:39 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Cai Xinchen <caixinchen1@huawei.com>
+Cc: mic@digikod.net, gnoack@google.com, paul@paul-moore.com,
+	brauner@kernel.org, jack@suse.cz, amir73il@gmail.com,
+	andrii@kernel.org, apparmor@lists.ubuntu.com, ast@kernel.org,
+	axboe@kernel.dk, bpf@vger.kernel.org, casey@schaufler-ca.com,
+	cel@kernel.org, cem@kernel.org, chenxiaosong@chenxiaosong.com,
+	code@tyhicks.com, corbet@lwn.net, Dai.Ngo@oracle.com,
+	dakr@kernel.org, daniel@iogearbox.net, dhowells@redhat.com,
+	dlemoal@kernel.org, dmitry.kasatkin@gmail.com,
+	driver-core@lists.linux.dev, dsterba@suse.com,
+	ecryptfs@vger.kernel.org, eddyz87@gmail.com, emil@etsalapatis.com,
+	eric.snowberg@oracle.com, exfat@lists.linux.dev,
+	georgia.garcia@canonical.com, gregkh@linuxfoundation.org,
+	hch@lst.de, hirofumi@mail.parknet.co.jp, hyc.lee@gmail.com,
+	ihor.solodrai@linux.dev, jlayton@kernel.org, jmorris@namei.org,
+	johan@kernel.org, john.fastabend@gmail.com,
+	john.johansen@canonical.com, jolsa@kernel.org, kpsingh@kernel.org,
+	linkinjeon@kernel.org, linux-api@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+	linux-xfs@vger.kernel.org, liubaolin12138@163.com,
+	martin.lau@linux.dev, mason@kernel.org,
+	mathieu.desnoyers@efficios.com, matt@bobrowski.net,
+	memxor@gmail.com, mhiramat@kernel.org, miklos@szeredi.hu,
+	neil@brown.name, netfs@lists.linux.dev, ntfs@lists.linux.dev,
+	okorniev@redhat.com, omosnacek@gmail.com,
+	penguin-kernel@i-love.sakura.ne.jp, rafael@kernel.org,
+	rdunlap@infradead.org, roberto.sassu@huawei.com,
+	rostedt@goodmis.org, selinux@vger.kernel.org,
+	senozhatsky@chromium.org, serge@hallyn.com, sj1557.seo@samsung.com,
+	skhan@linuxfoundation.org, song@kernel.org,
+	stephen.smalley.work@gmail.com, takedakn@nttdata.co.jp,
+	tom@talpey.com, yonghong.song@linux.dev, yuezhang.mo@sony.com,
+	zohar@linux.ibm.com, utilityemal77@gmail.com, lujialin4@huawei.com
+Subject: Re: [PATCH -next -v4 01/17] fs: pass struct path to notify_change()
+Message-ID: <20261119052339.GT989762@ZenIV>
+References: <20261117150542.1169451-1-caixinchen1@huawei.com>
+ <20261117150542.1169451-2-caixinchen1@huawei.com>
+ <20261117183059.GP989762@ZenIV>
+ <32b8d9c9-27d2-4da9-8618-ccfc44dee7a3@huawei.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,52 +100,31 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32b8d9c9-27d2-4da9-8618-ccfc44dee7a3@huawei.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [High] s390/vfio: unknown field support_driver_override in struct
-  device_driver
---
+On Wed, Nov 18, 2026 at 05:13:31PM +0800, Cai Xinchen wrote:
+> On whether we want the mount references at all: they are not for NTFS.
+> The path-based LSM hooks need them - Landlock's check walks the hierarchy
+> up from the object with path->mnt->mnt_root and follow_up(), for every
+> layer, and the idmap we pass has to be the one of the mount the path was
+> checked in.
 
-commit a91edca560e83afe4c0101413f2c0a4218259662
-Author: Alex Williamson <alex@shazbot.org>
+Then it won't be happy with overlayfs ones:
+        upper_mnt = clone_private_mount(upperpath);
+...
+        upper_layer->mnt = upper_mnt;
+in ovl_get_upper(),
+                err = ovl_get_upper(sb, ofs, &layers[0], &ctx->upper);
+in ovl_fill_super_creds()
+combined with
+static inline struct vfsmount *ovl_upper_mnt(struct ovl_fs *ofs)
+{
+        return ofs->layers[0].mnt;
+}
 
-s390/vfio: Allow untainted use of driver_override
-
-This commit sets the support_driver_override flag on the vfio_ccw_sch_driver
-and vfio_ap_drv driver structs.
-
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_=
-drv.c
-> index 7546bd137e4e1..77765cde87f78 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -375,6 +375,7 @@ static struct css_driver vfio_ccw_sch_driver =3D {
->  	.drv =3D {
->  		.name =3D "vfio_ccw",
->  		.owner =3D THIS_MODULE,
-> +		.support_driver_override =3D true,
->  	},
->  	.subchannel_type =3D vfio_ccw_sch_ids,
->  	.irq =3D vfio_ccw_sch_irq,
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio=
-_ap_drv.c
-> index 8e69ed286bb9c..2d47dc6432698 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -62,6 +62,7 @@ static struct ap_driver vfio_ap_drv =3D {
->  	.on_config_changed =3D vfio_ap_on_cfg_changed,
->  	.on_scan_complete =3D vfio_ap_on_scan_complete,
->  	.ids =3D ap_queue_ids,
-> +	.driver.support_driver_override =3D true,
->  };
-
-[Severity: High]
-Does struct device_driver have a support_driver_override member in this
-tree?  Without the driver-core prerequisite adding that field to struct
-device_driver in include/linux/device/driver.h, building vfio_ccw_drv.c or
-vfio_ap_drv.c fails with an unknown field error.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119051507.3306=
-075-1-alex@shazbot.org?part=3D1
+mean that the mount you get won't be attached to anything.  How (un)happy
+would landlock be with that?
