@@ -1,95 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795057745;
-	b=NsuRlM2Chog4li4t5w0w0SArate1cWUXZ+4TNByOGYxWmLi5dzo2TZT+hP2hN3W9LLHl
-	 jx1tti9nhUnwruagmeVJ6vvQJaXBDEIIcw4nsswzBNkQwwMlugRhU0FvFvHVyZajpqk8T
-	 1xG7Ts81rp1SEYpezjMd8uW4s6DWC3hd/mCIV702lnDLeRsL4dOOigu9Pvsr/dSc5gd66
-	 2KUbXUI9dM33PE8sy2iswbyWbz1lD78KCrS+uBoVPIr4kL6P2mpZUbSsHtaGOSGE9Npou
-	 hqR+scYfZEqOJeJLzubtXluOQSd6dLrXy1rz5m9dXrlIWZhMvqaGafG6DUCpiETOEYA==
+	t=1795057944;
+	b=HrM6fu1zcz61QMOMT8LsHuz9d7Oaet4jBL/8HjFJxREfcsW+uy7jr3zO20sqAPUou0Lg
+	 CiY8c9cEriJLpB4ndgLTOEWmNQNoKQIssxtyB0nE6efPq8vhaD54KKccnihRQzpKr+nak
+	 Kn35472wSTz/PoEBNCmP52k5SapfhGd+PSg3w41FwYDNciiY9GeeobhOTurXvf4GCPEkW
+	 HLSuOr/TXsVlbbazJ5vmAk1bXK/po2YdMnVSI8KLpUk8nFQ3EGYk8YOWdd0NhcpC5Ng27
+	 aiCPtTjrkyeGG12ImGZetCMEiAFmQhQro6/tqgcKiLIdbz6fh/HLxVRBW0S3PASpNgQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795057745;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=r7dnxHtK8RkgCgZSr6np7k+vnrFRmkzlCepNeeA4tmg=;
-	b=bIxk7gsSMCQ7ZEoxUhb0QzpW2RJH34SfSVjMEFZYU6XfwHQj3tQuUAJECg9VcH5cHhzC
-	 ZDcZqjp+/CqXo9r8xsspXXwoqMSknvmrVxMkROg+oUMtvmlcIKOzJD7p9WY6axdYf+C73
-	 JTv5BCx62aCzq3T0AAH9jl6njhb0b5yHov0YQefAa7W4PZYyQ+HROt8ecxkHL9btaoffE
-	 lVuFdvGOjjh07M/6uTTH/t9q+r82f9AYY3vr9SDP+EplQ96pskwIh0W+Ik2ZsoFy+9NEs
-	 YC9dKeG+r20hM0s8HIjMncYcmb5meU92E11V3p1nDlsoHw74DjXavoduYrrwBVz9vJQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795057944;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=BkJypv3B5OIWI65pwJGtLRapGiHkqXJl5pv6AoeGTbw=;
+	b=AnkoxMJW4mPI+lRa78ZBnyzEuMoIYerJkduGJ2l6q2ybOGtiTimJRizSJ1ILtZTOGeh6
+	 LF2YMwh5WLWilwXIz0QDW8q/HbzxIVLKGUz0Uvrl0iCw+CL0uSyiIzb+TWETnMp3YZlhU
+	 3HTwlVG2q+zIzJUrL135br3uhm3OdTzH8+f6VJYP2cU+zWItqWLPRjBH00KeRvbAVdc7n
+	 R1YyLlvytDGxMtDsroi7PYYZ3ZM/+5RjuFTYR1Dbwi22835aGx0gITCYp6WFWBYktt1gg
+	 X21Miz5jDmH+qnUfvC/wcpbEnjbHH7E8JfVeTda+lwucH2BNUCeZ5eX9dybf207qopA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D87I7va0;
-	arc=none smtp.remote-ip=74.125.82.52
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z0ZPpJFH;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AC9606A32C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 03:09:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30AC9606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B99606A31C;
+	Thu, 19 Nov 2026 03:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=D87I7va0
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1b3a05f8b5bso2274578c88.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 19:09:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795057744; x=1795662544; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=r7dnxHtK8RkgCgZSr6np7k+vnrFRmkzlCepNeeA4tmg=;
-        b=D87I7va08/wwoduX335hDH7kRaGyO2QauSdljCbfwvtVNeqkYXqR5ZmB0QDcFwlD2V
-         dgF7JKXPZcN9xxEInSwljqBKzOVIaLZcZgpPcD2bJu36IC7l2YG/EQE7YO1dUcSyBa50
-         +E8xBTMqjfMQ24WeUn7lyKs+4mms80/9FfWTyjpfs2LKT77Pdf3rTRVhmpQD7OkWZfIL
-         nRJIXvZ7JoLzv8wNyKKEZfN0LFRJSJdKAe8v+eFoPxHe9iBdI/0cHZP6T9UhOEqmwoRe
-         jzJEucCdYbYax5E7J09n6Mv1Y5tv4+soECOcVr61VyyvTRyhVJzdt+zxWzSSz+5lo1kR
-         PFAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795057744; x=1795662544;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=r7dnxHtK8RkgCgZSr6np7k+vnrFRmkzlCepNeeA4tmg=;
-        b=gGGHyKpWxpvqK6QDQ+NeWWiiRA92m4+3yW0VPj7Jd5EhEOOaDh5B+Xjz0iLFQm4PXR
-         d4RNB9RQ/uxQbYBl4zu1IFkZp5DBo+IVfU0QKENBdMF8O//tP5YQRXzIMAqkEUarWPvV
-         HxvfJu+OMkh9CxbMC4pD0neTYqKapRC4QHU5iVDBSvUibej1R0uOtOCpPEAVxdD76muY
-         aczQL/KfGlScfEA7vrfoSEN9eWXRFPO8rt7FhHFxw7FrkJ0gKZqXZxY3CSSmFEAMQAYk
-         E35Xgoc2L5UORhjkbGWK8l9zOthofpg+NLoYhip4kkVKPOOoMuo8e2TQlK/AEJKd0MhQ
-         MM0A==
-X-Forwarded-Encrypted: i=1; AL+hErERMhnU0uZ5l/CO7Sst4lYBjYEt3zZDqIYenuH/huV71dLYEB1BFFHQY0rl3zj97lytLJLdNFCl4U/VA3AzfrIOIzI=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/Y5gEccAe7IgKBdWHzyPuo4BVcsQ2kBIxjTmLV8EQdh7sUSpl1
-	50epx3rwwhp4RtZA9xXt6r8gN6dlrOWI06MZy/X2R8hOku+O3ZDxEPuF
-X-Gm-Gg: AZFdTZd70XuDPjPMIgWTeUzDo+Hx3pXGljYqJCKG07hB141zX+2QDalF9JWy9yjjUHn
-	FfvAuf9J7DkMb9gF+Cp6rT2V0/2zszOne6eQVijLjnHlD33YTtT/L4s+tC2p8HdJJTGygVpwf9A
-	TMKVjWJ9qEKmyEDwUNWB/f1K45ui8Pp0xY2CIhKH+kZjcFJFwJTx0RY+gSrog7FZZFWzWQYLr0n
-	qK8Hy+xXyVdkuDNzfcIvDTFVgFDhh26wdTGy8ts9WjGGWeM4wa1tAckWBHjDbpejJ75RJTvMPni
-	bIVVRrUIkc8X+0pLZCBp+U3KS1pbkpZtVZIggXR6O2PVVxPcpVtd5BxZ+ArgBl0inqjWzrJv5QS
-	RSTWbALmi3rjMbnt9w0HtcocW6FWxn6I2JqNZl17pGDtWo107Vy0jjptXdDzips3WK/ltw9FvD0
-	DnWQvHmI3ndi29C3jre/dMNiwebZgnLcsco7fX7rV9r7yK+sEIKWcLisqXKuyOAVq3RdGyRrQmE
-	dmiszqj7WlSjTjNA/oHcVjk0LRXybgp2EhAShUzzm/5yX8fw+5z3/VpFMp2FbA2KGmWVuCOCXZo
-	GOwg+CKFTdjF1JvsFXiffcdfuK6afp9mUIyeAObxFIdGr0z/8f5EZYuayPRHfIH2yeQmh8pMxrz
-	e8Ch2aJt1GqFK8B4yWu+k+1nO0HtYhU9VV5Dxw8fAB+MJ+QXLQ/PAX7rgMhc4T9Cd3gqXgRRQ
-X-Received: by 2002:a05:7301:428b:b0:36e:b05e:9a74 with SMTP id 5a478bee46e88-3828161a511mr4153472eec.30.1795057744246;
-        Wed, 18 Nov 2026 19:09:04 -0800 (PST)
-Received: from localhost.localdomain (c-107-3-155-154.hsd1.ca.comcast.net. [107.3.155.154])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3843559c264sm1991115eec.22.2026.11.18.19.09.02
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 18 Nov 2026 19:09:03 -0800 (PST)
-From: Yifan Feng <evanfengff@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yifan Feng <evanfengff@gmail.com>
-Subject: [PATCH v2] ftrace: Reject "!!" in front of a set_ftrace_filter command
-Date: Wed, 18 Nov 2026 19:09:00 -0800
-Message-Id: <20261119030900.37343-1-evanfengff@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z0ZPpJFH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358871F000C5;
+	Thu, 19 Nov 2026 03:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795057944;
+	bh=BkJypv3B5OIWI65pwJGtLRapGiHkqXJl5pv6AoeGTbw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Z0ZPpJFH0ZB3TRY9Dop+cmQF5POUyeOxXOxRQcPthLc7n2uRhMVsdQqZoosRZH/T8
+	 a8UWbdFzXPsFCo4dp267kv1vajKt9Y+PeyPgIcyNOpxL1nOGAOovhT8Kk0VbDUiiCv
+	 02TOu+HHaHrc2LdqtUOUDzpRVIhyOFyXDedndqZyDC3Gg+LKwtPqASN1jtIdJo93Hj
+	 5YmvgbyRcF5zDh7PazDO2UP3J4DbI1X7YcOvYZparDYbjj8trNYZY4srSA6m6RLJ/q
+	 EHAkuoklky0SsAR/ugX958emJI3ihiuqbL7QQetYlu0Y+4l8vzk9Wm/bqSmIqny3Ew
+	 j0Ifk+QJiRGIg==
+Message-ID: <sashiko-outbox-222370@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: Require kallsyms permission for the .function
+ filter modifier
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "JunYoung Lee" <ljyoung04@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261119025941.87102-1-ljyoung04@gmail.com>
+References: <20261119025941.87102-1-ljyoung04@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 19 Nov 2026 03:12:23 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -98,51 +59,93 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-A command written to set_ftrace_filter with two '!' in front of the
-function glob triggers the WARN_ON() in
-unregister_ftrace_function_probe_func():
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] tracing: unstripped cover letter and scissors line in commit
+  message
+--
 
-  # echo '!!vfs_read:traceoff' >> set_ftrace_filter
-  WARNING: kernel/trace/ftrace.c:5675 at unregister_ftrace_function_probe_func+0x662/0x870
+commit 8240d9570c52f6cf2edfd9796cbc32ecb0f181af
+Author: JunYoung Lee <ljyoung04@gmail.com>
 
-The command callbacks strip the first '!' and pass the rest as the glob
-of the probe to remove. filter_parse_regex() then reports the second
-'!' as a negated glob, which function probes do not support.
+> tracing: Require kallsyms permission for the .function filter modifier
+>
+> Hi Steven, Masami,
+>
+> An unprivileged user can locate the kernel image (KASLR bypass) with
+> PERF_EVENT_IOC_SET_FILTER at the default perf_event_paranoid=3D2.
+> parse_pred() accepts "<field>.function =3D=3D <addr>" only if the address
+> resolves in kallsyms, and the perf path has no permission check, so the
+> ioctl result tells whether an address is kernel text. The details and
+> the fix are in the patch below.
+>
+> Affected (reproduced as uid 65534, KASLR on), since e6745a4da964 (v6.3):
+> - mainline 4405c18c95d2 (v7.4-rc3-230)
+> - stable 6.12.118
+>
+> Example on mainline: a counting event on ftrace:print (field "ip") and
+> 561 probes return image_start=3D0xffffffffa1000000 and
+> image_end=3D0xffffffffaae30000. These equal _stext and _end in
+> /proc/kallsyms as read by root; the same user sees zeros there. No
+> tracefs and no capabilities are needed. Not affected:
+> perf_event_paranoid > 2, or perf_event_open blocked.
+>
+> A C reproducer is available privately on request.
+>
+> Testing of the patch on mainline with KASAN: for an unprivileged user
+> every .function form now fails with -EINVAL, and ordinary filters still
+> work. Root keeps .function via perf and tracefs (it is refused under
+> kptr_restrict=3D2, like kallsyms values). ftrace selftests test.d/filter
+> pass 4/4. checkpatch --strict and W=3D1 are clean. A 6.12.y backport is
+> available.
+>
+> A separate issue seen while testing: as root, a .function filter on the
+> perf function event (ftrace:function) crashes the kernel with a NULL
+> dereference in ftrace_function_set_filter_pred(), because pred->regex
+> is not set on the .function path. It needs CAP_PERFMON. I can send
+> details if useful.
+>
+> Found with AI-assisted code analysis. All results come from test runs.
+>
+> Thanks,
+> JunYoung Lee
+>
+> -- >8 --
+> "<field>.function =3D=3D <operand>" resolves the operand to a kernel symb=
+ol
+> range. parse_pred() accepts the predicate only if
+> kallsyms_lookup_size_offset() succeeds, so the result of setting the
+> filter tells whether an address lies inside the kernel image (or a
+> module).
+>
+> perf_event_open() allows any user to open a tracepoint event for
+> counting at the default perf_event_paranoid=3D2, and
+> PERF_EVENT_IOC_SET_FILTER passes the string to the same parser without
+> a permission check. An unprivileged user can therefore probe addresses
+> one ioctl at a time and recover _stext and _end exactly (about 560
+> ioctls on x86-64, under two seconds), while /proc/kallsyms shows that
+> user zeros.
+>
+> Apply the rule that /proc/kallsyms uses, kallsyms_show_value() on the
+> current credentials, before the operand is looked at, so both the
+> numeric and the symbol name form are refused to callers who may not
+> see kernel addresses. Root and CAP_SYSLOG keep the modifier under the
+> default kptr_restrict. With kptr_restrict=3D2 it is refused to everyone,
+> the same as kallsyms values are hidden from everyone.
+>
+> Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to =
+function names")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: JunYoung Lee <ljyoung04@gmail.com>
 
-Return -EINVAL for such input in ftrace_process_regex(), before a
-command callback is called.
+[Severity: Low]
+This isn't a bug, but the commit message retains the email greeting, notes
+for the maintainers, and the "-- >8 --" scissors line above the actual
+changelog.  Transient commentary intended for maintainers belongs below the
+"---" separator after the Signed-off-by trailer (or should be stripped with
+"git am --scissors") so it does not end up in permanent git history.
 
-Fixes: 23b4ff3aa479 ("ftrace: add traceon traceoff commands to enable/disable the buffers")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Yifan Feng <evanfengff@gmail.com>
----
-v2: keep the WARN_ON() and reject "!!" before a command callback runs (Steven Rostedt).
-v1: https://lore.kernel.org/linux-trace-kernel/20261118032637.80038-1-evanfengff@gmail.com
-QEMU, all 7 probe commands: one WARNING each before, none after, other results unchanged.
-Found and written with the help of an AI coding assistant.
-
- kernel/trace/ftrace.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index c7d74b33d36d..44a861f021be 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5846,6 +5846,9 @@ static int ftrace_process_regex(struct ftrace_iterator *iter,
- 
- 	/* command found */
- 
-+	if (func[0] == '!' && func[1] == '!')
-+		return -EINVAL;
-+
- 	command = strsep(&next, ":");
- 
- 	guard(mutex)(&ftrace_cmd_mutex);
-
-base-commit: 4405c18c95d2d0f99f6c581ef0ee8591a1aa6ccd
--- 
-2.39.3 (Apple Git-146)
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119025941.8710=
+2-1-ljyoung04@gmail.com?part=3D1
