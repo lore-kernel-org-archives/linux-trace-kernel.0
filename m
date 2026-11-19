@@ -1,53 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795120172;
-	b=Au2xqnJ3iGsipPNCw8mXvtEsso3cv1GyxhfHSBfrUuMNpCzrlDFJ6nr9lKnJ7J8/iOqh
-	 BsrvnUV01vchTl8EmKPiimIbe1jnz3YCb9vHVfxvoMjMNvEDCJUvrra/O46L97ksXoyg+
-	 A913YOI+nEo2IYypKiHrdog+6sNrGM4BBwQNLa3vLRQMEmGprWOQvbj9o73viqInp//4N
-	 tNWbC9t/KK5i10RVoIHZCrAdmiNFowe7wUtBoBXKal8C+/I4XwKiUIccwA5hVLk+S1iFU
-	 JqTML/kECr3SdFthpOxs9JRDKAylc0kvkY3tNsuHRN3/kgG1XzCZ9Ms0v39Yyf9oVDA==
+	t=1795121403;
+	b=lr4mPaW8RkKykKPiALQgxFhWBrsJFztMCjmb3bmMIh67neuT+ENJNNV4e9Q0zfo9L7kY
+	 yNO0SitPezUB40LO4+uHfsC0/K/sSnoamW4GD6lOL1JHtSpU35apIAIgJTLZc5NVMlQCU
+	 ksBdH6WSZu5kFA2Ho9ZhwxhHoPOKoU1TDEpUzZZ7vdouNB8KzCOgH51UDUJO/2gay0RYm
+	 O0gMZZ8B6V55LwOc4sRoDOmALCpBOcifHqLkmriNB6AZni4KWdxy0iGmi2XGup/h3TLLC
+	 R+lGOglyPLk7XLEVmrCEpex8ll4FIp0v/qeKXwUtRFY7laFsrZJKtBcvEFSTIU85SHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795120172;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:
-	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=PnxIt1bw+pEf3Hn45cnPIXxc6g7CbUAWTpW7fsZ8zl8=;
-	b=IJU2Re1iZNAIyeTNFJVInOU2czeczE2sT4tCbuw4mWzGGx028KQHmhKAuMCNV4h8MQXa
-	 GvvYcGvnvWhLw5N6hlFW4rRnyBycQMrnjGlYSMS/W4njet605yDfb97fXJGflawtxezbh
-	 dI5/Sc74HpvRkEPmYxG6E8OfuvllI2c6dwkQAIRROmzRVXU9loZZ3UP378xkH0NymrhAR
-	 AbyswepTzQ8mioe7hkgkUYda1Nf6jPLkyD7relWa6b15YpnGRbCsuTJNzTZUeqzQxgI56
-	 fkAoYgt7q+ibp5VoKC+hkUL74CmQn+s9pUlbmir538wmyfRH5LBKiVpAZ9RC1aJgcFg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795121403;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=18Mnzc/2jcuIQqG9/nXUKdn7+EaF0lPK0ALtudUKl1U=;
+	b=WSys1TNSI5vzTm5IHI3wy1A1NXDCXKHZc0c0NncXcbnCsOCSxB2dULV0g1baN2ddVn9V
+	 kMYK/kJniBa72RJzaf/ZwZLfM92IAdaY5ggm9lYVfzOmJAw4rkcL8+gd2RIAfAHHkftZo
+	 8JKN3pZ9SUE894lKIN/BqWgBgeURWiC2kv/1oyUTerSQeLFGzDDvC0vZTnNHN/o+X1gSw
+	 4gFnAktmh16YYI/sn18gOL63vj5ECUh9emEnjhGp3X5ckLpdrk4ktTRkJKFTaafoA4UXw
+	 AA3sP0pCRXUcasu9U0nnB0X2QjGv1RriNg1qEA5V++YUzCeCEAtorW6K4dV9DrjqnGA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=y23HLLDd;
-	arc=none smtp.remote-ip=216.40.44.17
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bo2xEbXV;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E228A606A320;
-	Thu, 19 Nov 2026 20:29:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E228A606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4405606A337
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 20:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=y23HLLDd
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id D2459A8B16;
-	Thu, 19 Nov 2026 20:29:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 339B920025;
-	Thu, 19 Nov 2026 20:29:23 +0000 (UTC)
-Date: Thu, 19 Nov 2026 15:29:22 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v3] tracing/probes: Zero out faulted dereferenced fields
-Message-ID: <20261119152922.5a66f10e@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bo2xEbXV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5AF1F000C0;
+	Thu, 19 Nov 2026 20:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795121403;
+	bh=18Mnzc/2jcuIQqG9/nXUKdn7+EaF0lPK0ALtudUKl1U=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=bo2xEbXVTJ8DvNmh16ia2vlNvZKQZ83EzPfQW1LDz3f5/Z3m9VssNnwmyB7bksmfT
+	 CEBye6D3Cc5R8ZyL3hZGv0NyUjOgqV49tCDaMej9CAeHJQYgBraT4a/9KVkZPboxHS
+	 nudl+aOhZDZT6sxEseCPE1iqb8mZgSjKuzjYO6syL7yba79sSxzwBiBtxxmcqklzrz
+	 RJmUeEBZint0vkUhNbPI+I1aoQzs2ZNnz+YymldRrtflBDXb+NymrJvZAXh8IXG4qb
+	 a/I2rYmLuF3VHmb12i9KOJOdGVJFExWnGPnXE+4xTY7xFjlvsDju+VTEuDs6k6V3zQ
+	 JfQNe3jfIlhvw==
+Message-ID: <sashiko-outbox-224053@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3] tracing/probes: Zero out faulted dereferenced fields
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Steven Rostedt" <rostedt@goodmis.org>, "Linux Trace Kernel" <linux-trace-kernel@vger.kernel.org>
+In-Reply-To: <20261119152922.5a66f10e@gandalf.local.home>
+References: <20261119152922.5a66f10e@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 19 Nov 2026 20:50:02 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -56,218 +57,261 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 339B920025
-X-Stat-Signature: sy9gy9ix1zwjkmy6z37r8wautc78ddnr
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+9Aau3MhQeAR+KxyK2Lke4W3EUJtXLNUo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=PnxIt1bw+pEf3Hn45cnPIXxc6g7CbUAWTpW7fsZ8zl8=; b=y23HLLDduHn6Caipj+sgwATAVM0NekRql4FyqNKH7ZIJFtRiMy7ENSWOfvnBgn2/FV0og1fB7gA8zmo6vjBogPVCJE5KKo8MfvcJcyy2O6iYIRmS+OY38MdGonPRbPZALLuwKXjEgi9Xs/UoBm/Tdst7WNhDyAmAmbkO938Ulrg=
-X-HE-Tag: 1795120163-700725
-X-HE-Meta: U2FsdGVkX182mqpNEikB1Hymz0Vfvx9t0IecANTgEFwleDzTGwlmScPYdsyzEzs1pOm6KgtnLPWxUZGJGo5c8x4PCpRt/Xfi9OfOgq/2AbKt/CM35WkZAg0nu2lOWZXw7j1y8ROdwuJzwfn9ddfZkXsteTKo0e1tJsqaNaV/Rv6JJaL6J4ul2J2SXR+EQxu2qbpUdx9BDN2GKU9WK2KVYtlSjno1orqpsglnBP/yngjYFpNGPYvDZ3f5jvlGcbB/xm0axjL5Icrviz/iRJx0h1LZA1kbLo2HxG4Jek+Zoy6U3/ix73Wc4yXUXrL/P/D33Ty+7Z2gEL3a5xsoXQs8lxdrYJFc0puir1zvyxTe+mka/ZWGQvIS4VY1ji5aenViF+nqVbWwUYc+Zgm+wqOOR3jvD74wHuGku2G+zkxv0r+2wHosxPjnk6r3ySHwG//yYncNinjBuVCL4+Pi3YityMBmupEZ4V1b/AUro5Ui8ZQ=
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Thank you for your contribution! Sashiko AI review found 4 potential
+issues to consider:
+- [Medium] tracing/probes: stage 3 in process_fetch_insn_bottom()
+  dereferences NULL val
+- [Medium] tracing/probes: FETCH_OP_LP_ARRAY in
+  process_fetch_insn_bottom() advances NULL
+- [Medium] tracing/probes: FETCH_OP_CPU_PTR in
+  process_fetch_insn_bottom() shifts NULL
+- [Low] tracing/probes: trace_uprobe probe_mem_read() leaves partial
+  bytes on fault
+--
 
-While looking at tasks global descriptor tables, I discovered the
-following anomaly:
+commit 754d85e0c0dcb5af755f3a74bd787872a07c54fd
+Author: Steven Rostedt <rostedt@goodmis.org>
 
-~# echo 't:sched sched_switch prev=prev mm=(task_struct)prev->mm ppgd=(task_struct)prev->mm->pgd' > /sys/kernel/tracing/dynamic_events
+tracing/probes: Zero out faulted dereferenced fields
 
-The above creates a tprobe on the sched_switch tracepoint and records the
-previous task_struct pointer, it's mm_struct and the pgd the mm_struct
-points to.
+This commit zeroes the destination buffer in probe_mem_read() and
+probe_mem_read_user() on read failure, and updates
+process_fetch_insn_bottom() to skip NULL dereferences and continue to
+stage 3 so faulted fields are zeroed in the trace event.
 
-~# trace-cmd start -e tracepoints:sched
+> diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe=
+_kernel.h
+> index 4eb4acfa09ba1..00542a162d307 100644
+> --- a/kernel/trace/trace_probe_kernel.h
+> +++ b/kernel/trace/trace_probe_kernel.h
+> @@ -102,18 +102,27 @@ static nokprobe_inline int
+>  probe_mem_read_user(void *dest, void *src, size_t size)
+>  {
+>  	const void __user *uaddr =3D  (__force const void __user *)src;
+> +	int ret;
+> =20
+> -	return copy_from_user_nofault(dest, uaddr, size);
+> +	ret =3D copy_from_user_nofault(dest, uaddr, size);
+> +	if (ret < 0)
+> +		memset(dest, 0, size);
+> +	return ret;
+>  }
+> =20
+>  static nokprobe_inline int
+>  probe_mem_read(void *dest, void *src, size_t size)
+>  {
+> +	int ret;
+> +
+>  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>  	if ((unsigned long)src < TASK_SIZE)
+>  		return probe_mem_read_user(dest, src, size);
+>  #endif
+> -	return copy_from_kernel_nofault(dest, src, size);
+> +	ret =3D copy_from_kernel_nofault(dest, src, size);
+> +	if (ret < 0)
+> +		memset(dest, 0, size);
+> +	return ret;
+>  }
 
-            bash-1050    [000] d..3.    90.829478: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d30b623600 mm=0xffff88d30108c600 ppgd=0xffff88d33352b000
-          <idle>-0       [002] d..3.    90.836024: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d301870000 mm=0x0 ppgd=0x0
-     rcu_preempt-15      [002] d..3.    90.836031: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d3013ad100 mm=0x0 ppgd=0xffff88d33352b000
+[Severity: Low]
+Does probe_mem_read() in kernel/trace/trace_uprobe.c need the same
+memset(dest, 0, size) on error?
 
-The first event has is a user task that has both a valid mm_struct and a pgd.
-The second event is a kernel task where the mm_struct is NULL and so is the
-dereferenced pgd pointer.
+kernel/trace/trace_uprobe.c:probe_mem_read() {
+	void __user *vaddr =3D (void __force __user *)src;
 
-The third event is where things looked strange. The mm_struct is NULL but
-the dereferenced pgd has a value! That is: NULL->pgd produced something
-other than zero.
+	return copy_from_user(dest, vaddr, size) ? -EFAULT : 0;
+}
 
-The reason for this is that the probe_mem_read() and probe_mem_read_user()
-do not write to the destination on failure. The process_fetch_insn_bottom()
-loop does not check the return value of the dereference (as it is the last
-one), and does not update the event. That leaves the value for that failed
-field to be whatever was in the ring buffer at that time.
+trace_uprobe.c includes trace_probe_tmpl.h, where
+process_fetch_insn_bottom() now ignores the return value of
+probe_mem_read() in stage 2 and relies on it to zero dest on failure.
+When an unaligned multi-byte read faults across a page boundary,
+copy_from_user() only zeroes the uncopied trailing bytes, leaving the
+initial bytes from the first page in val and causing stage 2 to
+dereference a truncated non-zero address.
 
-Have both probe_mem_read() and probe_mem_read_user() set the destination to
-zero on failure to read the address.
+> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_t=
+mpl.h
+> index 8db12f758fdae..8be14c00d66f9 100644
+> --- a/kernel/trace/trace_probe_tmpl.h
+> +++ b/kernel/trace/trace_probe_tmpl.h
+> @@ -127,7 +127,7 @@ process_fetch_insn_bottom(struct fetch_insn *code, un=
+signed long val,
+>  			   void *dest, void *base)
+>  {
+>  	struct fetch_insn *s3 =3D NULL;
+> -	int total =3D 0, ret =3D 0, i =3D 0;
+> +	int total =3D 0, ret =3D 0, i =3D 0, offset;
+>  	u32 loc =3D 0;
+>  	unsigned long lval, llval =3D val;
+> =20
+> @@ -135,25 +135,28 @@ process_fetch_insn_bottom(struct fetch_insn *code, =
+unsigned long val,
+>  	/* 2nd stage: dereference memory if needed */
+>  	do {
+>  		lval =3D val;
+> +		/* Prevent dereferencing NULL val pointer */
+> +		offset =3D val ? code->offset : 0;
+>  		switch (code->op) {
+>  		case FETCH_OP_DEREF:
+> -			ret =3D probe_mem_read(&val, (void *)val + code->offset,
+> -					     sizeof(val));
+> +			/* Do not dereference NULL pointers */
+> +			if (val)
+> +				probe_mem_read(&val, (void *)val + offset,
+> +					       sizeof(val));
+>  			break;
+>  		case FETCH_OP_UDEREF:
+> -			ret =3D probe_mem_read_user(&val,
+> -				 (void *)val + code->offset, sizeof(val));
+> +			/* Do not dereference NULL pointers */
+> +			if (val)
+> +				probe_mem_read_user(&val, (void *)val + offset,
+> +						    sizeof(val));
+>  			break;
+>  		case FETCH_OP_CPU_PTR:
+>  			val =3D (unsigned long)this_cpu_ptr((void __percpu *)val);
+> -			ret =3D 0;
+>  			break;
 
-Now all pgd are zero when mm is zero.
+[Severity: Medium]
+Should FETCH_OP_CPU_PTR also check if (val) before calling
+this_cpu_ptr()?
 
-Also update the stage 2 of process_fetch_insn_bottom() to not return on
-fault but to just set the value to zero and also do not even bother
-dereferencing the address if the value is already zero. This allows the
-code to continue and fill in the zero into the memory location on the
-ring buffer.
+Now that stage 2 continues after a failed or NULL dereference, an inner
+dereference in an expression such as this_cpu_ptr(+8($arg1)) or
+this_cpu_read(+8($arg1)) can reach FETCH_OP_CPU_PTR with val =3D=3D 0.
+On SMP kernels, this_cpu_ptr((void __percpu *)0) evaluates to
+__my_cpu_offset, so subsequent instructions will record or dereference
+the current CPU's per-CPU base address + offset instead of zero.
 
-Cc: stable@vger.kernel.org
-Fixes: 533059281ee59 ("tracing: probeevent: Introduce new argument fetching code")
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-Changes since v2: https://patch.msgid.link/20261112105853.38bd39be@fedora
+>  		default:
+>  			lval =3D llval;
+>  			goto out;
+>  		}
+> -		if (ret)
+> -			return ret;
+>  		llval =3D lval;
+>  		code++;
+>  	} while (1);
+> @@ -161,19 +164,22 @@ process_fetch_insn_bottom(struct fetch_insn *code, =
+unsigned long val,
+> =20
+>  	s3 =3D code;
+>  stage3:
+> +	/* Prevent dereferencing NULL val pointer */
+> +	offset =3D val ? code->offset : 0;
+> +
+>  	/* 3rd stage: store value to buffer */
+>  	if (unlikely(!dest)) {
+>  		switch (code->op) {
+>  		case FETCH_OP_ST_STRING:
+> -			ret =3D fetch_store_strlen(val + code->offset);
+> +			ret =3D fetch_store_strlen(val + offset);
+>  			code++;
+>  			goto array;
+>  		case FETCH_OP_ST_USTRING:
+> -			ret =3D fetch_store_strlen_user(val + code->offset);
+> +			ret =3D fetch_store_strlen_user(val + offset);
+>  			code++;
+>  			goto array;
+>  		case FETCH_OP_ST_SYMSTR:
+> -			ret =3D fetch_store_symstrlen(val + code->offset);
+> +			ret =3D fetch_store_symstrlen(val + offset);
+>  			code++;
+>  			goto array;
+>  		default:
+> @@ -181,27 +187,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, =
+unsigned long val,
+>  		}
+>  	}
+> =20
+> +	/* Prevent dereferencing NULL val pointer */
+> +	offset =3D val ? code->offset : 0;
+> +
+>  	switch (code->op) {
+>  	case FETCH_OP_ST_RAW:
+>  		fetch_store_raw(val, code, dest);
+>  		break;
+>  	case FETCH_OP_ST_MEM:
+> -		probe_mem_read(dest, (void *)val + code->offset, code->size);
+> +		probe_mem_read(dest, (void *)val + offset, code->size);
+>  		break;
+>  	case FETCH_OP_ST_UMEM:
+> -		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
+> +		probe_mem_read_user(dest, (void *)val + offset, code->size);
+>  		break;
+>  	case FETCH_OP_ST_STRING:
+>  		loc =3D *(u32 *)dest;
+> -		ret =3D fetch_store_string(val + code->offset, dest, base);
+> +		ret =3D fetch_store_string(val + offset, dest, base);
+>  		break;
+>  	case FETCH_OP_ST_USTRING:
+>  		loc =3D *(u32 *)dest;
+> -		ret =3D fetch_store_string_user(val + code->offset, dest, base);
+> +		ret =3D fetch_store_string_user(val + offset, dest, base);
+>  		break;
+>  	case FETCH_OP_ST_SYMSTR:
+>  		loc =3D *(u32 *)dest;
+> -		ret =3D fetch_store_symstring(val + offset, dest, base);
+> +		ret =3D fetch_store_symstring(val + offset, dest, base);
+>  		break;
+>  	default:
+>  		return -EILSEQ;
 
-- Do not dereference any val that is zero. Set offset to zero as well.
-  (sashiko)
+[Severity: Medium]
+Does setting offset to 0 in stage 3 still dereference address 0 when val
+is NULL?
 
- kernel/trace/trace_probe_kernel.h | 13 ++++++++--
- kernel/trace/trace_probe_tmpl.h   | 41 +++++++++++++++++++------------
- 2 files changed, 36 insertions(+), 18 deletions(-)
+finalize_fetch_insn() converts the final FETCH_OP_DEREF or
+FETCH_OP_UDEREF of a dereference chain (such as ->pgd in prev->mm->pgd)
+into FETCH_OP_ST_MEM, FETCH_OP_ST_UMEM, FETCH_OP_ST_STRING or
+FETCH_OP_ST_USTRING in stage 3.  When val is 0, val + offset is 0, and
+stage 3 still calls probe_mem_read(), fetch_store_strlen(),
+fetch_store_string() and their user counterparts with address 0.
 
-diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
-index 4eb4acfa09ba..00542a162d30 100644
---- a/kernel/trace/trace_probe_kernel.h
-+++ b/kernel/trace/trace_probe_kernel.h
-@@ -102,18 +102,27 @@ static nokprobe_inline int
- probe_mem_read_user(void *dest, void *src, size_t size)
- {
- 	const void __user *uaddr =  (__force const void __user *)src;
-+	int ret;
- 
--	return copy_from_user_nofault(dest, uaddr, size);
-+	ret = copy_from_user_nofault(dest, uaddr, size);
-+	if (ret < 0)
-+		memset(dest, 0, size);
-+	return ret;
- }
- 
- static nokprobe_inline int
- probe_mem_read(void *dest, void *src, size_t size)
- {
-+	int ret;
-+
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	if ((unsigned long)src < TASK_SIZE)
- 		return probe_mem_read_user(dest, src, size);
- #endif
--	return copy_from_kernel_nofault(dest, src, size);
-+	ret = copy_from_kernel_nofault(dest, src, size);
-+	if (ret < 0)
-+		memset(dest, 0, size);
-+	return ret;
- }
- 
- #endif /* __TRACE_PROBE_KERNEL_H_ */
-diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index 8acc0f0ebd7a..4bb5ca440b75 100644
---- a/kernel/trace/trace_probe_tmpl.h
-+++ b/kernel/trace/trace_probe_tmpl.h
-@@ -139,7 +139,7 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 			   void *dest, void *base)
- {
- 	struct fetch_insn *s3 = NULL;
--	int total = 0, ret = 0, i = 0;
-+	int total = 0, ret = 0, i = 0, offset;
- 	u32 loc = 0;
- 	unsigned long lval, llval = val;
- 
-@@ -147,25 +147,28 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 	/* 2nd stage: dereference memory if needed */
- 	do {
- 		lval = val;
-+		/* Prevent dereferencing NULL val pointer */
-+		offset = val ? code->offset : 0;
- 		switch (code->op) {
- 		case FETCH_OP_DEREF:
--			ret = probe_mem_read(&val, (void *)val + code->offset,
--					     sizeof(val));
-+			/* Do not dereference NULL pointers */
-+			if (val)
-+				probe_mem_read(&val, (void *)val + offset,
-+					       sizeof(val));
- 			break;
- 		case FETCH_OP_UDEREF:
--			ret = probe_mem_read_user(&val,
--				 (void *)val + code->offset, sizeof(val));
-+			/* Do not dereference NULL pointers */
-+			if (val)
-+				probe_mem_read_user(&val, (void *)val + offset,
-+						    sizeof(val));
- 			break;
- 		case FETCH_OP_CPU_PTR:
- 			val = (unsigned long)this_cpu_ptr((void __percpu *)val);
--			ret = 0;
- 			break;
- 		default:
- 			lval = llval;
- 			goto out;
- 		}
--		if (ret)
--			return ret;
- 		llval = lval;
- 		code++;
- 	} while (1);
-@@ -173,19 +176,22 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 
- 	s3 = code;
- stage3:
-+	/* Prevent dereferencing NULL val pointer */
-+	offset = val ? code->offset : 0;
-+
- 	/* 3rd stage: store value to buffer */
- 	if (unlikely(!dest)) {
- 		switch (code->op) {
- 		case FETCH_OP_ST_STRING:
--			ret = fetch_store_strlen(val + code->offset);
-+			ret = fetch_store_strlen(val + offset);
- 			code++;
- 			goto array;
- 		case FETCH_OP_ST_USTRING:
--			ret = fetch_store_strlen_user(val + code->offset);
-+			ret = fetch_store_strlen_user(val + offset);
- 			code++;
- 			goto array;
- 		case FETCH_OP_ST_SYMSTR:
--			ret = fetch_store_symstrlen(val + code->offset);
-+			ret = fetch_store_symstrlen(val + offset);
- 			code++;
- 			goto array;
- 		default:
-@@ -193,27 +199,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 		}
- 	}
- 
-+	/* Prevent dereferencing NULL val pointer */
-+	offset = val ? code->offset : 0;
-+
- 	switch (code->op) {
- 	case FETCH_OP_ST_RAW:
- 		fetch_store_raw(val, code, dest);
- 		break;
- 	case FETCH_OP_ST_MEM:
--		probe_mem_read(dest, (void *)val + code->offset, code->size);
-+		probe_mem_read(dest, (void *)val + offset, code->size);
- 		break;
- 	case FETCH_OP_ST_UMEM:
--		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
-+		probe_mem_read_user(dest, (void *)val + offset, code->size);
- 		break;
- 	case FETCH_OP_ST_STRING:
- 		loc = *(u32 *)dest;
--		ret = fetch_store_string(val + code->offset, dest, base);
-+		ret = fetch_store_string(val + offset, dest, base);
- 		break;
- 	case FETCH_OP_ST_USTRING:
- 		loc = *(u32 *)dest;
--		ret = fetch_store_string_user(val + code->offset, dest, base);
-+		ret = fetch_store_string_user(val + offset, dest, base);
- 		break;
- 	case FETCH_OP_ST_SYMSTR:
- 		loc = *(u32 *)dest;
--		ret = fetch_store_symstring(val + code->offset, dest, base);
-+		ret = fetch_store_symstring(val + offset, dest, base);
- 		break;
- 	default:
- 		return -EILSEQ;
--- 
-2.53.0
+On CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE architectures, 0 <
+TASK_SIZE is true, so probe_mem_read(), fetch_store_strlen() and
+fetch_store_string() redirect the NULL kernel pointer read to current's
+user virtual address 0, faulting on every NULL pointer or reading user
+page 0 if mapped.  On s390, where address 0 is mapped to struct lowcore,
+copy_from_kernel_nofault() succeeds and copies lowcore bytes into the
+trace buffer instead of zeroing dest.
 
+[Severity: Medium]
+What happens in the FETCH_OP_LP_ARRAY loop below stage 3 when val or
+lval is 0?
+
+kernel/trace/trace_probe_tmpl.h:process_fetch_insn_bottom() {
+    ...
+	if (code->op =3D=3D FETCH_OP_LP_ARRAY) {
+		if (ret < 0)
+			ret =3D 0;
+		total +=3D ret;
+		if (++i < code->param) {
+			code =3D s3;
+			if (s3->op !=3D FETCH_OP_ST_STRING &&
+			    s3->op !=3D FETCH_OP_ST_USTRING) {
+				dest +=3D s3->size;
+				val +=3D s3->size;
+				goto stage3;
+			}
+			code--;
+			val =3D lval + sizeof(char *);
+    ...
+}
+
+Because stage 2 no longer returns early on a dereference fault, a NULL or
+faulted array base pointer now enters the FETCH_OP_LP_ARRAY loop with
+val =3D=3D 0 (or lval =3D=3D 0).  On the next iteration, val +=3D s3->size =
+or
+val =3D lval + sizeof(char *) turns 0 into a non-zero value (such as 8), so
+val ? code->offset : 0 and if (val) treat it as a valid pointer and
+dereference i * elem_size + code->offset for the remaining array
+elements.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119152922.5a66=
+f10e@gandalf.local.home?part=3D1
