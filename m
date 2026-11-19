@@ -1,54 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795051402;
-	b=XA3plYK4KnN5a4Vva1aTIUBECxuW7jP40E4usk4Hp7mqJr+ax77IKUOnx0IE4Xn2kzDN
-	 70ZLLrlaA/vzNzJvHLDEt/V6iCQ+bdNNlpFFvYtrj5FgAnjGYvpqe1l+UF8u074sXIpIH
-	 ypMda8VkvAa29gXZ+9UxMYAaApqT1k+PCa4cUm0gehmovYFQ0zHZaA7BrcOBmgM2G2L0j
-	 uOPDVatbZ0wqLn4XAKGN9jKePBjM95ydofbCuliHwXi6rCLqKt8OnOZAvZIpfGMtmWG7o
-	 v7dlFZ7Bt5BguLod9cbpOED1mC3J/VINOjavGIJQruiht0Pr4qKb9Q3OVxZkGd8ifpg==
+	t=1795057191;
+	b=B7oISNkaiCXsAeR6BBFGR0FPaYWN48E2Ntj2TdcWNiX51wlZNS2TnpltiJW8js5Wzlee
+	 Pu/LNf3TMoqDo6oJg1rXroCt6Pl1mwz+5dv9RsLlAnbv8+lvwDdAZXCC49qg9c4Ls8xOa
+	 iQ7XoTznmM8X63aw5Y86l2oTPxCVkapBzt08Lol09chuVdARirx51b5hN4zZGlca17mHF
+	 /xmtyeT4KePazUaA6pm19xGEd/GxKOvzYucttZ+Jqv3Bj28dgC/yFCrTgQDXfTV6O5Sei
+	 F4om4cuwaostjAv73/2v3FnN5nWMQfB5Bs6koAlGBpz2A2kYD8RC084QM38OGLpyfkQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795051402;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795057191;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Ugdf1JDwtIYL2rl1GRFqW8mRRpFfDP7eM8709/bjVsM=;
-	b=iDbX5+wqkrnuprLhueGNsQ4bKaxx0CM8NMlt5Uvkk7eRDwnTDKH9X+8EBJnRjt0ZZi/X
-	 MFKT4JSM0RjVnzPKQyVVbCVzVGMHzPupR6yjqM1NLqEW4mSgRH14W7Ihud6SjNIoAER8n
-	 r4SXZhq8tdSyxizblgWUjaw9tfxVpsGTg/rsABkcZs22d5zglExltWMZTYCAgO1bzX5s9
-	 nCWRxZgFW/WqWd6XBELMhg69tOgLWw2ZX0XmRov+OlbQImHLSbiKcc394iKMN51ZrScKC
-	 WNU13jZgYhJxm68f7/TTIYOsCLDdp1XenmS2eHm+rmm6oh4oQZIar6qm+Y4gTCGuZow==
+	bh=BemN4KAEIv94JTaM/LB9CfX7xPFFKwFGGLfkDjDGM5Q=;
+	b=Puv9bahOhOQA5zd9IHdnpDnqTJxsA93vm1cXuwLeMPw5/fmxFfFoK2krQ7Dq9IyioXei
+	 86iKFT6IzWCz6vkxTDiFNdirC6ZJWpk841OBq1gudZpoIMbvk0rXTrW47GS6+yz7Tefnq
+	 gxRKNGfa/P0Ya9WT/2Qocz0+mjc0Zp5weRAw2cL3T/NCuBaxw9ufxy5DfogPy2Z44i56R
+	 9+9D3P/wm9Jn/hiVDcVnzzcQprTxO8Fgz+TkwHarP6JqsEx3oEor8O9rN64Mpb7hzpUOW
+	 PMsi7s1L2rlHYqESWTx7PySUwL03J4pSzCw7/p7srMiYK/torcMod0i5nLxASN8Ad7w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lPAna9fE;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vUwIT1Vg;
+	arc=none smtp.remote-ip=74.125.82.179
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB60606A320;
-	Thu, 19 Nov 2026 01:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAAA606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 02:59:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AAAA606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lPAna9fE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E0801F000C4;
-	Thu, 19 Nov 2026 01:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795051402;
-	bh=Ugdf1JDwtIYL2rl1GRFqW8mRRpFfDP7eM8709/bjVsM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lPAna9fEwd3/tvrR5eHalRzsQG9X/1PgpFAEu0iKkJdnpsqX3ZhERyxNa5KfdtgwJ
-	 jnuNsns9Jey7NukNBShPBWZqPOL383/0mRbTrkwZiGeHrEEoxwUqLsCzEy8/q7GJ3m
-	 xL1pf0MCMYyqpAJFxjlDVP3x1Hj90UQ6zXSvbb9dTy1T65pBwqgjYObUWF3RAxENzr
-	 8jXGUofX/H80tEGC23NZzdkC7DgjihFGUvwGDDxAwNwyZMaKDXHLob6Wm4Rr+ZBll6
-	 GIxfWJamP+9hKqAsdaYZ1Zy4zO7yNp9lzjVrnXS9xAljH8sX7wGbgAfaxx5ZnUXxXG
-	 ytbWqLngZtdqg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 08/15] tracing/filters: Reject unsupported field sizes in parse_pred()
-Date: Thu, 19 Nov 2026 10:23:19 +0900
-Message-ID: <undine-1795051399139783125-8a432c8e1f39e433@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261117191700.7e5f1a10@gandalf.local.home>
-References: <179323784538.740114.15323117974242744566.stgit@devnote2> <179323791927.740114.2174706496595446472.stgit@devnote2> <20261117191700.7e5f1a10@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vUwIT1Vg
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-381f65e4e4bso2777044eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Nov 2026 18:59:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795057190; x=1795661990; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=BemN4KAEIv94JTaM/LB9CfX7xPFFKwFGGLfkDjDGM5Q=;
+        b=vUwIT1VgurTA5PcH58CV+OidjaQlZarrpDkxokT5Dc2FKUvEj1pnfPS32bbDNcWXOI
+         iS7TSFfQuJszS1B/dTp2aGKTksWm1ccF7NBWe8lXiANy+kQGZqppOBJQkkvXLqHddlz7
+         Z4mCYbXH/JPRElL7Qy5Zlgy3IQABFFNg90T0B9+tmiXAQqRc6Uo8kR2rMXxdHIM4sVLX
+         dASfsJFLI2rMl3+D0xOmaQ17kXymY53zTt17yYv2R+gDZUBsekaZ/W+po1ydfdaEYZOb
+         5ZeozYdnX+OMDnyYLCSuvB2clE5P4cp87sv7dwEy1QBvFPJMRTa/EarhKESF/D/jnC0I
+         b9FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795057190; x=1795661990;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=BemN4KAEIv94JTaM/LB9CfX7xPFFKwFGGLfkDjDGM5Q=;
+        b=aaLNku0k7DfI1u9vr1wSLmgyjsDMbUJPaGFR08nz/WryxyEaRxdgUjWSNn+gQXwbzR
+         uxC58cbjzI8GNG5p+sRCIM41tkQX183BNg/V/rx0nfUxyPkd81V7ZQFui822oPlzidjJ
+         dpVPcOjj/5zVTYn1nETAN7VqDxku2PBfeIkuD0Tlp9H0SjtPp6s8Mzb8ZU5Opx8yBPRY
+         ZRG0edhFYjsvMKT8jSvB2dBnnXF7DPJaWx067yz6boW8TMfW3w1Ajy+LuZBK5mlvqSot
+         cJULLwY+BZzRxW3g7p8Vgm7vAUjKbRLUy8My7qPAdP/CwYEOc+WOOKHQGcaslzLWlWeU
+         hB5A==
+X-Forwarded-Encrypted: i=1; AL+hErEpCFxuX1/hQ1fivVIzKG3st/tSPPYDkTjzwSwreatr4dEAgpJJvhW9KywjnTGz+1emblDGdXKSp5qAZNHL//8CrAM=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8rX4MDpVuUMh6isjdix1zJ17v/1xlBwIp1Ab8UQWI7IdsZukmV
+	ZUFNH1DIf2s7mmVln+Cb8MWr1DQRuFybKbFa1pMFd2jvClOv5aZ2UqCfHhZOEeXEVqU=
+X-Gm-Gg: AZFdTZd6L9fYvBgzBgmcPGoXzghuYeLUtjK9ABcMh04hRx2vC/iJ9Zw18bToSB3fEMD
+	Gc8E/5Uti7HCqkXIdMvd9AupXZrHfN/BGh1Z3OBLtMdDTNEsnryaYICtjnfN1rC04mKinaRz+Gx
+	BuCydnss5frWaMtfAwh6vDfbI2+14sYxA0kE4UuhZfFgN0Gu3wJ3Y1i+xlnWD8+kN9QM5O7g8dz
+	AI7Ju2xbVT84eS+IgLM4ZcPf4KSv9GCnjgk3iyjgyhjW9OSb03yBNsbd34OssIBv+q9HOZIWojM
+	Hnb7e/js21m5AFI0Tx0B0jpK/U7sgFf2g2QC4PObymyA8vHcQZvlT41fwq6IcAdgWU9iKcuOv40
+	QTB9OvQbti18YuXI5VX46jF4CUXZ/SOT0Kmu+lvdysJRFW2UvNeqn7Si0GQvUG++CcvmDbRhrei
+	P+pPQ6Q86IEcSlvbW9lAlksOB/Hu4u10vKuMe2iKHZ39AP+u6DJFlyFAC72w8II4sxYgqwEE7Cd
+	35TgscWE/bCZpL6ovb9c0wW8MAvumVETayrLGByOxd0uuh9uIZnenzAXCE9FI97p6Irl3VKfIPK
+	FWUcIO3tgQVZ/jmtHONmtnUWWsMzw/0X1iH2C/6Hqa/GoQkW+b+1NpGW3AjjmKBPj1U4aXZi181
+	8Fg==
+X-Received: by 2002:a05:693c:2805:b0:36c:a1ef:f8f7 with SMTP id 5a478bee46e88-3827dd05b5emr4256126eec.4.1795057189615;
+        Wed, 18 Nov 2026 18:59:49 -0800 (PST)
+Received: from Desktop ([182.161.246.158])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-382a63059f8sm19658301eec.9.2026.11.18.18.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2026 18:59:48 -0800 (PST)
+From: JunYoung Lee <ljyoung04@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Require kallsyms permission for the .function filter modifier
+Date: Thu, 19 Nov 2026 11:59:41 +0900
+Message-ID: <20261119025941.87102-1-ljyoung04@gmail.com>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,106 +99,103 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 17 Nov 2026 19:17:00 -0500, Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Thu, 29 Oct 2026 10:38:39 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Prior to commit 80765597bc58 ("tracing: Rewrite filter logic to be simpler
-> > and faster"), parse_pred() checked whether select_comparison_fn() returned
-> > NULL and failed with FILT_ERR_INVALID_OP and -EINVAL. That check was lost
-> > during the rewrite, and commit 3cbec9d7b93d ("tracing/filters: Enable
-> > filtering a scalar field by a cpumask") similarly omitted a default error
-> > case when matching field->size for CPUS{} comparisons.
-> > 
-> > If a non-string field (FILTER_OTHER) has a size other than 1, 2, 4, or 8
-> > (such as a fixed-size integer array field), pred->fn_num remains
-> > FILTER_PRED_FN_NOP (0) and parse_pred() returns success. Subsequently,
-> > update_preds() rejects FILTER_PRED_FN_NOP via WARN_ON_ONCE() and returns
-> > -EINVAL without setting a parse_error() message, triggering a kernel
-> > warning from user-supplied filter input.
-> > 
-> > Restore the check for FILTER_PRED_FN_NOP in both the numeric scalar and
-> > CPUS{} branches of parse_pred() and report FILT_ERR_INVALID_OP.
-> 
-> Again, please show real examples of what fails, so I can test it.
+Hi Steven, Masami,
 
-Yeah, this is much easier to check via tracefs.
+An unprivileged user can locate the kernel image (KASLR bypass) with
+PERF_EVENT_IOC_SET_FILTER at the default perf_event_paranoid=2.
+parse_pred() accepts "<field>.function == <addr>" only if the address
+resolves in kallsyms, and the perf path has no permission check, so the
+ioctl result tells whether an address is kernel text. The details and
+the fix are in the patch below.
 
-# cd /sys/kernel/tracing
-# cat events/raw_syscalls/sys_enter/format | grep args
-	field:unsigned long args[6];	offset:24;	size:48;	signed:0;
+Affected (reproduced as uid 65534, KASLR on), since e6745a4da964 (v6.3):
+- mainline 4405c18c95d2 (v7.4-rc3-230)
+- stable 6.12.118
 
-So this event has args[6] array field. So filter needs [] to specify
-the element. However,
+Example on mainline: a counting event on ftrace:print (field "ip") and
+561 probes return image_start=0xffffffffa1000000 and
+image_end=0xffffffffaae30000. These equal _stext and _end in
+/proc/kallsyms as read by root; the same user sees zeros there. No
+tracefs and no capabilities are needed. Not affected:
+perf_event_paranoid > 2, or perf_event_open blocked.
 
-# echo 'args == 0' > events/raw_syscalls/sys_enter/filter
-# echo $?
-0
+A C reproducer is available privately on request.
 
-This passed, and
+Testing of the patch on mainline with KASAN: for an unprivileged user
+every .function form now fails with -EINVAL, and ordinary filters still
+work. Root keeps .function via perf and tracefs (it is refused under
+kptr_restrict=2, like kallsyms values). ftrace selftests test.d/filter
+pass 4/4. checkpatch --strict and W=1 are clean. A 6.12.y backport is
+available.
 
-# cat events/raw_syscalls/sys_enter/filter
-args == 0
+A separate issue seen while testing: as root, a .function filter on the
+perf function event (ftrace:function) crashes the kernel with a NULL
+dereference in ftrace_function_set_filter_pred(), because pred->regex
+is not set on the .function path. It needs CAP_PERFMON. I can send
+details if useful.
 
-With this patch,
-
-# echo 'args == 0' > events/raw_syscalls/sys_enter/filter
-sh: write error: Invalid argument
-
-# cat error_log 
-[   23.864399] event filter parse error: error: Invalid operator
-  Command: args == 0
+Found with AI-assisted code analysis. All results come from test runs.
 
 Thanks,
+JunYoung Lee
 
-> 
-> Thanks,
-> 
-> -- Steve
-> 
-> > 
-> > Fixes: 80765597bc58 ("tracing: Rewrite filter logic to be simpler and faster")
-> > Fixes: 3cbec9d7b93d ("tracing/filters: Enable filtering a scalar field by a cpumask")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/trace_events_filter.c |    8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> > index a645af9eb1f8..40efcef94e02 100644
-> > --- a/kernel/trace/trace_events_filter.c
-> > +++ b/kernel/trace/trace_events_filter.c
-> > @@ -2013,6 +2013,10 @@ static int parse_pred(const char *str, void *data,
-> >  				break;
-> >  			}
-> >  		}
-> > +		if (pred->fn_num == FILTER_PRED_FN_NOP) {
-> > +			parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
-> > +			goto err_free;
-> > +		}
-> >  
-> >  	/* This is either a string, or an integer */
-> >  	} else if (str[i] == '\'' || str[i] == '"') {
-> > @@ -2166,6 +2170,10 @@ static int parse_pred(const char *str, void *data,
-> >  		else {
-> >  			pred->fn_num = select_comparison_fn(pred->op, field->size,
-> >  							    field->is_signed);
-> > +			if (pred->fn_num == FILTER_PRED_FN_NOP) {
-> > +				parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
-> > +				goto err_free;
-> > +			}
-> >  			if (pred->op == OP_NE)
-> >  				pred->not = 1;
-> >  		}
-> 
-> 
->
+-- >8 --
+"<field>.function == <operand>" resolves the operand to a kernel symbol
+range. parse_pred() accepts the predicate only if
+kallsyms_lookup_size_offset() succeeds, so the result of setting the
+filter tells whether an address lies inside the kernel image (or a
+module).
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+perf_event_open() allows any user to open a tracepoint event for
+counting at the default perf_event_paranoid=2, and
+PERF_EVENT_IOC_SET_FILTER passes the string to the same parser without
+a permission check. An unprivileged user can therefore probe addresses
+one ioctl at a time and recover _stext and _end exactly (about 560
+ioctls on x86-64, under two seconds), while /proc/kallsyms shows that
+user zeros.
+
+Apply the rule that /proc/kallsyms uses, kallsyms_show_value() on the
+current credentials, before the operand is looked at, so both the
+numeric and the symbol name form are refused to callers who may not
+see kernel addresses. Root and CAP_SYSLOG keep the modifier under the
+default kptr_restrict. With kptr_restrict=2 it is refused to everyone,
+the same as kallsyms values are hidden from everyone.
+
+Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
+Cc: stable@vger.kernel.org
+Signed-off-by: JunYoung Lee <ljyoung04@gmail.com>
+---
+ kernel/trace/trace_events_filter.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index c10951bcfc5f..895ef6d7652a 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -118,6 +118,7 @@ struct filter_pred {
+ 	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
+ 	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
+ 	C(NO_FUNCTION,		"Function not found"),			\
++	C(FUNCTION_PERM,	"Not permitted to filter on kernel addresses"), \
+ 	C(GLOB_WITHIN,		"'within' filter cannot take glob expressions"), \
+ 	C(ERRNO,		"Error"),				\
+ 	C(NO_FILTER,		"No filter found")
+@@ -1743,6 +1744,16 @@ static int parse_pred(const char *str, void *data,
+ 	pred->op = op;
+ 
+ 	if (function) {
++		/*
++		 * Whether the operand is accepted, and which events then
++		 * match, tells where kernel text is. perf lets unprivileged
++		 * users set filters, so apply the /proc/kallsyms rule.
++		 */
++		if (!kallsyms_show_value(current_cred())) {
++			parse_error(pe, FILT_ERR_FUNCTION_PERM, pos + i);
++			goto err_free;
++		}
++
+ 		/* The field must be the same size as long */
+ 		if (field->size != sizeof(long)) {
+ 			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
