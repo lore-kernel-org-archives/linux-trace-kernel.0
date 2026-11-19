@@ -1,101 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795116522;
-	b=jNgX1OIXefE0BuncQhVHgMzgEmxhVKFE9Hrpz7lG+6somL7BnVsn4NeMMPTnS72Ps8x8
-	 VNJVlXegYbNkd5WuiXKi9IeknWdc7U5F4XqfuyrygRnskCCv8S0egFhpSNkC1dyBSkW0C
-	 OgQDIhotKOUMzuS+PoJJct6SO7r/tNsczoiqsXekWoz7ZQuGd/gO5yKZrQijOrNlyjKaM
-	 JATm7BI/ilzr78eJlDMvJjAnEOn+YUAS5c4pbMfGNLztKN1DbgNo8Pz4mCNEZMKi+LFLj
-	 U5C6zhuGPCRH0Fc3zCjeEcLVa6kXlTln/QOtaIhgNOy6qnBf+NN64tLRhGWrGUp5ayw==
+	t=1795119553;
+	b=vYPg9Woa2bD6nKYiONP53IpnlPa7biDKkncZPrOoDHINBnWQOjGCNCMF4OMyw5xC7N7x
+	 oFZeA0fRJgxjYwUg7+QgogQQX7+gRx3zPVA5+b4VMjNZdfXOyOMYhmakhtGX+4qPWKUGs
+	 qC4GSM3m8d+UgpKYMCDuduLVYM6OYVhSE8zMFqj7K0cmp+SVZqoafdul7yOaCNl8wTWYZ
+	 WfIt7gp7yG5PPsZ9l4SD196WZ7ND4DY+JTc6PQLniaHFoMWR/5hRB0kb1ZX/KTCAaoTgz
+	 9VR+5ux2IluIi8gmavdrzP9nnYYAAgBgrSr7Txjym/ANVOmnRJTA/uucILL867nk8Xw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795116522;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=daCieWNeyyAkEEfSGL+gig14C8b2lK6bD4Sqxa/vxJ8=;
-	b=v8vyLIK1xXAxNKVmwGdL1ny7ToE7WHuo/Z6IBaLSSrUhHgwFOiJfIKL6ET7RnDK3gfDh
-	 nsbBLF0DT5pZqxH08pCloGumFipN8UuZmSoUuqJUPVwZKjK41MIML53PGqFgWJGZ8nLf1
-	 XHSGwKDPIWA3YvL9ljLQsS2J5LInULELeMKccaSrW9BiS7m4BWsOVjzUC71G4+xBeARrj
-	 0ulWklXsgWdr1yKZs5zpOdVW9akyydMRGaGX/DjV488uDQHucSULFYXmxrDmc52YSbW8h
-	 DuTAfUonw2byzMBMltdViNfISmK2rO7ma6B2O06/OUJqvbmeoyzpwA4cdVGUd5xN1eQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795119553;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=LI5H2Ayqlfdi0QAop46uAHg65RMj1BeBk5KVNpL+B1k=;
+	b=uCA2AMxJRt+Qe3SJVV9UM73n73KS41ZGDxZ0Jc1MW1hI3BEU4Nn+QQqkVWCBhr++Z3zq
+	 9wgPVTde1AmwzWRLT4F/ekCXnDfz66MXns01przB9PMAbhxe+shyh5HkeAfLAe+KuwNjm
+	 2mbcYfjeT83B/GPLMVXN6oljF2L9YXhZspaNIe0Q/+yhVsTLHsCOA35SXoTlBkjMh8JXT
+	 iMH6DlfFKpvaGrI4E9oM4qhv8rSXFfteJeva7T8IcvOUzW61bSXV0RcuE0xYb/o9rinzF
+	 qsTjk3im88poPhsGxchoJZz9du3c3cnOu0z0XNyr3wnrO1ZXXOcsPnk4TG5axpS1JSw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="tu20Gqk/";
-	arc=none smtp.remote-ip=209.85.221.45
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=HRY11z7g;
+	arc=none smtp.remote-ip=216.40.44.12
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22A4606A320
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 19:28:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E22A4606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DCE606A9D3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 20:19:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 05DCE606A9D3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tu20Gqk/
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-4a9be758734so45551f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 11:28:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795116520; x=1795721320; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=daCieWNeyyAkEEfSGL+gig14C8b2lK6bD4Sqxa/vxJ8=;
-        b=tu20Gqk/R+74eslqU7J+Qfe6fCPgO4z10zl9W/g+ahjktmWwy2JW7Pyk5DMtk7Npri
-         DWK9YC+vyF0laiaM1V8JE130P3Pqean1axFhXx+ax8wiPIS8RTV2CI9DzjfJpEtsZS9i
-         395vPURZPnd/woNmWSQGqV1wsOaaS0EvS07d6VsHDfCXlJIFEcJeHbMBg+1mGEeyAP9J
-         9jEn4aCTbjergCG7KG8jEJP/Bc6R4SurYMYyhWGcjp/uKMxa57LL3Xh0jIct8EWFkklv
-         w7xXc2qeAuPOJWrEowkLN7t9bplc32MaJzEPItjHzhJgE0XGCB24Rv04zi/6it5NEALW
-         oY9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795116520; x=1795721320;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=daCieWNeyyAkEEfSGL+gig14C8b2lK6bD4Sqxa/vxJ8=;
-        b=tSrtjTo8VQbAr0y0Syx485OYdlwyP+RkrgcY4r2W9DmaC8Qr808RoDKrzJJrq8Ihk+
-         ZLbyovQi0XVPqcctsMsKBN5R2Nvi6O3eh63j5BUkLoVblDYLGVNhZsGtFdbVCjHvVtOe
-         qIEC2B9dvnMutmRm2rDUIiUAlLL/eA41/+RUWw+XvCqc8A9GF5CsxrAqTGC3Iwf6fiNm
-         sEj6oBQiEkUB7eMOEkNlN5Tru7tgvCVlT+JqfOVT1mwM1YW4I1F1lsqC55p567ST1neQ
-         GfwkzKMr296TcSQiXiwc7w31PSYC2zacOOBSzLxrpxQXRqVjp2IeD5Pk2SqIER/k4jr+
-         4BeQ==
-X-Forwarded-Encrypted: i=1; AL+hErEsjPth/ygcwyHFb6dMCWOLzBw8+ShH7Gl2hdK4l3/WVlE0WT+p67MEeBLYy3KZmN1dOKmLhOORHrOIQpSEui2VCIU=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9zSRxFYIpAZYna0hSjQ88ITJaLQNZ6fyRKGpb+sDob0/cNjREp
-	MDNXsAEvDz8/PrmTDafO42hBMrpG2S1IwdDq22jKKhn/6W17g9Sj24m2
-X-Gm-Gg: AZFdTZfMs/4G74qO6zpeiSjzLPP1QWJ6MGI1sDiwaSIA3oFkgh9UT8qoWXbYCxRAvHA
-	o8nOhO2mREmSjArha9+89E+wZimm71xlyEsdf0MUbCzsMqC0xP/3NhU8d8OQDgkKLFPU0Mm+CNN
-	zwxc7TnFs8s/B/ljkB58Qmn6tlvW4DBMB3mcD2mJWLraKrPsALLTQi5hgnAsoJkOsy6ppidjaSb
-	WygqeAqjVWgSsyzzciUySWWlVJluAMWwWFhG/b1X8RpGTwKXzZavlGnWAb/eT2P25ULsBDg/KGR
-	+2tXKcGTPb8tcVy4AVmbEI3Kzd8+oeCp3tFbljXM1o3HCPzXDbhFjs/Q5eCH0le4F6nraAR7oBy
-	tmBV78F/yfzU1NUah1bQw1OALMg8m+pyvwARaIkSdWWnfWXN6VNtMFMaEC/E7Edrvy2abTmxacS
-	TXI/fromsunUC0WairGAmfxZR5qYjxJ7FF+Bcz5/CJAYczf7xttiQx2EiIFk3jwUYyH9WgJZw/U
-	woJYSJC7z/4c6gWABimZGsFOrLFg++bcu2iiaiRD3jK6JlZbXiHDSlmqWoRGVNuuyyHFJ9a3jQd
-	DUIiPcAQRlzk6bbPB0TqM94t2Si6WUfmpUPhUds=
-X-Received: by 2002:a05:6000:4b1e:b0:48c:7143:610c with SMTP id ffacd0b85a97d-4abb2910b8fmr809897f8f.36.1795116520113;
-        Thu, 19 Nov 2026 11:28:40 -0800 (PST)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67f204sm1477581f8f.21.2026.11.19.11.28.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Nov 2026 11:28:39 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 19 Nov 2026 20:28:37 +0100
-To: bot+bpf-ci@kernel.org
-Cc: mike.bazov@gmail.com, song@kernel.org, ihor.solodrai@linux.dev,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev,
-	yonghong.song@linux.dev, emil@etsalapatis.com, kpsingh@kernel.org,
-	matt@bobrowski.net, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	martin.lau@kernel.org, mason@kernel.org
-Subject: Re: [PATCH bpf-next v2] bpf: Use an on-stack pt_regs in the raw
- tracepoint helpers
-Message-ID: <av9N5RqhdRhW1fVh@krava>
-References: <20261119-bpf-raw-tp-regs-preempt-v2-1-e1e1b90857d6@gmail.com>
- <77d978d7f9343e907651b4d4d81ec1c1405dce42f75e33b169f729f208029fcc@mail.kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=HRY11z7g
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id DCB1BA04D7;
+	Thu, 19 Nov 2026 20:19:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 40C0320025;
+	Thu, 19 Nov 2026 20:19:03 +0000 (UTC)
+Date: Thu, 19 Nov 2026 15:19:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dominik Maier <dmnk@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ dmnk+artist@google.com
+Subject: Re: [PATCH] tracing: check kallsyms_show_value() for numeric
+ addresses in .function filter
+Message-ID: <20261119151901.7488cf38@gandalf.local.home>
+In-Reply-To: <20261119192233.2664654-1-dmnk@google.com>
+References: <20261119192233.2664654-1-dmnk@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -105,90 +61,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77d978d7f9343e907651b4d4d81ec1c1405dce42f75e33b169f729f208029fcc@mail.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 40C0320025
+X-Stat-Signature: 58mqq5gbsgkqd3tag7m3nu6xhaoje3k5
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/YyCRVQua6bIkUGnkBP8cAzLNEYGgFNwQ=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=LI5H2Ayqlfdi0QAop46uAHg65RMj1BeBk5KVNpL+B1k=; b=HRY11z7g1gtE93KLAT4yyjV1uTpsq/vzHprmX3nx3jh/FjeMd+Oep7k63dDNRy+QOQxSSbuS6OlF9RZNXpDVeAhhR65llVbUrMvBaYNvSavrkt5QXiN3ssBNUkWYA5/oIh94Eo8ZXb+TDufXr8qjPf0NStMYOZVQcjlo48hdFEI=
+X-HE-Tag: 1795119543-913082
+X-HE-Meta: U2FsdGVkX18oHeYvd4ySGZOuMHygJ0l1T3yT2YAE84KskCXGmmoP9rqa35tZXHiUqzRa7ThrfnybLS5ByDYCBxT4XsOTzZ6XUKz/gMs0ytb8vSzlahnu3KkNRjTOO3gSRD6kxe9/p8VeE7fsgoLMZ3eoeeJOP/y88s4TRNQNo75P/Uamu1mqCLD4JYZ3HeolVbkAVIzRRwSNzTQlidHKTZfhYiprkj2vHgZ8LDpncPbbXM9E7V0mBbEwN3zuW5aENANTlP3y3Xu6OdNs8uqMeL9F6L8Id/09iuXDJlha6MY+ZLY0w3b1brcERbtxJ9m5jsmzENgTBLHTlVvC7QciNxnX5mB0g0Ld
 
-On Thu, Nov 19, 2026 at 11:14:51AM +0000, bot+bpf-ci@kernel.org wrote:
-> > bpf: Use an on-stack pt_regs in the raw tracepoint helpers
-> 
-> TL;DR: Without the per-CPU slots, nested raw_tp/fentry programs may hit the
-> WARN_ON_ONCE in bpf_perf_event_output() (panic with panic_on_warn); the commit
-> message's claim of no more -EBUSY also looks wrong.
-> 
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> 
-> [ ... ]
-> 
-> >  BPF_CALL_5(bpf_perf_event_output_raw_tp, struct bpf_raw_tracepoint_args *, args,
-> >  	   struct bpf_map *, map, u64, flags, void *, data, u64, size)
-> >  {
-> > -	struct pt_regs *regs = get_bpf_raw_tp_regs();
-> > -	int ret;
-> > -
-> > -	if (IS_ERR(regs))
-> > -		return PTR_ERR(regs);
-> > -
-> > -	perf_fetch_caller_regs(regs);
-> > -	ret = ____bpf_perf_event_output(regs, map, flags, data, size);
-> > +	struct pt_regs regs = {};
-> >  
-> > -	put_bpf_raw_tp_regs();
-> > -	return ret;
-> > +	perf_fetch_caller_regs(&regs);
-> > +	return ____bpf_perf_event_output(&regs, map, flags, data, size);
-> >  }
-> 
-> Can this reach the WARN_ON_ONCE() in bpf_perf_event_output() using only
-> raw_tp and tracing programs?
-> 
-> bpf_perf_event_output() still has a three-level limit:
-> 
->     nest_level = this_cpu_inc_return(bpf_trace_nest_level);
-> 
->     if (WARN_ON_ONCE(nest_level > ARRAY_SIZE(sds->sds))) {
->         err = -EBUSY;
->         goto out;
->     }
-> 
-> Before this patch, every raw_tp/tracing caller first took a
-> bpf_raw_tp_nest_level slot, so a fourth nested caller got a silent -EBUSY
-> from get_bpf_raw_tp_regs().  That function's WARN_ON_ONCE was removed by
-> commit 3880cdbed1c4 ("bpf: Fix WARN() in get_bpf_raw_tp_regs") after a
-> syzbot report of this kind of nesting.  The WARN above could only fire if a
-> kprobe, tracepoint or perf_event program was also in the chain.
-> 
-> With the slots gone, a chain of only raw_tp/tracing programs can get there.
-> For example, a raw_tp program A calls bpf_perf_event_output() (nest 1),
-> and its __bpf_perf_event_output() calls perf_event_output().  Fentry
-> programs B, C and D attached to perf_event_output() also call
-> bpf_perf_event_output(), and each is let through once by its own
-> prog->active check, so they run at nest 2, 3 and 4.  At D the WARN_ON_ONCE
-> fires, and with panic_on_warn the kernel panics.  The same depth is
-> reachable across task, softirq, hardirq and NMI context.
-> 
-> This also seems to contradict the commit message:
-> 
-> > the helpers no longer fail with -EBUSY when nested more than three deep
-> 
-> For bpf_perf_event_output() the three-level limit remains, coming from
-> bpf_trace_sds and bpf_trace_nest_level.
-> 
-> Should the WARN_ON_ONCE in bpf_perf_event_output() be dropped, as
-> 3880cdbed1c4 did for get_bpf_raw_tp_regs(), and should the commit message
-> say that bpf_perf_event_output() keeps its three-level limit?
+On Thu, 19 Nov 2026 20:22:33 +0100
+Dominik Maier <dmnk@google.com> wrote:
 
-+1 we can now nest more than 3 times, hitting that limit shouldn't warn
+> In parse_pred(), the .function filter modifier accepts either a symbol
+> name or a raw numeric kernel address (such as 0xffffffff81000000) and
+> resolves it through kallsyms_lookup_size_offset().
+> 
+> While tracefs defaults to mode 0700, task-scoped counting tracepoint
+> events can be opened via perf_event_open() under default
+> perf_event_paranoid = 2 and configured via PERF_EVENT_IOC_SET_FILTER.
+> Allowing raw numeric addresses in .function predicates without checking
+> kallsyms_show_value(current_cred()) lets callers without kallsyms
+> address visibility test whether candidate kernel addresses fall within a
+> valid symbol despite kptr_restrict.
 
-jirka
+God I HATE AI!!!
 
-> 
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/44508926690
+This is a perf bug, it needs to be solved in the perf code. How many times
+do I need to keep telling people with AI bots this! I think you are the
+third person to send the same patch.
+
+The filter logic can expose kernel addresses. If perf isn't allowed to have
+access to that, then it shouldn't be allowed to filter.
+
+-- Steve
 
