@@ -1,72 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.77.101.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795094919;
-	b=ruGxLOPZ3spEb/Ua0wbuyjzqlW9mbhWYm/UJ7+u9X/XOaxN/Jxqxl2EMT8vevzWylPJ3
-	 IJ03+pfohVUty6twoxiUEZEsHfaaZ+5evImTSoH7XJF9VEgr7/ehkuUrdt8GfyxpAi6sl
-	 EHAujcRb6R928kCKO+clgCJgVylKlWOHwoy+repNaNKXu+nAoWRBEq7E9F4cx02H4uDnD
-	 gHrnGWI87uxeFwtQWhjBp/J6/k6+njNgH8tMdl+35xRT1Dek2P35bVlov06bNLTVEkzcw
-	 DWJuJaA4Qo/V0YSu/xhVeAFsgEG2N6Wg6ZzhSdddLlkUoGxo57tgMxj/VEwwowSprPQ==
+	t=1795096599;
+	b=qCn9a2XyD70hjlWNPmr9rzxapBwjPzz1T7HrqmWsEDLuzyclYn7meD4Pp3MElz+G/hAW
+	 GEndK2Wh7OfAFwRm62SEqdOAzPo2Ktczlh9BzYQ1J1D6rDfz/euNHSPfcG1FS9f8/Lt0X
+	 rHLwNNziFKEckoBn7a3NGx4We7uf8X16CfryENdi/fzfK83KcO0bqGVgKFtqxJ/zXMrX7
+	 D4lYzcyZNGoK0jRJwyDKiqSmWHjStnBBflpdDRTuGlx6urztx+XxDjIDG78/tFs731jXC
+	 czz+TYjPCt3n1Snwd4112CCfG0UC712n3ogujGrAUBe9yYEBv3VsSI0+biltG/emk7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795094919;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:X-WP-MailID:
-	 X-WP-AV:X-WP-SPAM;
-	bh=nFs7LhyMy8k5jmGRKz1u70BSbgNhRCYabK2uhH/Xm0o=;
-	b=kqMoBZAXsuENREaDR2xEvFEO0uPeY94Tli6KxEFxpP/LHejPE3sOwvb0mZP0nyk3lZiy
-	 KI6EQp5dgckah0F/elA3c4OMbrq1Nzp+laK4Ih+4m7TxoKsxcLsD1ACcJu/xwirVZuplS
-	 rRKZoDBZblJlvWO0RzXM5Tx70hVcL+W+0/geC6/ItGEJIdJ/0lKRlQFHa3q+JyOHoimJd
-	 3EaEA6dkRse4RoVr5aJRM1doB0zFR1RKh/TmWnfWRJeIss0kYazcTbVVFVuMdvBKGUVJB
-	 wxvVIVhKnEOZQEz5GIs3Nu/WfIQjRdvM/1fLcGupe13I6JBsKz1I1EZfzwo1BMr2ymQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795096599;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=p01AMJEsgxMawydqGiX5oGqRwQagNaltsLGSLmx0qnk=;
+	b=sVnpi8e/zicooyA45cliYgjQesrBmnf0szp2V0GkmirZM+JzkF2RlzwJcNLr7Vqt/gKG
+	 z9GMBRNvTws2mKDyFUMRryEEOpyXFy3kMyrWxAEs3gTyfPbCI4hqI0TsH5+bymngs3Q6H
+	 VrkuMsaoGj4TDFDFQghz1G1g+2BVV92WA4OSE97h+8nxUn7D2+2h/6Kwn9NYK2iXqMbiE
+	 whymyOqs6044Qi1GdpWPbh/o0wOOOGTcBJhDSjHf6K/FeXwfWf6Y+Ns++i+6otz4CfKA3
+	 smamPtWetIUJOJUygQ9mxAwoCtlSqq9lt1KRsyGGuHe4A106nV1pXxVHPHVfh1pNYiQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=wp.pl;
-	spf=pass smtp.mailfrom=wp.pl;
-	dkim=pass header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=V2TDVTkp;
-	arc=none smtp.remote-ip=212.77.101.12
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=yFKw5dWF;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6C6606AA74
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 13:28:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC6C6606AA74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1953D606A326;
+	Thu, 19 Nov 2026 13:56:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1953D606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.a=rsa-sha256 header.s=s20261001 header.b=V2TDVTkp
-Received: (wp-smtpd smtp.wp.pl 40278 invoked from network); 19 Nov 2026 14:28:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=s20261001;
-          t=1795094914; bh=nFs7LhyMy8k5jmGRKz1u70BSbgNhRCYabK2uhH/Xm0o=;
-          h=From:To:Cc:Subject;
-          b=V2TDVTkp6Twu60YGIv2NCg68IvYXBm+v+dlOqdyd/n5kGJgr51wVRE951Gash8RIs
-           62/x215GUrBT+jYp9l/W43PkAqXQUGT7pn/9yUUN/3Y8MAEc9GA6xXs4igFqLij4ix
-           0LsPtIfWP0u9JnWWd97zufqpUOKgxppFDcGP3sDIq3r/Ef/zhSdaQwE5u54lraiZXg
-           I8YhZoQTCW+5R5EroEdhUC58nXkbDUMLEdTv9wSiPrrsCHwxzGpLoL1J9/z4hJTvBO
-           jF+2IjGdHWzqP61HaFOSZ/bR0uH1/ioj0iUd4Qqa9wI28SLPJYY4weGVvvbSB6QKP/
-           DhUwwEUfL9wDg==
-Received: from localhost (77-236-5-223.static.play.pl [77.236.5.223])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with TLS_AES_256_GCM_SHA384 encrypted SMTP
-          for <sashiko-reviews@lists.linux.dev>; 19 Nov 2026 14:28:34 +0100
-Date: Thu, 19 Nov 2026 14:28:34 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-modules@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Daniel Gomez <da.gomez@kernel.org>,
-	Aaron Tomlin <atomlin@atomlin.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Jordan Rome <linux@jordanrome.com>,
-	Viktor Malik <vmalik@redhat.com>, Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v3 2/3] module/kallsyms: sort text symbol indices and use
- binary search
-Message-ID: <av75gob9XzeqglD7@wp.pl>
-References: <20261118145125.29399-1-stf_xl@wp.pl>
- <20261118145125.29399-3-stf_xl@wp.pl>
- <sashiko-outbox-221282@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=yFKw5dWF
+Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 2969080AFB;
+	Thu, 19 Nov 2026 13:56:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 3403B6000C;
+	Thu, 19 Nov 2026 13:56:34 +0000 (UTC)
+Date: Thu, 19 Nov 2026 08:56:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: JunYoung Lee <ljyoung04@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Require kallsyms permission for the .function
+ filter modifier
+Message-ID: <20261119085632.60cc7df3@gandalf.local.home>
+In-Reply-To: <20261119025941.87102-1-ljyoung04@gmail.com>
+References: <20261119025941.87102-1-ljyoung04@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -76,36 +62,64 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sashiko-outbox-221282@kernel.org>
-X-WP-MailID: 783790f8ec710f57db30d5bf09b3768a
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [kTPk]                               
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 3403B6000C
+X-Stat-Signature: q8fd4qnyrd5cyffidt1e5i3tdi88s7sp
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19aueHXQZARrHKFPI9VLfHoXusHGVYx6vM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=p01AMJEsgxMawydqGiX5oGqRwQagNaltsLGSLmx0qnk=; b=yFKw5dWFtRBxr2DVkodExwzF5jV7yxErNYj3s3Qa7JFTRK5lb3tAudPX8jYFe4KFsnqcJZnxtASF68nTk+ghX/FD03RBNMq19cPjxQEykbRvvN+WozjOfwCZ2cRJwdMT0HzA4UGm74pE0ptmbT3lTuGQCCXZ+Jp7cPr6pBBdMd8=
+X-HE-Tag: 1795096594-802728
+X-HE-Meta: U2FsdGVkX1/hWsnU9WHyInkMYlA2PoE5GYkMwY1JVwjEn7zdVsPZg2s0UYoK4WXkimiyonPIKWqB2k+7qrt2/VS5bl5z9tvr7lio64w7BRQgbZQjQiWp/j5XRf5CoRl8o1QZnZsGnYK9ctitJXIdqIzEbtkGxc9geK3iO5/gowWWuj37sesVgB277U0+x49L9g1vJb6f1s6vbpb5HHuU4Vtjp/MDYwFEsuCttredkBqNZgZrUQTN2NiRe/n4jheVK+jCK5GQf3l48qZCFDTFHKhMnuULL0lA/O4nB2EQDcfeHRWSnPKwvllP2KkTG0qWouG564nMQAO+ZSS7rXKaRdthMOZzHvvx
 
-On Wed, Nov 18, 2026 at 03:02:42PM +0000, sashiko-bot@kernel.org wrote:
-> > +// static void pr_tab(unsigned int *tab, unsigned int n, Elf_Sym *syms)
-> > +// {
-> > +// 	int i;
-> > +// 	// printk("\n");
-> > +// 	for (i = 0; i < n; i++) {
-> > +// 		printk(KERN_CONT "%d,", tab[i]);
-> > +// 	}
-> > +// 	printk("VALUES \n");
-> > +// 	for (i = 0; i < n; i++) {
-> > +// 		printk(KERN_CONT "0x%08llx,",
-> > +// 		       (unsigned long long)syms[tab[i]].st_value);
-> > +// 	}
-> > +// 	printk("\n");
-> > +// }
-> > +//
+On Thu, 19 Nov 2026 11:59:41 +0900
+JunYoung Lee <ljyoung04@gmail.com> wrote:
+
+> Hi Steven, Masami,
 > 
-> [Severity: Low]
-> Was this commented-out pr_tab() debug helper left in by mistake?
-
-Yes. 
-
+> An unprivileged user can locate the kernel image (KASLR bypass) with
+> PERF_EVENT_IOC_SET_FILTER at the default perf_event_paranoid=2.
+> parse_pred() accepts "<field>.function == <addr>" only if the address
+> resolves in kallsyms, and the perf path has no permission check, so the
+> ioctl result tells whether an address is kernel text. The details and
+> the fix are in the patch below.
 > 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20261118145125.29399-1-stf_xl@wp.pl?part=2
+> Affected (reproduced as uid 65534, KASLR on), since e6745a4da964 (v6.3):
+> - mainline 4405c18c95d2 (v7.4-rc3-230)
+> - stable 6.12.118
+> 
+> Example on mainline: a counting event on ftrace:print (field "ip") and
+> 561 probes return image_start=0xffffffffa1000000 and
+> image_end=0xffffffffaae30000. These equal _stext and _end in
+> /proc/kallsyms as read by root; the same user sees zeros there. No
+> tracefs and no capabilities are needed. Not affected:
+> perf_event_paranoid > 2, or perf_event_open blocked.
+> 
+> A C reproducer is available privately on request.
+> 
+> Testing of the patch on mainline with KASAN: for an unprivileged user
+> every .function form now fails with -EINVAL, and ordinary filters still
+> work. Root keeps .function via perf and tracefs (it is refused under
+> kptr_restrict=2, like kallsyms values). ftrace selftests test.d/filter
+> pass 4/4. checkpatch --strict and W=1 are clean. A 6.12.y backport is
+> available.
+> 
+> A separate issue seen while testing: as root, a .function filter on the
+> perf function event (ftrace:function) crashes the kernel with a NULL
+> dereference in ftrace_function_set_filter_pred(), because pred->regex
+> is not set on the .function path. It needs CAP_PERFMON. I can send
+> details if useful.
+> 
+
+The code in kernel/trace are all privileged commands. If perf is the one
+allowing unprivileged users access to these commands then the checks need
+to be done in the perf code. It's not up to the trace code to handle perf
+permissions.
+
+This fix should not touch any code in kernel/trace/*
+
+So NAK on this approach.
+
+-- Steve
+
