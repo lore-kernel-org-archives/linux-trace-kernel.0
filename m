@@ -1,58 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.224
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795059983;
-	b=QYt4A8VEMNU2nDiWBjzUQ7PEbKtbfaSd2D4AekzpAzCU4GvL+3+YoXkX6+g0vEvwzx9+
-	 Gf6lw0N0abtxb2Sid24/YKLVoBglkGEbv2POOON+Q7aAVGSfKg9ipmcJmRbOpm3XJ2CtY
-	 t++GrXGtHF4cXHxc0FSsPR+SYj1HwhQ9QbTjrgYGKPh4UOOADFtTAxrvZ3u0Rb9QqfgkB
-	 PfGCHwT1lM5PNwto0BLkoJcmgRqw9v4/4dgdihNEnKQlnpVfInOiyXrfzhDgCMhbWGDkC
-	 AUG0icYznYOT6p0xUdjrgX3PLZmeYtfAHEC8bVZkqoTmtiItMDEItwmMfXs2Bz9Xj0Q==
+	t=1795064581;
+	b=BWyhJRcvkzCAGsWlMnfr/BxqeS0KjEwbl01WhQN9dwD30zoGGfmmTQIUL8S5IBkL6nYj
+	 jf/LqGT95GLT4dau7P7r2nizHCSDwAriQmYC2l5uakYZJOsOH/rNNvUE25ZrgxB8gyYCa
+	 kI1K4V2rKMv+ObQgp5F5AMdptqGw9dU4WmMjhBVl0/sz/o/w7U5hrVOMMlb8nG/zpaiI0
+	 DxvorbXKUHATxHcvozHkY8ZLQtBp6wCGTIBQ6DBRVR4FYEAOCsbXgVLo1Xw5u1Vb5BxVe
+	 AYhsrK98pZ4MNBv0cwZLxvzfRIXZmcxwLm4jZL0AYhP+Az1cUIQIw010uBCK5DhZfaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795059983;
-	h=DMARC-Filter:dkim-signature:Received:Received:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:CC:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-	bh=OAbbp57riKGI1fZlq88CcOSg3koPqPRG3juTd/UX3uo=;
-	b=QaeNr5+xsg9u+Rf7J/e/9IDeo3uOfhzzOj8w1nwr4kfUk9+lX7pcWpnvwf4ki60o2Vxp
-	 waauT8pMaEmjFG6oMJwkIKgMuSK4SEPEIM8f5tBySDtSu/BZkC8dN9tQKto/F2a/WhWkQ
-	 puw01L5uYn+S3+hb4TM5Teq86DtGgKLpSqcsSIYtXIBD5Q+qNJAHTIUqiDB4DSXkfuKyu
-	 5xn8Z8hc3h6miOabyk83/zB8L5KNR1CbXYBK28HyMVCaAazkHH4TkK7kTzGv9MwsvfIMh
-	 o4flW/mnYDnxoiEyKn+x5Hu2XrwY2rwjlIabDzSvd5ZVIdlZDgBmE6N2ArXhodyDHeA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795064581;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=BT7+1r2EbCQwN3k5fIH4q6qWDyQXDFrNj9A0BO8ZTQs=;
+	b=FerZTSjD4qK1ORG6a//K0AG/aKvVgGNe09NDQdqjXvrUQX+47NQrmIURkh2dYY7j4s3e
+	 7v1Z0WaAG8Oz3fAfXNNnhhu/NBaqM9I3NUqhUd2Ahc5/iSfpyn154NV6yqT3UAiwLCy6H
+	 EWkBR4tIv+9nCpD8rBUM4n958rRdaLR6pmkKWH4hgNR/BG1KH0j96Wp82mD3s6zxNkt26
+	 jju6clNc9LcNixyZMHzxdqWKvih4R9/QhmWR/bqhEn71lzX8h4YgcIVcBmYHKJD2GMHp9
+	 UNQBByDbDpP41EOrcJgN36P1Yz4huZ8P3G1q7mP+tKUBl0MBA3pU5cvS3/hBsqKvpig==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=huawei.com;
-	spf=pass smtp.mailfrom=huawei.com;
-	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b="V/52GJjf";
-	arc=none smtp.remote-ip=113.46.200.224
-Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FalkxcAs;
+	arc=none smtp.remote-ip=91.218.175.54
+Received: from mta0.migadu.com (out-54.mta0.migadu.com [91.218.175.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA36606A325;
-	Thu, 19 Nov 2026 03:46:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3CA36606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CBA606A325
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 05:02:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 03CBA606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=V/52GJjf
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=OAbbp57riKGI1fZlq88CcOSg3koPqPRG3juTd/UX3uo=;
-	b=V/52GJjfwvVK8DnDIvM5IQVRHWD6bWwP9aQgdIQW3zyiANrSaj0DY2j7nFjPaV7CdoJkRPEs9
-	j5P3307aBbCQKc9UtkmeUFvURRjxT+IUgrgDq+974N8dU9cb6StPqSQAXioAda0lAeeDVSXW/cF
-	zoa53Mrhki2F1QPx2mEV1j0=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4jVPWm3pc4z1cyPH;
-	Thu, 19 Nov 2026 11:45:56 +0800 (CST)
-Received: from whupemk100010.china.huawei.com (unknown [7.152.184.41])
-	by mail.maildlp.com (Postfix) with ESMTPS id C65134058E;
-	Thu, 19 Nov 2026 11:46:16 +0800 (CST)
-Received: from [10.67.110.140] (10.67.110.140) by
- whupemk100010.china.huawei.com (7.152.184.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Thu, 19 Nov 2026 11:46:09 +0800
-Message-ID: <9787bc85-5b1c-4f13-9b0c-cd027548efa0@huawei.com>
-Date: Thu, 19 Nov 2026 11:46:07 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=FalkxcAs
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=J5rUZ6TR2jk9ww8i3KV8RMWzlPBWx7p9zVMYCEJba0U=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795064578; v=1; x=1795669378;
+ b=FalkxcAss1D7NsKzdTmRxfYXpEAHTaDAYkX6+jLZEvhm2ANlYeHknp2/pvQ3uBnVFWgrg+z3
+ T/+JBOl5SNmWeEmM9zjQ4z5SgtSu5xX9siTeRCtGWH/HobdKTNO2Z6e61lLBZnZjezWPp/OvTYN
+ J9tvP9ZSzazGjZcK67cQwv1c=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id b2ce2cbeb8803d33;
+	Thu, 19 Nov 2026 05:02:57 +0000
+X-Mizu-Trace-ID: b2ce2cbeb8803d33
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <9a47ede3-24fa-4fa3-8d7e-50f221de0929@linux.dev>
+Date: Wed, 18 Nov 2026 21:02:52 -0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -63,77 +59,113 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next -v4 02/17] LSM: pass struct path to the
- inode_setsecctx hook
-To: Christian Brauner <brauner@kernel.org>
-CC: Al Viro <viro@zeniv.linux.org.uk>, <mic@digikod.net>, <gnoack@google.com>,
-	<paul@paul-moore.com>, <jack@suse.cz>, <amir73il@gmail.com>,
-	<andrii@kernel.org>, <apparmor@lists.ubuntu.com>, <ast@kernel.org>,
-	<axboe@kernel.dk>, <bpf@vger.kernel.org>, <casey@schaufler-ca.com>,
-	<cel@kernel.org>, <cem@kernel.org>, <chenxiaosong@chenxiaosong.com>,
-	<code@tyhicks.com>, <corbet@lwn.net>, <Dai.Ngo@oracle.com>,
-	<dakr@kernel.org>, <daniel@iogearbox.net>, <dhowells@redhat.com>,
-	<dlemoal@kernel.org>, <dmitry.kasatkin@gmail.com>,
-	<driver-core@lists.linux.dev>, <dsterba@suse.com>,
-	<ecryptfs@vger.kernel.org>, <eddyz87@gmail.com>, <emil@etsalapatis.com>,
-	<eric.snowberg@oracle.com>, <exfat@lists.linux.dev>,
-	<georgia.garcia@canonical.com>, <gregkh@linuxfoundation.org>, <hch@lst.de>,
-	<hirofumi@mail.parknet.co.jp>, <hyc.lee@gmail.com>,
-	<ihor.solodrai@linux.dev>, <jlayton@kernel.org>, <jmorris@namei.org>,
-	<johan@kernel.org>, <john.fastabend@gmail.com>,
-	<john.johansen@canonical.com>, <jolsa@kernel.org>, <kpsingh@kernel.org>,
-	<linkinjeon@kernel.org>, <linux-api@vger.kernel.org>,
-	<linux-block@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
-	<linux-cifs@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-unionfs@vger.kernel.org>,
-	<linux-xfs@vger.kernel.org>, <liubaolin12138@163.com>,
-	<martin.lau@linux.dev>, <mason@kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<matt@bobrowski.net>, <memxor@gmail.com>, <mhiramat@kernel.org>,
-	<miklos@szeredi.hu>, <neil@brown.name>, <netfs@lists.linux.dev>,
-	<ntfs@lists.linux.dev>, <okorniev@redhat.com>, <omosnacek@gmail.com>,
-	<penguin-kernel@i-love.sakura.ne.jp>, <rafael@kernel.org>,
-	<rdunlap@infradead.org>, <roberto.sassu@huawei.com>, <rostedt@goodmis.org>,
-	<selinux@vger.kernel.org>, <senozhatsky@chromium.org>, <serge@hallyn.com>,
-	<sj1557.seo@samsung.com>, <skhan@linuxfoundation.org>, <song@kernel.org>,
-	<stephen.smalley.work@gmail.com>, <takedakn@nttdata.co.jp>, <tom@talpey.com>,
-	<yonghong.song@linux.dev>, <yuezhang.mo@sony.com>, <zohar@linux.ibm.com>,
-	<utilityemal77@gmail.com>, <lujialin4@huawei.com>
-References: <20261117150542.1169451-1-caixinchen1@huawei.com>
- <20261117150542.1169451-3-caixinchen1@huawei.com>
- <20261117184342.GR989762@ZenIV> <20261118001641.GA1669148@ZenIV>
- <bdc22808-9f22-46f7-b42d-e6bd8e1eeaca@huawei.com>
- <20261118-nordlicht-badeort-daumen-813a1e9fd0b3@brauner>
+Subject: Re: [PATCH bpf-next v3 0/4] bpf: Check recursion per task for
+ preemptible programs
+To: mikeba@sentinelone.com, bpf@vger.kernel.org,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Martin Kelly <martin.kelly@crowdstrike.com>,
+ Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>,
+ tyler.wilson@crowdstrike.com
+References: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com>
 Content-Language: en-US
-From: Cai Xinchen <caixinchen1@huawei.com>
-In-Reply-To: <20261118-nordlicht-badeort-daumen-813a1e9fd0b3@brauner>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: "JP Kobryn (CrowdStrike)" <jp.kobryn@linux.dev>
+In-Reply-To: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- whupemk100010.china.huawei.com (7.152.184.41)
 
-o, you are right, dentry is borned *self-parented*, and 
-d_alloc()/d_alloc_parallel allocate
-from parent->d_sb, __d_move only re-parent withon on sb. So 
-dget_parent() cannot
-leave the sb.
+Hi Mike,
+On 11/17/26 3:29 AM, Mike Bazov via B4 Relay wrote:
+> fentry, fexit, raw_tp and syscall tracepoint programs can be preempted
+> while they run, but their recursion check is a per-CPU counter:
+> 
+>   task A enters prog on CPU 0       prog->active = 1
+>   task A is preempted inside prog
+>   task B enters prog on CPU 0       dropped, counted as recursion miss
+> 
+> Nothing recursed, but B's event is lost. Since 7.0, x86 and arm64 have
+> only lazy and full preemption, so this happens on stock kernels. Our
+> fentry/fexit probe on inet_sendmsg() and inet_recvmsg() loses 9,254 of
+> 8 million runs under HTTP load on a 4-CPU VM. With the series it loses
+> none.
+> 
+> The series checks recursion per task instead: a program is recursing
+> only if the current task is already inside it.
+> 
+> v2 did that for every program, which breaks a program that uses a
+> per-CPU map as scratch space: the second task overwrites its buffer,
+> and nothing counts that. So in v3 the verifier marks the programs that
+> keep per-CPU state, and those keep the per-CPU counter and behave
+> exactly as today:
+> 
+>   - per-CPU maps, bpf_this_cpu_ptr(), bpf_per_cpu_ptr()
+>   - tail calls: the target has no recursion check of its own
+>   - timed may_goto: its budget is per CPU
+>   - a private stack
+> 
+> Trade-offs:
+> 
+> - Marked programs are not fixed. A program with a per-CPU map or a
+>   tail call loses runs to preemption as it does today.
+> - The verifier can't see everything. A program that keeps per-CPU
+>   slots of its own, like array[bpf_get_smp_processor_id()], is not
+>   marked. Today the counter keeps its runs apart. With the series two
+>   runs can write one slot, and nothing counts that.
+> - raw_tp is about 2% slower in bench, see the table below. fentry and
+>   fexit are within noise.
+> - Tracing, raw_tp and tracepoint programs lose the private stack
+>   (patch 1). It is already unsafe for them: two raw_tp programs that
+>   tail-call one handler let two tasks share its stack today. A program
+>   with two 2000-byte frames no longer loads.
+> - A marked freplace program can't be attached to an unmarked raw_tp or
+>   tracepoint program: -EINVAL.
+> 
+> One question: the marking is automatic. A flag that the program's
+> author sets would avoid the second trade-off, but existing programs
+> would keep losing runs until they are rebuilt. Which do you prefer?
+> 
+>   1. bpf: Avoid per-CPU private stack in preemptible tracing progs
+>   2. bpf: Mark programs whose runs must not overlap on a CPU
+>   3. bpf: Check program recursion per task via bpf_ctx
+>   4. selftests/bpf: Add preemption recursion test for tracing programs
+> 
+> Testing, x86-64 VM with 4 vCPUs:
+> 
+> The selftest pins two tasks to one CPU and makes B enter the program
+> while A is preempted inside it, 20 rounds per subtest. With the series
+> all 19 subtests pass. On bpf-next 7 fail: B is dropped in every round
+> (fentry, fentry_s, raw_tp, raw_tp_s, tp_syscall), A's stack is
+> overwritten (two_dispatchers), and the freplace attach is not rejected
+> (ext_attach).
+> 
+> bench -w2 -d12 -a trig-<x>, M/s, median of 10 runs [min-max], lazy
+> preemption, in boot order, on bpf-next 0fb18ce8a2e9:
+> 
+>                trig-fentry          trig-fexit           trig-rawtp
+>   bpf-next     41.65 [40.81-42.14]  38.89 [37.58-39.41]  42.62 [41.95-42.80]
+>   series       42.40 [41.87-43.04]  39.33 [35.24-41.68]  41.31 [40.48-41.74]
+>   bpf-next #2  41.64 [40.87-41.74]  39.29 [35.18-40.62]  42.05 [41.24-42.35]
+>   series #2    42.34 [42.12-42.78]  39.87 [39.46-41.38]  41.53 [40.79-41.75]
 
-On 11/18/2026 5:35 PM, Christian Brauner wrote:
-> On Wed, Nov 18, 2026 at 04:59:29PM +0800, Cai Xinchen wrote:
->> There are two places that violate (1), both introduced by this series of
->> patches in ksmbd:
->>
->> smb2_parent_compressed() and smb_inherit_dacl() pair the directory entry
->> returned by dget_parent()
->>
->> with path->mnt, and problems arise once that directory entry becomes the
->> root of its mount point.
-> No, (1) holds there. dget_parent() never leaves the superblock so the
-> parent has the same ->d_sb as path->dentry.
->
-> What happens at the root of a mount is that the parent isn't below
-> path->mnt->mnt_root anymore. That's a different property and struct path
-> doesn't guarantee that (open_by_handle_at(), nfsd with
-> no_subtree_check). So there's nothing to fix for (1) in those two.
+We tested this series and wanted to share the data. Overall unmarked LSM/fentry
+hooks previously affected went to zero. Marked hooks remained about the same or
+regressed slightly. Normalized data:
+
+category		before	after
+raw_tp (marked)		240	213
+fexit (marked)		61	135
+fentry (unmarked)	3	0
+other (unmarked)	805	0
+
+It's nice to see the series progressing since we are affected by the same issue.
+See some comments on the individual patches.
