@@ -1,99 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795067497;
-	b=PizJrPiRdacQOivJN1glKJiYPuAYyuMqqTZl3wR6SZDQCrGB0x8rOMA9QkgdTaT0uV/1
-	 bgLOd87vA/SwIr+H+68jWMEIOv5B4NGuBQ+p7yO9tZmKcyqE8vVdCqqAKSihHDS0K7yDP
-	 7O8b5P+to3XynZpyLjO5JJjiL8lXNU7SReH3SYW6tM7daU8vm4G6OJm+/TaXmJmMg1gyL
-	 Yfxr+8of5GKNaxXhphnWFrQHUHf8SnYjbFzm5o9OfJIDiolqN8uORqfvKszlLXISCHMvK
-	 2be/9YMNQdXf5MwcfuM4NkEwLIA2LOfWAAHBXC1JS/fmxCNDNh8KH2VXQLN9kHFF89Q==
+	t=1795075303;
+	b=VoA2Zzd0vA+MCnRRJa47L7++4+ELm1HFcMR7NPqmxxifQbwLXv7lrggCvtBoJSVjke5C
+	 nhsjnlNqEFMeoifX71e2bn+xwxUhIFt0XY+BOhCFQ1q4uR4Bk1QTTUNeJ3BgazLsZJJxk
+	 z+yFKpj3pH8DeoLiZyAqot7m42BA9KOvrch+9SEzanQzmXl7MnknSez4NJVzr5Aqe0vmg
+	 FT7RPq0Mra6RKsr1b32dm8XjwMbaaw5eLvxMySZPSiotJV+qkh9XIR5hlXq9P45p/oqCa
+	 dW1tLaz6HmXEiY2etqtyDrmgBUg9Po6Wr8+RgHe8DC24HdMOrnF7SuZFC4H0ma/9qWA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795067497;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:Sender;
-	bh=z8G4571aUTPFuGlDRih4WtoT+MR1zWs5KxPfHLJ0IoQ=;
-	b=K438CdbgINAZblCj2Vo8NMPTupp/jd8A3pokleOc9gKBuaVvr8hgSpT7r+t88U3xpw4R
-	 8lCEgPXLikVJak4pUOOjA4WHRs43tG8gXxCkodM9lU1qGFg3zzn8+XP2CxxHooy1Gayd0
-	 juO8N3HMQBBckyCNTsdUDRwj9NuzbHC90rRyc7Aa3H108FuG2cE5256WaeqxJlJN+wkEj
-	 takEtrZqw7IUaVDHq3aUOrY1e0ps3JpvqlCFmg12LpqYohT5bh1QbKRiHNRdaq2adobsE
-	 vYFosqm6szMv6srf4rGaa0Vd5nVeEHcEzwuULrG4gu1btRDDdAOfuAPwdULTADdmyPg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795075303;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=BI3GiHZy5PM41ztBgWptxPosjP5yVUX7sfT56sMb9/k=;
+	b=zNRav5vBH51tlG/ktoGMAZ3+btiuPjMbPNzP3s+abW1GAX5H3Lr/n+AgjLjaVdZmnv1/
+	 y/6hPPIUZWg+U3agVSZicUdqt+tjU2Q5CNxGQMvIbGnM04DzFuYTBurqBECgQ6MXQ2StE
+	 l8pQbOYo1POTfn4JfDqvgWaa63fkcBWhyhtfVwJue2xXyyESpu1b/m21UfYadTIMxhLGM
+	 o+YPayJ8pYS73SHOLlIwtCgWLkFe8+MsScXn1SF3fAHl7Ys7flX/f03wA2CEED1rkH0VF
+	 N8APftUChcv2Ku+fbdrIcTkFM5IKetxj+4KTIMwTBW1BgcdhT90ze4/w/xIUvVwJIWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=zeniv.linux.org.uk;
-	spf=none smtp.mailfrom=ftp.linux.org.uk;
-	dkim=pass header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=HUmq9V2f;
-	arc=none smtp.remote-ip=62.89.141.173
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bMu2ZlI2;
+	arc=none smtp.remote-ip=209.85.128.43
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD1F606A325;
-	Thu, 19 Nov 2026 05:51:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFD1F606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C37606A325
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 08:01:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89C37606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=HUmq9V2f
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=z8G4571aUTPFuGlDRih4WtoT+MR1zWs5KxPfHLJ0IoQ=; b=HUmq9V2fqWZniya7o9nBaVPeDZ
-	hdLnNqA0+VaoySgEJuKHB41/nmyLaGptpyplTvFZpj9ZsUfvW/Uacb0EujAyxoatj/wEjrTHUy1Y8
-	Jf/0+dvEia8oYQhTDJ2QTEjT6TZu9xP6N/is4httLR57O2jb4I7x7sybjo+/cFqRcKEnzzz9PN71w
-	Fs3s4nF5yw1DIdzaYMKdWCNazNDVu5/+7GdnX+s8wkC+dHul4l8kAJetHVgTfI7IM42m1/kFkA0V+
-	e5cVGVGh3fNAY2bVKP02Pyi9IdxpjMoQwmhSMxh71ivIpbruqUDwYbd4JXLlMVMx0hkbK2WWTq4Oa
-	k2qmfFmA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTv3O-000000063G7-3IJX;
-	Thu, 19 Nov 2026 05:51:26 +0000
-Date: Thu, 19 Nov 2026 05:51:26 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Cai Xinchen <caixinchen1@huawei.com>, mic@digikod.net,
-	gnoack@google.com, paul@paul-moore.com, jack@suse.cz,
-	amir73il@gmail.com, andrii@kernel.org, apparmor@lists.ubuntu.com,
-	ast@kernel.org, axboe@kernel.dk, bpf@vger.kernel.org,
-	casey@schaufler-ca.com, cel@kernel.org, cem@kernel.org,
-	chenxiaosong@chenxiaosong.com, code@tyhicks.com, corbet@lwn.net,
-	Dai.Ngo@oracle.com, dakr@kernel.org, daniel@iogearbox.net,
-	dhowells@redhat.com, dlemoal@kernel.org, dmitry.kasatkin@gmail.com,
-	driver-core@lists.linux.dev, dsterba@suse.com,
-	ecryptfs@vger.kernel.org, eddyz87@gmail.com, emil@etsalapatis.com,
-	eric.snowberg@oracle.com, exfat@lists.linux.dev,
-	georgia.garcia@canonical.com, gregkh@linuxfoundation.org,
-	hch@lst.de, hirofumi@mail.parknet.co.jp, hyc.lee@gmail.com,
-	ihor.solodrai@linux.dev, jlayton@kernel.org, jmorris@namei.org,
-	johan@kernel.org, john.fastabend@gmail.com,
-	john.johansen@canonical.com, jolsa@kernel.org, kpsingh@kernel.org,
-	linkinjeon@kernel.org, linux-api@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org,
-	linux-xfs@vger.kernel.org, liubaolin12138@163.com,
-	martin.lau@linux.dev, mason@kernel.org,
-	mathieu.desnoyers@efficios.com, matt@bobrowski.net,
-	memxor@gmail.com, mhiramat@kernel.org, miklos@szeredi.hu,
-	neil@brown.name, netfs@lists.linux.dev, ntfs@lists.linux.dev,
-	okorniev@redhat.com, omosnacek@gmail.com,
-	penguin-kernel@i-love.sakura.ne.jp, rafael@kernel.org,
-	rdunlap@infradead.org, roberto.sassu@huawei.com,
-	rostedt@goodmis.org, selinux@vger.kernel.org,
-	senozhatsky@chromium.org, serge@hallyn.com, sj1557.seo@samsung.com,
-	skhan@linuxfoundation.org, song@kernel.org,
-	stephen.smalley.work@gmail.com, takedakn@nttdata.co.jp,
-	tom@talpey.com, yonghong.song@linux.dev, yuezhang.mo@sony.com,
-	zohar@linux.ibm.com, utilityemal77@gmail.com, lujialin4@huawei.com
-Subject: Re: [PATCH -next -v4 02/17] LSM: pass struct path to the
- inode_setsecctx hook
-Message-ID: <20261119055126.GU989762@ZenIV>
-References: <20261117150542.1169451-1-caixinchen1@huawei.com>
- <20261117150542.1169451-3-caixinchen1@huawei.com>
- <20261117184342.GR989762@ZenIV>
- <20261118001641.GA1669148@ZenIV>
- <20261118-woher-duften-bejubeln-7a8a2099f89f@brauner>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=bMu2ZlI2
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so16598015e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 00:01:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795075301; x=1795680101; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=BI3GiHZy5PM41ztBgWptxPosjP5yVUX7sfT56sMb9/k=;
+        b=bMu2ZlI2o6HCtUAxMfEv1ledyJ03bapITiRAATkmdTsD09Vx/yhmG65NF47xEQyFYM
+         yyUHFv/l3p9H9os8ztvdv5Y0xu28YstZXhjuJBo13XU6nqBkRVl4YzAehVMUsAfk+url
+         wRi3jJszRTnEDG4/Zo5veRySKoTFPrhH/rByARHkF1AQKsJkrHSZRR5FW4O1AwClPeZ5
+         rZoWQ7RwrOLHbxRYnc1bRyGj5fGgHJ4liIAbd3FkXKhVdjDdZFkLMn7bcbQGxNBr5Zqz
+         z2DvuN7cJShasX6d2OmreaIpVZUSKLYyB8mKk0ACrEbp86SLBarcz32UGenx2mjGds38
+         M/8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795075301; x=1795680101;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=BI3GiHZy5PM41ztBgWptxPosjP5yVUX7sfT56sMb9/k=;
+        b=m+7xjr3jzQyj+yGaln3NkCnm02aOhn0i52qVyCvJ/n/KBWhv6Jn+pmeZf72DBnOXqb
+         U1pGyrws7bggKsZ73hZOTDHVgiyyd15eg2mLy/5IIV2/3Zf04KXG5JkgzdiyfsAyT784
+         MekTdPzrxdQC8PkcgCt/4k5EVUzW+lFOcIspVS2XUoF6fu2C2a9Oe/37n9h/2w7AWZMI
+         b6kcnHVH46pMQLGoL4Fzz0sYouCwleSKmGTtadgMz+6qlve+Fjybk7/mtGeSey2VZX1l
+         CAzQSuMz7NaScK49aUPkNsFjfoo0q+6B/84kdcgO1TRRHtC0t2k1sETtAbw+bV8VStaw
+         MCAg==
+X-Forwarded-Encrypted: i=1; AL+hErEmGUKY5Uwo3VLTp1UzuMX14O3wHTKDZdy79uPGR/zbbd/3uxqx9MbTd3h8Rkqoc6VvcWfyni+1lAy0ddmXvYI8Mco=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/eFOrM1hb8qM+CT4UL2Ts2okjCGWoXW2tFHo83ub9DCiB5cN8k
+	Ou90BMT+OAHuhfyG6hdCXHnNvTDw9oa3q+7fbiUC8+u04aMVuLYrnxSj
+X-Gm-Gg: AYBFou3igLdPKwDWD1nyOnnTyGvJxLRpliNLfWCk+OcEl5JAUSavOZmg8phUg8zSEh3
+	GJinDI8nxI4OrP6fsJcQUCbgG46UFeGcGUSLUOBx4nJl4qxE4IIsK66NqoWRREo1A7AnEjSnbHf
+	qHBpqSstaNGMnEjnysuVPRk6rQUMtAUNvtN+5Gau2iugXcVGrKTDAT0nvVghZpv41uwGyhupNiw
+	trn5Ah79MIe5nk4j5i2A8Xrqo0gnhGlMgL5kdb0niYfaQg8sYcQoDDqUcjsKVWm5/Oo0iuI7OJX
+	Ajx4JwZYlMYE3+2ku10SWL0CY/JGc5x47Ry1Q108ARh0fopFf5wUjv2RpzYJXBFZMhEaznpi27f
+	THMGDTX0upzThTw0a+yJ27XGrpdOg/ozHcI7dZSByPI/xeLr75MgR++CTAd8Lp5xjReAWCaXnyv
+	LFoiDtOAV0Cj9qOEZs5wR7eWyPk4w6wKOJLmN4eLyy59LTbXJ2opMPhRSe8/FDzF1Qu/vGY4bpl
+	RLt+m5vFcsK1Foi5FbhNr7m2kHviSsXaZjKZw8FxlPUjqSSR/Fu75BjWfhFfTULJxIuP8xGwnB7
+	/P84g5jnZ7aGFbxLa5zqFn9G/LUPt+PZgdeBdYYxg3KI9hmzukrn+twiRhYI6y8PzViGVbWfQvC
+	wRnqsPsyCZrTjQw==
+X-Received: by 2002:a05:600c:1396:b0:4a4:4d57:8462 with SMTP id 5b1f17b1804b1-4bb7da21b76mr103724785e9.24.1795075301248;
+        Thu, 19 Nov 2026 00:01:41 -0800 (PST)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb84e50512sm11628805e9.3.2026.11.19.00.01.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2026 00:01:40 -0800 (PST)
+From: David Carlier <devnexen@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Daniel Wade <danjwade95@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] tracing: Ignore .function on the function trace event
+Date: Thu, 19 Nov 2026 08:01:39 +0000
+Message-ID: <20261119080139.131834-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -103,123 +99,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261118-woher-duften-bejubeln-7a8a2099f89f@brauner>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 18, 2026 at 09:51:27AM +0100, Christian Brauner wrote:
-> On Wed, Nov 18, 2026 at 12:16:41AM +0000, Al Viro wrote:
-> > On Tue, Nov 17, 2026 at 06:43:42PM +0000, Al Viro wrote:
-> > > > + * Hooks that take a struct path argument: the VFS only sanctions passing
-> > > > + * the path to VFS helpers that take a struct path (e.g. notify_change());
-> > > > + * it makes no guarantees with regard to path->mnt, whose layout and
-> > > > + * implementation details are subject to change.  Implementations must
-> > > > + * not rely on its properties.
-> 
-> That comment is a garbled version of an earlier review. It meant that
-> LSMs get no guarantees about struct vfsmount internals and don't get to
-> poke at them. I'm not sure how this can be read as path->mnt being a
-> random mount.
+For the function event, parse_pred() handles the .function suffix
+before the ftrace_event_is_function() case, so "ip.function == schedule"
+builds a predicate with no regex. Setting it through perf then
+dereferences the NULL pred->regex in ftrace_function_set_filter_pred().
 
-"no guarantees with regard to path->mnt" is easy to parse that way when one
-is stuck with a caller that needs to be converted to new API with no relevant
-mount reference in sight.
+The "ip" field of that event already takes a function name, so ignore
+the suffix there and let the function event case handle it.
 
-> > > If that kind of stuff actually does get passed to any existing hooks, we need
-> > > to fix that ASAP.
-> 
-> Of course there is one...
-> 
->   dent = lookup_one_unlocked(idmap, &QSTR_LEN(...),
->                              priv->dir_fp->filp->f_path.dentry);
->   [...].
->   rc = ksmbd_vfs_fill_dentry_attrs(priv->work, idmap, dent, &ksmbd_kstat);
-> 
-> It passes only the bare dentry, and ksmbd_vfs_fill_dentry_attrs() then
-> makes up a path from the share's root mount:
-> 
->   struct path path = {
->           .mnt = share_conf->vfs_path.mnt,   /* mount the share is exported from */
->           .dentry = dentry,                  /* entry inside the listed dir */
->   };
->   rc = vfs_getattr(&path, ...);
-> 
-> since 5614c8c487f6 ("ksmbd: replace generic_fillattr with vfs_getattr").
-> 
-> So a client that lists a directory on a submount below the share then
-> that dentry belongs to another superblock. So security_inode_getattr()
-> and ->getattr() get a mixed path.
+Fixes: cfb58e278c6a ("tracing/filters: Dynamically allocate filter_pred.regex")
+Cc: stable@vger.kernel.org
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: David Carlier <devnexen@gmail.com>
+---
+Changes in v2:
+- Ignore the suffix instead of rejecting it (Steven)
+- Fixes: points at the commit that made regex a pointer (Daniel Wade)
+- v1: https://lore.kernel.org/linux-trace-kernel/20261114195914.2678414-1-devnexen@gmail.com/
 
-So e.g. apparmor hits
-        vfsuid_t vfsuid = i_uid_into_vfsuid(mnt_idmap(path->mnt),
-					    d_backing_inode(path->dentry));
-with path->mnt having nothing to do with path->dentry there?  Fun...
+ kernel/trace/trace_events_filter.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> The third patch in this series fixes this. But we should make this a
-> Fixes: patch really... Something like [1].
-> 
-> > To elaborate a bit: correctness of quite a few places does depend upon the
-> > following invaraint:
-> > 	path->mnt->mnt_sb == path->dentry->d_sb		(1)
-> > for all struct path pointers they might possibly run into.
-> >
-> > _IF_ you can guarantee that (1) is not violated, we have something to
-> > talk about; otherwise, don't call your object struct path and don't
-> > pass it to anything that expects to deal with struct path.
-> 
-> Every struct path the series constructs:
-> 
->   - devtmpfs
->   - nfsd
->   - cachefiles
->   - ecryptfs
->   - overlayfs
->   - ksmbd
-> 
-> doesn't have this bug.
-> 
-> [1]:
-> 
->   --- a/fs/smb/server/smb2pdu.c
->   +++ b/fs/smb/server/smb2pdu.c
->   @@ -6375,13 +6375,14 @@ static int process_query_dir_entries(struct smb2_query_dir_private *priv)
->                           continue;
->                   }
-> 
->   +               path.mnt = priv->dir_fp->filp->f_path.mnt;
->   +               path.dentry = dent;
->   +
->                   if (test_share_config_flag(priv->work->tcon->share_conf,
->                                              KSMBD_SHARE_FLAG_HIDE_UNREADABLE)) {
->                           __le32 daccess = FILE_READ_DATA_LE | FILE_READ_EA_LE |
->                                   FILE_READ_ATTRIBUTES_LE;
-> 
->   -                       path.mnt = priv->dir_fp->filp->f_path.mnt;
->   -                       path.dentry = dent;
->                           rc = smb_check_perm_dacl(priv->work->conn, &path,
->                                                    &daccess, daccess,
->                                                    priv->work->sess->user->uid,
->   @@ -6397,7 +6398,7 @@ static int process_query_dir_entries(struct smb2_query_dir_private *priv)
->   @@ -6397,7 +6398,7 @@ static int process_query_dir_entries(struct smb2_query_dir_private *priv)
->                   if (priv->info_level != FILE_NAMES_INFORMATION) {
->                           rc = ksmbd_vfs_fill_dentry_attrs(priv->work,
->                                                            idmap,
->   -                                                        dent,
->   +                                                        &path,
->                                                            &ksmbd_kstat);
->                           if (rc) {
->                                   dput(dent);
->   --- a/fs/smb/server/smb_common.c
->   +++ b/fs/smb/server/smb_common.c
->   @@ -472,32 +472,36 @@ int ksmbd_populate_dot_dotdot_entries(struct ksmbd_work *work, int info_level,
->           for (i = 0; i < 2; i++) {
->                   struct kstat kstat;
->                   struct ksmbd_kstat ksmbd_kstat;
->   -               struct dentry *dentry;
->   +               struct path path = { .mnt = dir->filp->f_path.mnt };
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index c10951bcfc5f..2bbcc2abe794 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1708,7 +1708,9 @@ static int parse_pred(const char *str, void *data,
+ 
+ 	/* See if the field is a kernel function name */
+ 	if ((len = str_has_prefix(str + i, ".function"))) {
+-		function = true;
++		/* Ignore if event is already a function */
++		if (!ftrace_event_is_function(call))
++			function = true;
+ 		i += len;
+ 	}
+ 
+-- 
+2.55.0
 
-That's just asking for breakage down the road.  Just pass it
-the address of ->f_path for "." and
-	&(struct path){.mnt = dir->filp->f_path.mnt, .dentry = dentry}
-for ".." (and sod the dentry = dget(...) for "." - just have it NULL there)
