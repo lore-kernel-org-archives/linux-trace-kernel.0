@@ -1,67 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795090023;
-	b=alG11WF447TMSetNApOldEb5CiyoTQiVCsOdTRG0USR0HDp/0AfqQXyMmYfp+tgcNiPH
-	 8iUzoSrOeE0SUyb4xZ16FaX22RTP5gZt4/5AowxNAlS3wVOV1II5wDglhwvPH+NWfE6Re
-	 sAyuLOgBGOudZudJd1dv4S8tPtklmCiMlyaAgW4QojH0Z7vMm+SbHhmOThwPC/DM5nt9w
-	 7Wa7V2j7ulULjIYv/b79DWLtQMhPszY7jeFSQUUFQ+8iEnL0BlJOycE+bWhaWYBeNtWKx
-	 afMM2v62X+YrNqhUc8lyh0WGUdwYi4xYnQg3D5oSaATT1hHzsZ8zYjwDcjoXWfBh3Qg==
+	t=1795090175;
+	b=zKdFSOFVOLq820hs2/eOaUmoYnCzV/c/oQoRVS/DpYEyQR5CficVa8P8WgqSgfLV+/yu
+	 2RnSNTOsX3jowfDMiETpzzHfbiXRJl/fQctpSdEb9mUxF+mMUbiiQW/gfiFU8e89rS8JB
+	 qo3+Sg/7RGEZ2bGDJmtaqIf8gLkk3nSyFkYLZXtC3+Ze2wX7qw121WbUvIjlh3ceZ20Vy
+	 cSmFi25okmLF3fcdR3U8d0LO1DKk88nisqr/GVqIjrJaIIqyJbfnEFRIYvD5bLilWv4ew
+	 3Jf+TCKhFseOYWmjlOcwLVFmhElpIm2z+ZI6g6Fyt7bpaJ7IgXgm+DIn1BlrYnFHPUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795090023;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795090175;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
 	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=kbnABEqj47FPQ4dABzs+jDJQ6NL1Axc8aBPEjacCJCU=;
-	b=o3rrB0gjaVbUXNVxoASc1R9/Tjd6cZECVPXVAR7cFHLr3yBVQD7g3APHxr4PxR9be70i
-	 Ii5NXp36KXjG5w0RNPVVc9EkPRn4MR+CLgf8Ti3LVgpUaMKPkVKTxaP+lxhbbdf5Hrf61
-	 WJFCSecH5OPxGpOpoaHqaw+s42WXNuu2zUF/6icrDpuT1suEZfbUZcmUmAYfQALpacY/z
-	 cZVrAYXsFeuwYaqDdT9XDH00J5JNXqdZzUOd7SxZQ1niKupNAVVjoSzwX2mZEV5vvWQ3q
-	 619AlsK2tU/LGmMjffkQ+Ttic8zyGemyV8/yrppLej6c9PWZD0/I+6FkE6U4f2bTrpA==
+	bh=ydIgApLk01MFhi36RdMalHHr502VfgKWUr2OzSHniKE=;
+	b=MXB1R0pVPOO0rIwd7TQ86d6WXD2zecqhBDZR8acvvgfgCmculh0TlSZodHwskgIYOVYZ
+	 6RmO9ADoXBQhTcQBi/8dJnpuKAfZFcZcgFG1iVACqX2oi4oPtv9T7b0JjknbhOWuQbKj7
+	 UD7HHX8nPra9txNjcG4XzJeL0MrNhyHoOlq8uo+bZrhDG04Y0MKFKSSw6Ucetp22xxn9h
+	 tFSN+aA7jqpIR4LUHUnetC42O4gm5VEDuq7uvICCZ2gYtrkaB/0Exdv1K45SsqrbK1NM4
+	 N8sA7+yHLKBgx9yvjrZJkrdSa6gZs6kY4HS+KeLdAf7pMRj5bj2KuCJnLUACKUmrsaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DBBI85WQ;
-	arc=none smtp.remote-ip=192.198.163.12
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jFSeDNwB;
+	arc=none smtp.remote-ip=192.198.163.11
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B137606A320;
-	Thu, 19 Nov 2026 12:07:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0B137606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA85B606A320;
+	Thu, 19 Nov 2026 12:09:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CA85B606A320
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DBBI85WQ
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=jFSeDNwB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795090024; x=1826626024;
+  t=1795090175; x=1826626175;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=BTWUer8OEDqo97tY5wtj0OJ8SoMKQqyxH8oQM/MJ1Es=;
-  b=DBBI85WQy22HtpUVEUFsmiuYZGx7md3r/xMx7A7BRiELFlSoFETXLQdg
-   Fud7u5CL+VBmaTYuWCnKBZHyXa5dN2ILknawXY1o8qZJXDWwd4Vht7EXx
-   47GqTiYsr5IbvWXMLxrhzY9EKCYvkX/8o27Yd3v3IthKJYskjWmkE+T4e
-   e63lrki827GdSQylnPl1TYn5CVsaSl1I5Qr1zy04VkVv++BI8/T6aay//
-   LKKuSJxydRmvylYy3Y4pKYAsoLXjm6pdBw2d+CtcBWNwv5lULEY4S1eqM
-   2F4dSnOVafADx+k8srWVeFXYY10CYsD1qz7zviNDy0AFHCln7wVGi3OPW
-   g==;
-X-CSE-ConnectionGUID: B5/IG/t5Sjy+atiEtucRjg==
-X-CSE-MsgGUID: LcaNDb8NTN2+AFUCL0qCtA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3826265"
+  bh=FxciG8Bxqkjue7vfajbys66vQv/qbs5afV8W6ePOspQ=;
+  b=jFSeDNwBpukF3uvaZUXI/rjuWSLt4WxAplnM2+z7Oc9f8cgABKmq6KiX
+   E3ZxWdoaobB395QU+woNCfxnnfSHQSxiwDsFd7NKocDcZEl1W0Ehzp/7K
+   JvVVx2UVsY0dNzDFkLhCH6Nbb+tgFNFn2QxnIu8AHn9o0/OogIK0hTBCa
+   KjPHDDCQ5kBR//Wy3r+bj1Yz6MB0m0zjIxVPvrh0rt7S6mPNdWysnmFkX
+   Mbd1/N6dIrNtYZn5mwGdx1lmEKY4SejPzka8T2uciNSqGBCAmmZ74F9YB
+   5ig0tfmHeEF/lkTjNVnIf67Vrah0BUemvTJDP4FdQc3aKMAdLcBffSkKn
+   w==;
+X-CSE-ConnectionGUID: 7TfQ6ulNTjeio7t44x7kPg==
+X-CSE-MsgGUID: XUxvCP4RTYOVFv8ESSkB3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="3855345"
 X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="3826265"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 04:07:03 -0800
-X-CSE-ConnectionGUID: NdDRmPNMSeCtUp3gq+nUbQ==
-X-CSE-MsgGUID: lGkhzaaQSd+UkqQ0nyKkjA==
+   d="scan'208";a="3855345"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 04:09:35 -0800
+X-CSE-ConnectionGUID: mVgchslIRMiIWFAhm+S0kg==
+X-CSE-MsgGUID: USi6k1FWQz+wmYhPRIAdBQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="10328310"
+   d="scan'208";a="10646379"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 04:06:55 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 04:09:27 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 19 Nov 2026 14:06:51 +0200 (EET)
+Date: Thu, 19 Nov 2026 14:09:23 +0200 (EET)
 To: Ehab Ababneh <ehab.ababneh@intel.com>
 cc: Hans de Goede <hansg@kernel.org>, tony.luck@intel.com, 
     ashok.raj.linux@gmail.com, platform-driver-x86@vger.kernel.org, 
@@ -71,11 +71,11 @@ cc: Hans de Goede <hansg@kernel.org>, tony.luck@intel.com,
     linux-trace-kernel@vger.kernel.org, peterz@infradead.org, 
     sathyanarayanan.kuppuswamy@linux.intel.com, pengfei.xu@intel.com, 
     ravi.v.shankar@intel.com
-Subject: Re: [PATCH v2 12/17] platform/x86/intel/ifs: Add new sysfs interfaces
- {status, details, cpus_ran}_list
-In-Reply-To: <20261118193259.519568-13-ehab.ababneh@intel.com>
-Message-ID: <7a3f0d3e-291a-6498-f605-8465cc5bf963@linux.intel.com>
-References: <20261118193259.519568-1-ehab.ababneh@intel.com> <20261118193259.519568-13-ehab.ababneh@intel.com>
+Subject: Re: [PATCH v2 15/17] platform/x86/intel/ifs: Remove limit on number
+ of batch files
+In-Reply-To: <20261118193259.519568-16-ehab.ababneh@intel.com>
+Message-ID: <d081d12b-7a35-c45d-4fa6-91f07dbbee8d@linux.intel.com>
+References: <20261118193259.519568-1-ehab.ababneh@intel.com> <20261118193259.519568-16-ehab.ababneh@intel.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -89,158 +89,61 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Wed, 18 Nov 2026, Ehab Ababneh wrote:
 
-> From: Jithu Joseph <jithu.joseph@intel.com>
+> From: Tony Luck <tony.luck@intel.com>
 > 
-> Problem
-> =======
-> The current legacy interface for Intel In-Field Scan is designed to
-> simultaneously test all CPUs in a group [1], but it only reports the
-> status of the primary CPU in this group and doesn't indicate that
-> secondary CPUs have been tested. This results in the following issues:
+> Writing to the current_batch sysfs file rejects batch numbers above
+> 0xff. That limit was expected to be enough, but Diamond Rapids needs
+> more than 256 IFS test image (batch) files.
 > 
->   - All CPUs in a group can hold different statuses, but the user can
->     only see the status of the primary CPU, as any errors observed by
->     secondary CPUs are ignored.
+> Remove the limit check on the batch number supplied by the user.
 > 
->   - The topology of a group of CPUs may vary across systems. For example,
->     in a Hyper-Threading (HT) system, the group consists of all CPUs in
->     a core, while in a Dual-Core Module (DCM) based system (e.g., Intel
->     Diamond Rapids CPU), two cores in a module form a group. The user may
->     be unaware of the group topology and test each CPU of the system
->     individually, leading to duplicate test runs.
-> 
-> Solution
-> ========
-> The user continues to write a single value to run_test, and while the
-> legacy sysfs reports results for the tested CPU to ensure backward
-> compatibility, new sysfs interfaces {status, details, cpus_run}_list
-> provide results for multiple related CPUs tested as part of a group.
-> The user can check for the presence of new sysfs interfaces to
-> understand that multiple results are available, read them, and identify
-> which CPUs have been tested to avoid duplicate tests.
-> 
->   intel_ifs_0
->   +---- run_test	<--- Same legacy file
->   +---- current_batch
->   +---- details
->   +---- details_list	<--- Details for all CPUs in the group (new)
->   +---- dev
->   +---- image_version
->   +---- status
->   +---- status_list	<--- Status for all CPUs in the group (new)
->   +---- cpus_ran_list	<--- CPUs in the group tested along with CPU written to run_test (new)
->   \---- uevent
-> 
-> Example of reading the cpus_ran_list to see the CPUs tested:
-> 
->   echo 0 > run_test
->   cat cpus_ran_list
->   0,96
-> 
->   cat status_list
->   pass pass
-> 
->   cat details_list
->   0x8086 0x8087
-> 
-> [1] Indicated by bits [20:16] of MSR_INTEGRITY_CAPABILITIES when bit 21 is set.
->     E.g., in Hyper-Threading (HT) systems, a group includes all threads in a core;
->     in Dual-Core Module (DCM) system, a group includes all CPU cores in a module.
-> 
-> [ Qiuxu: wrote the commit message. ]
+> [ Qiuxu: Update IFS ABI documentation to reflect the change. ]
 
-Not among Signed-off-by members?
+????
 
-> 
-> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+Please don't submit garbage notes relating to development of the patch.
+
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
 > Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
 > Tested-by: Yi Lai <yi1.lai@intel.com>
 > ---
->  drivers/platform/x86/intel/ifs/sysfs.c | 60 ++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
+>  Documentation/ABI/testing/sysfs-platform-intel-ifs | 9 ++++++---
+>  drivers/platform/x86/intel/ifs/sysfs.c             | 2 +-
+>  2 files changed, 7 insertions(+), 4 deletions(-)
 > 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-ifs b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+> index 11cd2f412d81..22430926ceaa 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-intel-ifs
+> +++ b/Documentation/ABI/testing/sysfs-platform-intel-ifs
+> @@ -46,9 +46,12 @@ What:		/sys/devices/virtual/misc/intel_ifs_<N>/current_batch
+>  Date:		Nov 16 2022
+>  KernelVersion:	6.2
+>  Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
+> -Description:	Write a number less than or equal to 0xff to load an IFS test image.
+> -		The number written treated as the 2 digit suffix in the following file name:
+> -		/lib/firmware/intel/ifs_<N>/ff-mm-ss-02x.scan
+> +Description:	Write a number to load an IFS test image.
+> +		The number written is used as the <batch> suffix in the following file name:
+> +		/lib/firmware/intel/ifs_<N>/ff-mm-ss-<batch>.scan
+> +		where ff, mm and ss are the CPU family, model and stepping, and <batch> is
+> +		the number written, in lowercase hex, zero-padded to at least 2 digits
+> +		(e.g. 02, ff, 100).
+>  		Reading the file will provide the suffix of the currently loaded IFS test image.
+>  		This file is present only for device instances where a test image is applicable.
+>  Devices:	intel_ifs_0
 > diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
-> index 287f96bb033e..e96faf7bf0fa 100644
+> index 1a111e6101d8..1a0bfa2a2821 100644
 > --- a/drivers/platform/x86/intel/ifs/sysfs.c
 > +++ b/drivers/platform/x86/intel/ifs/sysfs.c
-> @@ -135,6 +135,63 @@ static ssize_t image_version_show(struct device *dev,
+> @@ -91,7 +91,7 @@ static ssize_t current_batch_store(struct device *dev,
+>  	int rc;
 >  
->  static DEVICE_ATTR_RO(image_version);
+>  	rc = kstrtouint(buf, 0, &cur_batch);
+> -	if (rc < 0 || cur_batch > 0xff)
+> +	if (rc < 0)
+>  		return -EINVAL;
 >  
-> +static ssize_t status_list_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct ifs_data *ifsd = ifs_get_data(dev);
-> +	struct ifs_test_output *pcpu_state;
-> +	int lcpu, len = 0;
-> +
-> +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
-> +		pcpu_state = per_cpu_ptr(ifsd->result_ptr, lcpu);
-> +		len += sysfs_emit_at(buf, len, "%s%s", (len > 0) ? " " : "",
-> +				     status_msg[pcpu_state->test_result]);
-> +	}
-> +
-> +	if (!len)
-> +		return sysfs_emit(buf, "%s\n", "none");
-> +
-> +	len += sysfs_emit_at(buf, len, "\n");
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR_RO(status_list);
-> +
-> +static ssize_t details_list_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct ifs_data *ifsd = ifs_get_data(dev);
-> +	struct ifs_test_output *pcpu_state;
-> +	int lcpu, len = 0;
-> +
-> +	for_each_cpu(lcpu, &ifsd->grp_cpumask) {
-> +		pcpu_state = per_cpu_ptr(ifsd->result_ptr, lcpu);
-> +		len += sysfs_emit_at(buf, len, "%s%#llx", (len > 0) ? " " : "",
-> +				     pcpu_state->test_details);
-> +	}
-> +
-> +	if (!len)
-> +		return sysfs_emit(buf, "%s\n", "none");
-> +
-> +	len += sysfs_emit_at(buf, len, "\n");
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR_RO(details_list);
-> +
-> +static ssize_t cpus_ran_list_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct ifs_data *ifsd = ifs_get_data(dev);
-> +	int len;
-> +
-> +	len = sysfs_emit(buf, "%*pbl", cpumask_pr_args(&ifsd->grp_cpumask));
-
-Why doesn't this format string just add \n and return immediately?
-
-> +	if (!len)
-> +		return sysfs_emit(buf, "%s\n", "none");
-> +
-> +	return len + sysfs_emit_at(buf, len, "\n");
-
-> +}
-> +
-> +static DEVICE_ATTR_RO(cpus_ran_list);
->  /* global scan sysfs attributes */
->  struct attribute *plat_ifs_attrs[] = {
->  	&dev_attr_details.attr,
-> @@ -142,6 +199,9 @@ struct attribute *plat_ifs_attrs[] = {
->  	&dev_attr_run_test.attr,
->  	&dev_attr_current_batch.attr,
->  	&dev_attr_image_version.attr,
-> +	&dev_attr_status_list.attr,
-> +	&dev_attr_details_list.attr,
-> +	&dev_attr_cpus_ran_list.attr,
->  	NULL
->  };
->  
+>  	if (down_interruptible(&ifs_sem))
 > 
 
 -- 
