@@ -1,58 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795125381;
-	b=jo7RhctkkBoheO+0lrXsnjJhOLUEUvNMjN0xumLiKYgSew3trszwMIyVNJpLao5xIKv0
-	 EqovSnlHuk7If9YVKhPpXLxIteh+aNuEcqqNt84k1WFeFyFHHgOMk/+xcFREEXnUCltEX
-	 Ns2+5x15YRnoI6nfC/JzCd/o4iEW1gwk8Ag2qDrRboqf/DhenAlmtlM25fjkIN7ymFKUg
-	 lo8m3xW+a04gAU5oCCF4JtyjypouYqzAO/RPbQjiZMCeucnUI/q6y91HzUXE3j7+lceRP
-	 zZzDTpquCnDof/0ogVwkMvU3b2k9tUFsVD2nMG20jXBhxvapIxLnBQGnrUs+yniKv6w==
+	t=1795132111;
+	b=HBWdY8uHijNe9KajYvEEF+IRgFzm7Syizt8E2pnx+Xc8yEjzfAoNhDfhcthQukjz5GRs
+	 OI4Bdw6QJdp/vofW5xdl+ir67+Xx/NEGOi+RM5687AsUirFd+pb4ebqzeOQvE+1TRyz9/
+	 a7xLTDn1POyZ+n7v87ecXTiY8TWMnoh06E3rD6jt8dRcP9j4LXQPt+iv9PjrDPPSPnV3b
+	 CDs1+JETuwpzzcuEaS3fs9u7w/WRKVX8fOfu94FS6fqEpnIjsWi03lgLOdTWCJghgCvq1
+	 AXSlqw18K/dG5FyibIw3IflOI90RbWQejWH13ozqp7leCNjXKs1XoakdHt4i5v+E1Mw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795125381;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Spam-Status:
-	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=N7dbMmYIG6BB2Tf2XMsRRWZPC73QWIsWOtFiN1PUJsw=;
-	b=X4/tFtUusOLNjqDyeX4WzbWQG4tR2qfbQYCAhUjPrtCAa+ABQT1jOvdcmu0JusYA2k9b
-	 +ruI1oWCrdXIpdK8H/KtZDxCtQNkjayTExNiDM19XQMf0zuwgaiP1sZNsUjAUJDmAVlRr
-	 VOIhPdTpHXVv3+IVVFCcBBP1J2dh5Sn5H4kym39/S3H+M423NE/DUBHOH66fV8LG04XWt
-	 K02h9dINKveA5L8W2Jk+StRiEjcqdMz5PADYrNzTnLgDy+ivdoH/IzSSfa6a6TVjAzAle
-	 rTcSgqjb4rFgBWlaq8cLTJVpmKTmtTscWg1haMd1Z8/YchXqEuoUXkfMNfDMhVHW2Ag==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795132111;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
+	 Cc:Subject:To:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=vcj5h00JjVNcq5RcRanYbKv1qUq4spqkJwru3XjEgEA=;
+	b=4FGkIC8zZi+OfrKxoiFXmUCTHqzkWNcdytHrI6KTuZv8BcIp6l1h+kg1/EhX6DdKI0w5
+	 hh+o9d4RqKTF4SrimsuAgDqwFRFdpH3tMPB4e/0V/tCl8mixsunpvpEoZT7+8xWz0S2td
+	 FPFnNnyn+DDcCpdgr5zUZHIex0GPZK4W2I7mU4IRc4D9gibBy9gqADAyiO4u+HXskX5qc
+	 ZKmHqbQnLXGSuyar4m1E4Ae9YD6t6nW9ACDY+eCtVuNC4UN/DJeSTRpl8oGYVMuTSNkL2
+	 zAbfbZnaI2AOueku/eJ9H/o18VeNZs7uSTD21Yp02hGco7sbe95czLPXRoQO1XIlWzw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=eeV5+1lP;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BoTWH5Fi;
+	arc=none smtp.remote-ip=91.218.175.172
+Received: from mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE40606A325
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 21:56:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BBE40606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9CC606A326
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 23:48:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6E9CC606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=eeV5+1lP
-Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 49EC9160C7B;
-	Thu, 19 Nov 2026 21:56:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id A069420028;
-	Thu, 19 Nov 2026 21:56:17 +0000 (UTC)
-Date: Thu, 19 Nov 2026 16:56:16 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dominik Maier <dmnk@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- dmnk+artist@google.com
-Subject: Re: [PATCH] tracing: check kallsyms_show_value() for numeric
- addresses in .function filter
-Message-ID: <20261119165616.34c3f1f4@gandalf.local.home>
-In-Reply-To: <20261119151901.7488cf38@gandalf.local.home>
-References: <20261119192233.2664654-1-dmnk@google.com>
-	<20261119151901.7488cf38@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BoTWH5Fi
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=6LWaP9a799dRmXjPzl0gkWLih06hsrqQYvPtGBFxEsY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795132107; v=1; x=1795736907;
+ b=BoTWH5Fi1IZExkaX1UVG0UE/sKHeD7yr0JBoEA7pSxpIS9I/AG/d2puwMNbDLQzs2vT11U1s
+ vASgSWckzezIb9s1Sd0vB6uxw4uXPLLwr5GKRk1rBj9hLubjulj4/oLYePkSmiMd7yc+crCqZM/
+ 4ZhHgjLXJXGKVDcDNMWg5GdI=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id a9882a66356e0e59;
+	Thu, 19 Nov 2026 23:48:27 +0000
+X-Mizu-Trace-ID: a9882a66356e0e59
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <583bde38-c84d-41a3-a65c-d1365ea04f07@linux.dev>
+Date: Fri, 20 Nov 2026 07:47:56 +0800
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,51 +58,116 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 3wc5ocrdkjogzpooasyzidbsqpjeuw8s
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: A069420028
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+6NJI9jAApQK/FBbeF3sljg4X8V7hgvyQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=N7dbMmYIG6BB2Tf2XMsRRWZPC73QWIsWOtFiN1PUJsw=; b=eeV5+1lPw/ct/6DvoK4ieOTP++h1sa0lFYvAAQg6zx0US3ysFhJGiMy3Mc2L2Lqnpif6KF0eeVLI7WSeEXpY8IK4yg+B61z3iNh1xc9ABxM18+ET42WOClYZ01lovZyVc9nDuE4OCVG9IyTQW9dpSl7q/Z2glVEOYeM7QhaC54I=
-X-HE-Tag: 1795125377-753204
-X-HE-Meta: U2FsdGVkX18CbtUINN0O6leQpy/5Zn4CuoMPegp4Se+jPyI+hyVhg9Mw4GT2+ULV4Dntdm4yda67J0saeUY5nSewetrvH/C9XbzCWbYr6DusqbU0NEczKBXhp+S7r9GStQaYLqRYTtRT1av+wYoMEjgD6DH+qEFDq1m/zcQdyVXEDdct/YYTiKLgY25yjfSPRNn5AZT0EDguykztER8VcDsYMf7fhc+jqISofW/cjRL0b5cwKPKho/qt5iJIuKeU5dagPU9gmKk3N7Ch7PK7JvMwJut80153ShrWbCcEbAXiawFrFh2Wbutsg7y8EzqKg8aKB+zRBKGMSfce1K0tmYcmXo3GNgGPoVwNoICQE4Hb4znw6vBz7O2Ta305a1a6mpncINiEK7BEI0BIImef7A==
+User-Agent: Mozilla Thunderbird
+Cc: cui.tao@linux.dev, akpm@linux-foundation.org, dgilbert@interlog.com,
+ mkp@kernel.org, loberman@redhat.com, jmeneghi@redhat.com, kraxel@redhat.com,
+ vivek.kasireddy@intel.com, mst@redhat.com, jasowangio@gmail.com,
+ eperezma@redhat.com, stefanha@redhat.com, sgarzare@redhat.com,
+ mhiramat@kernel.org, jgg@ziepe.ca, kevin.tian@intel.com, axboe@kernel.dk,
+ linux-mm@kvack.org, James.Bottomley@hansenpartnership.com,
+ sumit.semwal@linaro.org, christian.koenig@amd.com, phasta@kernel.org,
+ joro@8bytes.org, will@kernel.org, linux-scsi@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bobbyeshleman@meta.com,
+ mathieu.desnoyers@efficios.com, robin.murphy@arm.com, mason@kernel.org,
+ aesteve@redhat.com, tjmercier@google.com, harry@kernel.org, vbabka@suse.cz,
+ cuitao@kylinos.cn
+Subject: Re: [PATCH 4/7] tracing: account ring buffer pages and trace_array
+ metadata to memcg
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Vincent Donnefort <vdonnefort@google.com>
+References: <20261106131829.3228926-1-cui.tao@linux.dev>
+ <20261106131829.3228926-5-cui.tao@linux.dev> <avScKhR22kFOQ1z4@google.com>
+ <20261111181447.3c483a50@fedora>
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <20261111181447.3c483a50@fedora>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 19 Nov 2026 15:19:01 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hello, Steven, Vincent,
 
-> On Thu, 19 Nov 2026 20:22:33 +0100
-> Dominik Maier <dmnk@google.com> wrote:
+在 2026/11/12 07:14, Steven Rostedt 写道:
+> On Wed, 11 Nov 2026 16:47:38 +0000
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> > In parse_pred(), the .function filter modifier accepts either a symbol
-> > name or a raw numeric kernel address (such as 0xffffffff81000000) and
-> > resolves it through kallsyms_lookup_size_offset().
-> > 
-> > While tracefs defaults to mode 0700, task-scoped counting tracepoint
-> > events can be opened via perf_event_open() under default
-> > perf_event_paranoid = 2 and configured via PERF_EVENT_IOC_SET_FILTER.
-> > Allowing raw numeric addresses in .function predicates without checking
-> > kallsyms_show_value(current_cred()) lets callers without kallsyms
-> > address visibility test whether candidate kernel addresses fall within a
-> > valid symbol despite kptr_restrict.  
+>> On Fri, Nov 06, 2026 at 09:18:26PM +0800, Tao Cui wrote:
+>>> From: Tao Cui <cuitao@kylinos.cn>
+>>>
+>>> Creating an instance immediately allocates two full sets of per-cpu
+>>> ring buffers, array buffer plus snapshot, about 1.375MB per cpu per set
+>>> on the default config, plus the trace_array and its name.  None of it
+>>> is charged: neither trace.c nor ring_buffer.c passes __GFP_ACCOUNT,
+>>> while user_events in the same directory accounts everything it
+>>> allocates.
 > 
-> God I HATE AI!!!
+> As the name suggests, "user_events" are for users and are special.
 > 
-> This is a perf bug, it needs to be solved in the perf code. How many times
-> do I need to keep telling people with AI bots this! I think you are the
-> third person to send the same patch.
+>>>
+>>> Instance creation is currently gated by tracefs file permissions
+>>> alone, so a
+>>> rootful container with the host tracefs bound in can create instances
+>>> until the host runs out of memory.
 > 
-> The filter logic can expose kernel addresses. If perf isn't allowed to have
-> access to that, then it shouldn't be allowed to filter.
+> You mean, "works as expected"?
+> 
+>>  Charge the ring buffer pages and
+>>> the trace_array metadata to the creating cgroup.
+>>>
+>>> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>>> ---
+>>>  kernel/trace/ring_buffer.c | 8 +++++++-
+>>>  kernel/trace/trace.c       | 6 +++---
+>>>  2 files changed, 10 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+>>> index 1fd28a72e6ee..676c059c112c 100644
+>>> --- a/kernel/trace/ring_buffer.c
+>>> +++ b/kernel/trace/ring_buffer.c
+>>> @@ -441,7 +441,13 @@ static struct buffer_data_page *alloc_cpu_data(int cpu, int order)
+>>>  	 * gracefully without invoking oom-killer and the system is not
+>>>  	 * destabilized.
+>>>  	 */
+>>> -	mflags = GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_COMP | __GFP_ZERO;
+>>> +	/*
+>>> +	 * The subbuffers are charged to the memcg of whoever caused the
+>>> +	 * allocation: the creator of a trace instance, or root at boot for
+>>> +	 * the global trace.
+>>> +	 */
+>>> +	mflags = GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_COMP | __GFP_ZERO |
+>>> +		  __GFP_ACCOUNT;
+>>>  
+>>>  	page = alloc_pages_node(cpu_to_node(cpu), mflags, order);
+>>>  	if (!page)  
+>>
+>> Hum, by default tracefs is root only. 
+>>
+>> And even if made accessible to other users: 
+>>
+>>   1. The life span of a trace instance is not tied to the caller.
+>>   2. The ring buffer is shared by multiple users.
+> 
+> Right. Is there a use case out there that allows non-admin to create an
+> instance? Tracing ring buffers can expose a lot and should not be given
+> to unprivileged users.
+> 
+Not that I can point to.  Instances are admin-only by default, and the permission layer is the right place for that.
 
-I also want to point out that if you do filter by function name, the
-address of the function is what is recorded in the perf ring buffer that
-user space has access to. So all this change is doing is giving a false
-sense of security.
-
-Another reason to not allow trace filtering (or tracing for that matter) if
-you do not want to expose kernel addresses.
-
--- Steve
+> What exactly is this trying to achieve?
+>
+The series closes uncharged kernel allocations that scale with user input.  For tracing I misread the tracefs permission check as a gap rather than the intended boundary.  Combined with Vincent's points on lifetime and sharing, I'll drop patch.
+ 
+Thanks,
+Tao
+> -- Steve
+> 
+> 
+>>
+>> Overall I am not convinced charging the creator makes much sense.
+>>
+>> Eventually a few allocations for iterators could be GFP_ACCOUNT.
+>>
+> 
 
