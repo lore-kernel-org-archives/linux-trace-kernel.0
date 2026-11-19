@@ -1,72 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795116156;
-	b=EZ7yQQOqsHeCps0/6c/+rI5Ce6DqZIrJPc9F9EvzT6UY+pEMPC8vt6+Ry22dDPOrPST1
-	 Et4LjhnrdbvWiPnueXZIpAQNGDtbpc5psxSQqbhB0j7rzTVJMOgXfVYkHbZEA3KoTN/z8
-	 Uxn7z1bSVZYzOWUgm9kRSacn9NedCrNfUq7HJHMXSlFdOgPvSYm3qOmL+itSRvivA4bwR
-	 4h550QPbAs8QSGzL0SkKaJI/u1QmqoFIde9oTzcFPY481tE5i5+w0yIYsmM6Mur3Gydgc
-	 J86E+fN2AF6k5PnvVfBYRmoQ8fqvd8CFgmOw3Lo0Ivx/pwnkEei3E4JxQFwtrR9zNfw==
+	t=1795116522;
+	b=jNgX1OIXefE0BuncQhVHgMzgEmxhVKFE9Hrpz7lG+6somL7BnVsn4NeMMPTnS72Ps8x8
+	 VNJVlXegYbNkd5WuiXKi9IeknWdc7U5F4XqfuyrygRnskCCv8S0egFhpSNkC1dyBSkW0C
+	 OgQDIhotKOUMzuS+PoJJct6SO7r/tNsczoiqsXekWoz7ZQuGd/gO5yKZrQijOrNlyjKaM
+	 JATm7BI/ilzr78eJlDMvJjAnEOn+YUAS5c4pbMfGNLztKN1DbgNo8Pz4mCNEZMKi+LFLj
+	 U5C6zhuGPCRH0Fc3zCjeEcLVa6kXlTln/QOtaIhgNOy6qnBf+NN64tLRhGWrGUp5ayw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795116156;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795116522;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=5AWBPDr0HQpp4mKVAW/tYzafCeAMEU1ur2Y/7G6Rffk=;
-	b=eOzNKFluK8zKGnV0YRQ1NwDJPAp0IQgBfrJkp/PoKioi3GaYOKVGRgQGsqVzvphqD7gY
-	 5RWivwo27G7L/hYvm0f3OFdYYwlR2gJUuGOxXT5f4MIYHt1Kac15Ae7GEJKKYj00p90yK
-	 R9y+BELjbqyaazPc9u+Ec5rNF65tH84v9F2avQ4PPAlN74xIBc7ApeEcuT0SL0P0/Lbk8
-	 8KcoiZy9YXL7AlRzIbjeeWTdSIyLy9YhNKeYaVjrWN7wy95fccS/YJ/iLmotULOTiqxbN
-	 ZZaJh/wrJ2oTdWCQi5aSrFzUecS6r+GOCrQxKHhtIlsqxGpNeI1pf6jjSOyEqa2sh8g==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=daCieWNeyyAkEEfSGL+gig14C8b2lK6bD4Sqxa/vxJ8=;
+	b=v8vyLIK1xXAxNKVmwGdL1ny7ToE7WHuo/Z6IBaLSSrUhHgwFOiJfIKL6ET7RnDK3gfDh
+	 nsbBLF0DT5pZqxH08pCloGumFipN8UuZmSoUuqJUPVwZKjK41MIML53PGqFgWJGZ8nLf1
+	 XHSGwKDPIWA3YvL9ljLQsS2J5LInULELeMKccaSrW9BiS7m4BWsOVjzUC71G4+xBeARrj
+	 0ulWklXsgWdr1yKZs5zpOdVW9akyydMRGaGX/DjV488uDQHucSULFYXmxrDmc52YSbW8h
+	 DuTAfUonw2byzMBMltdViNfISmK2rO7ma6B2O06/OUJqvbmeoyzpwA4cdVGUd5xN1eQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--dmnk.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=T6q7vru1;
-	arc=none smtp.remote-ip=209.85.128.69
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="tu20Gqk/";
+	arc=none smtp.remote-ip=209.85.221.45
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4496D606A320
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 19:22:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4496D606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dmnk.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22A4606A320
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 19:28:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E22A4606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=T6q7vru1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a009f82bedso336225e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 11:22:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tu20Gqk/
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-4a9be758734so45551f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 11:28:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795116155; x=1795720955; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=5AWBPDr0HQpp4mKVAW/tYzafCeAMEU1ur2Y/7G6Rffk=;
-        b=T6q7vru11bZmo75UmF1a1JupQjTo39tyIWWehnSAujwZdId1rsKdiWdP3yeiDiCkbb
-         QCLi6LvzX/2U9MSizx1vBQRWDgnJOJMQ4q5pfBmt2NhS6i043WDPKR1Pe13cRxk5yxdV
-         7h0lWuYtfY1sNLA+p9CxHh/kN1JcFP4hjgJtTsaEf4UfhBj0p+AWaNlA4I/ZDLYYTiqB
-         WQRx67la0b6GVPV1qyjl3w00EoyNE5BxPzd694gGufO4bYwS5GBr/0F2kh/kKj+JQDuw
-         s1gsU/5xeiNubpaKPS4ZUYDHen6NIGbQAs+PQkq/OWeqstrH80g5eCHjmzhkD3lL4sBw
-         4QLA==
+        d=gmail.com; s=20260707; t=1795116520; x=1795721320; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=daCieWNeyyAkEEfSGL+gig14C8b2lK6bD4Sqxa/vxJ8=;
+        b=tu20Gqk/R+74eslqU7J+Qfe6fCPgO4z10zl9W/g+ahjktmWwy2JW7Pyk5DMtk7Npri
+         DWK9YC+vyF0laiaM1V8JE130P3Pqean1axFhXx+ax8wiPIS8RTV2CI9DzjfJpEtsZS9i
+         395vPURZPnd/woNmWSQGqV1wsOaaS0EvS07d6VsHDfCXlJIFEcJeHbMBg+1mGEeyAP9J
+         9jEn4aCTbjergCG7KG8jEJP/Bc6R4SurYMYyhWGcjp/uKMxa57LL3Xh0jIct8EWFkklv
+         w7xXc2qeAuPOJWrEowkLN7t9bplc32MaJzEPItjHzhJgE0XGCB24Rv04zi/6it5NEALW
+         oY9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795116155; x=1795720955;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
+        d=1e100.net; s=20260707; t=1795116520; x=1795721320;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=5AWBPDr0HQpp4mKVAW/tYzafCeAMEU1ur2Y/7G6Rffk=;
-        b=ENXXYa8eOsdEWn2XBaiTcP8OUg+qZNRZrWukEEHteJkuepgbAzQ6uvgihFHNb2poIt
-         IZVIKj3YDUdztNxaNCsMpRyqqUu6pzwQjmg2af/f8MJ7iV3a8BkMSCeJzXTfm/FvAF0x
-         H18gmyGBcd0i7Bu6UPGTTWIEIxFGaD4CJcJ6IqneIGkcCKI6Fxc9ZpNvNcooNESxmI+S
-         9SJrWZ/rhYqyFA5f7PjIsvsQTiZOY4CtCGXLa6YWpiYwAerqHdrITH9NMQzdvajVXxwL
-         1x6rdtz66FZI0nK5oShDFAUX5LT3eQ8CwJ6UuKNzNpLu8qJXfg7U1xHbgyad076e732L
-         iz9Q==
-X-Forwarded-Encrypted: i=1; AL+hErEzS4xFLrVokIFjKE+5CEbD80ooaC+/9Qc+i7wh9lWIh2nMWFgANmcIwFw0mTSlZYf7TzeYxJOSRuP1l127qed6E2g=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+deNvXIfALJaIAnv67zg9qf6sp2PS/C7Vtc5lhRx+VbeDVJ+j6
-	Ft7n/irHTLOnzCqN9RUPJv9H4oU5WUB64TdT541BP7zethcRXHAx7BEJ4XkhemDk+6mdfyvDHg=
-	=
-X-Received: from wmcq4.prod.google.com ([2002:a05:600c:c104:b0:4bb:52ec:7054])
- (user=dmnk job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600d:600b:b0:4a2:cbe:bec2
- with SMTP id 5b1f17b1804b1-4bb8882375cmr11520435e9.32.1795116154251; Thu, 19
- Nov 2026 11:22:34 -0800 (PST)
-Date: Thu, 19 Nov 2026 20:22:33 +0100
+        bh=daCieWNeyyAkEEfSGL+gig14C8b2lK6bD4Sqxa/vxJ8=;
+        b=tSrtjTo8VQbAr0y0Syx485OYdlwyP+RkrgcY4r2W9DmaC8Qr808RoDKrzJJrq8Ihk+
+         ZLbyovQi0XVPqcctsMsKBN5R2Nvi6O3eh63j5BUkLoVblDYLGVNhZsGtFdbVCjHvVtOe
+         qIEC2B9dvnMutmRm2rDUIiUAlLL/eA41/+RUWw+XvCqc8A9GF5CsxrAqTGC3Iwf6fiNm
+         sEj6oBQiEkUB7eMOEkNlN5Tru7tgvCVlT+JqfOVT1mwM1YW4I1F1lsqC55p567ST1neQ
+         GfwkzKMr296TcSQiXiwc7w31PSYC2zacOOBSzLxrpxQXRqVjp2IeD5Pk2SqIER/k4jr+
+         4BeQ==
+X-Forwarded-Encrypted: i=1; AL+hErEsjPth/ygcwyHFb6dMCWOLzBw8+ShH7Gl2hdK4l3/WVlE0WT+p67MEeBLYy3KZmN1dOKmLhOORHrOIQpSEui2VCIU=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9zSRxFYIpAZYna0hSjQ88ITJaLQNZ6fyRKGpb+sDob0/cNjREp
+	MDNXsAEvDz8/PrmTDafO42hBMrpG2S1IwdDq22jKKhn/6W17g9Sj24m2
+X-Gm-Gg: AZFdTZfMs/4G74qO6zpeiSjzLPP1QWJ6MGI1sDiwaSIA3oFkgh9UT8qoWXbYCxRAvHA
+	o8nOhO2mREmSjArha9+89E+wZimm71xlyEsdf0MUbCzsMqC0xP/3NhU8d8OQDgkKLFPU0Mm+CNN
+	zwxc7TnFs8s/B/ljkB58Qmn6tlvW4DBMB3mcD2mJWLraKrPsALLTQi5hgnAsoJkOsy6ppidjaSb
+	WygqeAqjVWgSsyzzciUySWWlVJluAMWwWFhG/b1X8RpGTwKXzZavlGnWAb/eT2P25ULsBDg/KGR
+	+2tXKcGTPb8tcVy4AVmbEI3Kzd8+oeCp3tFbljXM1o3HCPzXDbhFjs/Q5eCH0le4F6nraAR7oBy
+	tmBV78F/yfzU1NUah1bQw1OALMg8m+pyvwARaIkSdWWnfWXN6VNtMFMaEC/E7Edrvy2abTmxacS
+	TXI/fromsunUC0WairGAmfxZR5qYjxJ7FF+Bcz5/CJAYczf7xttiQx2EiIFk3jwUYyH9WgJZw/U
+	woJYSJC7z/4c6gWABimZGsFOrLFg++bcu2iiaiRD3jK6JlZbXiHDSlmqWoRGVNuuyyHFJ9a3jQd
+	DUIiPcAQRlzk6bbPB0TqM94t2Si6WUfmpUPhUds=
+X-Received: by 2002:a05:6000:4b1e:b0:48c:7143:610c with SMTP id ffacd0b85a97d-4abb2910b8fmr809897f8f.36.1795116520113;
+        Thu, 19 Nov 2026 11:28:40 -0800 (PST)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67f204sm1477581f8f.21.2026.11.19.11.28.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2026 11:28:39 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 19 Nov 2026 20:28:37 +0100
+To: bot+bpf-ci@kernel.org
+Cc: mike.bazov@gmail.com, song@kernel.org, ihor.solodrai@linux.dev,
+	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev,
+	yonghong.song@linux.dev, emil@etsalapatis.com, kpsingh@kernel.org,
+	matt@bobrowski.net, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	martin.lau@kernel.org, mason@kernel.org
+Subject: Re: [PATCH bpf-next v2] bpf: Use an on-stack pt_regs in the raw
+ tracepoint helpers
+Message-ID: <av9N5RqhdRhW1fVh@krava>
+References: <20261119-bpf-raw-tp-regs-preempt-v2-1-e1e1b90857d6@gmail.com>
+ <77d978d7f9343e907651b4d4d81ec1c1405dce42f75e33b169f729f208029fcc@mail.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -75,69 +104,91 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261119192233.2664654-1-dmnk@google.com>
-Subject: [PATCH] tracing: check kallsyms_show_value() for numeric addresses in
- .function filter
-From: Dominik Maier <dmnk@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org, 
-	dmnk+artist@google.com, Dominik Maier <dmnk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77d978d7f9343e907651b4d4d81ec1c1405dce42f75e33b169f729f208029fcc@mail.kernel.org>
 
-In parse_pred(), the .function filter modifier accepts either a symbol
-name or a raw numeric kernel address (such as 0xffffffff81000000) and
-resolves it through kallsyms_lookup_size_offset().
+On Thu, Nov 19, 2026 at 11:14:51AM +0000, bot+bpf-ci@kernel.org wrote:
+> > bpf: Use an on-stack pt_regs in the raw tracepoint helpers
+> 
+> TL;DR: Without the per-CPU slots, nested raw_tp/fentry programs may hit the
+> WARN_ON_ONCE in bpf_perf_event_output() (panic with panic_on_warn); the commit
+> message's claim of no more -EBUSY also looks wrong.
+> 
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> 
+> [ ... ]
+> 
+> >  BPF_CALL_5(bpf_perf_event_output_raw_tp, struct bpf_raw_tracepoint_args *, args,
+> >  	   struct bpf_map *, map, u64, flags, void *, data, u64, size)
+> >  {
+> > -	struct pt_regs *regs = get_bpf_raw_tp_regs();
+> > -	int ret;
+> > -
+> > -	if (IS_ERR(regs))
+> > -		return PTR_ERR(regs);
+> > -
+> > -	perf_fetch_caller_regs(regs);
+> > -	ret = ____bpf_perf_event_output(regs, map, flags, data, size);
+> > +	struct pt_regs regs = {};
+> >  
+> > -	put_bpf_raw_tp_regs();
+> > -	return ret;
+> > +	perf_fetch_caller_regs(&regs);
+> > +	return ____bpf_perf_event_output(&regs, map, flags, data, size);
+> >  }
+> 
+> Can this reach the WARN_ON_ONCE() in bpf_perf_event_output() using only
+> raw_tp and tracing programs?
+> 
+> bpf_perf_event_output() still has a three-level limit:
+> 
+>     nest_level = this_cpu_inc_return(bpf_trace_nest_level);
+> 
+>     if (WARN_ON_ONCE(nest_level > ARRAY_SIZE(sds->sds))) {
+>         err = -EBUSY;
+>         goto out;
+>     }
+> 
+> Before this patch, every raw_tp/tracing caller first took a
+> bpf_raw_tp_nest_level slot, so a fourth nested caller got a silent -EBUSY
+> from get_bpf_raw_tp_regs().  That function's WARN_ON_ONCE was removed by
+> commit 3880cdbed1c4 ("bpf: Fix WARN() in get_bpf_raw_tp_regs") after a
+> syzbot report of this kind of nesting.  The WARN above could only fire if a
+> kprobe, tracepoint or perf_event program was also in the chain.
+> 
+> With the slots gone, a chain of only raw_tp/tracing programs can get there.
+> For example, a raw_tp program A calls bpf_perf_event_output() (nest 1),
+> and its __bpf_perf_event_output() calls perf_event_output().  Fentry
+> programs B, C and D attached to perf_event_output() also call
+> bpf_perf_event_output(), and each is let through once by its own
+> prog->active check, so they run at nest 2, 3 and 4.  At D the WARN_ON_ONCE
+> fires, and with panic_on_warn the kernel panics.  The same depth is
+> reachable across task, softirq, hardirq and NMI context.
+> 
+> This also seems to contradict the commit message:
+> 
+> > the helpers no longer fail with -EBUSY when nested more than three deep
+> 
+> For bpf_perf_event_output() the three-level limit remains, coming from
+> bpf_trace_sds and bpf_trace_nest_level.
+> 
+> Should the WARN_ON_ONCE in bpf_perf_event_output() be dropped, as
+> 3880cdbed1c4 did for get_bpf_raw_tp_regs(), and should the commit message
+> say that bpf_perf_event_output() keeps its three-level limit?
 
-While tracefs defaults to mode 0700, task-scoped counting tracepoint
-events can be opened via perf_event_open() under default
-perf_event_paranoid = 2 and configured via PERF_EVENT_IOC_SET_FILTER.
-Allowing raw numeric addresses in .function predicates without checking
-kallsyms_show_value(current_cred()) lets callers without kallsyms
-address visibility test whether candidate kernel addresses fall within a
-valid symbol despite kptr_restrict.
++1 we can now nest more than 3 times, hitting that limit shouldn't warn
 
-Gate raw numeric address parsing in the .function branch of parse_pred()
-on kallsyms_show_value(current_cred()), matching other tracing paths
-such as trace_kprobe and bpf_trace while keeping symbol-name filtering
-unchanged.
+jirka
 
-This issue was discovered with an AI-assisted code review tool (ARTIST)
-and reproduced in QEMU/KVM on an unmodified v7.4-rc3 kernel without
-kernel modifications or error injection. The fix was verified against
-the reproducer in QEMU/KVM, compile-tested with -Werror, and checked
-with checkpatch.pl --strict.
-
-Fixes: e6745a4da964 ("tracing: Add a way to filter function addresses to function names")
-Signed-off-by: Dominik Maier <dmnk@google.com>
----
- kernel/trace/trace_events_filter.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index c10951b..9192f3e 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -8,6 +8,7 @@
- #include <linux/uaccess.h>
- #include <linux/module.h>
- #include <linux/ctype.h>
-+#include <linux/kallsyms.h>
- #include <linux/mutex.h>
- #include <linux/perf_event.h>
- #include <linux/slab.h>
-@@ -1760,6 +1761,10 @@ static int parse_pred(const char *str, void *data,
- 		}
- 
- 		if (isdigit(str[i])) {
-+			if (!kallsyms_show_value(current_cred())) {
-+				parse_error(pe, FILT_ERR_INVALID_VALUE, pos + i);
-+				goto err_free;
-+			}
- 			/* We allow 0xDEADBEEF */
- 			while (isalnum(str[i]))
- 				i++;
--- 
-2.56.1.750.gf70dc682cf-goog
+> 
+> 
+> ---
+> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> 
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/44508926690
 
