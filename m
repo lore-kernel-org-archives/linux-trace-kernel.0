@@ -1,116 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795101192;
-	b=WeKz/QKzjHPqTg4bb5w8VDFava5z8MMhVp2U4E6FBC3RTCvenqJaStCG5cWBUeZ2Pyuc
-	 ovo6HWC4u+09fM3qh2K+n2ylDltXkblnuNSSE7co1mPbeL1Kae2GRHFtuhr3LoIVuDBU1
-	 bikfce0FB9pc2gjZbqhAC1BVsjFIKWp85/xAu8WfYnyy18zH3ICSxm9+eGZJIymyZAAh9
-	 4rTgLHLrdzFn3ySUVVycQJaLEC4Sfz23keoCGRqQotQ/nCnUXxZAx8JKKPS0+cT4KOogC
-	 G1z8TOziP/M1RToczAmdubHkhFbX2tnX8AzEKj8YjgtqLYskNo3P18wo4zl9CY+JxUw==
+	t=1795101552;
+	b=viE6UF3jz8dtyo468GICLbteZZ0ZNyhSXOXzrXYNLe+Frl/71LmZmzQJRTwG9rdLhHFY
+	 G7kSRykBNoN0Y7iSrNuek8bzJCcpS9QlGZ1lrcfXRpQNchX/EPh3fCGULyyLDEDv+K9LG
+	 SPm4xeqGLnL5eCxbApzmZf8SPAFrzNRspPMt5QZ2oAL+0DuaRX6D6aa28NYq0fi09NnVZ
+	 qIMKcfliO7Sc0/QZDqHPfeba5uH52MCw7M58YXvWKYiTeJf+tSdJZH7UzGDkCMvabQUh0
+	 lA6w4xMOrXSl/oevO083ZwOSS/R0XufXdla8PX6MzQNXHw0/ck3wsUNitN3G4xlvlow==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795101192;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:In-Reply-To:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
-	 X-Mimecast-Originator:Content-Type:Content-Disposition;
-	bh=aUaUnGVOD0AnB0qQi2tHlDtmvMhT+a6tdGKKo0EDxDI=;
-	b=bkfSvdLCKPQm0AVtEk79K1FSqaGnAoapLUa3tuB6FPdJmYBFk1ZZPBlZiBUAbN8fyVAd
-	 nQKyMqPakWMsU0s8jJHkqAUdfTqWnjDaH4tj91xAnJ7oafG/HrMIA9IsiN3tv4aJBPdxs
-	 gnfB+6o1nqxpv+a78yAbU7rPO3eZ4uvRRc0cnApANWFL/L0PnOKJc3MjOjMc5sjJ9ihgs
-	 NwxTBeUFuZ+U+4c4XePZV7czSs7ch6LVF/80XF/l5dXCs0xvlYRY+J/85iR/7fEiTre4s
-	 PrTUG5QCK3wLfPY/dMnB8tyrDt2XUYezcKsNr3zDf45jG7DT5eC2ANo11MucqD0FZEw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795101552;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=p59+oRBqVD/OfRkrKGZMmpgQd6Fck6sy0XKFzDdr5i0=;
+	b=GYoEY4ZW/nflRaVC9qIQcHQbtN6S5gPALsS9vBzeMnCIN8fTiJQLyQqadWMplAI7sDuV
+	 BJ0hm1MVT8GRGU8ut+ymNOpp01Zuyyxq3CzyV0OSxGKcoKTRVPoM3MOcq8kftDCMKJh6p
+	 kBCQMiMSG1xvIz2xVqYcSeVutETeMR4i50syZkCdWa4HEmeX6Yv4Nmc6p9xvgb1buG4Za
+	 kBk21dmnTFM3+z0TJkH1c5gDJXth4w5nSMlohJmsl8TM2UrT+Rstmbs/6Y5pQDGKS2N/m
+	 +YwQf6yZNfV/W4I8s6Fng98w98DIdkIHMME7X9KiyD1t6HAwUYkeNBK62QjXWhem1sQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=b7pFSSAx;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Pl8FpfEj;
+	arc=none smtp.remote-ip=209.85.221.48
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10F0606A333
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 15:13:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D10F0606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893AF606A320
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 15:19:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 893AF606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=b7pFSSAx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795101191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aUaUnGVOD0AnB0qQi2tHlDtmvMhT+a6tdGKKo0EDxDI=;
-	b=b7pFSSAxI+E9EaZtsEfbolehGk2Tu+XE3olI4Vs/ypKruP6HT5txdO/AAW6Kw6DOBoGuQD
-	KjM+SJ9zqBvEX0Tf2YD1b2Ppz8GrMZzCjINvDF5x6gQW6ncfqjiD7zXGFlsYZrAVw3vo4j
-	GJuplVbUUZPlYyzsJRv6NkbPDFHGjvI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-459-E_A4ciWbNp2A1hHzcD5cMQ-1; Thu, 19 Nov 2026 10:13:08 -0500
-X-MC-Unique: E_A4ciWbNp2A1hHzcD5cMQ-1
-X-Mimecast-MFC-AGG-ID: E_A4ciWbNp2A1hHzcD5cMQ_1795101186
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4a35db2d6b3so17129535e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 07:13:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795101186; x=1795705986;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Pl8FpfEj
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-4a2f4ca0dcfso1214076f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 07:19:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795101551; x=1795706351; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=p59+oRBqVD/OfRkrKGZMmpgQd6Fck6sy0XKFzDdr5i0=;
+        b=Pl8FpfEjC14Hjrto9S7109Ok0Enk6KkMxBYg4wxv7gNy38p10dC1x0lXDdQQrvrmxf
+         0hwGWGIY+nblvLNyicbvByMqa94IU8c5piBf5sZXZBTs41j9sbi2sllcivutcHRcoHXP
+         k7Cn1QjhXBhHliUWj4qfgE0yXOjYinCRA1R8bp9jiq7wV+bWxIiwtMmKiBMl9TFqyp+I
+         6iosKfsKGftKRnKwLet0Mc6BQJ9OAXcwqrXNpbFW8sz7Jr5poYwS+Jz8AUfxAk68+tOn
+         P0O004MocKSbYkU6xxMmlLPLTUjxJ9Xf9a8crxe3ZZ7tkTxiMgIoG7cMIulGketN0UhN
+         xQjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795101551; x=1795706351;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=aUaUnGVOD0AnB0qQi2tHlDtmvMhT+a6tdGKKo0EDxDI=;
-        b=ZaXfEYFiBYujxX/tPSbvtm6CHeiB81pzDWfV4N912VF37sLBwqaRgOCRfouU3Gm1Fg
-         4ahlzrAVSArB0tzQj/LFxF35IHCs6tqHTeT6ckIOe1qbh81C6yM7/rAXiiKJpyX+3puL
-         FgDDPHk7eDc5e7KGFjUn8MBJ9TTnyPutOwRrfXk/RhmakwqMMh9PQW0YufzYez+U4GmO
-         cYUYory+wcGJNchr27hJ56jMs0FSO2E/K7jgBoGomxDe2R9e05y4eMhJatGgikCy+bmh
-         C1cbb7u3vaxwbX9N3Qwt4moeML5cJd1GsbcnpNZIyCdZHoCJ8RfqFcn3cwKMmKlNQaPo
-         e8rA==
-X-Forwarded-Encrypted: i=1; AL+hErFwIKoc5qhrOHeLOKpFKMT6JTYdfeF351sBTAi5jxCZmDo4obfOWCCldCnTNjYFtqLbt5xBJ6AY9TgJYncY9kDjFQk=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9vH4+RRhLV4bC9s80eYnA1gk3anqiwk1qNSXpuUNVZjvjKBzFz
-	7ulHQNv8uCEAkkyvf22xZTI8pvwR9cZ0gE+6jqCOz3/UW9xkMWYJeOsjsYOvsHvSvuni/LHTi4H
-	pXP5/+Vh/AWlDbRoXHg7sSInhNay66AOMGMdk0q5dSgEkKKT9aN62lEwZzAqpvmKDaO2CGZl+5w
-	==
-X-Gm-Gg: AYBFou2JRQfEbSjyvzvwytexXSy1dhl4JJlKen1I6rAYMU7rJ0gp8mg0ZxblCKjKEQQ
-	dvj03Zmvejp3O8vlUcu12WfF7aO2zwh+fK2YI6Syf4AQcx1kIFHOcbOhYrFG83RxyriXucpKeR3
-	0oNP/NckXzL5UtuCpHi2RwKVpQBq6qc/19Kbw88dSNPgsWITkpWH9WIcVViSqITwNvSuugH6mYU
-	GDLq7jcEw8hG/X+X9Sz2ImBtJEcOR8qc2KD8Aco64Tz4RZSnsSuTmogcrcpLA0fiAoKHLbngtZH
-	UbBb3Raa/VhfL7iBg8E40LcxSgD/v3hEsXBNSynq5cM/e2EtHO9DSBOjrNQctkeo7MHsCxMCW5k
-	WCmUe3nFVBCiFYRLHqJOGLLSNuwXfjy5ffSbFWsWgpA==
-X-Received: by 2002:a05:600c:3107:b0:4ba:eb:eb9b with SMTP id 5b1f17b1804b1-4bb7da1272cmr124142055e9.8.1795101185792;
-        Thu, 19 Nov 2026 07:13:05 -0800 (PST)
-X-Received: by 2002:a05:600c:3107:b0:4ba:eb:eb9b with SMTP id 5b1f17b1804b1-4bb7da1272cmr124141275e9.8.1795101185168;
-        Thu, 19 Nov 2026 07:13:05 -0800 (PST)
-Received: from redhat.com ([2a0d:6fc0:1522:6500:ac93:c62:f076:48c6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb884a3a3dsm3221365e9.10.2026.11.19.07.13.00
+        bh=p59+oRBqVD/OfRkrKGZMmpgQd6Fck6sy0XKFzDdr5i0=;
+        b=aF3fwhaxUWEg8bPaCwgTZiZrgFn6e4W5rFOuBM/5XLoVf0PXIMeWmgOGCgm2z1MXZ0
+         8EUOnPheoUPzy55kU7VGUQu2yA/Yz+6u50jcZ5WJNgmpgcpnyLwND3oJtiwt0YlHQX4H
+         Z4haC2261GCgITcTfukknWvFwZwDk1k9NvGCrtsC+2gFqGnQU2JX5IKwmqTiplekkILn
+         mxgwOQXIjB7qgd4XmyQa/I+jyYtph5MTR0J7Uzg66qJko020noPHlPWZL8DMGdI3DvnY
+         Oi7xfVdAgn2s5A3nqDqxoysYVU2ChOq62c769R3T66+dwR6BWnX9CVD/Xl6J5E6eL2Zu
+         gLdg==
+X-Forwarded-Encrypted: i=1; AL+hErEPdxb7ivHcwAVX+uO2TPAc7sCyGDQxKhxqfXVus+YiE9XJWmx1eZ/bVJIOCO0sLGglK3/rmxGyT4qk3mrVQ4v3d2c=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/ulMsQdylj46qc7UlG3/DWy+U3vOjO1igMwEPsH2Art34pNqPc
+	HYuOEEusBJ37ggroFC5m5FPp02duNOvGs9kyP9IFwhmiX8jQmnfGVPIIHwlJHyRK
+X-Gm-Gg: AZFdTZfRi04QZIJzkieTvBYxPlWfK2pZZEG6FidZ3n3i+FtyiZKCYxVItQtLf9y+TCb
+	H6GJpkWmIo10saU+wYvppieZtv+3tGEF0zYTxf5i1GkU4utQjvF/j7XUg+5k2aYs/HTed8J8A5K
+	yftUCrLDO7UkNtwY4MhvlLRvLYDOq74I0fgIn5ryEWMi7xYTHZy2Nu2PeZQCN/gDQo8nY0muKXG
+	yKXj2zy2Hfyc6KUkcynUTAC0Xne7wN6Q7QOmoChalvxZlQVHxR1FREUyjdpdZPGufRcZCF6dlGE
+	Gva9KuI21dO/9BtXzmgdC/UCnrNtfhA1gDH0FPfpVmvaYh9E3iwxt82OAJ4Jsz/L75BKmOnwbfU
+	bdwV+pnHYz+br1g5z9OjIlCCU+Tg/YBD3ptrJwU8p+ggk9Jg2seAbLAyimG5h4OpOegvELij2R8
+	zHZdS7yewbdSN/yr2Tc3Arafa+S374+cAiD405+83OrQT01i+VeL5kwQSQcRP1cikROdVxPIDV0
+	smf/ZmfpKI0j4SAZgsxv5rx8kE029xIGYBf/3AvYjFKl39pfO7HFYmZ4XboC9LFL2jbSgrY1sU4
+	HW4PjSEBTV+snh4x
+X-Received: by 2002:a05:6000:4a17:b0:4a9:760f:1824 with SMTP id ffacd0b85a97d-4a9760f28c8mr4476827f8f.21.1795101550635;
+        Thu, 19 Nov 2026 07:19:10 -0800 (PST)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6ae2dd55sm128332f8f.30.2026.11.19.07.19.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Nov 2026 07:13:04 -0800 (PST)
-Date: Thu, 19 Nov 2026 10:12:58 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Tao Cui <cui.tao@linux.dev>
-Cc: akpm@linux-foundation.org, dgilbert@interlog.com, mkp@kernel.org,
-	loberman@redhat.com, jmeneghi@redhat.com, kraxel@redhat.com,
-	vivek.kasireddy@intel.com, jasowangio@gmail.com,
-	eperezma@redhat.com, stefanha@redhat.com, sgarzare@redhat.com,
-	rostedt@goodmis.org, vdonnefort@google.com, mhiramat@kernel.org,
-	jgg@ziepe.ca, kevin.tian@intel.com, axboe@kernel.dk,
-	linux-mm@kvack.org, James.Bottomley@hansenpartnership.com,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	phasta@kernel.org, joro@8bytes.org, will@kernel.org,
-	linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bobbyeshleman@meta.com, mathieu.desnoyers@efficios.com,
-	robin.murphy@arm.com, mason@kernel.org, aesteve@redhat.com,
-	tjmercier@google.com, harry@kernel.org, vbabka@suse.cz,
-	cuitao@kylinos.cn
-Subject: Re: [PATCH 3/7] vhost: account the per-device kernel allocations to
- memcg
-Message-ID: <20261119101239-mutt-send-email-mst@kernel.org>
-References: <20261106131829.3228926-1-cui.tao@linux.dev>
- <20261106131829.3228926-4-cui.tao@linux.dev>
+        Thu, 19 Nov 2026 07:19:10 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 19 Nov 2026 16:19:08 +0100
+To: Yifan Feng <evanfengff@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/fgraph: Fix the unwind hint at the end of
+ return_to_handler()
+Message-ID: <av8TbKv7I_3LEm1d@krava>
+References: <20261118235023.14978-1-evanfengff@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -120,157 +107,61 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <20261106131829.3228926-4-cui.tao@linux.dev>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: N5osKCv1RhTyuq3jOiDBvP0JY7odsoL9Xmdv8rmO8JA_1795101186
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20261118235023.14978-1-evanfengff@gmail.com>
 
-On Fri, Nov 06, 2026 at 09:18:25PM +0800, Tao Cui wrote:
-> From: Tao Cui <cuitao@kylinos.cn>
+On Wed, Nov 18, 2026 at 03:50:23PM -0800, Yifan Feng wrote:
+> return_to_handler() reserves 8 bytes of stack for the return address
+> and marks that with UNWIND_HINT_FUNC. The hint stays in effect after
+> "addq $(FRAME_SIZE) + 8, %rsp" has dropped the slot again, so the ORC
+> entry of the following call has CFA = sp+0:
 > 
-> Everything except the worker struct is allocated with plain GFP_KERNEL:
-> the per-vq iovec and log arrays at VHOST_SET_OWNER, the memory table at
-> VHOST_SET_MEM_TABLE whose size follows the user supplied region count,
-> the pending message nodes, and the vhost_net/vhost_vsock device structs
-> with their fallback to vmalloc.  The worker has been accounted since the
-> vhost_task conversion.
+>   return_to_handler+0x41: sp+0	call .Ldo_rop
+>   return_to_handler+0x46: (und)	int3
+>   return_to_handler+0x47: sp+8	mov %rdi, (%rsp)
 > 
-> A container that can open /dev/vhost-net or /dev/vhost-vsock, which
-> device plugins hand out with passthrough, holds roughly 150KB of
-> resident kernel memory per device after SET_OWNER.  Charge the rest the
-> same way the worker already is.
+> A stack trace taken from an interrupt which hits the call or the mov
+> ends up at that entry, the stack pointer does not advance and the
+> unwinder prints:
 > 
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+>   WARNING: stack going in the wrong direction? at return_to_handler+0x46/0x50
+> 
+> The return address is only in %rdi at that point. Mark the code as
+> UNWIND_HINT_UNDEFINED again, as it was before the hint was added, so
+> that the unwinder stops there without the warning.
+> 
+> Fixes: 20a0bc10272f ("x86/fgraph,bpf: Fix stack ORC unwind from kprobe_multi return probe")
+> Signed-off-by: Yifan Feng <evanfengff@gmail.com>
 
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
-should each patch be merged individually?
+thanks,
+jirka
 
 
 > ---
->  drivers/vhost/net.c   | 14 ++++++++------
->  drivers/vhost/vhost.c | 16 ++++++++++------
->  drivers/vhost/vsock.c |  5 +++--
->  3 files changed, 21 insertions(+), 14 deletions(-)
+> QEMU, function_graph + 20 kHz perf callchains: warning in 2s before, none in 10 min after.
+> Found and written with the help of an AI coding assistant.
 > 
-> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> index 4570a4ffbab2..bab6597c696d 100644
-> --- a/drivers/vhost/net.c
-> +++ b/drivers/vhost/net.c
-> @@ -249,7 +249,7 @@ vhost_net_ubuf_alloc(struct vhost_virtqueue *vq, bool zcopy)
->  	/* No zero copy backend? Nothing to count. */
->  	if (!zcopy)
->  		return NULL;
-> -	ubufs = kmalloc_obj(*ubufs);
-> +	ubufs = kmalloc_obj(*ubufs, GFP_KERNEL_ACCOUNT);
->  	if (!ubufs)
->  		return ERR_PTR(-ENOMEM);
->  	atomic_set(&ubufs->refcount, 1);
-> @@ -302,7 +302,8 @@ static int vhost_net_set_ubuf_info(struct vhost_net *n)
->  		if (!zcopy)
->  			continue;
->  		n->vqs[i].ubuf_info =
-> -			kmalloc_objs(*n->vqs[i].ubuf_info, UIO_MAXIOV);
-> +			kmalloc_objs(*n->vqs[i].ubuf_info, UIO_MAXIOV,
-> +				     GFP_KERNEL_ACCOUNT);
->  		if  (!n->vqs[i].ubuf_info)
->  			goto err;
->  	}
-> @@ -1344,17 +1345,18 @@ static int vhost_net_open(struct inode *inode, struct file *f)
->  	struct xdp_buff *xdp;
->  	int i;
+>  arch/x86/kernel/ftrace_64.S | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+> index 4b20673a3395..8b488f99de02 100644
+> --- a/arch/x86/kernel/ftrace_64.S
+> +++ b/arch/x86/kernel/ftrace_64.S
+> @@ -387,6 +387,8 @@ SYM_CODE_START(return_to_handler)
+>  	movq RAX(%rsp), %rax
 >  
-> -	n = kvmalloc_obj(*n, GFP_KERNEL | __GFP_RETRY_MAYFAIL);
-> +	n = kvmalloc_obj(*n, GFP_KERNEL | __GFP_RETRY_MAYFAIL |
-> +			 __GFP_ACCOUNT);
->  	if (!n)
->  		return -ENOMEM;
-> -	vqs = kmalloc_objs(*vqs, VHOST_NET_VQ_MAX);
-> +	vqs = kmalloc_objs(*vqs, VHOST_NET_VQ_MAX, GFP_KERNEL_ACCOUNT);
->  	if (!vqs) {
->  		kvfree(n);
->  		return -ENOMEM;
->  	}
+>  	addq $(FRAME_SIZE) + 8, %rsp
+> +	/* The return address is only in %rdi now, the unwinder cannot follow. */
+> +	UNWIND_HINT_UNDEFINED
 >  
->  	queue = kmalloc_array(VHOST_NET_BATCH, sizeof(void *),
-> -			      GFP_KERNEL);
-> +			      GFP_KERNEL_ACCOUNT);
->  	if (!queue) {
->  		kfree(vqs);
->  		kvfree(n);
-> @@ -1362,7 +1364,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
->  	}
->  	n->vqs[VHOST_NET_VQ_RX].rxq.queue = queue;
->  
-> -	xdp = kmalloc_objs(*xdp, VHOST_NET_BATCH);
-> +	xdp = kmalloc_objs(*xdp, VHOST_NET_BATCH, GFP_KERNEL_ACCOUNT);
->  	if (!xdp) {
->  		kfree(vqs);
->  		kvfree(n);
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index ea127af58ada..d1274106ad5d 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -526,11 +526,14 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *dev)
->  
->  	for (i = 0; i < dev->nvqs; ++i) {
->  		vq = dev->vqs[i];
-> -		vq->indirect = kmalloc_objs(*vq->indirect, UIO_MAXIOV);
-> -		vq->log = kmalloc_objs(*vq->log, dev->iov_limit);
-> -		vq->heads = kmalloc_objs(*vq->heads, dev->iov_limit);
-> +		vq->indirect = kmalloc_objs(*vq->indirect, UIO_MAXIOV,
-> +					    GFP_KERNEL_ACCOUNT);
-> +		vq->log = kmalloc_objs(*vq->log, dev->iov_limit,
-> +				       GFP_KERNEL_ACCOUNT);
-> +		vq->heads = kmalloc_objs(*vq->heads, dev->iov_limit,
-> +					 GFP_KERNEL_ACCOUNT);
->  		vq->nheads = kmalloc_array(dev->iov_limit, sizeof(*vq->nheads),
-> -					   GFP_KERNEL);
-> +					   GFP_KERNEL_ACCOUNT);
->  		if (!vq->indirect || !vq->log || !vq->heads || !vq->nheads)
->  			goto err_nomem;
->  	}
-> @@ -2053,7 +2056,8 @@ static long vhost_set_memory(struct vhost_dev *d, struct vhost_memory __user *m)
->  		return -E2BIG;
->  	if (max_iotlb_entries <= 0)
->  		return -EINVAL;
-> -	newmem = kvzalloc_flex(*newmem, regions, mem.nregions);
-> +	newmem = kvzalloc_flex(*newmem, regions, mem.nregions,
-> +			       GFP_KERNEL_ACCOUNT);
->  	if (!newmem)
->  		return -ENOMEM;
->  
-> @@ -3405,7 +3409,7 @@ EXPORT_SYMBOL_GPL(vhost_disable_notify);
->  struct vhost_msg_node *vhost_new_msg(struct vhost_virtqueue *vq, int type)
->  {
->  	/* Make sure all padding within the structure is initialized. */
-> -	struct vhost_msg_node *node = kzalloc_obj(*node);
-> +	struct vhost_msg_node *node = kzalloc_obj(*node, GFP_KERNEL_ACCOUNT);
->  	if (!node)
->  		return NULL;
->  
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index 0cb87971d749..600daeb05e7b 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -721,11 +721,12 @@ static int vhost_vsock_dev_open(struct inode *inode, struct file *file)
->  	/* This struct is large and allocation could fail, fall back to vmalloc
->  	 * if there is no other way.
->  	 */
-> -	vsock = kvmalloc_obj(*vsock, GFP_KERNEL | __GFP_RETRY_MAYFAIL);
-> +	vsock = kvmalloc_obj(*vsock, GFP_KERNEL | __GFP_RETRY_MAYFAIL |
-> +			     __GFP_ACCOUNT);
->  	if (!vsock)
->  		return -ENOMEM;
->  
-> -	vqs = kmalloc_objs(*vqs, ARRAY_SIZE(vsock->vqs));
-> +	vqs = kmalloc_objs(*vqs, ARRAY_SIZE(vsock->vqs), GFP_KERNEL_ACCOUNT);
->  	if (!vqs) {
->  		ret = -ENOMEM;
->  		goto out;
+>  	/*
+>  	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
+> 
+> base-commit: 20eef29b7c8465ac98d7dd6d6f2ac07a8d8056ca
 > -- 
-> 2.43.0
-
+> 2.39.3 (Apple Git-146)
+> 
