@@ -1,82 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.21
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795087742;
-	b=sMIiCOHFfn/wvln31KXpsOhpOwh6Rqv3xPUsKRZ9m2zXc9uhUCZ3FnZlYtEjJU9TY5y9
-	 1GRavDREih+tc5vTT/T6gmbCGQHXBmwIOr+BD7oZdJ/rtavs/uq3ckm75/xj+xC/bB3Cw
-	 fEasx9yrYuXfN4FBQaW9Bs8eB7vjCOn+sotyef2+1PzRyo0V29uLOuVCDywRMraDSbX1/
-	 sBil3DFKvd57DnUjN3HoVfgik0bmB5rME5OJMfvQRFagh7K9HPxmojanOqboKzjvsOeMt
-	 kOXfzuiSyj8vDlSL4rSBJcwsyTiPmn0EUSulGBdANOdaN6Vh5RyITB2HUQ4q/2q51kA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795087742;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:Date:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type;
-	bh=rT49vqX0d2z5yeuabJbBdwkVravn81cAUid9mwENomY=;
-	b=WLCrSzPPmlkCq+YTwQLxbEi3Sxf17uGCKgCNTScb6DVCxuomxj3X3p/K7sIfyf4/ojcU
-	 kvt9grjWAga5LfEmyx8tWJ+Vuu/3yj2KpxZ6qPiwbfDJ7E4OLjHjhRBT1jFZ2PPz0WfWp
-	 uKCv68ceFbJAj7rP2flSybu1RV6mA2wiTF7vj5pmGdWkURreh1Ib+2lfyhRqjLg2gJOLL
-	 CPg0gf89mLJlxCNiT4BK5sKjUJK2dPjIXXd500N+a2sRlYnoPDFY0gBiBzLNfKGiTeLsZ
-	 C5zSpnpmNYzKh8+o/d2SMmsaQ/nSEOLBhDCsT2fcV9fwl9vkxTMshRlffBo5cqY4scg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=S0cZMpCL;
-	arc=none smtp.remote-ip=198.175.65.21
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.170
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795088156;
+	b=a3FCTQjeVBrfdY6D1oc65QU1y2LqlH0TUr8j1eCu/XkPlKZh/qJ9NapfNpQ+kSa5GH/u
+	 YSy5KIMOPSkOu8ODydGlVyv341d4ePXcAEM4eZ6QcK2c/l1dAM9bVog1AZWg5o5Y0rU8x
+	 smdD/6x/FKFemWUW5djnjujkTJvCvqtWxAAW57kDM01ZEsNPUUIwy5EoLqrDm3IMU7V2t
+	 d2xdn8tTAU4zBw5k93LOy0PfEPlSxVE8Lgg+0e5zCe20x9P89bFRINnUsLeNCt0X0HtIM
+	 j5f9kcV1UFKbplPXErYyhl21VA4mJjaHsdIGaoY4EHJcX/no0Qo/S5+xuH39rETzWpA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795088156;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=m7U6M/EGmEZmxU1yvdQ7vVBYlQ+ST0xMHMaAKZhcHEc=;
+	b=GYZP9W6erjKX+UcWIfEoHeZzgwetoq9OUoXQXOdSAm6zNR1ZfUfyQtuEBQT40yqPtVHO
+	 Kxjt6hQ9nrgWXEjxoxpYoGljamJItXgnq3J5dcC/jYkeXAni1m8zPdMDR/W2q26nfzgpr
+	 XwCGXC6ynEHoH/RJJLxk8e7G+vPFjNYRzE+OWC6xLty3yz0I7GBTfr4FTd6gG5Te9ubxN
+	 ReQlsfb0oPEL1naxPtvD+aZ7Cj8EQhN9GPgVpoXLDbfIJvHhJfELI+P79ratX2ZWnAsXj
+	 1zBPzZSUlGHbMtHubQHTO8mM5QpEzSLC0Tpa7zqnZ386M8jXn2esKeZZbrE3WOWy31Q==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=sentinelone.com;
+	spf=pass smtp.mailfrom=sentinelone.com;
+	dkim=pass header.d=sentinelone.com header.i=@sentinelone.com header.a=rsa-sha256 header.s=google header.b=QcPl93oW;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.210.170
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524C9606A324;
-	Thu, 19 Nov 2026 11:29:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 524C9606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10751606A330
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 11:35:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10751606A330
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sentinelone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sentinelone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=S0cZMpCL
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795087742; x=1826623742;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=am2GaxzuuxixHXIPR8eVr72TaNxgHF9IMiwJVeXwZkg=;
-  b=S0cZMpCL/iJ32juj5FDuQT3uopnICZtiEnjMcxJFdQNBqjKP3/yTqgfo
-   1QaCBvAExiL97ph9tMFtnX4R3RaYTDYmvauYOXjXBS91Oy9xF+ghZOALU
-   r8wv1bBXlHdFq6ZQVLwWkhDLFJNkJMc2LokJMGUAKjVODFHGZyT+h+xh9
-   fcm9Zev/0NaYk39AYIa1nChs3iXrqfHRSFEKml3Ty0XgXHOyGQu9d/8OO
-   0oGKt3ehYPFFm7Td431vpS8bVObADIJ3zjjTFwe1mWHol+/H2s7WPoMEe
-   jAMJOOR+LnuVAd6iMos/9DiyRslkUaKaZd6ROY3goLhtetj6u1V8vE7P4
-   w==;
-X-CSE-ConnectionGUID: n1ZuHzsnQNu6SVn1+r3Ldg==
-X-CSE-MsgGUID: Wl0rEWf4TmusY48PcQS+2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="4012136"
-X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="4012136"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 03:29:01 -0800
-X-CSE-ConnectionGUID: 0cMWW9MbQaqwfWljk0pIIQ==
-X-CSE-MsgGUID: bfc1o6b0QKC5L9UrztxXKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="10274588"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.132])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 03:28:55 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 19 Nov 2026 13:28:50 +0200 (EET)
-To: Ehab Ababneh <ehab.ababneh@intel.com>
-cc: Hans de Goede <hansg@kernel.org>, tony.luck@intel.com, 
-    Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
-    Ingo Molnar <mingo@redhat.com>, ashok.raj.linux@gmail.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-    rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-    linux-trace-kernel@vger.kernel.org, 
-    sathyanarayanan.kuppuswamy@linux.intel.com, pengfei.xu@intel.com, 
-    ravi.v.shankar@intel.com
-Subject: Re: [PATCH v2 07/17] stop_machine: Add stop_cluster_cpuslocked()
- for per-cluster operations
-In-Reply-To: <20261118193259.519568-8-ehab.ababneh@intel.com>
-Message-ID: <61f51eda-ed44-0f0a-86b8-522134896d17@linux.intel.com>
-References: <20261118193259.519568-1-ehab.ababneh@intel.com> <20261118193259.519568-8-ehab.ababneh@intel.com>
+	dkim=pass (2048-bit key) header.d=sentinelone.com header.i=@sentinelone.com header.a=rsa-sha256 header.s=google header.b=QcPl93oW
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-89ecfdbe443so252696b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 03:35:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795088155; cv=none;
+        d=google.com; s=arc-20260327;
+        b=niGM7D3GyCHwrrLojrkZY9Q8j1TM8B65AYIiecyQELmei7ogrQwv7EocIqcBgs3qz3
+         7AbFQlDCb9gtVaymq+XCuPDSC10wK03xuSPPkFpAug1/4xUroi5ye9IEaIY68oYb8Qqc
+         QhFz6kKSM/06jfSkucnkF4fbsHvek+dTyc4GmX8DZqF3MMi6ZS8bWgoShiwP+7KV9xMB
+         zJZwX0NQeWFnBNfCAxFe5Kv6R4EEAd+nG6+IVPz2txCbnNhKktPFWwcm5cn8gJbV0HwK
+         dZjVURndV/YQC8E0v/lsRzg80ixisq1y6iLRjCQqI9jnLsgRKd0intuJUNrOy43N0GhD
+         AlJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=m7U6M/EGmEZmxU1yvdQ7vVBYlQ+ST0xMHMaAKZhcHEc=;
+        fh=27/gubao05JuaAcabhcRkhUcTyCbh95/W4PKDWdthZs=;
+        b=X7xSL+y/9I30Iqp9oXOYNxJU7/gZT+/cYlr+VHmFrOoDOp/UEXuw9lXTmmiJk+YnzF
+         j3GQNynuk/kJ5LZZR6soBZIHIWAY9f2BmNlZG4VzcLxuZmsT3qexwsLIeWOgS2U2d5p/
+         ChemVBLjOK0YcSshFLGsZDPz2rE0LdeTHwEbUOz7nExyAM22ZrZJrEnZFQswR6AfovpM
+         yJ9dZW9BJoz1/b28xzD4VYhdTWQyTCpoOYKhl5zT+h3i35iPFr+paKO7nu9+vM5VFTts
+         MLdAwPmGcTNMc3qNgFPmY+YSUWzVjQxHv5miV6UOcPja1uD535WnvClimEx3E8HWROFk
+         7eww==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sentinelone.com; s=google; t=1795088155; x=1795692955; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=m7U6M/EGmEZmxU1yvdQ7vVBYlQ+ST0xMHMaAKZhcHEc=;
+        b=QcPl93oWLhCfA6leBBUG94g8wJ2Az2pfkebXkNqWqxr2f/4hbVCjDTxj4Wsgb4iD0r
+         nGkRNlVXyaMag+N4sHAeLhHr4fFYUg51fIfhQLYNgG9/GzgqFiZ/4fjhrEe09ii5oSWk
+         t8jvmiKoPyt6+LI7wNnxBX1bCvgbLK6ZjrZQ8f04aTDbIsVzjFvDiJfWdqNiN7iZqfVZ
+         Z0SX1IEAeCCU8Nlb7V0FyKQBiCaDad+dj9zl3js/OW3CO7QzEZkdeWlSdf6r+naAIr/A
+         FCCOZPjt4r6600Vq04BoxThCNOBtD+fxBkHJ75npg5p3lqF+E5+ObmkVKmoawWEJNj0V
+         BfKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795088155; x=1795692955;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=m7U6M/EGmEZmxU1yvdQ7vVBYlQ+ST0xMHMaAKZhcHEc=;
+        b=GFXCBY7VY6TK+gnD5y4NP7jcdxHkOdmQ9bAjm8Xw9rprUhyw5yWb8aHwCWWPEhledg
+         9O/2vaC+9NjXzH+3DzoL9CcrpyEY00Kc+NUaMmIS5k9do25LR5rL7O8+GvVhPCAogqsv
+         UPdZ55VNDBM2ExgowQ8cv8jQrVLqWcgiwc9YpP3g9RQTQCTfdhPLRRTr0pvIi5LPHH9D
+         WKKW1V2LccQXPzXZYGKSJbCxlbLHg/Q2Klw+KOKHHJAWga+Jzx50pwmXUNza7sQyAQDO
+         KcdxFOGs8C6CwiKgpX0dnx9Jw5Nk/HL0cFHVcbY6it7M1litzLIUOmDa6PmHBkYsILsZ
+         Zmuw==
+X-Forwarded-Encrypted: i=1; AL+hErHkrG8rbJIGBqpxFEyMIL7vOTkriX3FK7LrNoF4Ewn5HRofQayo0qyS+0KUPAx6yRKdQXywFzCj0RKPktHs2k34AF0=@vger.kernel.org
+X-Gm-Message-State: APuU4Z842TBliaJVk0GZbh8SrpiGn0ZiwwqbPRUqgI7g6GbWnOv0vMY0
+	duDhe0bS8OYUyUnRHjd1H8EHtV5VRD0yCktMrucqp1Lt97Ghgyus/tkGAirCehw+cJdaIjEPZnn
+	SK+YziR8XRSTPOfUKqKOLLcKg7XjTRXGtXsGwRfnFOQ==
+X-Gm-Gg: AZFdTZca8uyx4JFtz7yiNQhJa1cHCDEe78SsZMg9/wvLnCxaXdzu7xjB6JjRhhjpUhp
+	yduxXIb7j3Sf8TTn8P6ZHx3QzMtsbLqIP6ij2f7ZoB4PISfuOgHvqf7t9C6oQSPnI8r27R8TFUD
+	c0GPYYG2h3PGyDCZ5vqnCuHaFAAdlhHhKMtQzjMZWd1U6U0cqrOum9arI06o4BEzeHDDSMfx2Cr
+	5Ds4nA9DeamkNrJDfVaH7bmWh1yzQvMz8hzTRFCPZB8H+rbSpVmkfaR1LdurJsDXqoLY6TcINm3
+	yPGWhWA6iZ3hz6GV8xUNA98Tn4a1L5XY9o+A+jbeIHakTNPKYQdTtnlDnKD2QayUOkwbZY186WR
+	dYb6gE57FPY8y+a2hCCQLeF74Ywa7Af4jc2a5WIaSjUXRrIjrLFBrXhs=
+X-Received: by 2002:a17:902:e888:b0:2ed:29a5:782d with SMTP id
+ d9443c01a7336-2eff72e15f0mr91673755ad.2.1795088155325; Thu, 19 Nov 2026
+ 03:35:55 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -86,142 +103,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com>
+ <20261117-bpf-preempt-v2-r2-v3-3-586376ec3672@sentinelone.com> <8fa7eb35-950f-49c4-b60a-c00b52cc6e4d@linux.dev>
+In-Reply-To: <8fa7eb35-950f-49c4-b60a-c00b52cc6e4d@linux.dev>
+From: Mike Bazov <mikeba@sentinelone.com>
+Date: Thu, 19 Nov 2026 13:35:56 +0200
+X-Gm-Features: AclHuK_P4lCX2n9SuYxSAwroQnE6rqvhil-JFhCxhFnQsc1M0KgmmeelNAQBEi4
+Message-ID: <CAPnbwjpaTwDH1GqV0Mxtc6VOL7feWTBrQwaMD5bzq1kzDmE3vQ@mail.gmail.com>
+Subject: Re: [EXT.MSG] Re: [PATCH bpf-next v3 3/4] bpf: Check program
+ recursion per task via bpf_ctx
+To: "JP Kobryn (CrowdStrike)" <jp.kobryn@linux.dev>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Emil Tsalapatis <emil@etsalapatis.com>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Martin Kelly <martin.kelly@crowdstrike.com>, 
+	Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>, tyler.wilson@crowdstrike.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 18 Nov 2026, Ehab Ababneh wrote:
+> Was a limit on chain length considered?
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> There is already stop_core_cpuslocked() for hardware core-level testing
+My proposal in the v1 thread had a cap of 8. If it turns out to be
+needed, I can add one.
 
-Please rewrite this paragraph, as is it starts at middle of nowhere so it 
-won't connect to anything.
+> did you try the array-based approach mentioned and compare perf?
 
-Do not depend on shortlog in the changelog body, the body should be 100% 
-readable on its own.
-
-> features, which requires near-simultaneous execution of the WRMSR
-> instruction on all threads of a core to initiate a test. However, some
-> hardware requires this simultaneous execution of WRMSR at the cluster
-> level.
-
-Something along the lines of:
-
-stop_core_cpuslocked() is limited in performing simultaneous execution of 
-WRMSR on all threads of a core. However, ...
-
-That will immediately tell the reader there's a limitation and why the 
-limitation has to be removed.
-
-I'm not sure if "for hardware core-level testing features" is that 
-necessary at all (perhaps that's from LLM that wanted to describe 
-unnecessary details like it usually does).
-
-"some hardware" is vague, please be precise.
-
-> Add stop_cluster_cpuslocked(), a customized version of
-> stop_machine_cpuslocked() for operating solely on the threads of a
-> single cluster.
-> 
-> Suggested-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
-> Tested-by: Yi Lai <yi1.lai@intel.com>
-> ---
->  include/linux/stop_machine.h | 15 +++++++++++++++
->  kernel/stop_machine.c        | 35 ++++++++++++++++++++++-------------
->  2 files changed, 37 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/stop_machine.h b/include/linux/stop_machine.h
-> index 84e7fb627ba4..a189f405a4f2 100644
-> --- a/include/linux/stop_machine.h
-> +++ b/include/linux/stop_machine.h
-> @@ -157,6 +157,21 @@ int stop_machine_cpuslocked(cpu_stop_fn_t fn, void *data, const struct cpumask *
->   */
->  int stop_core_cpuslocked(unsigned int cpu, cpu_stop_fn_t fn, void *data);
->  
-> +/**
-> + * stop_cluster_cpuslocked: - stop all threads on a CPU cluster
-
-Extra :
-
-> + * @cpu: any CPU in the targeted cluster
-> + * @fn: the function to run
-> + * @data: the data ptr for @fn()
-> + *
-> + * Same as above, only the CPUs associated with a single CPU cluster are affected.
-> + *
-> + * Context: Must be called from within a cpus_read_lock() protected region.
-> + *
-> + * Return: 0 if all executions of @fn returned 0, any non zero return
-> + * value if any returned non zero.
-> + */
-> +int stop_cluster_cpuslocked(unsigned int cpu, cpu_stop_fn_t fn, void *data);
-> +
->  int stop_machine_from_inactive_cpu(cpu_stop_fn_t fn, void *data,
->  				   const struct cpumask *cpus);
->  #else	/* CONFIG_SMP || CONFIG_HOTPLUG_CPU */
-> diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-> index d085ba1f4b44..1afda0ddfb90 100644
-> --- a/kernel/stop_machine.c
-> +++ b/kernel/stop_machine.c
-> @@ -630,32 +630,41 @@ int stop_machine(cpu_stop_fn_t fn, void *data, const struct cpumask *cpus)
->  }
->  EXPORT_SYMBOL_GPL(stop_machine);
->  
-> -#ifdef CONFIG_SCHED_SMT
-> -/*
-> - * INTEL_IFS is the only user of this API. That selftest can
-> - * only be compiled if SMP=y. On x86 it selects SCHED_SMT.
-> - * Keep the ifdefs for now.
-> - */
-> -int stop_core_cpuslocked(unsigned int cpu, cpu_stop_fn_t fn, void *data)
-> +static int stop_cpus_cpuslocked(const struct cpumask *cpus, cpu_stop_fn_t fn, void *data)
->  {
-> -	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
-> -
->  	struct multi_stop_data msdata = {
->  		.fn = fn,
->  		.data = data,
-> -		.num_threads = cpumask_weight(smt_mask),
-> -		.active_cpus = smt_mask,
-> +		.num_threads = cpumask_weight(cpus),
-> +		.active_cpus = cpus,
->  	};
->  
->  	lockdep_assert_cpus_held();
->  
-> -	/* Set the initial state and stop all online cpus. */
-> +	/* Set the initial state and stop all online @cpus. */
->  	set_state(&msdata, MULTI_STOP_PREPARE);
-> -	return stop_cpus(smt_mask, multi_cpu_stop, &msdata);
-> +	return stop_cpus(cpus, multi_cpu_stop, &msdata);
-> +}
-> +
-> +#ifdef CONFIG_SCHED_SMT
-> +/*
-> + * INTEL_IFS is the only user of this API. That selftest can
-> + * only be compiled if SMP=y. On x86 it selects SCHED_SMT.
-> + * Keep the ifdefs for now.
-> + */
-> +int stop_core_cpuslocked(unsigned int cpu, cpu_stop_fn_t fn, void *data)
-> +{
-> +	return stop_cpus_cpuslocked(cpu_smt_mask(cpu), fn, data);
->  }
->  EXPORT_SYMBOL_GPL(stop_core_cpuslocked);
->  #endif
->  
-> +int stop_cluster_cpuslocked(unsigned int cpu, cpu_stop_fn_t fn, void *data)
-> +{
-> +	return stop_cpus_cpuslocked(topology_cluster_cpumask(cpu), fn, data);
-> +}
-> +EXPORT_SYMBOL_GPL(stop_cluster_cpuslocked);
-> +
->  /**
->   * stop_machine_from_inactive_cpu - stop_machine() from inactive CPU
->   * @fn: the function to run
-> 
-
--- 
- i.
-
+Not measured. I asked in the v2 thread whether it is worth doing.
+I can measure an array against it and post the numbers.
