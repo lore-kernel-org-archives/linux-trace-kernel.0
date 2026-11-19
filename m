@@ -1,54 +1,162 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.214
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.136
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795064953;
-	b=2MoYtHmivpGhFUCSa2Y1GJxE2LFVfaIItrIBePbzzq2e/99twg/wC6tlPp2k07pVxdqZ
-	 nUEPzwtrPo/z42zs4MngXWG4eIpppfGvpJBG7AgoCjvgocEYQ7CsLvl2h5aL4AkKu6Xah
-	 2px/Aw9blMRmrBOG27rKAW5HV98nm7GXKh4htdAdq2Mc6Bv9uLv8qVmOwDN7A8CpBrAr9
-	 iKUaGxN3wHNiYfgTqsxyGgew2ZZUvMxDtiEppB3So9OSEXW/4boGYCuy/6bLRzcTfq8Ee
-	 v2MFGLwXOsZOLWw7oFI9WHho+CuNtzzni6n9bWhYnmJhNf3b/pJdGR//3ouQCDOB12w==
+	t=1795065323;
+	b=HJ9HR1OsQmGQD3OcjadLUVUpWZSX3i+ps9UefbjCkjjMjetV2dTMl7jVc3mJgFQ7hLtU
+	 P+KjTuM4YCuZGljxZgvpjjzk6VMtHUBQx4OIFUAhCWcPkdzu7ixLpoMBLzF5hQmeS7/GR
+	 MaEUAnq1D7WSnc26bg64BBtZKSRfwa3IB6Eh/g7xa3BXzN5QLyp7ns0YID9fbrua327NH
+	 FkM1qe6CtrdJdhKRL0Gc3/xsHm6IlbiPg0E+JP2nzyL+4FcF3cogUKxhc6Gqfd7HHBj1E
+	 RdPyt3rbYnZHsuCLjgbcD3S5qAhM9GyWNSfTHbqD6AomCvXaCv9+68PfzallSXdRXOw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795064953;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=cRUrKvGLYw0SBRCiu66yBTropVmsa8L0KnbRGAvuHLw=;
-	b=ywP6sEKPy737WHr6LO1zZFvGZ5ThgsC8L13hvVdNs3arvTzXmLGkb6qyI9hLqPbMINCv
-	 ae/exlVd3PjICe037Eppv7h0GZkfdZh3R8MuDhAz3piPYFEJ9jLmBm8G+lLVLkJZ2MDrs
-	 +V4uSjkYe/h34teHupMAMbLO9p3JwVdg+RE9YPctu1WWm8AfaC8Sp0/fDaVk7IDvlUTBK
-	 cWEIhzIhnQKHK59LNkrSrj+d913hCyZgJmo2XSoJFLCQPujQnkbaf1CW/TdE4XpBzp/sh
-	 zDx74WKQlC8pxdIP5mDQTTu0r6mxYiqg2lfDIZyNY+xig7dI4QyLD/RmTk+lFO4rSWA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795065323;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Received:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:
+	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding;
+	bh=nB7NyMM3+R/ysxmgGPhpf3VtSpdLduKfuUDtKW50pjU=;
+	b=wK2Pnr+uUv5f4sleHe5rGw0e7y8gammkMwjg9fFRFIYR9LhqPf65bfQFaZ/HzEdwHMVG
+	 0mB3zfNW9XKfqED9YxUshU81+M+gBDpVUn0KuhSUgYWDTsXt/OjkeDroPOw37KCt/Q0ud
+	 7Rvg/xApciV3bKgesuRnLpZoHsZ78+J1l5hbreiRg4xelyNtSaF9hYgT1cQHytzzrn4SP
+	 D3OnUEmMqk+9lT3StNFxjPGzf12SAEFVy4CeGpHaK9m9kPSR/crH9wwObf6TK50NKzz1F
+	 OMRzJFsQ0SlD5GjTHMi1GEnEFneEeZ894gk+a0S1tpCAzeXpnAOvvfOgsqQxUFaQ5tg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BhLWq+as;
-	arc=none smtp.remote-ip=95.215.58.214
-Received: from mta1.migadu.com (out-214.mta1.migadu.com [95.215.58.214])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=shazbot.org;
+	spf=pass smtp.mailfrom=shazbot.org;
+	dkim=pass header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=X+tuZ839;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=MapbBIfr;
+	arc=none smtp.remote-ip=103.168.172.136
+Received: from flow-a1-smtp.messagingengine.com (flow-a1-smtp.messagingengine.com [103.168.172.136])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CED606A325
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 05:09:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72CED606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C09C606A325
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 05:15:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C09C606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BhLWq+as
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=YOo0Tn4d/EEveqjJFWxtczfbEXWSwvpjYc33Zhtusa8=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795064950; v=1; x=1795669750;
- b=BhLWq+asoX+A0HObQIrfDiDGVqi0oPhQEu8YoiJaiGQQlZvKTQ6oB1FR+eFE8Qdt4E3GRP4F
- X9rVu0hZtaPk5gouxau8GYpL2EZ7v8ZVPorgyL9T8FDkHeh0iuhV5wBw8O1rqZndZohYhv1i0zN
- boBG+vA5crfCQE9GIPKDC5m0=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id fbdcc30c2a970494;
-	Thu, 19 Nov 2026 05:09:10 +0000
-X-Mizu-Trace-ID: fbdcc30c2a970494
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <e3ed9b2d-7778-481b-ba85-2ac3ac5de877@linux.dev>
-Date: Wed, 18 Nov 2026 21:09:02 -0800
+	dkim=pass (2048-bit key, unprotected) header.d=shazbot.org header.i=@shazbot.org header.a=rsa-sha256 header.s=fm2 header.b=X+tuZ839;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=MapbBIfr
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailflow.phl.internal (Postfix) with ESMTP id 87E8A1381B55
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Nov 2026 00:15:21 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 19 Nov 2026 00:15:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1795065321; x=
+	1795072521; bh=nB7NyMM3+R/ysxmgGPhpf3VtSpdLduKfuUDtKW50pjU=; b=X
+	+tuZ839rtn44ra+tvX2/152CSn6sDJOi7eousXbFCygf3cj8uGPHOY9zUJba5huv
+	LCDQkU3Us9mEAnjbN5Ef+LAxHS1Pn9feoFU19N4WImH0CStAhcTDg0M0nF2CEbEU
+	1bVoUzI/sDEC8n07qqeXwanpSDwadkHK1wPasK1FW0h8ivlRmbuI/oVU4rMg8ZjE
+	BuNY+34UfeNjEbECb66jlcoUTPgDrySsv3b4nliyi3+1bHnjA7GATLSoIOlgesNw
+	kiDiz8RLAec8dWe2IzNJlMf3v5PDuycDgC4rzc+4mL6LbVjJ1y+yqLkeLGvjiRUf
+	JZVNPCJoN8mUsJIbxPlcw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1795065321; x=1795072521; bh=n
+	B7NyMM3+R/ysxmgGPhpf3VtSpdLduKfuUDtKW50pjU=; b=MapbBIfr7L6+jr/nb
+	+T7Wbr7xE94G4iBTC7xM69GXLXTNZ1A+AMhCTT65P1yp+UI5192y2+nqRlnVySGY
+	//mKjxGvSOp9DRW0Eoa0qcpNvZo5e7pFU2B2QOaCHfreaRpvCWu0DfQXS56Jo6SM
+	goTpD2+y0TsyLTQw11fG6S7bnHMy5bRxV010QexQnDd7OwrU/TMNE6sQyiQBj76u
+	2sZM7G9KtRQKUgbqRdAlsWj9Dz1V79tDu5pKTcaaxrt255k2kGifMJC94A+o6550
+	ggPUrWfejInKfJ3ffJm1zGP9tSYuRjt8gOfaUdwP50AyD6Sx0h9cNONhcSYmYSds
+	JYEcw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=shazbot.org a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795065321; d=shazbot.org;
+	mf=PGFsZXhAc2hhemJvdC5vcmc+;
+	rt=PGxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+;
+	s=fm2:rsa-sha256:jw7nIfqA+DSnwDNOCXIyWjfi3VS0qNPUuxEgCtPngjYtvKr
+	cvt0NnNcMeZrTVrmVO56aYu69WXkQHQQlaGsoqgK1z1PiVUVv0K/h9XEfbWET0g9
+	nJKAooGyGu1G6+tomBOtsuULXUUT6fxnUwG4M+uS4dXP353w3mmPgQDKj8U5C+Me
+	zqJ1bkkJejj6z9ytp8Bs8zSKj+PPyVE0qB7f3EKnUKzL4d3EC2xoebPUecN0HB9G
+	oBXh5eE8/HpZpv0NMCoXlvtb+DneojYZMJaLP3zpOwnAEBq2bRUev/MzXyvYydw0
+	x5xL2ZmQy2SlbCzfsF1AxXWpBWIGePMlpIrHmjQ==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=11;
+	hn=cc,content-transfer-encoding,date,feedback-id,from,
+	in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:x//NWy/h1nXC+M2WEmBfJfyd3519ihGy7lPGHXQNuSc=:4+p7gG5BwT/2fGf8d6eViKD6hqgE7hcriyEtzB2mdtQ=;
+X-ME-Sender: <xms:54X-aho_4vnnPquv-OcJCaLJUPyMtmONCVPGAJperguEiPfYtqBbFg>
+    <xme:54X-atcUTrB8kgIfLeDTdVatV-K0OoF0ZP2r4ZX3WPEcQS0-XAgGTJkDkeG2oEuzj
+    rLO5fUGEpWY97rzBD5bw5Ko1FBnlKiAvko0o9rXX1TvfRn6ozMT1J8>
+X-ME-Received: <xmr:54X-apoG77N28j-gDtcYRM10JWcfECYA3P8FK6HQiJ7FHK3H0APXSHp88o2wH9nkevS322BTiQY>
+X-ME-Proxy-Cause: dmFkZTGhOmZn91BW8pxHvBMWXRqhbLMysp8Q4TvoI+VE9JbSYAz0c/4zd+rMp6yJOnzQo2
+    A5h1+Ma3DwwRz0lh04L5XOWbUr4LmVOSOkHzpY/w2yLXGwmcxZredAsP80hMCQrJRFodW6
+    fmevnh4d26BVXSXn55rBOjAyx+h1bESp7gOITB+AIkBvzyJYGo0ESemuyh5h9uJD60i+cs
+    SgAZ3CvmPdBrooaNlYfuH3M0HsG27/6DablfXZ89RfIZExguJZ8ORWOgjF0hFWp3UR9raT
+    3tReRAeuihRXAsm9oqtGE+5YCk876shunhrpseVaBMkz0D3wHUm1dvwS6tCtN64SczWLEn
+    DuDdQwcYEIyrIp3ndQyEaBgkuOsANeEsOYAmiMe5BKYSCCscMTQTaA7bUQTdT6x2SL99mc
+    EUQODC5AfuKbMNxP/Du61PY2puKdqVCkV3+Tj2MSc94/QSUyNMqYek+Yv0FJ1UbYiNlyrf
+    Dnot7ED3QRTkVgCtq9MaF7Q85ATJahP/UiowPn4G+To3EsPmA3oeh0AsCvZ4gVbYqU7hOJ
+    F7+WWByG6u6U+GL8WxBKjc6F/n6WShQdTeCvDenqqOMGya2CnkJ8dAWj319wv25W8G1+/8
+    rT7muG5iAUUuzY6DkFFkzKUn5f4NY69Kts+aQyf5MaAnpzKasBu+TSjoeOAA
+X-ME-Proxy: <xmx:54X-apS2YRuzof4jvWet_kxz44WkEnql4uUwPonuQ0QVH0sa7svGJA>
+    <xmx:54X-arx6inLsBrg-Tf1IxmB_y7hsOGZShniWqqg7vapbad7zq59tSQ>
+    <xmx:54X-aog9aBPY90lWo6IWsIbsmYaUsr_HqTTPBwRBXHY114KefCSlCw>
+    <xmx:54X-an-yVrgaL7OWQVQnQxZNCLETee9XviNCC5sg_XgPQyln9JvbIw>
+    <xmx:6YX-aobwTqTMr42AXmk7bvGgz7NskPIhynqV0CtdcbgTyOySumcUqW7H>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 19 Nov 2026 00:15:16 -0500 (EST)
+From: Alex Williamson <alex@shazbot.org>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Alex Williamson <alex@shazbot.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Johan Hovold <johan@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Karl Mehltretter <kmehltretter@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Marco Elver <elver@google.com>,
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Bradley Morgan <brads@mainlining.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Pnina Feder <pnina.feder@mobileye.com>,
+	Mete Durlu <meted@linux.ibm.com>,
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Rio <rioo.tsukatsukii@gmail.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Tony Krowiak <akrowiak@linux.ibm.com>,
+	Jason Herne <jjherne@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Matthew Rosato <mjrosato@linux.ibm.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	linux-s390@vger.kernel.org
+Subject: [PATCH] s390/vfio: Allow untainted use of driver_override
+Date: Wed, 18 Nov 2026 22:15:04 -0700
+Message-ID: <20261119051507.3306075-1-alex@shazbot.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
+References: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,242 +166,59 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3 4/4] selftests/bpf: Add preemption recursion
- test for tracing programs
-To: mikeba@sentinelone.com, bpf@vger.kernel.org,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com>
- <20261117-bpf-preempt-v2-r2-v3-4-586376ec3672@sentinelone.com>
-Content-Language: en-US
-From: "JP Kobryn (CrowdStrike)" <jp.kobryn@linux.dev>
-In-Reply-To: <20261117-bpf-preempt-v2-r2-v3-4-586376ec3672@sentinelone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/17/26 3:29 AM, Mike Bazov via B4 Relay wrote:
-> From: Mike Bazov <mikeba@sentinelone.com>
-> 
-> Pin two threads to one CPU. Thread B is SCHED_FIFO and waits for a
-> signal that thread A sends from inside the program under test, so B
-> preempts A there and enters the same program on the same CPU. Each
-> subtest runs 20 rounds and checks in every round that A was inside the
-> program when B ran. It is skipped if that never happens, as on a kernel
-> that doesn't preempt kernel code.
-> 
-> - fentry, fentry_s, raw_tp, raw_tp_s, tp_syscall: a program without
->   per-CPU state. Both threads must run it in every round, without
->   recursion misses.
-> - *_percpu, percpu_var, this_cpu_ptr, tail_call, may_goto: a program
->   with a per-CPU map, a per-CPU variable, bpf_this_cpu_ptr(), a tail
->   call or timed may_goto. B must be dropped and counted in every
->   round. A constant selects the per-CPU state that the handler
->   touches; with none selected, the same code doesn't mark the program.
-> - two_dispatchers: two raw tracepoint programs tail-call one handler.
->   Both threads run it at once, and A checks that the stack buffer it
->   filled before B ran is intact.
-> - recursion_raw_tp, recursion_two_hops, recursion_test_run: true
->   recursion is still dropped and counted: directly, through a second
->   program, and from BPF_PROG_TEST_RUN.
-> - ext_attach: an extension that uses a per-CPU map can't be attached
->   to a raw tracepoint program that doesn't, while one without can.
-> 
-> Signed-off-by: Mike Bazov <mikeba@sentinelone.com>
-> ---
->  .../selftests/bpf/prog_tests/trampoline_preempt.c  | 352 +++++++++++++++++++++
->  .../selftests/bpf/progs/trampoline_preempt.c       | 258 +++++++++++++++
->  2 files changed, 610 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/trampoline_preempt.c b/tools/testing/selftests/bpf/prog_tests/trampoline_preempt.c
-> new file mode 100644
-> index 000000000000..f282fdba5d16
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/trampoline_preempt.c
-> @@ -0,0 +1,352 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#define _GNU_SOURCE
-> +#include <pthread.h>
-> +#include <sched.h>
-> +#include <signal.h>
-> +#include <sys/prctl.h>
-> +#include <sys/syscall.h>
-> +#include <unistd.h>
-> +#include <test_progs.h>
-> +#include "trampoline_preempt.skel.h"
-> +
-> +#define NR_ROUNDS 20
-> +
-> +/* The kernel's own "not supported" error, which the libc headers don't have */
-> +#ifndef ENOTSUPP
-> +#define ENOTSUPP 524
-> +#endif
-> +
-> +/*
-> + * Threads A and B are pinned to one CPU. B is SCHED_FIFO and waits for a signal:
-> + *
-> + *   A: prctl() -> enters the program under test
-> + *                 the program sends B the signal
-> + *   B:            wakes up and preempts A, which is still inside the program
-> + *                 prctl() -> enters the same program on the same CPU
-> + *
-> + * A program whose recursion is checked per task runs for B too. A program that
-> + * keeps per-CPU state keeps the per-CPU check: B's run is dropped and counted
-> + * as a recursion miss.
-> + */
-> +
-> +/* The per-CPU state that a program touches, see progs/trampoline_preempt.c */
-> +enum { NO_PERCPU, PERCPU_MAP, PERCPU_VAR, THIS_CPU_PTR };
-> +
-> +enum expect {
-> +	B_RUNS,		/* B runs the program, without recursion misses */
-> +	B_DROPPED,	/* B's runs are dropped and counted as recursion misses */
-> +	B_RUNS_HANDLER,	/* two_dispatchers: dropped by one dispatcher, runs through the other */
-> +};
-> +
-> +/* What threads A and B share */
-> +struct ctx {
-> +	struct trampoline_preempt *skel;
-> +	sigset_t sigset;
-> +	int cpu, err_a, err_b;
-> +	int overlaps;	/* rounds in which B found A still inside the program */
-> +};
-> +
-> +/* Only timed may_goto keeps its budget per CPU, and only these JITs have it */
-> +static bool has_timed_may_goto(void)
-> +{
-> +#if defined(__x86_64__) || defined(__aarch64__) || defined(__s390x__) || \
-> +	defined(__powerpc64__) || (defined(__riscv) && __riscv_xlen == 64) || \
-> +	(defined(__loongarch__) && __loongarch_grlen == 64)
-> +	return is_jit_enabled();
+The vfio_ap and vfio_ccw drivers bind devices through driver_override.
+With the introduction of the support_driver_override flag in the core
+driver struct, it's now required for drivers to declare themselves as
+driver_override compatible, otherwise driver_override bindings will be
+denied or generate a kernel taint.
 
-Any better precedent for checking this?
+Set the support_driver_override flag on the vfio_ap and vfio_ccw driver
+structs.
 
-> +#else
-> +	return false;
-> +#endif
-> +}
-> +
-> +static int pin_to_cpu(int cpu)
-> +{
-> +	cpu_set_t set;
-> +
-> +	CPU_ZERO(&set);
-> +	CPU_SET(cpu, &set);
-> +	return sched_setaffinity(0, sizeof(set), &set) ? -errno : 0;
-> +}
-> +
-> +/* A enters the program under test, which wakes B from inside it */
-> +static void *worker_a(void *arg)
-> +{
-> +	struct ctx *c = arg;
-> +	int i;
-> +
-> +	c->err_a = pin_to_cpu(c->cpu);
-> +	c->skel->bss->tid_a = syscall(SYS_gettid);
-> +	for (i = 0; i < NR_ROUNDS && !c->err_a; i++) {
-> +		/* Passes every hook that the programs under test are attached to */
-> +		if (prctl(PR_SET_NAME, "worker_a"))
-> +			c->err_a = -errno;
-> +	}
-> +	return NULL;
-> +}
-> +
-> +/* B is SCHED_FIFO on A's CPU: A runs only while B waits, and B preempts A as soon as A wakes it */
-> +static void *worker_b(void *arg)
-> +{
-> +	struct sched_param sp = { .sched_priority = 1 };
-> +	struct timespec ts = { .tv_sec = 5 };	/* give up if the signal never comes */
-> +	struct ctx *c = arg;
-> +	int i;
-> +
-> +	c->err_b = pin_to_cpu(c->cpu);
-> +	if (!c->err_b && sched_setscheduler(0, SCHED_FIFO, &sp))
-> +		c->err_b = -errno;
-> +	c->skel->bss->tid_b = syscall(SYS_gettid);
-> +	for (i = 0; i < NR_ROUNDS && !c->err_b; i++) {
-> +		while (sigtimedwait(&c->sigset, NULL, &ts) < 0) {
-> +			if (errno != EINTR) {
-> +				c->err_b = -errno;
-> +				return NULL;
-> +			}
-> +		}
-> +		/* B preempted A only if A is still inside the program */
-> +		if (*(volatile int *)&c->skel->bss->a_inside)
-> +			c->overlaps++;
-> +		/* B's own run of the program, while A is preempted inside it */
-> +		if (prctl(PR_SET_NAME, "worker_b"))
-> +			c->err_b = -errno;
-> +	}
-> +	return NULL;
-> +}
-> +
-> +/* Load and attach only programs @a, @b and @c. NULL after a failure or a skip. */
-> +static struct trampoline_preempt *load_progs(const char *a, const char *b, const char *c,
-> +					      int percpu)
-> +{
-> +	struct trampoline_preempt *skel = trampoline_preempt__open();
-> +	struct bpf_program *p;
-> +	const char *name;
-> +	int err;
-> +
-> +	if (!ASSERT_OK_PTR(skel, "open"))
-> +		return NULL;
-> +	bpf_object__for_each_program(p, skel->obj) {
-> +		name = bpf_program__name(p);
-> +		bpf_program__set_autoload(p, !strcmp(name, a) || (b && !strcmp(name, b)) ||
-> +					     (c && !strcmp(name, c)));
-> +	}
-> +	skel->bss->sig = SIGUSR1;
-> +	skel->rodata->percpu = percpu;
-> +	err = trampoline_preempt__load(skel);
-> +	/* The kernel or its JIT doesn't support one of the programs */
-> +	if (err == -EOPNOTSUPP || err == -ENOTSUPP)
-> +		test__skip();
-> +	else if (ASSERT_OK(err, "load") && ASSERT_OK(trampoline_preempt__attach(skel), "attach"))
-> +		return skel;
-> +	trampoline_preempt__destroy(skel);
-> +	return NULL;
-> +}
-> +
-> +static const struct subtest {
-> +	const char *name;
-> +	const char *prog;	/* A enters it; its recursion misses are checked */
-> +	int percpu;		/* the per-CPU state that the program touches */
-> +	enum expect expect;
-> +	const char *prog_b;	/* two_dispatchers: B reaches the handler through this one */
-> +	const char *handler;	/* two_dispatchers: the target of both tail calls */
-> +} subtests[] = {
-> +	/* Each kind of program, without per-CPU state and with a per-CPU map lookup */
-> +	{ "fentry",		"on_fentry",		NO_PERCPU,	B_RUNS },
-> +	{ "fentry_percpu",	"on_fentry",		PERCPU_MAP,	B_DROPPED },
-> +	{ "fentry_s",		"on_fentry_s",		NO_PERCPU,	B_RUNS },
-> +	{ "fentry_s_percpu",	"on_fentry_s",		PERCPU_MAP,	B_DROPPED },
+Cc: Tony Krowiak <akrowiak@linux.ibm.com>
+Cc: Jason Herne <jjherne@linux.ibm.com>
+Cc: Eric Farman <farman@linux.ibm.com>
+Cc: Matthew Rosato <mjrosato@linux.ibm.com>
+Cc: Halil Pasic <pasic@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Alex Williamson <alex@shazbot.org>
+---
 
-Is it worth covering fexit, fmod_ret?
+Uwe, this should complete the vfio drivers needing driver override,
+covering the s390 specific drivers.  Thanks,
 
-> +	{ "raw_tp",		"on_raw_tp",		NO_PERCPU,	B_RUNS },
-> +	{ "raw_tp_percpu",	"on_raw_tp",		PERCPU_MAP,	B_DROPPED },
-> +	{ "raw_tp_s",		"on_raw_tp_s",		NO_PERCPU,	B_RUNS },
-> +	{ "raw_tp_s_percpu",	"on_raw_tp_s",		PERCPU_MAP,	B_DROPPED },
-> +	{ "tp_syscall",		"on_tp_syscall",	NO_PERCPU,	B_RUNS },
-> +	{ "tp_syscall_percpu",	"on_tp_syscall",	PERCPU_MAP,	B_DROPPED },
-> +	/* The other things that keep a program on the per-CPU check */
-> +	{ "percpu_var",		"on_raw_tp",		PERCPU_VAR,	B_DROPPED },
-> +	{ "this_cpu_ptr",	"on_raw_tp",		THIS_CPU_PTR,	B_DROPPED },
-> +	{ "tail_call",		"on_tail_call",		NO_PERCPU,	B_DROPPED },
-> +	{ "may_goto",		"on_may_goto",		NO_PERCPU,	B_DROPPED },
-> +	/* Both threads are inside the handler at once, and A's stack must stay intact */
-> +	{ "two_dispatchers",	"dispatcher_a",		NO_PERCPU,	B_RUNS_HANDLER,
-> +	  "dispatcher_b", "handler" },
-> +};
+Alex
+
+ drivers/s390/cio/vfio_ccw_drv.c   | 1 +
+ drivers/s390/crypto/vfio_ap_drv.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 7546bd137e4e..77765cde87f7 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -375,6 +375,7 @@ static struct css_driver vfio_ccw_sch_driver = {
+ 	.drv = {
+ 		.name = "vfio_ccw",
+ 		.owner = THIS_MODULE,
++		.support_driver_override = true,
+ 	},
+ 	.subchannel_type = vfio_ccw_sch_ids,
+ 	.irq = vfio_ccw_sch_irq,
+diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+index 8e69ed286bb9..2d47dc643269 100644
+--- a/drivers/s390/crypto/vfio_ap_drv.c
++++ b/drivers/s390/crypto/vfio_ap_drv.c
+@@ -62,6 +62,7 @@ static struct ap_driver vfio_ap_drv = {
+ 	.on_config_changed = vfio_ap_on_cfg_changed,
+ 	.on_scan_complete = vfio_ap_on_scan_complete,
+ 	.ids = ap_queue_ids,
++	.driver.support_driver_override = true,
+ };
+ 
+ static void vfio_ap_matrix_dev_release(struct device *dev)
+-- 
+2.54.0
+
