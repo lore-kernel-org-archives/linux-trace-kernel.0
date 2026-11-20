@@ -1,55 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.13
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795205412;
-	b=h8McwBbLKLZftY16vFcJ8f/+sZTVzmdTPEr2ZErIX83Oz6mAVkRqy8iKK87a1Ny1MDLI
-	 AR0DT2TP1WmyLloZDw8klcweVB49V3qOV7NtT0HzyakXs3/2jj29+LU5RiXNma3y5zzvk
-	 Uh+UYcuPBbvG3YTL2z+4DPjm+2TjOyVsa29sjqom/5yGb57mZWOg20OJSGNnprWFFWQVM
-	 uV6RDdorfWtGGDZH3hn5BwooKux/x5RJ+VYApR5r2wuIrJuayBb7QY2YYlfiCMuPq0PRN
-	 GjwZhel5TIpuylyf0z7Thg4sLNX+evEEvyyKuckT4IsP05BQU4byrT0llEaKG/k6U1A==
+	t=1795206289;
+	b=WreF16fNbdfJhRMZBHzPCMI2s2GUBw6pF9V29m+N+tjlZi3v/IgGRRBlPRV6Bqghz92T
+	 QoBPYkbNLEIHB0w1pbqpMZOTDW/m7NhDtGT1ty2EqMNtN5qmorxlrC9KUyXpnHRgTPPTr
+	 /nGBvQVpaUwKh7lwC10gpNhfTRrxm9EwF49vCrgybwOjKyzj7MgrWju5w5GA8f2VKDiHD
+	 ZVOvKeTYWyrG6QJCei474BpbgwGtfAfHRNMe2Hbd7sE7c0RZcpTQCigsubQ7QlyWzEmfp
+	 FrY+SW2tPxlTvGsyxEviyy1n8Nzdfctww4+afvaMkSM7HE4p55CNceHZ2OM3P7BtxGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795205412;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795206289;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=hosspx6aaU+k/GrFDy0XlCAJwuBQtVCG9tTxjtZLOwE=;
-	b=ObNA+3SoqMQxEEAZNHv9W4Um03e3oEkznfEQOAP20AR5wY3qApQ3reWN2J44AQdotqqP
-	 nW3sC8JEjz9pkeSUxtuYQPnLntRDnITDlE3Xu7VjsYmSozeCQNPyr8Aj7MlRM0ikR6Qek
-	 SY77gYkhWZqfv79IiQh6+XHDs+AGRdjgc3DEKweqC4qSPTvSk3cJHmd15nvOHW4My/Jg5
-	 WafccboLQFumbk5BrxxbSdxhKc28Kn9O/auzocnhpoBZLURaG6fbWlqm69ubyH6YzisI3
-	 Atbf2cUvWKT/A9IRUxFWZKNOy/AXHeCMCqOhm+eX58ffKgJmzccHhv5krIQDU/mz9Nw==
+	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Stat-Signature:X-Rspamd-Server:X-Rspamd-Queue-Id:X-Spam-Status:
+	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=JTv+xl+nyOL4Yw0hb7NRutxsLhcTe2o9quNsiatE9kY=;
+	b=JnfppGCIQZPzDVyGzkNfQrsBfz3Tr3CUowq9m4ku2C9Ae2GizpKSPDwSgOCBsb7Wyppu
+	 DHVz7QZ+2+9cOvQQTdqv0Jy+8r7Jk4sZ3FoFZDdyRvdEO4uPn5I43YxaDk980I6qkDlS5
+	 ITwMpBrq55A4xw3rl3z/2nkg8aUATB5iyS/bx4+sUVHLWaH449EEtKyLF1/IOodJYytST
+	 GTAgqNJffkPLS9fNj05rfF3gEeX9KGhJLRlJZWzl3U25fFN8LXQQ+d2ykng8kiTDnCKha
+	 v0MlgQCS6IoDERzF33oLWR6RxrA2hpmMA3qpPoEXG+N8HN9cxEM7sTaGuGOQSe/rHXQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=kUGM3OjP;
-	arc=none smtp.remote-ip=216.40.44.12
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=IBVsxqPn;
+	arc=none smtp.remote-ip=216.40.44.13
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0D3606A6E9
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 20:10:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F0D3606A6E9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44DC606A6F9;
+	Fri, 20 Nov 2026 20:24:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D44DC606A6F9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=kUGM3OjP
-Received: from omf11.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 8BC5FA019E;
-	Fri, 20 Nov 2026 20:10:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 0BF122002F;
-	Fri, 20 Nov 2026 20:10:06 +0000 (UTC)
-Date: Fri, 20 Nov 2026 15:10:05 -0500
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=IBVsxqPn
+Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 3DB5840110;
+	Fri, 20 Nov 2026 20:24:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id AEC5420012;
+	Fri, 20 Nov 2026 20:24:33 +0000 (UTC)
+Date: Fri, 20 Nov 2026 15:24:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, "Linux Trace Kernel"
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] tracing/probes: Zero out faulted dereferenced fields
-Message-ID: <20261120151005.7142efbe@gandalf.local.home>
-In-Reply-To: <sashiko-outbox-225971@kernel.org>
-References: <20261120143002.18b364b3@gandalf.local.home>
-	<sashiko-outbox-225971@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v5] tracing/probes: Zero out faulted dereferenced fields
+Message-ID: <20261120152432.0dc2bdf0@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,40 +59,231 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: c8577iojcnz1jho9g7rdqadtr3cy3tkt
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 0BF122002F
+X-Stat-Signature: sodpzqdf1w8myg31qbqz9qjnn4aiidu6
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: AEC5420012
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18uEZKSswVMbbkwjEahiYw7sm7wizjqlpI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=hosspx6aaU+k/GrFDy0XlCAJwuBQtVCG9tTxjtZLOwE=; b=kUGM3OjPd/93C20BIkGolWShB6pw9G2o03dbOtfrg9xG78sum0l6I+EQVyg+Mwar9pAvyoPAB4k/QLHl5/ztc9WWQn4hRCXAS7RyINuzSufeVcIMI1G7g9xgbTYuCHD2DltLpCY9I6NEd+Q1Fj7aP98alhGUqeVey37XXWNzNCI=
-X-HE-Tag: 1795205406-973688
-X-HE-Meta: U2FsdGVkX1/ISfEjAldu9/skfwWLEUwDc+vWPTa66F9QRsA90OT+/RSOzi4NmKGkOBKV7943I3z86boHtgfsSgSfiRgfuDxzjxs461ZhR3lsGs5uJHNbtYhqXWpEW1IXWB81xopF4wFZ2QK2ZD2H9Nvfqz3uo9xkLkpBp3GIRSIKuoyjno7L7tLgRXnmXrZ28P03X/oN0SeFEhQ1I54/9Jfkto7X6/qbJSwAbld3RYScLwbBwwxB8/j4NU1HPwtWBWirUPeKdE2B6dsC9pspw0pktrxOBzDAZBYv/cB0RGb2d+ki7CDwkpkz2kCpg+ZpSrRfZ01bpDsDg0yjXWDbJ5zDyMqKnwst
+X-Session-ID: U2FsdGVkX1+Jcdwm+O31MLGWelu6hiYqYwHZt0+lNcM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=JTv+xl+nyOL4Yw0hb7NRutxsLhcTe2o9quNsiatE9kY=; b=IBVsxqPnNeusf5J7f+iYWJyi7TgZmo8lnMd6WS/8WNY4oD70Z3bbP5KXV093qP7xb3emT4OktzcWxQ+FJbBUZqjDU0wC7/EKtt/AUPbGZCcKxJDA8fMuyPiLzSc/IVDKL3uxMCFpe2GdLbp8C+F4yEQIGZQM4wFAm5myb1I7apI=
+X-HE-Tag: 1795206273-554924
+X-HE-Meta: U2FsdGVkX1/UYsHMR6jfLj5CVIYqp53KOnjdE0f2ApjjYtOveT0u36SWo+qP7k1yLFWOlUyeosvymLTaTduzBusa/qB5wu0dJ5ZYuou8Tl8/5SjVssE8VmTh5yntPCngQ8D+pgrjn4CghpyWiVSkXeG/2KRIokpMCffmnnN3anB7JB0JcSG+bnGtH3Rk0Dxortw3Y5vQXDrkyptGIfE7i/uSTj9GSGjwoXexlmkdifnXreyV+vKC6mtoaWh+dBsRXZrcQyg8ZNl8+hPBoJolr8qnsfBwVuxgzWMj+6PIcsLWrCFvCq2hNzVkfmAjjoqAHni9l28GGWl3l4S5EIjfNqcO+drgqISejACdw0Z9dOaB96D1DHb6yGZh1FpfGuMwc+QfkKOTaw4Bzsri3chlxu0HeUc/Jvwx2eduO0sjOneYvmtPZx73Hr827dUJBOdUvUYQjEu3+59X9rzGhN00rcPFxO4ddlhaeHI/nsBYnuI=
 
-On Fri, 20 Nov 2026 19:52:53 +0000
-sashiko-bot@kernel.org wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> > -			val = lval + sizeof(char *);
-> > +			/* Only update a non NULL val */
-> > +			if (val)
-> > +				val = lval + sizeof(char *);  
-> 
-> [Severity: Medium]
-> Should this check if (lval) instead of if (val) when advancing through a
-> string pointer array?
-> 
-> For FETCH_OP_ST_STRING and FETCH_OP_ST_USTRING arrays, stage 2 saves the
-> current array slot address in lval and dereferences that slot into val.
-> If the array pointer lval is valid but element i is NULL (or reading it
-> faulted), val is 0 while lval is non-zero.  Checking if (val) leaves val
-> as 0 instead of advancing to lval + sizeof(char *), so jumping back to
-> stage2 overwrites lval with 0 and causes all remaining string elements in
-> the array to be skipped and recorded as faulted.
+While looking at tasks global descriptor tables, I discovered the
+following anomaly:
 
-Hmm, I'm not sure if it makes much of a difference. If val were to fault,
-it is very likely that lval would fault too. But perhaps it should be:
+~# echo 't:sched sched_switch prev=prev mm=(task_struct)prev->mm ppgd=(task_struct)prev->mm->pgd' > /sys/kernel/tracing/dynamic_events
 
-	val = lval ? lval + sizeof(char *) : 0;
+The above creates a tprobe on the sched_switch tracepoint and records the
+previous task_struct pointer, it's mm_struct and the pgd the mm_struct
+points to.
 
-I'll send a v5.
+~# trace-cmd start -e tracepoints:sched
 
--- Steve
+            bash-1050    [000] d..3.    90.829478: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d30b623600 mm=0xffff88d30108c600 ppgd=0xffff88d33352b000
+          <idle>-0       [002] d..3.    90.836024: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d301870000 mm=0x0 ppgd=0x0
+     rcu_preempt-15      [002] d..3.    90.836031: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d3013ad100 mm=0x0 ppgd=0xffff88d33352b000
+
+The first event has is a user task that has both a valid mm_struct and a pgd.
+The second event is a kernel task where the mm_struct is NULL and so is the
+dereferenced pgd pointer.
+
+The third event is where things looked strange. The mm_struct is NULL but
+the dereferenced pgd has a value! That is: NULL->pgd produced something
+other than zero.
+
+The reason for this is that the probe_mem_read() and probe_mem_read_user()
+do not write to the destination on failure. The process_fetch_insn_bottom()
+loop does not check the return value of the dereference (as it is the last
+one), and does not update the event. That leaves the value for that failed
+field to be whatever was in the ring buffer at that time.
+
+Have both probe_mem_read() and probe_mem_read_user() set the destination to
+zero on failure to read the address.
+
+Now all pgd are zero when mm is zero.
+
+Also update the stage 2 of process_fetch_insn_bottom() to not return on
+fault but to just set the value to zero and also do not even bother
+dereferencing the address if the value is already zero. This allows the
+code to continue and fill in the zero into the memory location on the
+ring buffer.
+
+Cc: stable@vger.kernel.org
+Fixes: 533059281ee59 ("tracing: probeevent: Introduce new argument fetching code")
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+Changes since v4: https://patch.msgid.link/20261120143002.18b364b3@gandalf.local.home
+
+- For arrays, test lval for NULL pointer instead of val (Sashiko).
+
+ kernel/trace/trace_probe_tmpl.h | 78 +++++++++++++++++++++++++--------
+ 1 file changed, 59 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+index 8acc0f0ebd7a..6606fb26fd3c 100644
+--- a/kernel/trace/trace_probe_tmpl.h
++++ b/kernel/trace/trace_probe_tmpl.h
+@@ -133,13 +133,37 @@ process_common_fetch_insn(struct fetch_insn *code, unsigned long *val)
+ 	return 0;
+ }
+ 
++/* On failure, zero out the destination */
++static nokprobe_inline int
++do_probe_mem_read_user(void *dest, void *src, size_t size)
++{
++	int ret;
++
++	ret = probe_mem_read_user(dest, src, size);
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
++}
++
++/* On failure, zero out the destination */
++static nokprobe_inline int
++do_probe_mem_read(void *dest, void *src, size_t size)
++{
++	int ret;
++
++	ret = probe_mem_read(dest, src, size);
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
++}
++
+ /* From the 2nd stage, routine is same */
+ static nokprobe_inline int
+ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 			   void *dest, void *base)
+ {
+ 	struct fetch_insn *s3 = NULL;
+-	int total = 0, ret = 0, i = 0;
++	int total = 0, ret = 0, i = 0, offset;
+ 	u32 loc = 0;
+ 	unsigned long lval, llval = val;
+ 
+@@ -147,25 +171,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 	/* 2nd stage: dereference memory if needed */
+ 	do {
+ 		lval = val;
++		/* Prevent dereferencing NULL val pointer */
++		offset = val ? code->offset : 0;
+ 		switch (code->op) {
+ 		case FETCH_OP_DEREF:
+-			ret = probe_mem_read(&val, (void *)val + code->offset,
+-					     sizeof(val));
++			/* Do not dereference NULL pointers */
++			if (val)
++				do_probe_mem_read(&val, (void *)val + offset,
++						  sizeof(val));
+ 			break;
+ 		case FETCH_OP_UDEREF:
+-			ret = probe_mem_read_user(&val,
+-				 (void *)val + code->offset, sizeof(val));
++			/* Do not dereference NULL pointers */
++			if (val)
++				do_probe_mem_read_user(&val, (void *)val + offset,
++						       sizeof(val));
+ 			break;
+ 		case FETCH_OP_CPU_PTR:
+-			val = (unsigned long)this_cpu_ptr((void __percpu *)val);
+-			ret = 0;
++			/* Do not dereference NULL pointers */
++			if (val)
++				val = (unsigned long)this_cpu_ptr((void __percpu *)val);
+ 			break;
+ 		default:
+ 			lval = llval;
+ 			goto out;
+ 		}
+-		if (ret)
+-			return ret;
+ 		llval = lval;
+ 		code++;
+ 	} while (1);
+@@ -173,19 +202,25 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 
+ 	s3 = code;
+ stage3:
++	/*
++	 * Once val is zero, it is pointing to NULL. Any new dereference is
++	 * also treated as a NULL pointer.
++	 */
++	offset = val ? code->offset : 0;
++
+ 	/* 3rd stage: store value to buffer */
+ 	if (unlikely(!dest)) {
+ 		switch (code->op) {
+ 		case FETCH_OP_ST_STRING:
+-			ret = fetch_store_strlen(val + code->offset);
++			ret = fetch_store_strlen(val + offset);
+ 			code++;
+ 			goto array;
+ 		case FETCH_OP_ST_USTRING:
+-			ret = fetch_store_strlen_user(val + code->offset);
++			ret = fetch_store_strlen_user(val + offset);
+ 			code++;
+ 			goto array;
+ 		case FETCH_OP_ST_SYMSTR:
+-			ret = fetch_store_symstrlen(val + code->offset);
++			ret = fetch_store_symstrlen(val + offset);
+ 			code++;
+ 			goto array;
+ 		default:
+@@ -193,27 +228,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 		}
+ 	}
+ 
++	/* When val is NULL, so should the val + offset */
++	offset = val ? code->offset : 0;
++
+ 	switch (code->op) {
+ 	case FETCH_OP_ST_RAW:
+ 		fetch_store_raw(val, code, dest);
+ 		break;
+ 	case FETCH_OP_ST_MEM:
+-		probe_mem_read(dest, (void *)val + code->offset, code->size);
++		do_probe_mem_read(dest, (void *)val + offset, code->size);
+ 		break;
+ 	case FETCH_OP_ST_UMEM:
+-		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
++		do_probe_mem_read_user(dest, (void *)val + offset, code->size);
+ 		break;
+ 	case FETCH_OP_ST_STRING:
+ 		loc = *(u32 *)dest;
+-		ret = fetch_store_string(val + code->offset, dest, base);
++		ret = fetch_store_string(val + offset, dest, base);
+ 		break;
+ 	case FETCH_OP_ST_USTRING:
+ 		loc = *(u32 *)dest;
+-		ret = fetch_store_string_user(val + code->offset, dest, base);
++		ret = fetch_store_string_user(val + offset, dest, base);
+ 		break;
+ 	case FETCH_OP_ST_SYMSTR:
+ 		loc = *(u32 *)dest;
+-		ret = fetch_store_symstring(val + code->offset, dest, base);
++		ret = fetch_store_symstring(val + offset, dest, base);
+ 		break;
+ 	default:
+ 		return -EILSEQ;
+@@ -237,11 +275,13 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 			if (s3->op != FETCH_OP_ST_STRING &&
+ 			    s3->op != FETCH_OP_ST_USTRING) {
+ 				dest += s3->size;
+-				val += s3->size;
++				/* Only update a non NULL val */
++				if (val)
++					val += s3->size;
+ 				goto stage3;
+ 			}
+ 			code--;
+-			val = lval + sizeof(char *);
++			val = lval ? lval + sizeof(char *) : 0;
+ 			if (dest) {
+ 				dest += sizeof(u32);
+ 				*(u32 *)dest = update_data_loc(loc, ret);
+-- 
+2.53.0
+
