@@ -1,158 +1,114 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795173099;
-	b=q7BjiDeMjMbe8cdMi39CGUVKjMsSYVUIzyV863jCsm1Lph0S9V7Lo18r+6sddXY6hdw1
-	 L9Xf3DAPtSyvQY9UDGs/3imcPYhBanAic6Jbq71nuVv6g6mHQu2f6rCHlWxPPPNFAWS1b
-	 RPXhokv1Il+eGIKHa7QacYyXoDepRBdSrFBRS2G82bOv03NMo7Udf6C8synT978YWaLNj
-	 oY3hNbxyp/Nji0MezXLSY+k3OjhfbDKYhBT63ae2Hwtl81f5hcEz+EyfrCIeiYcaticim
-	 NAEjjGzXjCJbPrCZ5mkt8drX2dWUP1S6uRyQ238Xn25l5L/9SvG6TmEwcXqthRBSrgg==
+	t=1795176768;
+	b=iwY4bUn1UYa4oUThIiAoRb4i+eQmPhGWfEQGyZ8v7HWGP150saZQxm8Q0AF/+C4sO8vL
+	 idL3jmgLsIMUX3usLFxzecYVgvt0o2FfKc/7F7xU/O7Cl18KCCgtR3goIuzJRlzLgSODC
+	 H98kVi8bDKzVy5fq/gFUa9xh/Zh1gDfu8Hsc1mDGOazahGxNgcIF21Nf512aZ31CmRn3s
+	 sT5uIWuu2US10Uqte3SnHB9iq82CRz+B52/7rOgzu2Oz361IzPht00hl8uUWFnyys9o0h
+	 eE9Ik7hQ04L+7aN1mcq1X8sa7SBRPpVOW2gP6gD1tlmeTEhgNt1YzEDJp6QgpCaI5ig==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795173099;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
-	 X-Developer-Signature:X-Developer-Key:Content-Transfer-Encoding;
-	bh=6iowvnjr0RIgWlIDQQOFrlHY5uCtXtYYlYEEp/cOH20=;
-	b=5nnfdhAGPsormLec2G+4IfvNULAzqGwGfJI6Ky7M738xYSEcDtU2DzZkuCm8hdtYnafu
-	 9P66I76S0M9A6oAhEZVscRLe0x2w+y/2QT4KtGGOUxkCNb2EST5fx9FrzGvvVaQOJCL1i
-	 WR4pUpwCWCmaQKBqIUx5BqNGkvcOkVmTPm4S1kZsTXXErk9yReqF2M28KbG5LPJrZoBxZ
-	 mCu5vIoP1baCKTglfDvZWeuQYAkPBHRcpuS027KTxWYxXZ8viUeiqA6OZK/GG6V9qz5L2
-	 6wuoxLOEFMnlMDVb+G3KaKmfOYSag9yR2ahjIyYr6eO3BeXGn3T0uxc+Nih5e/MQz6w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795176768;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=Fm0n4WElJ0e9msCLidXhb9kiBDeF1hAX/ZUDT+BPJeQ=;
+	b=TdpFmm7IyZqFiwddDhg0uLA9c4TdGWaleX62CuPcja26A8EEXv8NVZN6zmX5W5qzOU49
+	 Fll+HyC6Qy1OrIg1SrahQFNFk24VC22yn9d9LTBfTsn+Ffezn1lJdYclSj0LSc4XocgZu
+	 edv/Ve+YRy/VEBVZT18No5bpyeSIltJ2BGBESMpX/E7jCSM706NCvmrVVcmpRG++Rb/W2
+	 JuS/zY8WbaQqX/QW5XK1jwIHgSXo0KqdaDRV45RiTBtKluUEKzW+v8QoD204jLd2zV6DF
+	 BQcTwmmLd+SNXtzAJnfpljT6sthP120UzM44qxTkcM9GxB/pF+3okoze/BjotgKP/VQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=baylibre.com;
-	spf=pass smtp.mailfrom=baylibre.com;
-	dkim=pass header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=cy0T8JFY;
-	arc=none smtp.remote-ip=209.85.221.53
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=eUpbCPdI;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D2360A2636
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 11:11:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69D2360A2636
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75343606A335
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 12:12:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 75343606A335
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.a=rsa-sha256 header.s=google header.b=cy0T8JFY
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4ac109a8a12so361286f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 03:11:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1795173093; x=1795777893; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6iowvnjr0RIgWlIDQQOFrlHY5uCtXtYYlYEEp/cOH20=;
-        b=cy0T8JFYf6te/xTc1kjLehflkRMCyCLyy11kt5kR0iiTkUeh72a0VfbQtLsWdxQKbC
-         cFhL1NyNlrILzdeaX46VwkVy4MeXP+mFwxsgogALnuIqFabIzDYbfPIl3XyCnmwy3ai5
-         8T6EK3t8OE8eX7WpS5CBBnJ9gcHuPx45xGmWl0vctudKI11NB8OsFG4EaWegB9jAqjdE
-         yLVMj47I7qQc00jYFIsxNT/1utXJQ9rQvvCMZFbRZLgflQn5wfH6nc0qoZ6hPFJoQBZA
-         5jVraI3baGqMgrr/3P3ZFrjwysBQ3aAxoi2icTr9AnuVXVlkHmUvOvgDDhNFO4YMaSSw
-         JBMw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=eUpbCPdI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1795176765;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Fm0n4WElJ0e9msCLidXhb9kiBDeF1hAX/ZUDT+BPJeQ=;
+	b=eUpbCPdIsgzjJ4SgjSQeoOs/pkvo9XmJ66R5YFDFz4YCV65Rn3flMAzt7p3AdLVh7yGYeA
+	tQEjM86xlF3qrRS7j5UgPVUeX5CiGORhwIUzxEuHAEfE48uwABYXgeKLe3U1tEjpEkOwB0
+	7faKq+AOLrGB7i3d35vUyyAFNiYhjO8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-580-SDJ3S5PXMtODSJ5aPV0b9g-1; Fri, 20 Nov 2026 12:12:43 +0000
+X-MC-Unique: SDJ3S5PXMtODSJ5aPV0b9g-1
+X-Mimecast-MFC-AGG-ID: SDJ3S5PXMtODSJ5aPV0b9g_1795176762
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-48e4d1e29f3so719308f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 04:12:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795173093; x=1795777893;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=6iowvnjr0RIgWlIDQQOFrlHY5uCtXtYYlYEEp/cOH20=;
-        b=qhizrvtYc86p68b4cCaUp3xIv/UevG/OmQE2XKDNHqROk9XZv9FNnFhM4XDNrP78Cd
-         PgcfGVwYS1HMO/VTcYujLTSBXO2Qd643MoJAwfYhQx+6hf1Eic5UjQxBEfwqiN7tOECZ
-         NsjM3M8OTu0DUyepxPP5X7LvSfRpHi3rhRv6DuWrIcEjEIB5wJcOgzs57BXPGfSJGTM8
-         tv32gcbFZFDZUlZXIxQS7ckljRTOtz4wDodj4eEUSHYXrj1wYD2i/2bYpU1Mvz4nuYXF
-         oF5z/yLPp9YpyV3ltM+74UTIbKhd1JYzp2X8yjdmdl4cTpi8Zy98FbblcoBLd/vHKE+a
-         D8qQ==
-X-Forwarded-Encrypted: i=1; AL+hErHKM9PI45CM/Fw+B6LlxMmLjT5cfNfwDNTB4NMLkMDWmzH/HWjSYIBcJrsYjqt6yWgqNZsfW3JT2cldJlwCvEmt8Tk=@vger.kernel.org
-X-Gm-Message-State: APuU4Z858mxRF8YKsGiiTepIBaNmRx9RTNdKZUn9wO/rt0t2227g0+tX
-	VojLz5JCVr7MyVbEYxS5ndtvWBTlsWPU911pLsk0cPQFwb9AJLh2C31PXY4Idt+RxFI=
-X-Gm-Gg: AYBFou0U45tMZM2PPrfMsu81O3Y5/bBBMRVXthBbrNkOX6FH39daverDhc665w+gfnP
-	oc2G+UKXX4bwyhR8BQ5twt/3g2uKO+uH4NvSeNdml64K7HhhTllOYe/y5pFQM0wFaC4OnCUDrYo
-	7+vYJsybBrvWzpFl75rgdKZlm3xXbVEctCu+cDLk42ruLgbnUC1J/CuacAgHIAbw7xlGr9u/spc
-	YuTgqDgiSnzixRseznceYpzak+z7ZzQbMI03qkTB1rJ2QP8jzsaBlpI6Di3Ytm62/3p+Pfovpmq
-	f0/k2RVWq1cmjR51/tapeRiALrYrynO2P6wvl8TGzrOpyiSze7WhH4elmTt5y3NQEv/3J5hGWiF
-	Y8D6pwP46luePDZj3H0v5oYrcxt0H0z8mpVtje7qVmG0pN9lWKASCHy4cXrGP4sERlkeZ6nnpCx
-	OsqlvIHaribVVDQU2aNAK5lC7Wbl6szfCvydBpREf/KHUDZm7EMTX5k1zWqn5WphpiZ/2yIUT9x
-	V2jB4FZIBKLKcpLkmJD+MkU/ArqbNzd8PRQHyj021QwTLy1V11YNEzCNroTZs4Z8iADIayoWn8H
-	Dy1ii+6Hsv2DavBz+HAwCD7PebvaLf3LCKo9TmttUFkT6EyInpf+Zq1dlVUMfFUiliHAVuHgpeH
-	/0wF/HzN3xyrd5OrF
-X-Received: by 2002:a05:600c:3b0e:b0:4a1:efba:511 with SMTP id 5b1f17b1804b1-4bb8882508emr60110635e9.35.1795173092340;
-        Fri, 20 Nov 2026 03:11:32 -0800 (PST)
-Received: from localhost (p200300f65f19a904be03815e1634e776.dip0.t-ipconnect.de. [2003:f6:5f19:a904:be03:815e:1634:e776])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4bb884a15absm67887745e9.9.2026.11.20.03.11.31
+        d=1e100.net; s=20260707; t=1795176762; x=1795781562;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Fm0n4WElJ0e9msCLidXhb9kiBDeF1hAX/ZUDT+BPJeQ=;
+        b=0xkvTW9R/MgRd1EJMciuJoi9PGMyiwrlPQu+oj/HVZK5z8EfLqXxtxsPqwINd1eWBY
+         +vFR/rRD7q5oXMHWz5rEWa5ImhT+J7UILAOCNarFgKdLZihlECEwitueLElJ/KYz1kOf
+         F5Id28ZLqvFx/FOWiY/k8ZiSXFeOqzALD7Z04flRFSGyhPZ2nOPkJngeDaYb7+fH1ozo
+         CFuxlMV7FEfKW4ICZWLgeL9ckppMCMbbm1g6042T3uKNbII211f0kLV2szaZ0T/RucwK
+         aPszyVBN7Uqw+8D6sOfi/5U4UTDFbefIgDoEKsukF4zh3y7j6saSwRLUsWSFk175/vCW
+         V3FA==
+X-Forwarded-Encrypted: i=1; AL+hErFOdDhyPblxp9ordWOKw0qDFDvaGNauI733qe78xaNzriCmnswJjbMPfmb60wT7E0vF7dOwZuAtIWhTBXQaazGRg/k=@vger.kernel.org
+X-Gm-Message-State: APuU4Z83UsUVUQXJssdlE1m+H65sIKH4iJXvfi3irnB7DoZyO2Eg+u77
+	zoeZScggfL9XK88Yo5HmbR+0jX4dwLtykc7IW3Z2wY6CL/dobu02b8Kxdkxk+D03nESUv/7ccXn
+	0mnq9RzBsqe0SSgAWlDzgLwuBdZnC2ZjH246bj1DHvDWbkSAHwA5SElL3p1SE45ArtBVT9M7zoz
+	Xw6cLcwZgxLLY=
+X-Gm-Gg: AYBFou1B8EMyc1eplA0Dm1zRtQdJTQFu3FTqzoUAaFbQhQybTonrMetidVnAsOSZbzQ
+	AxxbnQcoSoktkFWQ2sr6Wb/gYnVBc1Fh8pP2qwH053UeQovcXsHe3eT/r8u4qInNk41QiBspDix
+	4gLXbReh2ZAgWxFBlHhqoztJ0P32fTVFqK//zD7a+kAJSUbIBT7pZea15RBBPhhI+tth20I0bpx
+	1pZtiXbPRlggrVtdz3+3SLk7SkjWRvEjgp9CTx3KqWJOOpnY+dO2rUzFxATzhov0pGxxOHO5GeZ
+	E6TwgxrF3kGOfHmFJoGdRNZfJl/x0D9gb7xjVOgxaBDUmhApTBpd+5K1Uk+aSJ0Jy1yUounNdiI
+	6PZxqe44FbkskgH5M+lOsMR1fmKmm4B6SU7/TAK4Fn9OY2KQW8S5lcR1eCKaLkbJgjylfGUhhKd
+	Zq
+X-Received: by 2002:a05:600c:4f84:b0:4bb:8701:a2df with SMTP id 5b1f17b1804b1-4bb88809950mr64759775e9.17.1795176762186;
+        Fri, 20 Nov 2026 04:12:42 -0800 (PST)
+X-Received: by 2002:a05:600c:4f84:b0:4bb:8701:a2df with SMTP id 5b1f17b1804b1-4bb88809950mr64759385e9.17.1795176761785;
+        Fri, 20 Nov 2026 04:12:41 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab65cb41f4sm5183887f8f.7.2026.11.20.04.12.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 03:11:31 -0800 (PST)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Johan Hovold <johan@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Ioana Ciornei <ioana.ciornei@nxp.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Julian Ruess <julianr@linux.ibm.com>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	=?utf-8?q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Tony Krowiak <akrowiak@linux.ibm.com>,
-	Jason Herne <jjherne@linux.ibm.com>,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Mark Brown <broonie@kernel.org>,
-	Abel Vesa <abelvesa@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Brian Masney <bmasney+clk@redhat.com>,
-	Jerome Brunet <jbrunet+clk@baylibre.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Bradley Morgan <bradley.morgan@linux.dev>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-doc@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Alex Williamson <alex@shazbot.org>,
-	Mostafa Saleh <smostafa@google.com>,
-	kvm@vger.kernel.org,
-	qat-linux@intel.com,
-	virtualization@lists.linux.dev,
-	intel-xe@lists.freedesktop.org,
-	Vineeth Vijayan <vneethv@linux.ibm.com>,
-	Peter Oberparleiter <oberpar@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	linux-s390@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	linux-clk@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.com>
-Subject: [PATCH v2 00/10] driver core: Disable driver overriding by default
-Date: Fri, 20 Nov 2026 12:11:01 +0100
-Message-ID: <cover.1795171088.git.u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.3
+        Fri, 20 Nov 2026 04:12:41 -0800 (PST)
+Message-ID: <9709becb82665468bef304ece738c17280550337.camel@redhat.com>
+Subject: Re: [PATCH v8 09/14] rv: Add generic uprobe infrastructure for RV
+ monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: wen.yang@linux.dev
+Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 20 Nov 2026 13:12:40 +0100
+In-Reply-To: <21469501d58c0b7efc662226f4c9e9a9d7d32847.1793900349.git.wen.yang@linux.dev>
+References: <cover.1793900349.git.wen.yang@linux.dev>
+	 <21469501d58c0b7efc662226f4c9e9a9d7d32847.1793900349.git.wen.yang@linux.dev>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -162,110 +118,206 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4896; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=zb+igsuXLt8tOTuUjhzAr7HaxCaZLq4II70BN40Br9Y=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBrACrJx1qga/LvoqPeQ2w7AGsIzkvZ0u8Ei7ilD OnkWyRDOleJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCawAqyQAKCRCPgPtYfRL+ TrT2B/4h+7Q3cE0LlxcXdMzSjo72DibWSV5sOQkmoVdvDT2jirOpWioUU86bki4NAIk6Z4fKuAQ Tq67UAFcdu/x0sb+TsWnSkdYqWbFXP1E9qqHzS6LbgG2Wo9AfXLnJRQPoIkCW5R3i/w6jmyDLiI LkWjw6qUO85o5cf3veZf7uvTVs/F1HlPcGi5H2XR8SEvtsTQoNcOqyDD/XO+JfY5VRim2QTygzC /LqpSYXX2fMI/PZcft+vtXeHkKEsua161Yxgcwt3mnXV1cWuUQhOgqkI5MNgrbn/8PHF60B4GWC cbYFOHiY7+15odYG/kF7YqO0HOLOodN9ndNTOKA9GdiXGD/D
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Q-ThwW38HbuKnYqP-HJj7N3cc1ZdecLGZsv-CGQQtx0_1795176762
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, 2026-11-06 at 01:49 +0800, wen.yang@linux.dev wrote:
+> From: Wen Yang <wen.yang@linux.dev>
+>=20
+> Monitors that instrument user-space function boundaries need to register
+> uprobes and deregister them safely.=C2=A0 Provide a thin wrapper so monit=
+ors
+> share a single implementation of this boilerplate.
+>=20
+> struct rv_uprobe embeds struct uprobe_consumer directly, avoiding a
+> separate heap allocation per probe.=C2=A0 The struct holds an inode refer=
+ence
+> (acquired via igrab()) for the probed binary for the full uprobe lifetime=
+,
+> as uprobe_register() does not take an inode reference.=C2=A0 On unregiste=
+r,
+> the inode reference is released with iput() only after
+> rv_uprobe_unregister_sync().
+>=20
+> rv_uprobe_unregister_sync() calls uprobe_unregister_sync(), draining
+> all in-flight handlers before the containing struct may be freed.
+>=20
+> The API provides register, nosync unregister, a global handler barrier
+> (rv_uprobe_unregister_sync), and an active-state predicate.
+>=20
+> Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> ---
 
-here comes v2 which addresses the review feedback I got for (implicit)
-v1. See https://lore.kernel.org/linux-kernel/20261116110853.3418077-2-u.kleine-koenig@baylibre.com
-for the discussion about that previous submission.
- 
-The objective is to deny force binding a device to a driver that isn't
-prepared for that. There are many drivers that run in a null pointer
-exception when this happens and only very few drivers are supposed to be
-used like that. So the first patch implements an explicit opt-in for
-drivers and denies other matches; the remaining patches implement the
-opt-in for drivers that rely on it. This makes it unnecessary to fix
-individual drivers to explicitly refuse such bindings. See commit
-1e50a0349012 ("iio: adc: mcp3564: reject devices without match data")
-for an example of such a driver-specific fix.
+This API requires a lot of manual steps from the callers. We can refine
+it later on but at least I'd simplify the teardown.
 
-Changes since (implicit) v1:
- 
- - Rework parameter parsing to just use `allow_driver_override` on the
-   kernel commandline
- - Add review tags
- - Add patches by Alex Williamson setting .support_driver_override in
-   pci and vfio drivers
- - Add patches for uio, spidev and a few more drivers setting
-   .support_driver_override
- - align wording in Documentation/admin-guide/tainted-kernels.rst with 
-   tools/debugging/kernel-chktaint
+I remember we discussed this already. The uprobe registration requires
+both inode and mount to stay alive, path_get() does both, so I don't
+think we really need also the igrab()/iput().
 
-It is sensible to merge the driver core change (patch #1) together with
-the individual driver patches setting .support_driver_override because
-with the driver core change the driver override doesn't work any more
-for the unmodified drivers (unless the new kernel parameter is provided
-and a taint is accepted). So I suggest (once there is agreement that the
-patches are fine) to merge them all in one go and provide a stable
-branch in case a driver was missed to be adapted. I can create such a
-branch and ask Greg or Linus to pull it, or Greg can do that.
+Do users really need to carry the inode around together with the path?
+Other APIs (e.g. bpf_trace.c and trace_uprobe.c) pass only the path and
+get the inode internally, I don't see why we cannot do that and mandate
+the path is owned by the caller (which is already the case).
 
-So if you're the maintainer of one of the drivers touched by patches #2
-and later and assuming your ok with that patch, please provide your Ack
-(plus the required coordination if applicable) for not merging via your
-usual tree.
+All the other logic might be fine in the callers, but at least let's aim
+to simplify what is general enough.
 
-Best regards
-Uwe
+Thanks,
+Gabriele
 
-Alex Williamson (3):
-  PCI: Allow untainted driver_override for PCI stub drivers
-  vfio: Allow untainted use of driver_override
-  s390/vfio: Allow untainted use of driver_override
-
-Uwe Kleine-König (7):
-  driver core: Disable driver overriding by default
-  uio: Allow untainted use of driver_override
-  spi: spidev: Allow untainted use of driver_override
-  clk: imx: scu: Allow untainted use of driver_override
-  remoteproc: Allow untainted use of driver_override
-  slimbus: qcom-ngd-ctrl: Allow untainted use of driver_override
-  ASoC: samsung: i2s: Allow untainted use of driver_override
-
- .../admin-guide/kernel-parameters.txt         |  6 +++
- Documentation/admin-guide/tainted-kernels.rst | 54 ++++++++++---------
- drivers/base/bus.c                            | 51 ++++++++++++++++++
- drivers/clk/imx/clk-scu.c                     |  1 +
- drivers/pci/pci-pf-stub.c                     |  1 +
- drivers/pci/pci-stub.c                        |  1 +
- drivers/rpmsg/rpmsg_ctrl.c                    |  1 +
- drivers/rpmsg/rpmsg_ns.c                      |  5 +-
- drivers/s390/cio/vfio_ccw_drv.c               |  1 +
- drivers/s390/crypto/vfio_ap_drv.c             |  1 +
- drivers/slimbus/qcom-ngd-ctrl.c               |  1 +
- drivers/spi/spidev.c                          |  1 +
- drivers/uio/uio_dmem_genirq.c                 |  1 +
- drivers/uio/uio_hv_generic.c                  |  1 +
- drivers/uio/uio_pci_generic.c                 |  1 +
- drivers/uio/uio_pdrv_genirq.c                 |  1 +
- drivers/vfio/cdx/main.c                       |  1 +
- drivers/vfio/fsl-mc/vfio_fsl_mc.c             |  1 +
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    |  3 +-
- drivers/vfio/pci/ism/main.c                   |  3 +-
- drivers/vfio/pci/mlx5/main.c                  |  3 +-
- drivers/vfio/pci/nvgrace-gpu/main.c           |  3 +-
- drivers/vfio/pci/pds/pci_drv.c                |  3 +-
- drivers/vfio/pci/qat/main.c                   |  3 +-
- drivers/vfio/pci/vfio_pci.c                   |  3 +-
- drivers/vfio/pci/virtio/main.c                |  3 +-
- drivers/vfio/pci/xe/main.c                    |  3 +-
- drivers/vfio/platform/vfio_amba.c             |  1 +
- drivers/vfio/platform/vfio_platform.c         |  1 +
- include/linux/device.h                        | 19 +------
- include/linux/device/driver.h                 |  2 +
- include/linux/panic.h                         |  3 +-
- include/trace/events/module.h                 |  3 +-
- kernel/panic.c                                |  3 +-
- sound/soc/samsung/i2s.c                       |  1 +
- tools/debugging/kernel-chktaint               |  9 ++++
- 36 files changed, 144 insertions(+), 55 deletions(-)
-
-
-base-commit: 7cfbf79c66c63e807ea452abf0546e6f6d6833a6
--- 
-2.56.0.rc1
+> =C2=A0include/rv/rv_uprobe.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 35 +++++++++=
+++++++++++++++
+> =C2=A0kernel/trace/rv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +++
+> =C2=A0kernel/trace/rv/Makefile=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0kernel/trace/rv/rv_uprobe.c | 56 ++++++++++++++++++++++++++++++++++=
++++
+> =C2=A04 files changed, 96 insertions(+)
+> =C2=A0create mode 100644 include/rv/rv_uprobe.h
+> =C2=A0create mode 100644 kernel/trace/rv/rv_uprobe.c
+>=20
+> diff --git a/include/rv/rv_uprobe.h b/include/rv/rv_uprobe.h
+> new file mode 100644
+> index 000000000000..b93c2a81bc22
+> --- /dev/null
+> +++ b/include/rv/rv_uprobe.h
+> @@ -0,0 +1,35 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (C) 2026 Wen Yang <wen.yang@linux.dev> */
+> +/*
+> + * Generic uprobe infrastructure for RV monitors.
+> + */
+> +
+> +#ifndef _RV_UPROBE_H
+> +#define _RV_UPROBE_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/uprobes.h>
+> +
+> +struct inode;
+> +struct pt_regs;
+> +
+> +/*
+> + * Free the containing struct only after rv_uprobe_unregister_nosync() +
+> + * rv_uprobe_unregister_sync() + iput(p->inode).
+> + *
+> + * The inode reference does not pin the dentry, so callers that re-resol=
+ve
+> the
+> + * probed path must hold a struct path: 9p cache=3Dnone remints an inode=
+ per
+> + * lookup.
+> + */
+> +struct rv_uprobe {
+> +=09struct uprobe_consumer=09uc;
+> +=09struct uprobe=09=09*uprobe;
+> +=09struct inode=09=09*inode;
+> +};
+> +
+> +bool rv_uprobe_is_registered(const struct rv_uprobe *p);
+> +int rv_uprobe_register(struct inode *inode, loff_t offset, struct rv_upr=
+obe
+> *p);
+> +void rv_uprobe_unregister_nosync(struct rv_uprobe *p);
+> +void rv_uprobe_unregister_sync(void);
+> +
+> +#endif /* _RV_UPROBE_H */
+> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+> index efa930f94ea4..2bc412304293 100644
+> --- a/kernel/trace/rv/Kconfig
+> +++ b/kernel/trace/rv/Kconfig
+> @@ -86,6 +86,10 @@ source "kernel/trace/rv/monitors/nomiss/Kconfig"
+> =C2=A0
+> =C2=A0# Add new monitors here
+> =C2=A0
+> +config RV_UPROBE
+> +=09bool
+> +=09depends on RV && UPROBES
+> +
+> =C2=A0config RV_REACTORS
+> =C2=A0=09bool "Runtime verification reactors"
+> =C2=A0=09default y
+> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+> index 4b84b83b942b..8dc14a1819b8 100644
+> --- a/kernel/trace/rv/Makefile
+> +++ b/kernel/trace/rv/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_RV_MON_DEADLINE) +=3D
+> monitors/deadline/deadline.o
+> =C2=A0obj-$(CONFIG_RV_MON_NOMISS) +=3D monitors/nomiss/nomiss.o
+> =C2=A0obj-$(CONFIG_RV_MON_WAKEUP) +=3D monitors/wakeup/wakeup.o
+> =C2=A0# Add new monitors here
+> +obj-$(CONFIG_RV_UPROBE) +=3D rv_uprobe.o
+> =C2=A0obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+> =C2=A0obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+> =C2=A0obj-$(CONFIG_RV_REACT_PANIC) +=3D reactor_panic.o
+> diff --git a/kernel/trace/rv/rv_uprobe.c b/kernel/trace/rv/rv_uprobe.c
+> new file mode 100644
+> index 000000000000..1c7f8466aeed
+> --- /dev/null
+> +++ b/kernel/trace/rv/rv_uprobe.c
+> @@ -0,0 +1,56 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Generic uprobe infrastructure for RV monitors.
+> + */
+> +#include <linux/fs.h>
+> +#include <linux/uprobes.h>
+> +#include <rv/rv_uprobe.h>
+> +
+> +/*
+> + * uprobe_register() takes no inode reference of its own, so grab one he=
+re
+> and
+> + * drop it only after rv_uprobe_unregister_sync().
+> + */
+> +int rv_uprobe_register(struct inode *inode, loff_t offset, struct rv_upr=
+obe
+> *p)
+> +{
+> +=09int ret;
+> +
+> +=09p->inode =3D igrab(inode);
+> +=09if (!p->inode)
+> +=09=09return -ESTALE;
+> +
+> +=09p->uprobe =3D uprobe_register(inode, offset, 0, &p->uc);
+> +=09if (IS_ERR(p->uprobe)) {
+> +=09=09ret =3D PTR_ERR(p->uprobe);
+> +=09=09p->uprobe =3D NULL;
+> +=09=09iput(p->inode);
+> +=09=09p->inode =3D NULL;
+> +=09=09return ret;
+> +=09}
+> +
+> +=09return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rv_uprobe_register);
+> +
+> +bool rv_uprobe_is_registered(const struct rv_uprobe *p)
+> +{
+> +=09return p && p->uprobe;
+> +}
+> +EXPORT_SYMBOL_GPL(rv_uprobe_is_registered);
+> +
+> +/* The inode stays held: in-flight handlers may still reach it. */
+> +void rv_uprobe_unregister_nosync(struct rv_uprobe *p)
+> +{
+> +=09if (!p || !p->uprobe)
+> +=09=09return;
+> +
+> +=09uprobe_unregister_nosync(p->uprobe, &p->uc);
+> +=09p->uprobe =3D NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(rv_uprobe_unregister_nosync);
+> +
+> +/* Global barrier over every probe dequeued so far. */
+> +void rv_uprobe_unregister_sync(void)
+> +{
+> +=09uprobe_unregister_sync();
+> +}
+> +EXPORT_SYMBOL_GPL(rv_uprobe_unregister_sync);
 
