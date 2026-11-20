@@ -1,67 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.219.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795200506;
-	b=odT4PYUGQRdkvkVxhSEQC1IE3qJUCECfHTOd4hX7kU0wGhHAF6ysezHZiLv4dbNwtW9Z
-	 BiGWNUzAaDvgInZ3+J+dVQjzg+yHNLnYcIPSUoolTOYytg6YqCF5242z7SL723Mhh18Dd
-	 8C2RezjnAf/UKD0+MkI4wr3oXtD7+MHgskGEV/+Ncmkrz52UuPBiw+M7JxGnYNUYFEN6c
-	 hVkYOzfcNChSvWnuOAr+/vFCH/q94D/PpeKqaUBjBlJfr2sORkdQfSNEe7KZ0H68K4Fdx
-	 dy0KqRc20xZanr56urBia/moDt+otLvoY0+FUj3qfBdoF+4g/WAVw+lWEnjnczlzcIA==
+	t=1795201157;
+	b=NHbXw86ePMLJ14GQekL7exepEc4D287Ds3REFsP/qRyTE1Ck6Aamklg+T3/X5FE/FxZg
+	 JQBEUjKNmKEuxMrgVgldGba9UpT0CFUXv5VT+CS1nDByxi9/WKG/FY7IU3gWvqGOzz597
+	 0SH4iAW1AgDH06405EC8vxsFH3wKAhC6sWVsaKEXDsQR2sPpyzknmWPebqOGfHT3tpTyi
+	 5AMSZA/+aAYMd3FDxF2ZC8sLP0+o2D7t0JqVEILaFGApOlAFKDDAB1EZ7JQ9fpRxG5OpM
+	 9eDQinHk23KcHcLCKxyAS0loC5yqkP4vE2h0ZqR7rHtNwx1h4uweCVWgjwTtFM1d86g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795200506;
-	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Debian-User;
-	bh=rXBlCLAIPxZIrnxc5TaUZs68Bkw6of2txEBVWp826uY=;
-	b=bE4WhJkAHpS3QnSv05iR0sXuzub0b5IGpRoY1vd7dK+BdOOiYRvARpQfKDgvVw0hlLVc
-	 N8+Zbve2wSSafa4pjeulkcC+ElWKFfvwgXRMv61F9FR1k1sGhHCWx/QctO5WRt3jHKwdY
-	 YdI2gGQH1LF16bpgxf+jBoQL4pIFGBPw1HcNpxsEt9KXa0zd9qn6s46xls/eJj+IhVQCt
-	 J/QB/O5pRry5BkUmaDzajUl39IGa4wOsJHwmLXn+xd+HkpLpxlpP21Kb5duBM+svzLeZQ
-	 cX/i/r800HfbitmnChhlBbgMx4TgkXKGP6OlmhHnkRygCckp+OHm5mUrESaRfwSyCOQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795201157;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To;
+	bh=tJwebgYCqnOwbw+tEDHyKOXYITgvxF1JqBIr3xmLP1k=;
+	b=S5BskHmeYyRgz5F8DlJ4NUKv/3UqxNhLjC+/zzJWjCeHHgzpDIdxdBv8V7zqQrcWzp9R
+	 LESJLs+OKNnOPiAWNXk13OsyNtdrskiZbo1tHZstzoFNEdW4tdp6AyoCV2jp//z8x/3AQ
+	 a6OGB1tgj7fpk/7PN7DD2a8kiaa7QdkAFy9ANWTaqdAMl1KP3c3XlFhexis5Uc0e7mp/P
+	 owPQ9azKVvDUvFYqr2swo/LZyvLmzHPW+jQhAVKYktCuHWUbvjrySWqVGpHLhsek+NpF9
+	 qwksVAdf+exTIRCRtoDc98XvLNDDJ6KbKCcAdfXiP5dV74FQOQQte+Ko8CcCuUdHJMQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=debian.org;
-	spf=pass smtp.mailfrom=debian.org;
-	dkim=pass header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=qi5royQj;
-	arc=none smtp.remote-ip=82.195.75.108
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=none header.from=ziepe.ca;
+	spf=pass smtp.mailfrom=ziepe.ca;
+	dkim=pass header.d=ziepe.ca header.i=@ziepe.ca header.a=rsa-sha256 header.s=google header.b=mU3aNJZB;
+	arc=none smtp.remote-ip=209.85.219.46
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24D960A260D;
-	Fri, 20 Nov 2026 18:48:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D24D960A260D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51C660A262B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 18:59:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E51C660A262B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.a=rsa-sha256 header.s=smtpauto.stravinsky header.b=qi5royQj
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rXBlCLAIPxZIrnxc5TaUZs68Bkw6of2txEBVWp826uY=; b=qi5royQj/MxjP2EhLMDrPzFRUV
-	QRQtkFov2KwEqvFQVTOm9DxW4/AUZmmIDMDYnSZEOQBypgTf42igwM3yWgxWGuBKCT9mujN2EOfsH
-	yLEFvhU0RkbaBglJCpKuJDCJiqzWxFqYB2XosUDmaVOJRK81TXWR1SjyZ8gxCYL3Z4ZbFP5qMv/I5
-	p8SstMBI4S+nFMDf3R/KCTEUZ6FL0cjNJU8uANYvOGX8MkZQsm5K4JJXnQKnJBz4pJqYayspbIho8
-	frFzMs4cLZpWE9l13n56CM15dG/+dHaVRbqVuml+pxnflRylzPlPmVdZb3e02jT10AF9xwhjyUbNv
-	glh3sPhQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1xUTei-0034dY-2b;
-	Fri, 20 Nov 2026 18:48:17 +0000
-Date: Fri, 20 Nov 2026 10:48:12 -0800
-From: Breno Leitao <leitao@debian.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] bootconfig: Exclude alignment padding from
- bootconfig max size
-Message-ID: <awCV4GdVIRNJN6ty@gmail.com>
-References: <179495924003.237695.10973676765152260584.stgit@devnote2>
- <179495925054.237695.2777053796977822521.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.a=rsa-sha256 header.s=google header.b=mU3aNJZB
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-92119da3d37so11655406d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 10:59:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1795201151; x=1795805951; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tJwebgYCqnOwbw+tEDHyKOXYITgvxF1JqBIr3xmLP1k=;
+        b=mU3aNJZBRL8xUqWS/+Z7eLapx4QbOcTgVhU+sRd6l8RC/BU4tGdhmpl3f7TK7HXUDN
+         e6WbNtj/CG+SB2L8fMXHAhgkzYS+OWZViqSQaN96DeEnuHCbbF3QyV+ORx+ipnLawE7e
+         cC9jAUXHBb4BgVZLeGi1R+A9LGcu7JQxCnw6Qid5UMZ/ru2ubKJpU9c3WeRiRVPuISx7
+         iQlM29eE6uHpDIp582x0bH1E3v/YLRIlUz8MQQx6kuMQ7rbGY5dfZ5OZrEc0W1eLmd0r
+         W2tqTk89VFPb7601U+F+RmlG/JVcritFbVV2fJXNJ2hXrK+nfps0hqEj1izLBKF5UoPP
+         lm7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795201151; x=1795805951;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=tJwebgYCqnOwbw+tEDHyKOXYITgvxF1JqBIr3xmLP1k=;
+        b=sDMkU1knIBUXDuECZIptLoF70XaYX8y7xvSdmIlqumoGMzKTlWYC8Nxif1jlMGT4Vy
+         OESA05PcPjnIWI67X1GVg/7gyQloPFWncNI9IM/KMVESU2Rom6x3NroYZfHA7mZdziRn
+         JTFV5eXC8LgqWImxFEkK6pI2IF9wftablPONsGwL6vbRtLURGTH6v1E9CpZromcvR7D2
+         Tir5W8ZqiV/D9iASpez7ed43xXJxbEqikGSemQMECmqlo8xfgVG1FoycyqYd5+a7dkTY
+         8RMUsJCYcCWV81C0+/6aLW49p14Ka5CHJpECxTQvv6WhHuvaQh21mu6wFf3sm1heHl67
+         JmvA==
+X-Forwarded-Encrypted: i=1; AL+hErFmlQMmN/OIQy7SSo/Fa76ihSbRISF4JytrUvBlc2/LkYKI9l2/ggl3rFxBGVl7x8CSPO0LeT4y3StmLnFMMz/WU+Q=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+rAr6THSWvqP2YOOuUeNs8XB+s+KEWwJY0T5mtWKVYWlmeIS4c
+	T32xmi9+bb1bwfu6xQDXNs9A5GMCpGM74lxBErrCNCsvbn8L2t92AJMu1wZtmgYT9hw=
+X-Gm-Gg: AZFdTZeLdKi53TvIJS18KAyJg+zNl6atmi64/4d2KJkUOTWuenCH+PXAZnUJUdmfD2p
+	AMbPdaNoGtb1ySGcW+MaXjp8L5DXZg7ssNKFEG5F5vJxySdeD16+VyieXXNAWSSWerE16Nl8RtW
+	ayaVW93cRmuZo9SR/8bAU4B1D7kJdTxIQ7ozpU9nBD/NKuBxDidk2Wbq7Em7oQRjWSryxaP5nfO
+	BLRkeqIo+HlMSq9RJ6+CvybW2rwiqnrYKu0jmMyGA2jbE0IaU9x/Ch+zCp32YU/BvIlbmT0kgUo
+	KK/EXuykQvWBo2vOsnUhzvUeSVlYpxcrozrQFYW8QzvhFnierjztOdld0Aq+NOefQcDJnSTIDst
+	mFkSHUXd2X1PRlp1hDfFX2E79OdUILiJrARNqPp0il4r304QcPhHHSL6voypbxMU7J48Tl3D/dJ
+	bAB6fzux37zVcaVpbfIH27LIOqShB4iPPi5ovvhrUZGdmfATMtzJOJffivXvuqEyChl/7ivO7tk
+	FI4iehRebiggvn5ecgrpOtLU/xxQTyLk5X7HMKSbZuSxsTCkdZFN3VumpFcD5iCAu+Esn4XpoMC
+	7Tj0mw==
+X-Received: by 2002:a05:6214:528a:b0:91f:171b:e02b with SMTP id 6a1803df08f44-92134b3fff4mr65009886d6.35.1795201150678;
+        Fri, 20 Nov 2026 10:59:10 -0800 (PST)
+Received: from ziepe.ca ([142.166.156.71])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-921349f8c34sm34171876d6.32.2026.11.20.10.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Nov 2026 10:59:10 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1xUTpF-00000004mVJ-1MNw;
+	Fri, 20 Nov 2026 14:59:09 -0400
+Date: Fri, 20 Nov 2026 14:59:09 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Bradley Morgan <bradley.morgan@linux.dev>,
+	Armin Wolf <W_Armin@gmx.de>, Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-doc@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/10] driver core: Disable driver overriding by
+ default
+Message-ID: <20261120185909.GB1133597@ziepe.ca>
+References: <cover.1795171088.git.u.kleine-koenig@baylibre.com>
+ <f7b5c6319203d288a166e6f811c6ea07e12d5f4f.1795171088.git.u.kleine-koenig@baylibre.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -71,41 +110,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <179495925054.237695.2777053796977822521.stgit@devnote2>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f7b5c6319203d288a166e6f811c6ea07e12d5f4f.1795171088.git.u.kleine-koenig@baylibre.com>
 
-On Wed, Nov 18, 2026 at 08:47:30AM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> When attaching a bootconfig to an initrd image, apply_xbc() appends 0-3
-> null padding bytes to align the total image size to 4 bytes and includes
-> those padding bytes in the footer size field. As documented in
-> Documentation/admin-guide/bootconfig.rst, the maximum bootconfig size
-> (XBC_DATA_MAX, 32767 bytes including the terminal null) is not supposed
-> to include these padding null characters.
-> 
-> However, both load_xbc_from_initrd() in tools/bootconfig and
-> get_boot_config_from_initrd() / xbc_init() in the kernel check the raw
-> footer size directly against XBC_DATA_MAX. As a result, a valid
-> 32766-byte config (size = 32767 with the terminal null) gets a footer
-> size of 32768..32770 when alignment padding is added, and is rejected
-> with "bootconfig size is too big" depending on the initrd size.
-> 
-> Define XBC_DATA_MAX_PADDED (XBC_DATA_MAX + BOOTCONFIG_ALIGN - 1) for the
-> raw trailer size check, and add xbc_exclude_padding() to strip up to
-> BOOTCONFIG_ALIGN - 1 trailing null padding bytes (keeping the terminal
-> null byte) before checking the unpadded bootconfig size against
-> XBC_DATA_MAX and passing it to xbc_init(). Keep using the raw footer
-> size when truncating or trimming the initrd so that both the bootconfig
-> and its alignment padding are removed.
-> 
-> Also expand test-bootconfig.sh to verify applying, reading back, and
-> deleting a maximum-size bootconfig across all 4 alignment paddings.
-> 
-> Fixes: e1cef2d4c379 ("tools/bootconfig: Align the bootconfig applied initrd image size to 4")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, Nov 20, 2026 at 12:11:02PM +0100, Uwe Kleine-König wrote:
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 8228c9acc530..ed505e362b1d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -424,6 +424,12 @@ Kernel parameters
+>  			do not want to use tracing_snapshot_alloc() as it needs
+>  			to be done where GFP_KERNEL allocations are allowed.
+>  
+> +	allow_driver_override
+> +			Allow matching drivers without
+> +			.support_driver_override = true to devices using
+> +			driver_override. This is a dangerous operation in
+> +			general allowing root to oops the kernel.
+> +
+
+I feel like this is more appropriate as a lockdown level than a kernel
+command line?
+
+Jason
