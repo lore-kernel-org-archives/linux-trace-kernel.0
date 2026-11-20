@@ -1,114 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795162358;
-	b=lG7akzDncKbvH717UqrskmjgdbqE3RnJJSf3wny1q/1yB05s0DZagCsbyoC2b7TsdLKD
-	 6eMwN0xjzl8u/Dd3ch8yBfvuJeN0ocRgKCX5iWIDK+TClFNpFYVwWjgoY56fPonEzFigO
-	 QL3pR/EwyQhmKDGLNfFEkxvkcqU9qv3TtN6ARMRFOqKvaG7fIGcaHi3VFptnUtvjzoLsH
-	 2nyds4ywb7oip/UaM8pOaoiC9anJfhuhsGIR7VkiMeSPQAuULQt6pKECs0KZtmtGJy4+H
-	 iNjhzhfF/3GIpbeEr9FN9W+tMZ1f1+Ex2hCRitGUSMyng2fqx+GTFPr8Wbo2tO1/Nbg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795162358;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=yny7ZCsaJaUBk2Uk+L6wiiJ87n/ATHV1ryvHlIqZ5Tk=;
-	b=L/9eXmTmJCJ3RZus/098RzsmCpC0iJmeqpYfTNhJnXf9mB73swHQZCETJFo1WTfzSLyU
-	 7ZYMdDY6UtAeA4epQUQZs/uiwUBBOl7hOtWAkeJQXQFmsgfwxFD8whlsF/YfUiSZzGUmM
-	 vVYyZ21swSwe6wUg1jAoMEecfTDBEKddl8KOiko9e3RkN4eF9DZmthTGiooNz36QPAhJu
-	 GNuweRGXsA0olKYqUdhlzNkjWLZ2oFYzEBKkMh1NpeEM8NajtLgNyGWW4B80L67FdIZvZ
-	 70LB9hrfhxRc9FUVdoLfdd4TOc14jm7TZxunarMKQFt57pAxoq3GF4peU9rLw75u4jw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IXUtFnpz;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795172379;
+	b=YAJTX6L3s9E57rywyw2TciFys3/Yt52flMLj/swZBecWRt0enVtM51mm4CUBpiTIYhYQ
+	 s2jp6stL7Np1iGyjBNQx2W3qXR++4DADSgWHs/fhsa7VorpG+PVOoujoXRknYmjbYI4kj
+	 uCfeC/YHpB5H8e/g2tit4b1y5t5732BdEFu/FqPvBulEI+68J0sxdNkfJaQ4sAeX97CsR
+	 +fd6VxSm0pw10WTrf/HNYTSKQy6bN2ZsFXRaSfRh7fC+o+QCs87GUAWSFVApMvACG4byt
+	 DpnGZIT2soq0oO+j6Y3zaCJkLW9raDiagJSHpksIKW0ANmYT5FKabbka9LsslfUq+5w==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795172379;
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=N9GJoWP9KWGANWBclMN/x/7grGRAitsXcFOYvWp45p8=;
+	b=VCbxb8mxLZnMFbtFstLNgrubfAKP9HsqOPI/MDKvv/oYo6YzevkQKEmhBmf6eAsB+Uum
+	 LFMG2jhV5Rb16TeCE3aSrrEm/vTifoisY3PekB6hn2+pHM34AkMVmM10fIXvS2OjsqLIm
+	 QCVAvGofuYbuGn/1ThXyKBPz9sPzADcZO31Vw6vvDba2B1bTgioYJ0hWiTjRGaA7LS/cN
+	 cIrCdHNNOdqQdKzCgrAP9O5ADUtm+d9D2k2rhbWdsnsV10UPGhbC6i7/uRZKYpmuRN2b0
+	 hVvQBIwgBcTapp4K8N+TFtSJ4KWrk+2zPXxr9zBtl0zYqwdf5JRTEb1HvWioHRUkcHg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tg+wGCAW;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D5A60A2600;
+	Fri, 20 Nov 2026 10:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tg+wGCAW
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1795172379;
+	b=3OXDbaMMpzQ4cLykjXsDEaHhqVAD0Kn+RYbqeqGB/jfKQLI63YcVJr2BWS59EaTYqbtH
+	 iimis6ItokhyyDWlMgWEvd7nFcj3Bi7HZfvtczn7Ipj0MuF3pveRjmS7AzkrGZeQ96UdP
+	 rX7PSbdIPBT8wh3/X8pOmlfKyjINTpdK90t0jtFCg30fGDnsQyaMcdixEvfi2R1dWA/Zt
+	 B0r67+aK7t3iMNMwtyaR2Ts6E7xUTCdmXKBpnej+mszjw45tP+iBl9KpnH92bz73H/OPO
+	 bLY31VrevDhFWNOqTa5QA5YlwBLmugNxSRY9LQziOzm6L+STbOSc2bfVWpMZ1uYMBUQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1795172379;
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=N9GJoWP9KWGANWBclMN/x/7grGRAitsXcFOYvWp45p8=;
+	b=PmJdtqexSORjpkVpBvOBNqgwVcqvqsSW3zjnjMwLj6zYEKm3teCefcNBbj7bz0BjXoek
+	 W2oZWrveASshqIEccEra2ZDEqIid3aNOhwndJE0KYHb6tUgT7TepKlq+4kpgfz5jdZuD1
+	 62cncmb0MWENEpB0v97OslgbvgTBKJaRRfwyUZLY1sS9WVWEJs8s23XF496iHZYQp2Kqa
+	 EVsEZJLwMCYXHP0JQ+dKfrjy6wRbpHabIFUAvpbKLD/AflippwIehUTkZhg1CbCrzcUuH
+	 ayUYeU7empDo8tfBB2JQHyxWZG6+0Puk7dD083DxssKxGF0rcyFWADLfRuj6N9WzIFg==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C494606A326
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 08:12:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7C494606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IXUtFnpz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795162356;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yny7ZCsaJaUBk2Uk+L6wiiJ87n/ATHV1ryvHlIqZ5Tk=;
-	b=IXUtFnpzoAOlbIDtwZ8WhauUJZdHs65FhMtsHlehbYKGFuQtSIzLQ05rq44Oin7UKOOCOa
-	kgTRfMcZRJS7vZuQHdBwcX3guq+UwrCfP8qIn5R4jopj0s+IdzhXlTQvqZKl26KaScuSGn
-	oDtm0JzRrhuAuvWBEPjm+TD9fbq+vMg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-572-bgDRtF6GOI6_JNp2IH6MVg-1; Fri, 20 Nov 2026 08:12:34 +0000
-X-MC-Unique: bgDRtF6GOI6_JNp2IH6MVg-1
-X-Mimecast-MFC-AGG-ID: bgDRtF6GOI6_JNp2IH6MVg_1795162353
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-48e0af48c18so354157f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 00:12:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795162353; x=1795767153;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=yny7ZCsaJaUBk2Uk+L6wiiJ87n/ATHV1ryvHlIqZ5Tk=;
-        b=EGS5enrGBLo22qbbsRmm+Qot+ma9hBcsxuNJnyKddwwszGVBMkPXfvmigaSTAxXVi5
-         oyOJ7kTDnog/XZADPNuJn1jU3D6ZA1hgS4b7SBCQiTDuwlRKxEA2TfatSpBp+1OkuKJz
-         4nbx/L1/4LKquIA3vE5HZZYstC9AkwXzztuMIv7u42TVtlMs53KFHI2nTK2uY2o42XC1
-         3sH9dlzdrF+6JDPPU/ElTBx9qVunexYmlY7lGnFs6GOvMCfLsVGoq/UphGOq8b9k0uYF
-         isdkzZEr00bgrfLjsjLkOIi8NuzvHSpzg/DGIh90Uul1+yvWvJgIi93xRuu2M0VrHocb
-         eoLg==
-X-Forwarded-Encrypted: i=1; AL+hErEnOReybqgqPAIulQTBwI99/BVCJbp9JZ4VxdyDnJW82FMPGR/NXUdKb/RTMkkEW6u4Guqv/DN3iy8v2102nSQjee8=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+VfO934Hg1etroxN7IT0JjSd2rS9DO2k5RtrFbLEIbzdxaXZ8S
-	S4P0oxE3ay+fCuiBl4HmKNsE9Be97pYubkQEZlbcNonrAGffKzzyAza7ighMVAVnEEFrdk6Xy/D
-	Z3Ic8fSaVEBW5uyTUODKK5Uvz2VW4/S3Igc5pE51f/O8LX97Qw8tTZZ4t5g0DjxzfYN94twXBGA
-	==
-X-Gm-Gg: AZFdTZfWb+WAZU8kW2je8d0agfk7hAhwEaMNoMgGDwpkInzrKzxubjJ/nlIO7kuT7zL
-	LAr0UF3Sg+/RucW/vJLYaOHQfDW9EsDjH0m/5INcg0MPMbIwKJ4InjsQpZHJjl25daWiL1rYn7R
-	c6oKNK+0/IQ9SNb5G9vT1wQ8VGbUR5QAfirck4SeyGJEDuyGyR+u3wllhhAiJmALo2JQsw9aROJ
-	NmIPuQu1SqhPympizc+bf1gprSDwN3Nm0sxTozYMEPGao6c94uCFj8cVE8nrt5rCmeCpom4+01S
-	xfSAllrAiD5spNgC/n9Y7YeU1YgM+uhIDPUCqDefb/zMq4FhavTWHV24n62Hjnjh/AzaSHVH2vu
-	fbAAH/Zv2WKR9R4wTl+uqbXGvBM5TFqgtindoBdBjzey6an5nyjBCAdUm/Ambx2TtJnDPeTXVJy
-	KM
-X-Received: by 2002:a05:6000:22c2:b0:4ad:5e91:8fcb with SMTP id ffacd0b85a97d-4ad5e918ff5mr44921f8f.25.1795162352950;
-        Fri, 20 Nov 2026 00:12:32 -0800 (PST)
-X-Received: by 2002:a05:6000:22c2:b0:4ad:5e91:8fcb with SMTP id ffacd0b85a97d-4ad5e918ff5mr44869f8f.25.1795162352554;
-        Fri, 20 Nov 2026 00:12:32 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab69bf680fsm4565988f8f.14.2026.11.20.00.12.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 00:12:32 -0800 (PST)
-Message-ID: <0a593f7ba6372245497cb9ac58dad1b71f9a2f4b.camel@redhat.com>
-Subject: Re: [PATCH v8 08/14] rv: Support embedded target types in
- per-object DA storage
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: wen.yang@linux.dev
-Cc: Nam Cao <namcao@linutronix.de>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 20 Nov 2026 09:12:30 +0100
-In-Reply-To: <49fd8e0482d2cf1f9c690031ab0cf9cc1eb1c5ad.1793900349.git.wen.yang@linux.dev>
-References: <cover.1793900349.git.wen.yang@linux.dev>
-	 <49fd8e0482d2cf1f9c690031ab0cf9cc1eb1c5ad.1793900349.git.wen.yang@linux.dev>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
+	by smtp.kernel.org (Postfix) with ESMTPS id 5F05C1F000D0;
+	Fri, 20 Nov 2026 10:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795172379;
+	bh=N9GJoWP9KWGANWBclMN/x/7grGRAitsXcFOYvWp45p8=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=Tg+wGCAW4zpukb+x1lwkG7mWcbdnZSiVTg4hGAhEYkgJqSBYWW0hfmFcyfnUeRmP4
+	 Lz1VqpEMQyQGdCeB/qIcEgQYQeEqF2Dcv61p4ZWh8K+rthJLDiyrhg6dqnwslZAzS1
+	 RtIm1tdinEPPY/Bu9jS2G2nhTlHT64/wtwRePx/0ENhKU8QCyEYg9hBU9qWXSMdJxD
+	 RPBxHpVZGdPFKOoarLizZiLQnLAyZ9qMoSgXmIcU0qBvsfjJ2klLq7VzbA0AOilxJQ
+	 HogP1V17DOS6S/TdeZgpWOB0jaB/pFhZdX5JPNpvpjcAvtDLDG54Lvx9Nu9VdlTXQF
+	 rxydHzl3JlErw==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id D186B49822;
+	Fri, 20 Nov 2026 10:59:24 +0000 (UTC)
+From: Mike Bazov via B4 Relay <devnull+mike.bazov.gmail.com@kernel.org>
+Subject: [PATCH bpf-next v3 0/3] bpf: Use an on-stack pt_regs in the raw
+ tracepoint helpers
+Date: Fri, 20 Nov 2026 12:59:10 +0200
+Message-Id: <20261120-bpf-raw-tp-regs-preempt-v3-0-ec109009a5d2@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -118,117 +84,133 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: NMRpV3HyVzr6tIA14X8PzP4zUvGDqheWzBvHiR_Iy9k_1795162353
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP8nAGsC/4XNQQ6CMBAF0KuQWTuGKRGoK+9hXBQ6QBOBpm0qh
+ nB3Kys2xuWfn/9mBc/OsIdrtoLjaLyZpxSKUwbtoKae0eiUQeSiJKISG9uhUy8MFh33Hq1jHm1
+ A6qqcpKylaiSkdbp3ZtnlO3xHEy8BHqkZjA+ze+8vI+39Xz0SEuqcmlLr+lIV7a0flXme23ncz
+ SiOjvztiOQwMTUyT44uj862bR/iVWwyEAEAAA==
+To: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ihor Solodrai <ihor.solodrai@linux.dev>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ Emil Tsalapatis <emil@etsalapatis.com>, KP Singh <kpsingh@kernel.org>, 
+ Matt Bobrowski <matt@bobrowski.net>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, Mike Bazov <mike.bazov@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795172363; l=4481;
+ i=mike.bazov@gmail.com; s=gmail-20261116; h=from:subject:message-id;
+ bh=4aGQ30fVGQcDktz+c2aNUCUwsz1tlkmURfv5+dT5M+Q=;
+ b=Br8yFWWxoQSuqlWMGIXaNofyvpYJBZw/pOHE4k/eXeU9vSibz9Je439VzXK+bUFun4kq4wd3B
+ uwmLjp4+fnAAwiorDfpWyDqkMjypn0a3NRNE4spCWtXCt3+lzo0sbyU
+X-Developer-Key: i=mike.bazov@gmail.com; a=ed25519;
+ pk=Rr9fagn0pNA+bs8tgc6DXZpRAhl/maU6BeqkttIR7DA=
+X-Endpoint-Received: by B4 Relay for mike.bazov@gmail.com/gmail-20261116
+ with auth_id=1544
+X-Original-From: Mike Bazov <mike.bazov@gmail.com>
+Reply-To: mike.bazov@gmail.com
 
-On Fri, 2026-11-06 at 01:49 +0800, wen.yang@linux.dev wrote:
-> From: Wen Yang <wen.yang@linux.dev>
->=20
-> A PER_OBJ monitor usually typedefs monitor_target itself, as a pointer to
-> the monitored object (borrowed: the object exists independently of the
-> monitor and outlives the storage).
->=20
-> A monitor whose target is monitor-owned data can instead define
-> DA_OBJ_EMBEDDED_TYPE with a complete struct type: the framework then
-> derives monitor_target as a pointer to it, embeds one instance in each
-> per-object storage, and allocates and frees it together with the storage.
-> On storage creation the caller-supplied target is shallow-copied into
-> the storage before it is published, so it may be a fully initialised
-> stack object.
->=20
-> This allows per-object monitors to manage custom per-instance data withou=
-t
-> maintaining private mempools, complex multi-stage reference counting, or
-> out-of-band teardown state machines.
->=20
-> Suggested-by: Gabriele Monaco <gmonaco@redhat.com>
-> Signed-off-by: Wen Yang <wen.yang@linux.dev>
-> ---
+bpf_perf_event_output(), bpf_get_stackid() and bpf_get_stack() of raw
+tracepoint and tracing programs share three per-CPU pt_regs slots,
+picked by a nest counter. These programs can be preempted, and tasks
+then leave the slots out of order, so a sample or stack trace of one
+task gets the registers of another. Patch 3 fills in a pt_regs on the
+stack of each helper instead and removes the slots.
 
-Looks good, just a minor comment.
+The slots also limited how deep these helpers nest. Two things need a
+limit of their own without them, and both can already be hit today
+without raw tracepoint programs:
 
-> =C2=A0/*
-> =C2=A0 * da_get_target - return the object associated to the monitor
-> + *
-> + * NULL for an embedded target whose storage was pre-allocated but not f=
-illed
-> + * yet: a manual-allocation monitor publishes its storage before it has =
-one.
-> =C2=A0 */
-> =C2=A0static inline monitor_target da_get_target(struct da_monitor *da_mo=
-n)
-> =C2=A0{
-> -=09return container_of(da_mon, struct da_monitor_storage, rv.da_mon)-
-> >target;
-> +=09struct da_monitor_storage *mon_storage =3D
-> +=09=09container_of(da_mon, struct da_monitor_storage, rv.da_mon);
-> +
-> +#ifdef DA_OBJ_EMBEDDED_TYPE
-> +=09if (unlikely(da_storage_is_empty(mon_storage)))
-> +=09=09return NULL;
-> +#endif
+- bpf_perf_event_output() WARNs when entered a fourth time on a CPU.
 
-We usually avoid ifdeffery inside functions like plague..
-Could you embed this in TARGET_PTR?
+- Build ID collection in bpf_get_stack()/bpf_get_stackid() and
+  bpf_find_vma() take mmap_read_trylock(), which fires the mmap_lock
+  tracepoints. Programs on them that call these helpers nest into each
+  other as deep as there are programs. Patch 2 limits it to three
+  levels.
 
-  #define TARGET_PTR(storage) (unlikely(da_storage_is_empty(mon_storage)) ?=
- NULL : &(storage)->target)
+Results on bpf-next 0fb18ce8a2e9, x86-64, debug config, CONFIG_PREEMPT=y,
+preempt=full. "base" is that tree, "v2" adds only patch 3, "v3" all
+three.
 
-> +=09return TARGET_PTR(mon_storage);
-> =C2=A0}
-> =C2=A0
-> =C2=A0/*
-> @@ -572,8 +635,11 @@ static inline struct da_monitor
-> *da_fill_empty_storage(da_id_type id,
-> =C2=A0=09=09=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 monitor_targ=
-et target,
-> =C2=A0=09=09=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct da_mo=
-nitor
-> *da_mon)
-> =C2=A0{
-> -=09if (unlikely(da_mon && !da_get_target(da_mon)))
-> -=09=09container_of(da_mon, struct da_monitor_storage, rv.da_mon)-
-> >target =3D target;
-> +=09struct da_monitor_storage *mon_storage =3D
-> +=09=09container_of(da_mon, struct da_monitor_storage, rv.da_mon);
-> +
-> +=09if (unlikely(da_mon && da_storage_is_empty(mon_storage)))
-> +=09=09da_storage_set_target(mon_storage, target);
-> =C2=A0=09return da_mon;
-> =C2=A0}
-> =C2=A0
-> @@ -589,7 +655,11 @@ static inline monitor_target
-> da_get_target_by_id(da_id_type id)
-> =C2=A0
-> =C2=A0=09if (unlikely(!mon_storage))
-> =C2=A0=09=09return NULL;
-> -=09return mon_storage->target;
-> +#ifdef DA_OBJ_EMBEDDED_TYPE
-> +=09if (unlikely(da_storage_is_empty(mon_storage)))
-> +=09=09return NULL;
-> +#endif
+The slot race, 5 runs of 10s each. Two raw tracepoint programs on
+sys_enter call the helper, two threads make syscalls on CPU 0 and a
+SCHED_FIFO thread preempts them every 20us. For bpf_perf_event_output()
+the reproducer reads the return address of each program's helper call
+from its JIT image and checks the IP of every sample; bpf_get_stack()
+and bpf_get_stackid() get an empty kernel stack instead, because the
+unwinder looks for the other task's sp on the current stack:
 
-Same here.
+                                     base        v3
+  bpf_perf_event_output, wrong IP    7-18        0      per program
+  bpf_get_stack, empty stacks        362-535     0
+  bpf_get_stackid, empty stacks      168-364     0
 
-> +=09return TARGET_PTR(mon_storage);
-> =C2=A0}
+The bpf_get_stackid() case with bpftrace, whose kstack calls it; @a[]
+and @b[] count the empty stacks:
 
-Thanks,
-Gabriele
+  bpftrace -e '
+  rawtracepoint:sys_enter /comm == "dd"/ { @a[kstack(1)] = count(); }
+  rawtracepoint:sys_enter /comm == "dd"/ { @b[kstack(1)] = count(); }' &
+  taskset -c 0 dd if=/dev/zero of=/dev/null bs=1 &
+  taskset -c 0 dd if=/dev/zero of=/dev/null bs=1 &
+  taskset -c 0 chrt -f 1 perl -e 'select(undef, undef, undef, 2e-5) while 1' &
 
-> =C2=A0
-> =C2=A0static void da_kfree_cb(struct rcu_head *head)
-> @@ -635,7 +705,7 @@ da_create_pool_storage(da_id_type id, monitor_target
-> target,
-> =C2=A0=09memset(mon_storage, 0, sizeof(*mon_storage));
-> =C2=A0
-> =C2=A0=09mon_storage->id =3D id;
-> -=09mon_storage->target =3D target;
-> +=09da_storage_set_target(mon_storage, target);
-> =C2=A0
-> =C2=A0=09hash_add_rcu(da_monitor_ht, &mon_storage->node, id);
-> =C2=A0=09return &mon_storage->rv.da_mon;
+Nesting. For the WARN, a raw tracepoint or kprobe program calls
+bpf_perf_event_output(), and three fentry programs on
+perf_event_output() call it too. For mmap_read_trylock(), six programs
+on mmap_lock_acquire_returned call bpf_get_stack() with build IDs, or
+bpf_find_vma(), while the process does 1000 mmap()/munmap():
+
+                                         base     v2       v3
+  WARN, started from raw tracepoint      no       yes      no
+  WARN, started from kprobe              yes      -        no
+  bpf_get_stack, build IDs: depth        4        6        4
+                            calls        1.5M     5.9M     1.5M
+  bpf_find_vma: depth                    6        6        4
+                calls                    5.9M     5.9M     1.5M
+
+Depth counts the programs on the stack; at 4, the last one gets -EBUSY
+or the fallback to IPs. The kprobe case wasn't run on v2, which doesn't
+change that path.
+
+---
+Changes in v3:
+- New patch 1: don't WARN when bpf_perf_event_output() nests too deep
+  (reported by the BPF CI bot).
+- New patch 2: limit nesting of mmap_read_trylock() in BPF helpers
+  (per Alexei's suggestion).
+- Patch 3: correct the commit message, bpf_perf_event_output() keeps
+  its own nesting limit.
+- Link to v2: https://lore.kernel.org/r/20261119-bpf-raw-tp-regs-preempt-v2-1-e1e1b90857d6@gmail.com
+
+Changes in v2:
+- Use a pt_regs on the stack of each helper and remove the per-CPU
+  slots, instead of disabling preemption while a slot is in use
+  (per Andrii's suggestion).
+- Link to v1: https://lore.kernel.org/r/20261116-bpf-raw-tp-regs-preempt-v1-1-d01b6dd8573c@gmail.com
+
+---
+Mike Bazov (3):
+      bpf: Don't WARN when bpf_perf_event_output() nests too deep
+      bpf: Limit nesting of mmap_read_trylock() in BPF helpers
+      bpf: Use an on-stack pt_regs in the raw tracepoint helpers
+
+ kernel/bpf/mmap_unlock_work.h | 16 +++++++--
+ kernel/trace/bpf_trace.c      | 80 +++++++------------------------------------
+ 2 files changed, 26 insertions(+), 70 deletions(-)
+---
+base-commit: 8835113107b2cf75df33a71e265cdeec5d5d13e0
+change-id: 20261116-bpf-raw-tp-regs-preempt-1f7019989ab9
+
+Best regards,
+-- 
+Mike Bazov <mike.bazov@gmail.com>
+
 
