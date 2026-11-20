@@ -1,93 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795177736;
-	b=v/tcJQWXObvuay/iL68alCNvp4Lfmytjpq4Y2+XjaQGYoEh2fs6ZYtu6xNHZP0osXDZV
-	 t/qOvnbgnghBETLRDewOf2U2iMFjzJ93HIcU8alneO+9G3WwOmVNr0jR6yiIBHIlMCiiE
-	 y3As5F3r0PusD+6C9u28GR/QdhHJnDUArl+u2svG6tW/tSyziZbbuNhYy78zbmUme/uqE
-	 +zlJewOXHMErRiJtUoq83dpS89eHkkOyDmYKMbjsAzN3UiDQKcRoB4+r5kbU3SzfY3DUX
-	 mGuIyxXcR0nv0B9XCWxKuQa5MO4WBLGRvRWGMK8T/4+qJNMhFmvo7tPHCI5Pj48iBRA==
+	t=1795178245;
+	b=5BZpK/iaFFxgtPK5fMnyvJ2VOjYQqHa7Xgj59we4j3JCedleI5XUr6LIi/ZQs9hkdER+
+	 6yOFX1B3urJ+OBnJkBmEQGoHOtpwJ5T2yx/LFuz/MOGCtgo+WJMucKO6xwKuwqqpjfohx
+	 7FpwFAacb/dtZ1nWsjKsqjZ01kQdtgEMrTWdWyoyoOGiIIprwr/j/VI0kr1dOZmLiKtK/
+	 KZw5uU3diP29LHX9Npl2qkoWL/BTt9v8FdxmJCYRBnIG9LXylPNR7B03dAMDHPTbN35pz
+	 x32umicKae7CzoUdI6/DTJpZNXAGB7b8fdcAGvsxy/V/Jpqf5yrdM5x/gqVzdrSAeDw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795177736;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=+KA+YLla3am2sIk9vQD6p3FihKCddHdYMt501msSpC8=;
-	b=T1p7b96w5mLedKSxFaeW1EROQ0yZGqLOguwVUh9rD7hh4n0Pi3FDiE1CbnB1bzNQpCld
-	 x9kngdPj+8xyeiPk6KtJ0ro79SkamuswzuQzYeiv2nH4pAr5/yOnA/anYtgqFEw+ACc5L
-	 BE2o5qhJRqiIvBkHDEFM77crJFaAdzHJ+M5ukgXaPS35hhVZyuFjGTNsEsi2Wfj7E+2+m
-	 L3WsSL90kriDOmnFDQ7yLhRZQMKQTTdF++31e0RgahRy9KhT0ehoFbX7Zm8WG43E64N6B
-	 Yc8Y3Nl5AAE1qXhQW2WuQfzwNjyRH3y0teltldBCAZVYecoiiMXPuogm74apoovH9gg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795178245;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=Bs247TMy5ZVgaAryWhBMwTNU+j8yz4KTRR2MUfwT5Xs=;
+	b=UjHIVAIJxcBLyWFXkVJubOyaCLH4hqMLxvKPAmJWVfpTo+/pVhoZ98RPbwGc22kpDYHf
+	 PWpxbhT5Ur4pyPYI4IOvN4EFS3VuV+0+Ur5rigFv6CLeiqmwe1wymxocP5AsS5pf1KuYf
+	 Nd1+W+ftqtjL2heZL0e4TtyX7yZ9zbD2it7FM486zd6pdq1HyktM1p1aAn7GKA97a3H2U
+	 TMHT0AKpnfr3SbErtYsY4MMf7bUK+HpcC0lAl0zS2ycY49m0LuPHqyEAdzXl9FfkbytnW
+	 yMn2MV1mcRy+1Z+OVA7eBDneG4L+Re1vgCLzOYbnGbarUvERaw3GdoHrUHLiFYGPY+A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=weOiSFkP;
-	arc=none smtp.remote-ip=209.85.221.50
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L7yk6Qiy;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C183606A320
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 12:28:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C183606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E12606A330
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 12:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=weOiSFkP
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-48e09aa5264so416115f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 04:28:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795177734; x=1795782534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+KA+YLla3am2sIk9vQD6p3FihKCddHdYMt501msSpC8=;
-        b=weOiSFkP5LHC25zLAuM95X9lbET+Pa1kwiWB7K2SAM1CrOOM3ye5/GwKqW8kQojbc7
-         EbyaH1FLJB1xBSAetDIOwvcutl9a7QdA8pdLftMPnRJAkvjTQstW5afqsH3pLKQfU0RB
-         8tZrJq1oUDUFJ38j3SR48oVlzkc1RVh16w0Osssxi55mDPFT9fFTv3nppfLM+znpkKFF
-         eVwbJ5YhAA6BMRcNSUBcpW7Jy0T8GNcSNF+IYohDMK6YuWSZT4t8LTcwDE6ERMGMnFcP
-         z1OS8xWrDALZSVj4NC59nxGdf4Dafcem/5QW7wCjMBrC0lRqEsk2cKHcu7z5e+uaVLSw
-         mnRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795177734; x=1795782534;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=+KA+YLla3am2sIk9vQD6p3FihKCddHdYMt501msSpC8=;
-        b=F9+GHud1YF+4LDXWuQ1kCLH6f123jJPGHiwlWSk/cSpdjp7NS1uJSZ4Szy4oWnqiiE
-         qj/v4vpHoQudYTyh00JAjKqH6NBrggFx7+lP9Wd6EBycHhwzfT5Z5rwnyanSjxV8Aru1
-         vDxyPjjj7wREGQgo5ZPmnQ25Qn4r/onJGnzXHhGof00Vgjeaqg0GgB6Mvnr8iUFHKBr3
-         qPdjE9jNctOdi/0Syk3rLs8eL8eA6s0NUeecm4ifAJ4Ggr99JFKbWba8ULwRDHXaYXt8
-         NKaCQK4mqF3ftWcjmR9ZWuZtgbBAshlEItFIMyOMYM+1gixBTwAl8pWxkYRU+JjBBPEl
-         v7hg==
-X-Forwarded-Encrypted: i=1; AL+hErH9K0xXCmzkCKkX5+pS7H5wIvMQIOQrytme6UJ+YJragdwf5EtcGu/Qe18QtrW2Ug6k0h2ue5Cnhl3lstHLGcHNQQ4=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9QCdRLiFU1JqAUbTcFNlfsS59N+zfl+3jYgYoI5CSvdpoeTHxM
-	H7H9ctTWaQviUVwLmqxvfmD+NeWnSocJQfcp31OjleJ4Ba1b1a0ED7vy
-X-Gm-Gg: AZFdTZc+hf185b5wsvemGsK30hFJ7t2e9h+3mJK4EKueMDGQ2/OG0HHctm1HsxRm634
-	HdRlmhDnTbp3+egaW96GzXZM1rTZNLt726YxlmUwpInjOQ70wMkE0anNIaeBIY0ZyOdZryNAjGU
-	aodxmBL/f6i0vo8+px9pWeomAK688z22Z938lWZpdKrkDulW3Vry1/LOhswHqOoomBx7K2m9UNw
-	/F8eXpZ1rB3S4tao8H7wjSOp6mqY1qGZKbLmp6fQrmkiHXjwvUd4u2PEePh8SXDa+BVSi1qKjZx
-	b+ogC7yqm9XEtnvl7hOSoMhLql8ye6fQkdOKdBKEr8G5tRAsJjILaJD567wMztHEM7wLUHnfABE
-	yqZT5/GfbWjwakBnGwo1HWt+igdJ+OQ1ZTdfB+41x7oJ0LziGgpbJPFTiRxU+84YPCOu7L9QM6S
-	gTxOgleSehR65T47M1Ga4HCbexLimZsL9Zp2yrz89IBmy7c8ZEUmOWXDIxLEr+VfNg25WKLS0yC
-	7bZ432f/BF0m5cLK6L/03dU9GRW1r3WpoIMarRsbsh9IpdtX0s3JFynP/GT9JtLNjlGKCQe/cMH
-	MzCanST5416l8GJF0/j4oehwZfcT6D9ZXA==
-X-Received: by 2002:a05:6000:258a:b0:4a6:4f35:1bdb with SMTP id ffacd0b85a97d-4abb44d3448mr6020046f8f.39.1795177733737;
-        Fri, 20 Nov 2026 04:28:53 -0800 (PST)
-Received: from LAPTOP-AVI.lan ([2a06:c701:477f:ff00:c12b:38c5:81:f768])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a680483sm5312438f8f.28.2026.11.20.04.28.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 04:28:53 -0800 (PST)
-From: Avi Weiss <thnkslprpt@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avi Weiss <thnkslprpt@gmail.com>
-Subject: [PATCH] tracing: Restore custom event creation selector
-Date: Fri, 20 Nov 2026 14:28:38 +0200
-Message-ID: <20261120122837.1597798-2-thnkslprpt@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L7yk6Qiy
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E92A01F000EB;
+	Fri, 20 Nov 2026 12:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795178245;
+	bh=Bs247TMy5ZVgaAryWhBMwTNU+j8yz4KTRR2MUfwT5Xs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=L7yk6Qiy5gV7hoevafsG9yUGOWyjFnVaynp6tkIDN/c9ohX+f4nWh3ldMHhcfXulW
+	 9B87VyuWpN1ZlVDVU+xidOc2yH/CM020llKi2cb0WRkOHvsLgkWrSnnVvggzgWL5t6
+	 JbGWaW6wbcSQTJOZ0gSNbS2WjMtedZplmcvgyG88hxjEYpL+qWBxRzQe7b2SBe6D9R
+	 f3AJ0f7nTHRQ7ttWE3Riu7339j7SWScdMrEeHjkLJdRPWrnJZ13L2Fu72kCXIwpf8g
+	 CXWy0ZuEfFT1jY8gimfRMT8PKSIlmPbxKGYC1YZd73nQCNqD647ElTzhVCAZgtLqaj
+	 /YfeECltZKlaw==
+Message-ID: <sashiko-outbox-225150@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] tracing: Restore custom event creation selector
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Avi Weiss" <thnkslprpt@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261120122837.1597798-2-thnkslprpt@gmail.com>
+References: <20261120122837.1597798-2-thnkslprpt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 20 Nov 2026 12:37:24 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -96,41 +58,64 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The custom event generator undefines CREATE_CUSTOM_TRACE_EVENTS to avoid
-recursion, but restores a different macro - CREATE_CUSTOM_TRACE_POINTS
-when processing is complete. A second custom event header included under
-the same selector is then skipped, leaving its generated update helper
-undefined.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] tracing: duplicate str__custom__trace_system_name on second
+  custom header
+--
 
-Likely a simple copy-paste error.
+commit e451694c0169b91ce25bbac13cc9b1321c4dd71b
+Author: Avi Weiss <thnkslprpt@gmail.com>
 
-Restore CREATE_CUSTOM_TRACE_EVENTS after processing so subsequent custom
-event headers can generate their definitions.
+tracing: Restore custom event creation selector
 
-Fixes: 3a73333fb370f ("tracing: Add TRACE_CUSTOM_EVENT() macro")
-Signed-off-by: Avi Weiss <thnkslprpt@gmail.com>
----
- include/trace/define_custom_trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This commit restores CREATE_CUSTOM_TRACE_EVENTS instead of
+CREATE_CUSTOM_TRACE_POINTS at the end of include/trace/define_custom_trace.h
+so subsequent custom event headers in the same translation unit are not
+skipped.
 
-diff --git a/include/trace/define_custom_trace.h b/include/trace/define_custom_trace.h
-index 5827a4c92c744..177c628f2d567 100644
---- a/include/trace/define_custom_trace.h
-+++ b/include/trace/define_custom_trace.h
-@@ -72,6 +72,6 @@
- #endif
- 
- /* We may be processing more files */
--#define CREATE_CUSTOM_TRACE_POINTS
-+#define CREATE_CUSTOM_TRACE_EVENTS
- 
--#endif /* CREATE_CUSTOM_TRACE_POINTS */
-+#endif /* CREATE_CUSTOM_TRACE_EVENTS */
+> diff --git a/include/trace/define_custom_trace.h b/include/trace/define_c=
+ustom_trace.h
+> index 5827a4c92c744..177c628f2d567 100644
+> --- a/include/trace/define_custom_trace.h
+> +++ b/include/trace/define_custom_trace.h
+> @@ -72,6 +72,6 @@
+>  #endif
+> =20
+>  /* We may be processing more files */
+> -#define CREATE_CUSTOM_TRACE_POINTS
+> +#define CREATE_CUSTOM_TRACE_EVENTS
+> =20
+> -#endif /* CREATE_CUSTOM_TRACE_POINTS */
+> +#endif /* CREATE_CUSTOM_TRACE_EVENTS */
 
-base-commit: 65e4fd942f72a9dba0e4e257290c4fa1aa756854
--- 
-2.43.0
+[Severity: Medium]
+Does including a second custom event header under CREATE_CUSTOM_TRACE_EVENTS
+now fail to compile with a redefinition of str__custom__trace_system_name?
 
+Each inclusion of include/trace/define_custom_trace.h includes
+include/trace/trace_custom_events.h, which sets TRACE_SYSTEM to custom and
+includes include/trace/stages/init.h:
+
+include/trace/trace_custom_events.h:
+#undef TRACE_SYSTEM
+#define TRACE_SYSTEM custom
+
+#ifndef TRACE_SYSTEM_VAR
+#define TRACE_SYSTEM_VAR TRACE_SYSTEM
+#endif
+
+/* The init stage creates the system string and enum mappings */
+
+#include "stages/init.h"
+
+include/trace/stages/init.h then invokes TRACE_MAKE_SYSTEM_STR() to emit
+static const char str__custom__trace_system_name[] =3D "custom"; on every
+pass, because all custom event headers share the custom TRACE_SYSTEM and
+the definition is not guarded against multiple inclusions in the same
+translation unit.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120122837.1597=
+798-2-thnkslprpt@gmail.com?part=3D1
