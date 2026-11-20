@@ -1,65 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.139
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.46.229.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795155565;
-	b=kHW3DvhBHEE4+1cBjI/asLePmNb7+/qjyIvriALAxguIWV+BoqzxJ5waJXGjWqF0WLVe
-	 ZFIuPgWQRWcwT0eq3glbPepi32Skv1VjXf+lYiijPntvaozSAjJBId4cMqeprv5iZQWAU
-	 zychu2lU7yj4DRAN6rahqO0tTgVtd9uCUd7Mj7PS5z5KV6+hmepDbFeS6l/Vy5hAfGJZ4
-	 K/epwoWrG/86pqKzs/PX6STNlwLUkud9tLAy9xUvwoJld8MTIbbbigMKyBXHVKLFFZJNr
-	 jU7e3IsCU7cC3a4+lXJ8ORgptOs3NBQaXxKV17xLsVNX5vxrPhEZvnARIsh4N3NDM1Q==
+	t=1795158558;
+	b=B349QglrvgF2O3XcU3ohs3aGMKrghVtwPtepW7IgzUq3Uw60aqB5jZ59zkirS/c53r/d
+	 uTgu0N5gOd/FyJ126g1O2NBPR1lit752iKi7JoJKRRI5G2Ln8F8EQVV/YS1YLWNxpqv3y
+	 W/eBNVnAFAt6n2l1fowVOtI3gwoIksPligrVTmUQx6UX6bOgOp7gl0g6lfcLsoOntn2o8
+	 24QiZo/pC/lIHh+o8Ub0cKmakxmTwvMlZeAh9Vf24mGveoYrEJTKBywIZ8OaRvGqElY2Q
+	 QS/irwMTfNIQrRmBVIamjS28bcSWGrzCgkopW1C25bPXks2wOWELJpYLsZm5mGoVRmg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795155565;
-	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
-	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
-	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=o+3oz/RFIJNUAxTwaGf9HfTA/+CGFJ2Xdk3XeS8VxCg=;
-	b=gHHWeNPx9EB8ad/UB22w+iQ/09wVy2PLnEv4uo1NmVdR8XVDFKqhI9f3zAqB2O6XDhYs
-	 hkgqu7ndIfQR4X9UCuwJV8sWqFJmaBtJGO4e6sAva1MF40Lo+MGPVofumilrzSHDkV+lm
-	 5pUbtt3a8TZVBP0UT1R5OVoXMkY2k+b/TaEAro5YeNrITe4BPGmjaz1fTBybQlnC7nGT0
-	 vkIkmGtPnuNI0keHYU9g35s7OfUGjeexKM69S5bkiR1dgA0HfuvyuIySfWbRhdYIJNaQ3
-	 Sz8uWeeoe9gOzm9c0LPilGleMEZmC5x2CJPxihqCkekt0DMqXb0XFDVLhC15RXBFbQQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795158558;
+	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=1g00Z6gc0jKWEBH3y928a6aryx0kBD5/KzHExqvR7e8=;
+	b=d0n7N1J7+NS5o6H1U1+wf1RnjSFLKYdWjw534TJrpqgG4wGHliPGXRkQD9JhqOXjhVhL
+	 yBLPWjiP0FMxYoiVd70XI1T6SV7GAoNS6fo/iekb4cT2wKZDYARGF4vqjZYqmJ0iAZTPA
+	 4BM4pG2WX+LS4R6ETvJetC4IqBfzRaIhvF6orC4Z8IteqdRifkVFZieGjbC/YE3J8yy3u
+	 gnGhP9hqvuBE75ttb3imSweQ9IFhd/wLEJ36m892eZ09cBRyH84QctSSjDwO86+gu6rAr
+	 REp4zXDpa7URRKFIGY7S1ShEErpG4asvF9txElRE9n1zgP6AKAsd67/nUjgptmtd7UQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=cmss.chinamobile.com;
-	spf=pass smtp.mailfrom=cmss.chinamobile.com;
-	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=SG9LkR3i;
-	arc=none smtp.remote-ip=111.22.67.139
-Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF487606A51B;
-	Fri, 20 Nov 2026 06:19:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EF487606A51B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+	dmarc=pass header.from=eswincomputing.com;
+	spf=pass smtp.mailfrom=eswincomputing.com;
+	dkim=pass header.d=eswincomputing.com header.i=@eswincomputing.com header.a=rsa-sha256 header.s=dkim header.b=NH4yi1OH;
+	arc=none smtp.remote-ip=207.46.229.174
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F5CC606A325;
+	Fri, 20 Nov 2026 07:09:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5F5CC606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=SG9LkR3i
+	dkim=pass (1024-bit key, unprotected) header.d=eswincomputing.com header.i=@eswincomputing.com header.a=rsa-sha256 header.s=dkim header.b=NH4yi1OH
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=cmss.chinamobile.com; s=default; l=0;
-	h=from:subject:message-id:to:cc:mime-version;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	b=SG9LkR3ilis2a6hvmb3dEBFuNxSrjFAx4s/uqhd3kxpSlWREePV3WdlgkU4mqbdzLy7jo3bIdMuDw
-	 KwyKsj01+yJo31UNbhunVza9i0AsiBmZMIxwLd64KHNPvCkNzWcXAo2JL/cvEzisAg8zoSat5BWLPj
-	 ftbVhGJDxT46x2Pg=
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee56affe6664c4-220fb;
-	Fri, 20 Nov 2026 14:19:19 +0800 (CST)
-X-RM-TRANSID:2ee56affe6664c4-220fb
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from devin-VMware-Virtual-Platform.localdomain (unknown[10.55.1.71])
-	by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee86affe66518d-80cb2;
-	Fri, 20 Nov 2026 14:19:19 +0800 (CST)
-X-RM-TRANSID:2ee86affe66518d-80cb2
-From: Zhu Jun <zhujun2@cmss.chinamobile.com>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org,
+	d=eswincomputing.com; s=dkim; h=Received:From:To:Cc:Subject:Date:
+	Message-Id:MIME-Version:Content-Transfer-Encoding; bh=1g00Z6gc0j
+	KWEBH3y928a6aryx0kBD5/KzHExqvR7e8=; b=NH4yi1OHYvolZYXR9tvk8yyp1b
+	fh6TxNUWWBjeuZJiYLr2snd3whPmec+THRo7kr6LiZvKlRWA06zh6WWV2mZQbfyG
+	FdhyVZmmymOD+d9+lKnaA8x5cBRyD8MYy99ik07UZa4xcntz6U8Wc1Hw+C48BSl/
+	NO9EUD3L4L2LYIltI=
+Received: from E0002472LT.eswin.cn (unknown [10.64.96.163])
+	by app1 (Coremail) with SMTP id TAJkCgCXhuUB8v9q1FQAAA--.2533S2;
+	Fri, 20 Nov 2026 15:08:51 +0800 (CST)
+From: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Zhu Jun <zhujun2@cmss.chinamobile.com>
-Subject: [PATCH] tools/bootconfig: Report initrd append failures
-Date: Fri, 20 Nov 2026 14:19:17 +0800
-Message-ID: <20261120061917.98169-1-zhujun2@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.51.0
+	linux-trace-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v3] riscv: kprobes: free insn slot in arch_remove_kprobe() to avoid memory leak
+Date: Fri, 20 Nov 2026 15:08:49 +0800
+Message-Id: <20261120070849.1239-1-yuanxiaofeng@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -70,45 +64,66 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgCXhuUB8v9q1FQAAA--.2533S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4UXr4DXry3AF1rCFWruFg_yoW8WF4fpF
+	s8uwn8G3yrXa1fG347Aw4kW34FyayrW3y2grW8A343Xw15Jr15Xw4Ig3yUXrn8Kr98Kr1a
+	vF90vFWFqrW7Aa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43
+	MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU5
+	6yI5UUUUU==
+X-CM-SenderInfo: h1xd05xldrwv1qj6v25zlqu0xpsx3x1qjou0bp/1tbiAgERE2r-JS8i1gAAsq
 
-The signed return value of write() is compared against a size_t.
-A negative return becomes an unsigned value and bypasses the error
-path, so applying a bootconfig can claim success without appending
-it. Check for a negative return before comparing the byte count.
+When a kprobe is removed, arch_remove_kprobe() does not free the
+instruction slot allocated by arch_prepare_kprobe(). This causes
+a memory leak every time a kprobe is unregistered.
 
-Fixes: e1cef2d4c379 ("tools/bootconfig: Align the bootconfig applied initrd image size to 4")
-Signed-off-by: Zhu Jun <zhujun2@cmss.chinamobile.com>
+Other architectures such as arm64, x86, and powerpc all free the
+slot in their arch_remove_kprobe() implementations. Add the
+missing free_insn_slot() call for RISC-V.
+
+Registered and unregistered a kprobe on kernel_clone in a loop
+inside a QEMU (RISC-V virt) guest: before the fix the number of
+kprobe_insn_page entries in /proc/kallsyms grew by one every 512
+iterations (each insn-slot page holds 512 eight-byte slots), and
+after the fix it stays at 1.
+
+Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
+Cc: stable@vger.kernel.org
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
 ---
- tools/bootconfig/main.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+Changes in v3:
+ - Add Fixes tag and Cc stable (Masami Hiramatsu).
+ - Add Reviewed-by from Masami Hiramatsu. No code change.
 
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index a3935e1a8c6b..014fd04d2a61 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -503,14 +503,16 @@ static int apply_xbc(const char *path, const char *xbc_path)
- 	total_size = size + BOOTCONFIG_FOOTER_SIZE;
- 
- 	ret = write(fd, data, total_size);
--	if (ret < total_size) {
--		if (ret < 0)
--			ret = -errno;
-+	if (ret < 0) {
-+		ret = -errno;
- 		pr_err("Failed to apply a boot config: %d\n", ret);
--		if (ret >= 0)
--			goto out_rollback;
--	} else
--		ret = 0;
-+		goto out;
-+	}
-+	if ((size_t)ret != total_size) {
-+		pr_err("Failed to apply a boot config: %d\n", ret);
-+		goto out_rollback;
-+	}
-+	ret = 0;
- 
- out:
- 	close(fd);
+ arch/riscv/kernel/probes/kprobes.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
+index 9e2afabf9..a76eab297 100644
+--- a/arch/riscv/kernel/probes/kprobes.c
++++ b/arch/riscv/kernel/probes/kprobes.c
+@@ -128,6 +128,10 @@ void __kprobes arch_disarm_kprobe(struct kprobe *p)
+ 
+ void __kprobes arch_remove_kprobe(struct kprobe *p)
+ {
++	if (p->ainsn.api.insn) {
++		free_insn_slot(p->ainsn.api.insn, 0);
++		p->ainsn.api.insn = NULL;
++	}
+ }
+ 
+ static void __kprobes save_previous_kprobe(struct kprobe_ctlblk *kcb)
+-- 
+2.34.1
 
