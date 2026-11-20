@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795197267;
-	b=lbL1rLyUuff8AnZupO1ZFO53YmisT2jUgNvoQUSxXV5SKxDydEYhtx/f8eCXZrpoubz9
-	 uXySV1gmSivwuYs2NmNTKnOhTQSxIcqd+7Ad4wtAdvmDT+a2rx3xD31/+fXGjCXrzvBzY
-	 2C+BH/k9/P2WHX/CTIG5Shr9Vh+McD0bdRGG+wuZQC7tmTHEEBKdrH/8dAh7kNz92BkFS
-	 DXWJv0TpcjSlnuHa4VIqD7DBW3w3SeSKqvknPs6U1VgUkcKZFUnXK8BVdvG5KDvSpM0Yt
-	 r7RE4LiGSmOPERmK/DBK8zpuoui2Wlnw32kVOBtAd/kzH8hKrJCR2xZRAY4CDwi6OeA==
+	t=1795197268;
+	b=g69Fq4GWdBWXB7v5Om2ldEdDuo8RfTFC5T3apzxDrF8PtF19r/wkNXxFChR4oc74JtTX
+	 mwk/4G2uJs9kSyuQ6KgRKe1DFhtOL2t3q1WJNk/Z1NY7ZI2p8I6CwqI5cQDirk28MhHB9
+	 3H3lRJaRw3eNimLphzHqjdB5FyDS7vdtoMhv3HkX4LC3Rnlx9fd4UgB4mnPX/cg4JwXgF
+	 Yy8N1iI52E6yguIs45oPp0AklzuqWlNEULZXXmtptvjLLanGIieP3/A6KPT6wA0ck5GQr
+	 8/9NfjaI82/RfTM7OMjN5whPLzfGy0LivuO2MEOaRa4xZVf+vYqj9XpqwpvoB7aWtUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795197267;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795197268;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=QuaN7qklmtATNr9a9/BzpxIEd+K2ItM/GVGUPmcIjnc=;
-	b=CZvYV6AcGMoVYegUlDBOUwVigBZcEnucYNMWLB8IraQ76TW+sRy5TMIjG9LeTC+ZRvni
-	 8V0+j2X2QoMTfyAheaUPmmBvasBAP5cpN6dRjgZhnTB3eUaanvA7dX+v8GwSTZHLRcaW5
-	 3bZIgY1uDReL+FStAVsglEc1oqdsLZFxn2OA1PX0GHJOLit0FTFhB78qWat5EtuRLPUid
-	 I8h3ipkZ8+efOsYB0RkPPHcBrTK385/VLlycgr+A/suy6DWb00K0aT5c/9nD/rizsMAae
-	 olf9JE0VATdzo9JET9ZXJdMzQtS35LlcGiD8E01tbIOVFbUPNrqioqUNQJX7xNlLbcQ==
+	bh=fIALKS6j1QHbo6lCje8nv06Y9CozFk03PXZTpPMpa3M=;
+	b=JuEX/b/FYWGcvqSm4ikhcoqF/BAmNc36TsR+5m7jzscFJeWTETtPkLXllA4ZQ4QL0ISN
+	 TfytXsUJyBmMxGHWkE0+U6U8dwAzbnpGzGjTEuGn4nlOlEytv26WarX7z8y6zKltu02Mq
+	 sU7vhEQ7YkRjddJWdM+Rn0rzjlhR7wmnfHvxZrqPK/PB5hCN1vWn22uiNXLVmiHNLp0Ux
+	 8wp0JElYH02eYDI+ADio1bpDyoIgxwlvEkQ11aobQM8uS9kVpGJjtyG+eRcBKrEN3OppP
+	 29KZ9gx1HU4ucDb5GixVrcrrk3nJBqlqcTvrHNtNxJRF9ENNQTgQ8hfY0N/Bqb1nO4A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=intel.com;
 	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JDvUIjuY;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Z28e2TSo;
 	arc=none smtp.remote-ip=192.198.163.16
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2103D60A2606;
-	Fri, 20 Nov 2026 17:54:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2103D60A2606
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B1F60A263A;
+	Fri, 20 Nov 2026 17:54:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 08B1F60A263A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JDvUIjuY
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Z28e2TSo
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795197264; x=1826733264;
+  t=1795197266; x=1826733266;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5JBtHZxCiUk913vGpVvkg5wusS9sFbDkF78zR4yXjtA=;
-  b=JDvUIjuYFId5JEQxat31UXtFISz1QSmtJ8Se/6A+TGs4sb5Qq5xroPWy
-   xyN63DceWbqmfQOluy9Gx4HYifoKtP53QP5OaYuyPUe9YFbbTWXE3+Y1b
-   atjBaUTRT2MoA+2G5Eqwua6yi59P3S8JCDG0MEtufLIAeLI6TLrTYThwN
-   +46oAsj3YFGMspLHyRA1gkGswb37plbvu0cJFvrPPq/eE0E5FEGb4xDPw
-   VlgGota4jVva0EGZYzqU2ss++tNZS1dDJqmb7zVihnotnUg+OV7h9PGI9
-   TSEKzWMZybPQW5JZb8RzAyYV02KrzLATitjLh/iaPb1Hqxrz5FgNy0Cck
-   A==;
-X-CSE-ConnectionGUID: UKIIFv+eTA+Fpm3+vgW12w==
-X-CSE-MsgGUID: n+uri3pfS8unTzRmaQsVCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="4108887"
+  bh=QLwZ1mSEPrbAIFjkVbImtbWEdEayXGy0Zjs+ER9nAf4=;
+  b=Z28e2TSo8j6L492hvEo3UUBvqEskKQyFh+vo5uXxI/cl4zuFaxIo21JV
+   jFTaSSXDdQea22yQ41TXsV/A45n3Uih1xcFDbr/PTq0vaTmIxRj3+hxMh
+   LZU/epI619ejyFefKjy1RahWA47kZf4HGU8L8SPS7A7l2neZlCiHAmY79
+   wO0xeLuaqU+mWaitD4CX9ktCbYwCKjyvcPMVYq0YoqirrCUR8XQ/bDyXA
+   keOSoRjlHDqgShZL9EmNQaaTe1OOsomU/u1+UJYD9xjXZes6EBIAVBGLG
+   /Jcuh0fyFO4bJmVXoErswLuZzTLSxeZe+ofbw+0G7eZY646cynroG7fim
+   w==;
+X-CSE-ConnectionGUID: 4GRwVkTWQT6PWjrb5Le9kQ==
+X-CSE-MsgGUID: pae7VmoWQ/6mJOKgQtGAyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="4108918"
 X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
-   d="scan'208";a="4108887"
+   d="scan'208";a="4108918"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:54:22 -0800
-X-CSE-ConnectionGUID: KpRttW1ATMOBy2lXVtsZcQ==
-X-CSE-MsgGUID: uZohQZbLSzO/9urtchP66w==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 09:54:23 -0800
+X-CSE-ConnectionGUID: Qd6AcplmRYGasu+kHBO+Mg==
+X-CSE-MsgGUID: 6GWgrYvPTPaYHeQRXFCeaA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,223,1787036400"; 
-   d="scan'208";a="11171025"
+   d="scan'208";a="11171038"
 Received: from jf.intel.com (HELO jf.intel.com.jf.intel.com) ([10.165.154.102])
-  by fmviesa001.fm.intel.com with ESMTP; 20 Nov 2026 09:54:21 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 20 Nov 2026 09:54:22 -0800
 From: Ehab Ababneh <ehab.ababneh@intel.com>
 To: ilpo.jarvinen@linux.intel.com,
 	hansg@kernel.org,
@@ -80,9 +80,9 @@ Cc: ashok.raj.linux@gmail.com,
 	linux-trace-kernel@vger.kernel.org,
 	peterz@infradead.org,
 	sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v3 02/17] platform/x86/intel/ifs: Fix IFS sysfs interfaces in the comments
-Date: Fri, 20 Nov 2026 10:56:43 -0700
-Message-ID: <20261120175658.1147030-3-ehab.ababneh@intel.com>
+Subject: [PATCH v3 05/17] platform/x86/intel/ifs: Early return on the IFS image hash/chunk error
+Date: Fri, 20 Nov 2026 10:56:46 -0700
+Message-ID: <20261120175658.1147030-6-ehab.ababneh@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261120175658.1147030-1-ehab.ababneh@intel.com>
 References: <20261120175658.1147030-1-ehab.ababneh@intel.com>
@@ -99,167 +99,106 @@ Content-Transfer-Encoding: 8bit
 
 From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-The sysfs interfaces in the comments in sysfs.c are incorrect. Fix them.
-Additionally, improve some IFS comments and fix some typos in the comments
-such as: s/cpu/CPU, s/intel/Intel, s/ifs/IFS.
+Return immediately upon encountering a hash error or chunk error in the
+IFS (In-Field Scan) test image to avoid meaningless assignments following
+these errors.
 
-No functional changes.
+Additionally, assign the boolean value 'true' instead of '1' to the
+boolean variable 'ifs_pkg_auth', and use SZ_1K macro instead of '1024'
+for better readability.
 
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Ehab Ababneh <ehab.ababneh@intel.com>
 Tested-by: Yi Lai <yi1.lai@intel.com>
 ---
- drivers/platform/x86/intel/ifs/ifs.h     | 16 ++++++++--------
- drivers/platform/x86/intel/ifs/load.c    |  2 +-
- drivers/platform/x86/intel/ifs/runtest.c |  8 ++++----
- drivers/platform/x86/intel/ifs/sysfs.c   | 23 +++++++++++------------
- 4 files changed, 24 insertions(+), 25 deletions(-)
+ drivers/platform/x86/intel/ifs/load.c | 34 ++++++++++++---------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index f55528ac517b..0f5cdc1ad14d 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -35,10 +35,10 @@
-  * IFS Image Loading
-  * -----------------
-  *
-- * The driver loads the tests into memory reserved BIOS local to each CPU
-- * socket in a two step process using writes to MSRs to first load the
-- * SHA hashes for the test. Then the tests themselves. Status MSRs provide
-- * feedback on the success/failure of these steps.
-+ * The driver loads the tests into memory reserved by BIOS, local to each CPU
-+ * socket in a two-step process. It first writes to MSRs to load the SHA hashes
-+ * for the test, followed by the tests themselves. Status MSRs provide feedback
-+ * on the success or failure of these steps.
-  *
-  * The test files are kept in a fixed location: /lib/firmware/intel/ifs_<n>/
-  * For e.g if there are 3 test files, they would be named in the following
-@@ -83,14 +83,14 @@
-  *
-  * Test a specific core::
-  *
-- *   # echo <cpu#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-+ *   # echo <CPU#> > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  *
-- * when HT is enabled any of the sibling cpu# can be specified to test
-+ * when HT is enabled any of the sibling CPU# can be specified to test
-  * its corresponding physical core. Since the tests are per physical core,
-  * the result of testing any thread is same. All siblings must be online
-  * to run a core test. It is only necessary to test one thread.
-  *
-- * For e.g. to test core corresponding to cpu5
-+ * For e.g. to test core corresponding to CPU5
-  *
-  *   # echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  *
-@@ -284,7 +284,7 @@ struct ifs_test_msrs {
- };
- 
- /**
-- * struct ifs_data - attributes related to intel IFS driver
-+ * struct ifs_data - attributes related to Intel IFS driver
-  * @loaded_version: stores the currently loaded ifs image version.
-  * @loaded: If a valid test binary has been loaded into the memory
-  * @loading_error: Error occurred on another CPU while loading image
 diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 329400908cb2..dde3f5eb379f 100644
+index dde3f5eb379f..0edbf9eedc12 100644
 --- a/drivers/platform/x86/intel/ifs/load.c
 +++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -108,7 +108,7 @@ static void auth_err_message(struct device *dev, u32 err_code)
- }
+@@ -123,7 +123,6 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+ 	int i, num_chunks, chunk_size;
+ 	struct ifs_data *ifsd;
+ 	u64 linear_addr, base;
+-	u32 err_code;
  
- /*
-- * To copy scan hashes and authenticate test chunks, the initiating cpu must point
-+ * To copy scan hashes and authenticate test chunks, the initiating CPU must point
-  * to the EDX:EAX to the test image in linear address.
-  * Run wrmsr(MSR_COPY_SCAN_HASHES) for scan hash copy and run wrmsr(MSR_AUTHENTICATE_AND_COPY_CHUNK)
-  * for scan hash copy and test chunk authentication.
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index 1762eab7fe5c..96b538c665f4 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -149,7 +149,7 @@ static atomic_t array_cpus_in;
- static atomic_t scan_cpus_in;
+ 	ifsd = ifs_get_data(dev);
+ 	msrs = ifs_get_test_msrs(dev);
+@@ -131,17 +130,16 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+ 	wrmsrq(msrs->copy_hashes, ifs_hash_ptr);
+ 	rdmsrq(msrs->copy_hashes_status, hashes_status.data);
  
- /*
-- * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
-+ * Simplified CPU sibling rendezvous loop based on microcode loader wait_for_cpus()
-  */
- static void wait_for_sibling_cpu(atomic_t *t, long long timeout)
- {
-@@ -389,8 +389,8 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
- }
- 
- /*
-- * Initiate per core test. It wakes up work queue threads on the target cpu and
-- * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
-+ * Initiate per core test. It wakes up work queue threads on the target CPU and
-+ * its sibling CPU. Once all sibling threads wake up, the scan test gets executed and
-  * wait for all sibling threads to finish the scan test.
-  */
- int do_core_test(int cpu, struct device *dev)
-@@ -403,7 +403,7 @@ int do_core_test(int cpu, struct device *dev)
- 	cpus_read_lock();
- 
- 	if (!cpu_online(cpu)) {
--		dev_info(dev, "cannot test on the offline cpu %d\n", cpu);
-+		dev_info(dev, "cannot test on the offline CPU %d\n", cpu);
- 		ret = -EINVAL;
- 		goto out;
+-	/* enumerate the scan image information */
+-	num_chunks = hashes_status.num_chunks;
+-	chunk_size = hashes_status.chunk_size * 1024;
+-	err_code = hashes_status.error_code;
+-
+ 	if (!hashes_status.valid) {
+ 		ifsd->loading_error = true;
+-		hashcopy_err_message(dev, err_code);
++		hashcopy_err_message(dev, hashes_status.error_code);
+ 		goto done;
  	}
-diff --git a/drivers/platform/x86/intel/ifs/sysfs.c b/drivers/platform/x86/intel/ifs/sysfs.c
-index 01b7502f46b0..287f96bb033e 100644
---- a/drivers/platform/x86/intel/ifs/sysfs.c
-+++ b/drivers/platform/x86/intel/ifs/sysfs.c
-@@ -10,14 +10,14 @@
- #include "ifs.h"
  
- /*
-- * Protects against simultaneous tests on multiple cores, or
-- * reloading can file while a test is in progress
-+ * Protect against simultaneous tests on multiple cores and prevent
-+ * the reloading of IFS image file while a test is in progress.
-  */
- static DEFINE_SEMAPHORE(ifs_sem, 1);
++	/* enumerate the scan image information */
++	num_chunks = hashes_status.num_chunks;
++	chunk_size = hashes_status.chunk_size * SZ_1K;
++
+ 	/* base linear address to the scan data */
+ 	base = ifs_test_image_ptr;
  
- /*
-- * The sysfs interface to check additional details of last test
-- * cat /sys/devices/system/platform/ifs/details
-+ * The sysfs interface to check additional details of the last test:
-+ * cat /sys/devices/virtual/misc/intel_ifs_<n>/details
-  */
- static ssize_t details_show(struct device *dev,
- 			    struct device_attribute *attr,
-@@ -37,9 +37,8 @@ static const char * const status_msg[] = {
- };
+@@ -153,14 +151,13 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+ 		wrmsrq(msrs->copy_chunks, linear_addr);
+ 		rdmsrq(msrs->copy_chunks_status, chunk_status.data);
  
- /*
-- * The sysfs interface to check the test status:
-- * To check the status of last test
-- * cat /sys/devices/platform/ifs/status
-+ * The sysfs interface to check the last test status:
-+ * cat /sys/devices/virtual/misc/intel_ifs_<n>/status
-  */
- static ssize_t status_show(struct device *dev,
- 			   struct device_attribute *attr,
-@@ -53,12 +52,12 @@ static ssize_t status_show(struct device *dev,
- static DEVICE_ATTR_RO(status);
+-		ifsd->valid_chunks = chunk_status.valid_chunks;
+-		err_code = chunk_status.error_code;
+-
+-		if (err_code) {
++		if (chunk_status.error_code) {
+ 			ifsd->loading_error = true;
+-			auth_err_message(dev, err_code);
++			auth_err_message(dev, chunk_status.error_code);
+ 			goto done;
+ 		}
++
++		ifsd->valid_chunks = chunk_status.valid_chunks;
+ 	}
+ done:
+ 	complete(&ifs_done);
+@@ -199,16 +196,15 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
+ 		wrmsrq(msrs->copy_hashes, ifs_hash_ptr);
+ 		rdmsrq(msrs->copy_hashes_status, hashes_status.data);
  
- /*
-- * The sysfs interface for single core testing
-- * To start test, for example, cpu5
-- * echo 5 > /sys/devices/platform/ifs/run_test
-+ * The sysfs interface for single-core testing.
-+ * To start a test, for example on CPU5:
-+ * echo 5 > /sys/devices/virtual/misc/intel_ifs_<n>/run_test
-  * To check the result:
-- * cat /sys/devices/platform/ifs/result
-- * The sibling core gets tested at the same time.
-+ * cat /sys/devices/virtual/misc/intel_ifs_<n>/status
-+ * The sibling thread gets tested at the same time.
-  */
- static ssize_t run_test_store(struct device *dev,
- 			      struct device_attribute *attr,
++		if (!hashes_status.valid) {
++			hashcopy_err_message(dev, hashes_status.error_code);
++			return -EIO;
++		}
++
+ 		/* enumerate the scan image information */
+ 		chunk_size = hashes_status.chunk_size * SZ_1K;
+-		err_code = hashes_status.error_code;
+-
+ 		num_chunks = get_num_chunks(ifsd->generation, hashes_status);
+ 
+-		if (!hashes_status.valid) {
+-			hashcopy_err_message(dev, err_code);
+-			return -EIO;
+-		}
+ 		ifsd->loaded_version = ifs_header_ptr->rev;
+ 		ifsd->chunk_size = chunk_size;
+ 	} else {
+@@ -344,7 +340,7 @@ static int scan_chunks_sanity_check(struct device *dev)
+ 			ret = -EIO;
+ 			goto out;
+ 		}
+-		ifs_pkg_auth[curr_pkg] = 1;
++		ifs_pkg_auth[curr_pkg] = true;
+ 	}
+ 	ret = 0;
+ 	ifsd->loaded_version = ifs_header_ptr->rev;
 -- 
 2.43.0
 
