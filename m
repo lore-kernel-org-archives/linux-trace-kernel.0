@@ -1,115 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795272204;
-	b=CbsFPiP63Qxntpur+YWRRDOXDdCjYDTfPgiUAW99NLStQvn58hTv9EI7gx5XUT1f+XN1
-	 q5AEiNqDYOV5VfcEAjn/vezvWJV0scCFV2yv/EM50wxPskKr1rhwbqWdPybzyFb4Uq3t4
-	 MxdHg2YXfMD2tSKVLNdlKajR2bIWBfsQrD0iYc5cDzxh1oBi9Ajzp9ujEgGmAQmFxEdHN
-	 lK5eaMHJ528yX6w2G7Y4QIDStxxQcAU37uqiBKmfpyD1YBDzGsE6bO4UGT5+3isP/6MVU
-	 B8Vz/7ryAejMgdSxqXTvXiKM0ROhi71imGtEaxLk/CbsQcDQxSQ+VWQJML9+gqvTtEQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795272204;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
-	 Subject:From:To:Cc:Date:In-Reply-To:References:Autocrypt:User-Agent:
-	 MIME-Version:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
-	 X-Mimecast-Originator:Content-Type:Content-Transfer-Encoding;
-	bh=cCJcXQgk/Si4catT5eOwtfh+QW2z1vm+mPPFnEPeMZ4=;
-	b=hfwYagXod4fIsaAMzKRP+kTQ9b1zJVgqIVl7KOzcl6Z6HUB6EgXPWSRWFycouIxEhq9s
-	 GD4OqCagjMJtg9k8RLrvRGKAutXWZ7U2JFVOI2rC+/zH0+xdUG4y/JAJKr6SJ9xZv73qR
-	 jorQdi2800sYBXYC9wvOCcebdCaOpqvrSRJycTQkN9QFkTbeudRsn13kVMp12EAzwwUXD
-	 wRYpCrsZJD69Ld7aNgwNHypIGKXSpbBHkFyYYdHUtia4H7V0GrIXrM+jZKixMNpxQzGsy
-	 8IPMKJ/MF9M/Eg16oiFp7vgASO2YWBbMKiuCc8W0WEl2/wAdwmfx3vlHgxUrES5LYbA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=GNpSypgf;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.169
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795295684;
+	b=oCqD42BaUQXabzWVSKXqdukN9JnQHMgriAYSx6eIvS6gkAZL6hGTdw3Af1l412d09HUf
+	 fUEh7PVgrH2pAi+GM6nn63BP+J48pcvichOo7ybZFPSL+w5nTrVOlAkbgRK/y9bBPaTHt
+	 O7m66sgF6xhm2o8gzxptr22K7CL8JDRBtffRYc4lkOFWmNDs/erzT6XwQcrOo2nLm7l1s
+	 qqH/0ihczC0TmOCzGKkuhsKe6ADtrg4RgNfbaypLLliyZ0DLrG8TpYktjiPT14xOsoE/e
+	 91NKXVSCveqHwX0vI80/LeFuwKKNQ6Q/pmKG3oZVXZEBB7e5ubcwDCo6R+x5G99qvhw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795295684;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=JVXIUze55zta93CLasHcBtUF3k3F0VOVstypLu4rWEo=;
+	b=ThM5LFaaYIp4ta0cRn3dYXZNpTqE2h7goMAYE6CSdeSgmpa1/F/jrCKrsu9ZmTZx6FjG
+	 m9vMsu63xlR/Y4fyZygWbeH94EpTsiWAevhJX5lGmgFizpOmsBf04lZNmk4obNsH+sSZB
+	 eiuygd3vYRF2gGPx8J8OjpwRvYngxsFTtjtaECszeFW9FMCYS3hmwjcTwLmWaAffFTwe9
+	 GW1DvulV/o4n0S+SKezpqQYA2Xc+Bd+XsRDbCB6144RU5AYASAW3tiYqZnQjpI177M4ot
+	 J7hNL240WR0jXriHBCjdDe60ZGmv+99XUcDle5VZmWl31ZroyBoxXho89HpVODvYGjg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=daSCu1rV;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.169
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396C3606A320
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 14:43:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 396C3606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4D5606A333
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 21:14:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9D4D5606A333
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=GNpSypgf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795272202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=cCJcXQgk/Si4catT5eOwtfh+QW2z1vm+mPPFnEPeMZ4=;
-	b=GNpSypgfGPVGCuri//eCXZYtp5nxBq11XUwZEKhtWYUPD3pj7bdm3xtKym/CsVYklNsgrx
-	GjrVLhPXfcoZveO9OSbIhJpHRy0BskN/V5ljPzUhQughMKlM85Zonp+qjBZ9y1vn3z/T8N
-	tQin5OsfQuijmw22Vo5N8ihL+ERotbU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-675-JbG4WOHYOfuRcMrIdJ971A-1; Sat, 21 Nov 2026 14:43:20 +0000
-X-MC-Unique: JbG4WOHYOfuRcMrIdJ971A-1
-X-Mimecast-MFC-AGG-ID: JbG4WOHYOfuRcMrIdJ971A_1795272199
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a009f82bedso12619115e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 06:43:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=daSCu1rV
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5ece6c1d1cbso655388e0c.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 13:14:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795295682; cv=none;
+        d=google.com; s=arc-20260327;
+        b=l25CYg2V6RUaZ7CXD22f19hOBIG2+BLmeUK+o9QWJK/hVJ0nVdtV+DVVkNtGUOdbO5
+         Lorsits2ohKf1yKCX8s5D9D1rwcID7h62btVA1O8EBmfHbAsXAdCyCllUFGcU+Ujawx9
+         hdIAUiOMmDTp45yYuMLOZrHFoc8sW7iVrLE48oSQCwoZJSOngt58OmgaSqBxny72y3X+
+         0yhXjUPA3KpJKzILlv7tkSSygjdw8K+cvdjngLa4szsQPcD286NOyPmBXa3evvtSVFWQ
+         DHDK9pS8RURHl/06Yi5hllUIj8HkgR6uUn5Q4G8VunXs/Ji+EkyuXmMIgZLI8T8Jc300
+         D6KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=JVXIUze55zta93CLasHcBtUF3k3F0VOVstypLu4rWEo=;
+        fh=nsHOkoCVb6QboZTn1bznBdVlNV/T+LkGFAfnsOAm0u4=;
+        b=G4Iurcsoh+7YzgRMvu2gn6FnWWhyTU9FHBl+SDz3twaNMsw9etFQ7JGVVv2w2LedD1
+         v2CYEbouiuttCCmOXdOkkGPmgLoxiLzb0RTRwMYS23H4g6WzdNt9ZoXBnN5QwXKWPb2X
+         sy4ADoDKLWw3lOaiaGFYup6dIj8XUCQcVuB+I+6blGo+yib6w4j5r8AQ2Vx6rlPmndzq
+         wzYTxuLl65e8+31BOJVcyhTvtu7NHWHs0q3i6scRtkfzTM6+snIvhNgIuGuC3OULX/yP
+         ign62659X+GKthVH+I2phpXS+UvmGZltZTNBhO5/qBSnu+qfQ2qg2K+o64VW/p/7QEen
+         fyTw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795295682; x=1795900482; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JVXIUze55zta93CLasHcBtUF3k3F0VOVstypLu4rWEo=;
+        b=daSCu1rVibP6KmyXonSqkr5VdhcRGAjLASbLzwqytA8wCCYmTkuypGNc9yh3g8tYro
+         gcoLLfqIjpVrzh1a0Qg7pINTcCVmT9WihsvEDNJcu/1iRmj1MkHnYT/nJliaeU0aCGor
+         ZG2WKAD3ONqob74E9Lt0wohObg+p2u+kz5zkhu2KVXO9dz6Xj2PBhjk7iII9lIDYlyMQ
+         a+RLJ+MTy74iMQR/JNE8Gmj11KQj3Vt/CQcLsv+BFt7Jg6Hkt2MjgL5KbLZs78NXeif2
+         TMXPkxEW/EQNSJFgb/HHs3nh65h259gh7DP4ybPfO/JH+toj05KzMIIUO2fFkflD5GF0
+         JmaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795272199; x=1795876999;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=cCJcXQgk/Si4catT5eOwtfh+QW2z1vm+mPPFnEPeMZ4=;
-        b=DoeeWvKe898YmoB5P7Ddmp7XQ+lPU8tFbuO53s6r7vOxJf+HvdgJMHAuoY/aQsXOwu
-         Y2AYml2qM/xM7ibcMdZMeVibB6zH5m17f8cMFBUB5op7Zeu2i8w+Anz4vnq8g+pB231t
-         cT02XgHqZ9avg3SuCzpeOD3adTQkyQQvXpCHvRHqNFu6L5exVvhhVDHKcLBcMNaKGRVF
-         3HfvZPElPohxRzB7OMmaSHVnZIhwmKm5OL2P0Q7tBSGuD/ZdGaYnKtxEPf5nXHuhZPF+
-         ecaxAHbqHvvfJN3HZCtXT7VQZ2MX/IaWkroceDQbnxV76D+jfUBx/Fox7t6pxibXkA11
-         IXgQ==
-X-Gm-Message-State: APuU4Z/gIhIhPAC/g3ie6H6C6UM45PADOG2svl3RMhHTSFUwlahHo3nw
-	W5F1e2YOs+H9vNjLdpYdsTfTYiFX22oFVkcZKn5/1cr+uI69NZMJ4negA9hmtJyHtbY4FFBRDLH
-	0SePZ/hfwqA023vTafr1Kl9+aExw+2GgV2lZH0dhF6bMEWqX7bYiXIWssPtbMsv9xr8FuD5gA2g
-	==
-X-Gm-Gg: AZFdTZdqwf0k/uIgBKAySmoBbTo0CR0mOqMuDqJIdWzOPBwDWLPl/AqXKMTzs1kDJFs
-	7PnDMe6Q/nfHwSMVqcNPUS9o4HJDZh9S/1XIjz/e5wPK0AiPGKBpVXFoZvTtB6V0ppsKsxFwYlh
-	fjlOsFOr088laQJgbgdoGKPJMNJJNkNQBj+uKdOl+reLV+ya6md55bCkyZiSq8eJHKLAN4NTyDU
-	ELM5v1TuGSuITN+4JONi12A2k1VhAjZrUt18f5KcdRfd0PgPxu0yO2N5QOC55M9nVmHMCc9usPs
-	tn7dLbTjJKqbZSyKAT00bHKFd2CoMCCGIah0kJcUcSSiuxsunHddc2x91BuwRcTfPIBiAkh7BFk
-	kdjL/OlXHbHZ5EOQyLhUn8ioEAIoFDpNJkbxPkg18S6L5FXnkGX4Z/C1+75q27WqExmMdgLLyVu
-	cM
-X-Received: by 2002:a05:600c:3b8a:b0:4bb:76d9:f81a with SMTP id 5b1f17b1804b1-4bb88824fc8mr150766705e9.34.1795272199367;
-        Sat, 21 Nov 2026 06:43:19 -0800 (PST)
-X-Received: by 2002:a05:600c:3b8a:b0:4bb:76d9:f81a with SMTP id 5b1f17b1804b1-4bb88824fc8mr150766295e9.34.1795272199011;
-        Sat, 21 Nov 2026 06:43:19 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6c340df4sm13970576f8f.55.2026.11.21.06.43.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 06:43:18 -0800 (PST)
-Message-ID: <9d23c0a68ae574f0c124da238d8ebf676d152039.camel@redhat.com>
-Subject: Re: [PATCH 3/6] rv: Show the mixed enable state of containers
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wei Li <liwei1412@hotmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Jonathan Corbet
-	 <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap
-	 <rdunlap@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Nam Cao <namcao@linutronix.de>
-Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	liwei391@huawei.com
-Date: Sat, 21 Nov 2026 15:43:17 +0100
-In-Reply-To: <CY8PR19MB70099F2263C408361053B295B7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-References: <CY8PR19MB70098BF493A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-		 <CY8PR19MB70099F2263C408361053B295B7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
+        d=1e100.net; s=20260707; t=1795295682; x=1795900482;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JVXIUze55zta93CLasHcBtUF3k3F0VOVstypLu4rWEo=;
+        b=RCcqdUD0DV5tfXf4VSbDymQuGrH2KxL2jIk4dVOX4s7OWJ4CN6GCuVAFSO8SpN3Slg
+         P/L/KnD8T3lEoA7VYA1sNUySckwOt/G7lEh6dkXZH4FlMK2gUTQvoKoghjodSBA9SVuy
+         zqfTrDLF7Y4BR4mjAqExMYYIqmSeEm5JF4PNnKYbYoTafGBy46jHmPNh73LNh4NSen/M
+         AyJfu0ZO2MCvT6jOt00y6ulSaTxdS7LDQg5+uwwZXYZpkEKo0NE3ueW4Vmo5yyYUBmJx
+         n6hRG6Mi20kOVtRdnLOFOzEFTTc+aYmmxz4UlDTgzcq6Nlr3Sjsn0k3POBQQcQ/wOZiB
+         ccAA==
+X-Forwarded-Encrypted: i=1; AL+hErF/fgZdeOXjOCDDTVTZEIBofGwDejqP8NpLUOaBxXKOxqbhcVWqYaSxfFJ0GS7KHbEbeBIZjXY+2snpXMV1FA+Ebrg=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+QIzJXR2WvK3T7+zx7dbFqyUF6U/uIuRkpKBhcgesGwlctITmx
+	x9EN7V5oK/B3WoLw9dJCNWBLH9pJxHVXovF4sUyaXXoTIm4xXptPuL6cpOocQ+Y4lOXSl/tBPt2
+	CKjm7NxPIBXMvX9YWERnimUFHhiBe4gs=
+X-Gm-Gg: AZFdTZfFJOFwgyhja+A0GtYiiNRxSbisEZQkvk7BNnjyuZWZ2T+M3z3RaW2GXg01pef
+	jrxIYzVHl6H/AuO07h0szh+sIBmLhTLIR5GOC2TA/gpyCwYpqWMb36Ek5pb5Dipytmflk4kfst0
+	oZfcKy9EQZ2l2gmR5V7gcMC8h+3uLxdzgw34IPZNQ1Isr8BhPAOiQHcyxl7XejV7IkPPJOrKH3j
+	FuPmBqgJvv3Zo313T1ZrOfLhnWDTMtvrZ2UQCayYySyDlH1cCa6sQVuU/Ao5Eg83BghzWI02MnJ
+	w6hOShgm0GV2MUKpy8DKsw2VQKfAsH/206P7wMGGBsZgVLBZXcV7Oss0pQ33R6wlydzIJrgOjr6
+	7kDlnY1K2HUatfZjJjLppRbGXjpgRImsm5dWDS8w+p5IjrGvRPVwB4PniAgpV/LPt9vubyl5yLp
+	VWSQFEXVWGM4KdhUzbF0bF9teNUfV9GeCV0pBJT5mMlqke9Fb8tzPO5v3fe7a/cvgcCPJkI5FQ6
+	FsHcuSUCCtG8Lpw9Le6Dv2IBPvfE2C8O1+skPXWB5Kp9ta5lj2Xg2RAuxRWOterXYjaGn/H
+X-Received: by 2002:a05:6122:17a2:b0:5ec:d70c:6326 with SMTP id
+ 71dfb90a1353d-5ee8af988f4mr3347118e0c.23.1795295682517; Sat, 21 Nov 2026
+ 13:14:42 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -119,132 +106,99 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: cAaXf7SrjqGr7KDEGKzD0shSF41fo4RxtlgQNCzrQl4_1795272199
-X-Mimecast-Originator: redhat.com
+References: <1218ce4d98a4c6ab6df6279c34d973b9d033755e.1795042969.git.edumucelli@gmail.com>
+ <undine-1795189391477787363-17dbbdcc692ec995@undined.local>
+In-Reply-To: <undine-1795189391477787363-17dbbdcc692ec995@undined.local>
+From: Eduardo Mucelli <edumucelli@gmail.com>
+Date: Sat, 21 Nov 2026 22:14:02 +0100
+X-Gm-Features: Aa3M54q79aKI1og8D0RQNbEoTQYxDDLEgGbfjp3m4OsVj8VXK4D6VmegMI0QjiM
+Message-ID: <CAK0NWSOGSiBEHMaMg1vcheH9-EHU4fUW3sEQsg5H5Btr7+S9og@mail.gmail.com>
+Subject: Re: [PATCH] tools/bootconfig: Preserve structured histogram filter strings
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2026-11-04 at 17:21 +0800, Wei Li wrote:
-...
-> +enum rv_monitor_state {
-> + RV_MON_DISABLED =3D 0,
-> + RV_MON_ENABLED =3D 1,
-> + RV_MON_MIXED =3D 2,
-> +};
-> +
-> =C2=A0struct rv_monitor {
-> =C2=A0 const char *name;
-> =C2=A0 const char *description;
-> - bool enabled;
-> + enum rv_monitor_state enabled;
-> =C2=A0 int (*enable)(void);
-> =C2=A0 void (*disable)(void);
-> =C2=A0 void (*reset)(void);
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index 4e689d4590ae..7846e4092b9c 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-> @@ -235,12 +235,15 @@ bool rv_is_container_monitor(struct rv_monitor *mon=
-)
-> =C2=A0static ssize_t monitor_enable_read_data(struct file *filp, char __u=
-ser
-> *user_buf, size_t count,
-> =C2=A0 loff_t *ppos)
-> =C2=A0{
-> + const char set_to_char[3] =3D { '0', '1', 'X' };
+Thanks Masami!
 
-Real nit, but nothing ensures these match the enum fields although they sho=
-uld,
-you could use a designated initializer:
+On Fri, Nov 20, 2026 at 4:43=E2=80=AFPM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
+>
+> On Thu, 19 Nov 2026 00:02:52 +0100, Eduardo Mucelli Rezende Oliveira <edu=
+mucelli@gmail.com> wrote:
+> > print_one_histogram() expands the hist.filter value through an unquoted
+> > command substitution. Field splitting collapses repeated whitespace in
+> > quoted filter strings, and pathname expansion replaces literal wildcard
+> > characters with filenames. The generated command is already incorrect
+> > before run_cmd() evaluates it.
+> >
+> > Print the filter with printf and a quoted command substitution so that
+> > structured histogram filters reach the generated command unchanged.
+> >
+> > Fixes: f134ebb28126 ("tools/bootconfig: Add histogram syntax support to=
+ bconf2ftrace.sh")
+> > Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+>
+> OK, looks good to me. Let me pick it.
+>
+> Thanks!
+>
+> > ---
+> > Hi Masami,
+> >
+> > Thanks for picking up the run_cmd() quoting fix. I had this small
+> > follow-up ready in case that patch went in.
+> >
+> > Here's the thread for that patch.
+> > https://lore.kernel.org/all/97454eceb5d56bf956740b8998972767bcfe6c70.17=
+93216183.git.edumucelli@gmail.com/
+> >
+> > This uses the structured hist.filter option documented here:
+> > https://docs.kernel.org/trace/boottime-trace.html#ftrace-histogram-opti=
+ons
+> >
+> > I tested numbered and unnumbered histograms in a temporary tracefs
+> > instance on my Ubuntu machine, running kernel 7.0.0-38-generic. Repeate=
+d
+> > spaces and tabs were collapsed, and a wildcard expanded to filenames.
+> > With the fix, the generated and installed filters matched the input.
+> >
+> > The run_cmd() quoting fix was present in both versions of this test.
+> > This additional change fixes the string while the histogram command is
+> > being generated, before it reaches run_cmd().
+> >
+> > Feedback is welcome.
+> >
+> > Thanks,
+> > Eduardo
+> >
+> >  tools/bootconfig/scripts/bconf2ftrace.sh | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >
+> > base-commit: 0ad31c3252d4c626a93ae6251340ef86b18342d0
+> >
+> > diff --git a/tools/bootconfig/scripts/bconf2ftrace.sh b/tools/bootconfi=
+g/scripts/bconf2ftrace.sh
+> > index 6a3535a2c..0992e54c6 100755
+> > --- a/tools/bootconfig/scripts/bconf2ftrace.sh
+> > +++ b/tools/bootconfig/scripts/bconf2ftrace.sh
+> > @@ -163,7 +163,7 @@ print_one_histogram() { # prefix
+> >       print_hist_actions ${1} "onmatch" "event"
+> >
+> >       if xbc_has_key "${1}.filter"; then
+> > -             echo -n " if "`xbc_get_val ${1}.filter`
+> > +             printf ' if %s' "$(xbc_get_val ${1}.filter)"
+> >       fi
+> >  }
+> >
+> >
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-  { [RV_MON_DISABLED] =3D '0', .. [RV_MON_MIXED] =3D 'X' }
 
-> =C2=A0 struct rv_monitor *mon =3D filp->private_data;
-> - const char *buff;
-> + char buff[2];
-> =C2=A0
-> - buff =3D mon->enabled ? "1\n" : "0\n";
-> + guard(mutex)(&rv_interface_lock);
-> + buff[0] =3D set_to_char[mon->enabled];
-> + buff[1] =3D '\n';
-> =C2=A0
-> - return simple_read_from_buffer(user_buf, count, ppos, buff, strlen(buff=
-)+1);
-> + return simple_read_from_buffer(user_buf, count, ppos, buff, 2);
 
-Why don't you use sizeof(buf) here?
-
-> =C2=A0}
-> =C2=A0
-> =C2=A0/*
-> @@ -269,10 +272,22 @@ static int __rv_disable_monitor(struct rv_monitor *=
-mon,
-> bool sync)
-> =C2=A0
-> =C2=A0static void rv_disable_single(struct rv_monitor *mon)
-> =C2=A0{
-> + struct rv_monitor *cntr =3D mon->parent;
-> + struct rv_monitor *p =3D cntr;
-> +
-> =C2=A0 __rv_disable_monitor(mon, true);
-> + if (!cntr)
-> + return;
-> + cntr->enabled =3D 0;
-
-Do you mean RV_MON_DISABLED?
-You added the enum which is nice, don't rely on magic numbers.
-
-> + list_for_each_entry_continue(p, &rv_monitors_list, list) {
-> + if (p->parent !=3D cntr)
-> + break;
-> + if (p->enabled)
-> + cntr->enabled =3D 2;
-
-Do you mean RV_MON_MIXED?
-
-> + }
-> =C2=A0}
-> =C2=A0
-> -static int rv_enable_single(struct rv_monitor *mon)
-> +static int __rv_enable_monitor(struct rv_monitor *mon)
-> =C2=A0{
-> =C2=A0 int retval;
-> =C2=A0
-> @@ -289,6 +304,27 @@ static int rv_enable_single(struct rv_monitor *mon)
-> =C2=A0 return retval;
-> =C2=A0}
-> =C2=A0
-> +static int rv_enable_single(struct rv_monitor *mon)
-> +{
-> + struct rv_monitor *cntr =3D mon->parent;
-> + struct rv_monitor *p =3D cntr;
-> + int retval;
-> +
-> + retval =3D __rv_enable_monitor(mon);
-> +
-> + if (!retval && cntr) {
-> + cntr->enabled =3D 1;
-
-Do you mean RV_MON_ENABLED?
-
-> + list_for_each_entry_continue(p, &rv_monitors_list, list) {
-> + if (p->parent !=3D cntr)
-> + break;
-> + if (!p->enabled)
-> + cntr->enabled =3D 2;
-
-Do you mean RV_MON_MIXED?
-
-> + }
-> + }
-> +
-> + return retval;
-> +}
-
-I need to test it, but at first it looks good and sounds like a nice additi=
-on.
-
-Thanks,
-Gabriele
-
+--=20
+Eduardo Mucelli R. Oliveira -- http://eduar.do
