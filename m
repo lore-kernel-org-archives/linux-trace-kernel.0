@@ -1,89 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795260725;
-	b=YNcTy+cXYGJ3PneVUOCgaNa83a9qoq9gsvGwMgSIhSTl+qiwag7LKB7KbHMv9Kj1dBVv
-	 wUdnEkQJ+Xi8ZQbx3d32AUQznx3GFsA6WZXzg048p7/5NvAZjbGY3yCUZkMZ1BeWUsYtr
-	 FTc1pk+/gFtTWFVDbdTjzCVMF8fikgQ5nHn4Sf7nfZXaCNFTbemdmKN1O/de0YugL0Tdn
-	 eztRbnwJAKwBlR5pcDbAUdx8fuML2mwdCNZvDvB/wETffYkWEBH2hLAKgxaub8YXkOCiz
-	 1TekNpJ3/YwR98oTw4WsIfJwNOcfTeYa9PvpBoOizVMtAgdFjDVGi7QMYcsxkZ2wNOg==
+	t=1795260734;
+	b=ZbZkcwHFrZfhTuspdzr5hgFLJL5zOD/ZEJ3+maUX0/NP8eQkiCQPwNgKEBGQT8OGeWQ1
+	 zJmBdgeE9PgC8SmKp8uMDSh6DShgHmG5nNQgLcD8usAcff7txEeRutQcYB1yqK/2N8BAR
+	 dvmlGDwoxM6F5Ka5M1a3eVpQ85b1MOq0plKTl0X87vD+y9sykBeQ9ziR9QLzUX6d84B0G
+	 LHRrSzPI89CnN7rUOzDlNapcObTDuQFrR0/ouyE8WcQMKKU7U4lNGxufy2RShqnl4XWnE
+	 ruTdpSecat/mYedSmG2cJkN85MBXJHVVabA2mnJTS+GbayTK7fzN05lRFWa0qO0Fzsw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795260725;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795260734;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=NGCS/K0a+v9qdamXn5wmb9umGowNWIc4OW6YckyqxpY=;
-	b=B/woJ7TGkqVJEXwqPyb9YoRLP+qdBUE4xnHnCDzVYoPXP7n0aFWpghdRwtwNC7C+7U1Q
-	 BdX4ro3D+QVD1/YDtuomToYEXRy/awYXbrwn2UcQ1MeJh5SvpKeB/J+XLf1r0b2kAsh92
-	 YX0wTs52BwjS0SpydkYjVAk6dDnCgp57RwZs6yvd1sRO7YV2otRpjpq4VxKVdOy7Zy8nh
-	 MplgRmoS77oqN20OPr5jfuWC7c54KKGZYGiHeQn60o25257xpDyETWuQkRQH7r0tCVjw5
-	 MaEi+zxO6H3wVpJSCgg7rtfJHkxesHQ/bVhwORYT1B+DjtCDk5NgRXN63rPtccaTCnw==
+	bh=eReobK1M/4MSKVVNxfhKdJx4Lmw1aJcPP01j44uODU0=;
+	b=CXEFzRBl1fR7JJMmmhfzsj7OKDc12TrcCfcphAmlvFSgOA6rYPFrMt5Vz4UIxUv2kHCR
+	 yoniIXgpCnNRGrG/2KJ8vu1GY2jYo2O6nsrSQWSDz5EnA9aKonc3JHy7Lg0tGPuxKDlBl
+	 BPlWv850itZxMVlzX/KeWDtH59T4owQRP9HWEbuBeR3ipOaEUn8VeF59F90fHhOCf1mHP
+	 4gF7YornFtBtDztQprC2qqlUjRqCRQ9xFpaLvkLIR05z4/zaoWbZSOMc88oAj/klz1vki
+	 iAP0hAKnSVC7yzhiC11z0UInjkDChm02+LRgkOrcb6DDxx0WMusA6PgBSbzlAg18/cA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cG0FZdK6;
-	arc=none smtp.remote-ip=209.85.214.171
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="Hk85h/gy";
+	arc=none smtp.remote-ip=209.85.215.177
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B37A606A325
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 11:32:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2B37A606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8644606A325
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 11:32:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8644606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cG0FZdK6
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2f05b465cd1so4242275ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 03:32:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Hk85h/gy
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cc4be0e5351so1786076a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 03:32:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795260724; x=1795865524; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795260733; x=1795865533; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=NGCS/K0a+v9qdamXn5wmb9umGowNWIc4OW6YckyqxpY=;
-        b=cG0FZdK6k/9BZZ/csAcJeoYIIcI9VALnU7XuyUOVDaBd1Jyft/xMXjHhByjGbqzDM0
-         Vv0R4PNG53KHR+Uqk3TDv+LlSLD5wVcc7woOTHWw52ODkLVX3vQ3LMFvQ6/DqBJEx35q
-         YitFw8LPBtp6x2DdxrEOTUmWeS0xLULSqYJ/SfB7UP5y0uyubwYbJconRMdL8MsWlhNI
-         V4WHnlePtuFikE8bD9i7MaIZ88HbPRJpsif6TCrXe+zfDRoKwDBXAHClVTtHcTIurLXV
-         01jyk0XXxvHZz4/cEbDjMdeOpv5BcKY84wkVoSvU0DYY2lzJH/nODV8WeTfhVRKkMbXY
-         KZcg==
+        bh=eReobK1M/4MSKVVNxfhKdJx4Lmw1aJcPP01j44uODU0=;
+        b=Hk85h/gywmD+mYbWlOQCBAKntNEl7TzJiiWWSQOQdan3JY4s5yzfxEryCNe9/rg/Lu
+         zMr+0BjRrnEwfhRrpEZhBu87WBgbFLEuse9gLwhJoixUx1Bz+KqBia4xOTCkUZgL0L+g
+         SW0cBAUS1xcf53dHN5FVs2r7QT0aqVYFfLrdahxefIQY8jz49alISdi/EY227XsSpQ8d
+         tfjydyOEo3Bq3i2zicGZyTKSSaaDU+VRpJJJ2YLW0ntFXCwBhDFumGSbtFH/b4Cm480F
+         bdWgLMHVpU75FG2mXCzV0tn23Svc/uUd0FnovbSAi+5y4qIH0lGaZ9P1K/kHVU3ndl0T
+         u5sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795260724; x=1795865524;
+        d=1e100.net; s=20260707; t=1795260733; x=1795865533;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NGCS/K0a+v9qdamXn5wmb9umGowNWIc4OW6YckyqxpY=;
-        b=nhUVFqkDu+NB0mTS3JkbKXd/qPDCkHuQwcM3wblGangs2/3BAwKz98zLKUaxzcpRdt
-         UKpYd0X6SyKxu5V9AFaq3qpZ5a0U18bapWC3qXKQDwxExj6ZliMIDEogT+N0V1F9HcjY
-         uzDoz5E7r2WY0jAtGpuSfx8suC/Y4J9/9x3zG2QB6E7z7gLpSULvQC0BR3JigGGwo7z2
-         QWuoEHLNivf9DYx8abimd/FrBOGUxNAU+pWH8/xRiPI06oYeqYn6ypgfMXN/W4CPO8Lv
-         c0hq6JH+JiO0gKw8/SU1GXZV9uZWtFjsgBr3TDRMgdQ96fYLZS1rQNIbtIzOQuKXgmIO
-         8CNw==
-X-Gm-Message-State: APuU4Z9xl/drirlMOkZMwDLuZNVuub+SaTgHq3QkDTvZh0/WS8NM950P
-	ekJmqaQq56ZUsU6K2epbTgkNuNoQ3ndzc8HFfuZLkSeoOtiE0otilSbU
-X-Gm-Gg: AZFdTZfdbE94flp5qgwWtifbxpD/jcgbFn944AHh0mtCFu2yljUN4fgtqnvNpTeCN5k
-	ErTPIyFTxRrYljZyY9VMYRFfTxIG5HBKGFCskOxoW82gfoe/qRHotoLV0dsfdRnjLHioNkvNoNm
-	K766yeJnVVIwYkykPQ//FRAbM+ToW+bIElRqIUddxbPPvOj3P4uyddya9DgnQNBS0f1lHeOe8XW
-	k/5YpZlyO7SRnKRX6Wr1Fq5AyiebE+9br867/A/1ZEbCKJ0jKyT+FnQrLRYx7pv+hTW1DGVhFBr
-	m9gNsbhCufQTpvgbIVs/CtLIcTEu2v3eb5ViG1gD3AuS44gYWd3ZBotFIukbfnXwc3pZspy0xPx
-	bMuT09lohl4q0dHgkhaaEGoM6844WDIcqxw7YV9qZVIo++bl0sazeH5zO1RRPpu7CT2JRGGxcSy
-	T/awrPOsW57O7vnmOHlhRbi2LxgJBDwfl97JUCeoTEQAmA/++uLDAqC7owmaTTDQ9E4pAk6dYj9
-	kj66D6uKSN0BHmnFxnJ9Fhu2dvHN7A4HJZcBek/498FnUpH1NJefs1SomwJD4No0mkIax1/s+HQ
-	OyZHqVc5HFBNBIemtyREN8Rwm5+QxFwwb4nxmRZjzQ==
-X-Received: by 2002:a17:902:ce85:b0:2ed:1350:59ff with SMTP id d9443c01a7336-2f03ef594c0mr58057885ad.3.1795260724508;
-        Sat, 21 Nov 2026 03:32:04 -0800 (PST)
+        bh=eReobK1M/4MSKVVNxfhKdJx4Lmw1aJcPP01j44uODU0=;
+        b=VPkeyUsh25s+3X6mfIf70EL1shfCIzv7RtO3diaYlJ8deq05O8i6KMUutoyROWD2ty
+         icA+e2NLtzVRx0VEvw1XSEBHlHy/f2Rcn6nEplsbMFAagcLvSdd8HCMBDAevpvCfSQPQ
+         tvAD5ByAo8ys0mB4oROVf2t0ZEhQYYgzsTz3q7mAau2+6LLh0sa5OQA0KPO2QXdwQzX0
+         P9dcZX7E4Wwg/976RJXv4oRHID8owvWbhZaXWjaGGaC3mP88CZOJwBwuSS0SG11Jodtk
+         JlLuMc85BkJUlQibl1wMwq0ZoaR1cGPuMHSjiIMBBENwQoT8n0vOmfLwEndSbPEC5lqK
+         LxdQ==
+X-Gm-Message-State: APuU4Z9BZ/TrerGfXELL7GOMU9QqGihz41jqE0tQkjVx8GgrDYPthYqx
+	JeV6UjJV4q+oYijeQGngaVWSbFfnJR9qAj4e8ESCKzr8oZP3l15XFqqJ
+X-Gm-Gg: AZFdTZcw+mFuupD6mH7qWfOzHyU82l2VNP9YeIYO47/MZTiq+IZ/9xfa2hu/Mnaurem
+	vgxl5hJz3B56eukCvAph3Fsb7nbb+DzwRp4bLTnMkOr+h1kDXwWEdnf9aBFfWA6WlXyZjVBdDjF
+	ER+PaH/Qv1Sp9lkJoza5KOsE0i7Q/K4Eo3z/GKn1dXRhbl5bk17owIW2nNSIL/FLhGtD3IR2Gn0
+	Y0RPcCWl0tJ8cq7gWR5iOgt1ls4z80JZRQCXkOBEnnUy22YeoqrVPOSN8ejJG8Qb/Ch/C2uPR90
+	qUvOIOfLvzGuMLWuG/BPwp4P0ar7FZXQzLzhmhDeYeGK1bsCRByaR5daxzUbVReEfsfkEkxUfPn
+	GS+75O5BuYC1XeqoegrjcIkntX9J7OB81ScV406U+1kMw+dmSe/FdhKAqHv90mP3VYW4SLlJfoK
+	Dex30+3nYi0vJPkfsuuLym6Tbm3vkMZzoWeFCNDgS4YRmcEqJgrFQWmxxtqlh/b3q4V2EbRq2gs
+	hfORaMWsnb6vouUgPc/l0dmrYwlOO7Ecph9guGdIjR3SwaKQXexkglEZqsytAPdo5NVepOXKIRV
+	jAwv7wGD8YYvfi6+cqcSsctEPFC5j8Zm45ZFdZMHUQ==
+X-Received: by 2002:a17:90b:4a48:b0:3a8:7096:9b48 with SMTP id 98e67ed59e1d1-3b41c7b5fb3mr5850701a91.1.1795260733085;
+        Sat, 21 Nov 2026 03:32:13 -0800 (PST)
 Received: from [127.0.1.1] ([220.196.193.21])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f04f6049dfsm16057885ad.19.2026.11.21.03.32.01
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b41abb2076sm8322610a91.2.2026.11.21.03.32.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 03:32:04 -0800 (PST)
+        Sat, 21 Nov 2026 03:32:12 -0800 (PST)
 From: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>
 Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] verification/rvgen: Validate the monitor type
+Subject: [PATCH v2 2/2] verification/rvgen: Cover an invalid monitor type
 Date: Sat, 21 Nov 2026 19:31:27 +0800
-Message-ID: <cf05914335850f6835ae79b34d6b4ad891128948.1795252297.git.chaosheng.qu.linux@gmail.com>
+Message-ID: <0d9350979dc4cf67e8aed1171b74b9f6e56f6b52.1795252297.git.chaosheng.qu.linux@gmail.com>
 In-Reply-To: <cover.1795252297.git.chaosheng.qu.linux@gmail.com>
 References: <cover.1795252297.git.chaosheng.qu.linux@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -98,37 +98,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The monitor type is pasted into the generated monitor as RV_MON_<TYPE>.
-Nothing checks it, so a typo yields a monitor that cannot build and the
-tool still exits 0:
-
-    $ rvgen monitor -c da -s test_da.dot -t bogus_type -n bm
-    $ grep RV_MON_TYPE bm/bm.c
-    #define RV_MON_TYPE RV_MON_BOGUS_TYPE
-
-include/linux/rv.h defines only RV_MON_GLOBAL, RV_MON_PER_CPU,
-RV_MON_PER_TASK and RV_MON_PER_OBJ, so that macro never resolves.
-
-The accepted set is already in Monitor.monitor_types, which the help text
-prints.  Pass it to argparse as choices.
+Add a rejection test next to the other ones, so the new check is
+exercised.  Without the check the command exits 0 and leaves a generated
+tree behind, so the test fails on both the exit code and the message.
 
 Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
 ---
- tools/verification/rvgen/__main__.py | 1 +
- 1 file changed, 1 insertion(+)
+ tools/verification/rvgen/tests/rvgen_monitor.t | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvgen/__main__.py
-index 246b43fa2..6053db5e5 100644
---- a/tools/verification/rvgen/__main__.py
-+++ b/tools/verification/rvgen/__main__.py
-@@ -38,6 +38,7 @@ if __name__ == '__main__':
-     monitor_parser.add_argument('-s', "--spec", dest="spec", required=True,
-                                 help="Monitor specification file")
-     monitor_parser.add_argument('-t', "--monitor_type", dest="monitor_type", required=True,
-+                                choices=list(Monitor.monitor_types.keys()),
-                                 help=f"Available options: {', '.join(Monitor.monitor_types.keys())}")
+diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t b/tools/verification/rvgen/tests/rvgen_monitor.t
+index 5f2562600..2a48a7b54 100644
+--- a/tools/verification/rvgen/tests/rvgen_monitor.t
++++ b/tools/verification/rvgen/tests/rvgen_monitor.t
+@@ -64,6 +64,10 @@ check "invalid monitor class" \
+ 	"$RVGEN monitor -c invalid -s tests/specs/test_da.dot -t per_cpu" 1 \
+ 	"Unknown monitor class" "Traceback (most recent call last)"
  
-     container_parser = subparsers.add_parser("container", parents=[parent_parser])
++check "invalid monitor type" \
++	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t invalid" 2 \
++	"invalid choice: 'invalid'" "Traceback (most recent call last)"
++
+ check "missing dot file" \
+ 	"$RVGEN monitor -c da -s tests/specs/nonexistent.dot -t per_cpu" 1 \
+ 	"No such file or directory" "Traceback (most recent call last)"
 -- 
 2.43.0
 
