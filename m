@@ -1,97 +1,121 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795214538;
-	b=hkFoPPpZeVVMwT4t0yg4VtwykEykErhhF5S69unXvh/Lduq1CP78bU6Hrbr4eGIUyPIa
-	 TY5nvutavGiriKl6YlzyQKIz76TRpGvHThiXqPTPAdYOp+OhMiO6QIItJpkLZLaaskEcR
-	 uxPNxRMbZ4dbIgIlhLB2+v95/bygTin5WNHE0JqTB0RWN1XeGVGuD7eoGswsReT276dc1
-	 JDxuR9RGUDb0u03vuZ6LQ6D8JJpYgVWcVuOvL3mSiWwgTbew3upgam6TeZSstQ0YLX4vR
-	 1DlTx41UqToFoJ0Ujqa9FWrUxROiPjLliYUXE8iaMlwCftCGP9GsjMDHkkLJzjG9lOg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795214538;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.173
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795221756;
+	b=J18VzezxjXG2KOTGiGuVtF96lEvvFgkZ++b8PVMlG7jUJ1FEGeGCT2A9lusbUinc4kcD
+	 rNYNGpr+k6eCO/urM0VgoNVITA/zvZ5qotdElhWjX+lj7SAHdObq2LeVcaTy8iLGgKQk/
+	 wfpuYxKZT0XRsUiwSJ6SWnNZTR3SlukdX+5Qi7hf4cXvGVCi2TKhv5vyanANO+MWqwts1
+	 Wjz1H7AhbEg0W6bcr7jO+ydM5X5qltr6LQj1rHHv3hcqWrIT2Unqvnkry6Ge0Wuqs1eOg
+	 U0Ic+QHAXcuWhkykZtINexDgoQcBwPEdk81jqcezLUE3M5hxMg97U+uvZnZ6RqdAM/g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795221756;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=vQU4s0s9jpO6QmWD/0jmrJPFOrD2Wfw5sN63JkEaowU=;
-	b=1V+YLYT37YOA4gpbV4x3a1tsg3fGBhJmzq9xVoqFOP9V8jmtSz6WzjOhKZiMaabKkiBT
-	 80JrJBgF8+vlIePyP/AHKqbXdrCztFn6NmE442gsAi8NMCCt5tdWY9A+Ko1HRKHKMGTEY
-	 TRkPk51WxNZjawL8P1yEaYQq7JUIT2kkyTt0DNwEdYylyK/zWkcBPFBScql5pn2DfgO43
-	 2H6sqqWq7nO5clV0rOZk8wXry0CX16Ecd+bfC/VM8vuFrdQbbeWrsy1J6/MJgO0YE47CT
-	 yqKsIl51rHbvBAj4jkgYxs/GYaSWx3iII9HuyHrpmcBD+4O9JkWLfVe/+wDk1CurQVQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=chromium.org;
-	spf=pass smtp.mailfrom=chromium.org;
-	dkim=pass header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=fvNFs6YW;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To;
+	bh=Js5N6yiXwXXSTzZ4KgFGwIMSCZDX/tKTz1lwaDrh2ys=;
+	b=efcXFXuU1vA+MJv84Zz9eUkxnduAbBKgJC9Xa/eCiNQB136g4Ted4+TmmWZGRMy3avrv
+	 aT+fbxN1zPC9p1AxsORWvd7Q1GRcqLOpOYcyRPAjVyXmQS1lPz3gEX4fIslmpyhzc/vfL
+	 uE18pl218W0vQ1w3QeHlud7rFTJsnUB1vre/tQfPKGmyuR6Nqse3+u9pKQqh67x07ZVI+
+	 TcSNkm1oclX20OnPaPoyxrk15Jrnk+yzH49RiudgbH1Wocf7faJuphOTXLDb1S+XVdMjZ
+	 PBh6QmCzuZ5E4sjrgYl48BHHsErl8AXei5giA1IkYI4Ex7GXLSMGb4nqKwEducNEotQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pD4AmFXt;
+	arc=none smtp.remote-ip=74.125.82.173
+Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C58606A6BD
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 22:42:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E7C58606A6BD
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30905606A6BD
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 00:42:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30905606A6BD
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.a=rsa-sha256 header.s=google header.b=fvNFs6YW
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-67c6a0abc2eso1693417d50.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 14:42:12 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795214531; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ZMSQG4Hq6L78S8n0oyCX/SqmGWu7Lb7z+na9VnH/tDTizb2IJxxHrM18kr7js9H5ga
-         6WTqSoZyQK1T/vKU/BOVJwIoslpks77ygkU+rBh+gnTmABVo5XFTHJWpUoPWqnbtvg11
-         7JVX58iYn7F4NR0yarTPMhkkENltMgb7dWKRJOiblVwORgHtAE/gfRDROAuwNwTQuS2k
-         ycCfGGewAnKofkyQvmpadBbDH5hHvC6ML7eOn75Oo5M1QiPxTCfjkv/FPTbg6xWYirUt
-         /7CNaXtucTxYKUF/+3uzVraRoRZfDIgKtVbHoZ437UEYgRHvORRPeZf8NCtHcAs8vj7k
-         Iv4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=vQU4s0s9jpO6QmWD/0jmrJPFOrD2Wfw5sN63JkEaowU=;
-        fh=2kGZJG9G3AuYX+FuT5qwzVphAkUHSda0J93dFGNn9YM=;
-        b=h9hw69jUxypee7SxRj0KXepYIIwrU8ZBSdQmB/efsJp+DwgOUdLRu0+IQzUrsEH0aK
-         yZBpm0uuRLfyDlxXJFEWxkkTQbxSw508jCqBtHJzfyu16zgHJt3ZJrtBNTTjBzCICQJs
-         6i1jjPWPOD/PFN2FFXUu4pmruXCCDa6XC/WSlDkhxXi1ZsZw6+flY5cc8Xbkq9gVms6y
-         tjHM7pPNCZVjDckC0CGuZVWEOX1eUZc3te3hxNB6N/24SRyeOUB0h0FDQa2w05XsanXu
-         pH49GEn1rhm9bN5BDuh1P4Gv9b7j4iQg2ZCA19KQEFRu50MQMAV1YTsJxS4snnxu8dl7
-         R9ng==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pD4AmFXt
+Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-3863db981d4so1435074eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Nov 2026 16:42:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1795214531; x=1795819331; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=vQU4s0s9jpO6QmWD/0jmrJPFOrD2Wfw5sN63JkEaowU=;
-        b=fvNFs6YWasf+wplVYmHAek4F/XoGdUzQF5xAHO5IGZp5CRRMRRxkruN3V+DWI4+hCW
-         oHgp2SRsfzcmufJj7ymjrsKVE0kw4s8HdIeYBoJqV5T7lhTewU9l1CwTZk4K5ZUFxWIh
-         2dqCA02YjCgAuB7cdfi9YfOGibXePz+tK2myU=
+        d=gmail.com; s=20260707; t=1795221754; x=1795826554; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Js5N6yiXwXXSTzZ4KgFGwIMSCZDX/tKTz1lwaDrh2ys=;
+        b=pD4AmFXtEI4gcW8lq8jgkb4TQsgIV3/rLtjvPlKCyYdsJDnM+Zhcqgii1TYOrJgoEg
+         68QH0SXg5hfk3V3UukH3TNA6omD4Miw35AKisfch3ZeCi1bcWUEFHWVhKQFBenR4d/uT
+         PFVo9ZKRd8MNE9ce59HLBrRIZXQfzrDXwp88W6gcmp93e+7LmSWp/JUaImYP0bEpCPKk
+         6tqgTgqxEcGLlucCXJv1PzuFx9Yqt9WPeGxHvVFuV+Jy7dSJmrRs5k1OvQWJzkVegXfk
+         /o+CFNkY9vYecLaF55iDgXS/a0dzZuftjHafZCpoIZxy8MI8Lcx0nAf3II18bzFxbRtK
+         7fWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795214531; x=1795819331;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vQU4s0s9jpO6QmWD/0jmrJPFOrD2Wfw5sN63JkEaowU=;
-        b=WNsWb2dvnuVfJV3xOa6+/Cj4xPZNVyE0Lp9I4DwNxMC1vFJr04X/r4XwLgavHMPZkR
-         nDwU45dv8ng5bauxle/ThwawQSQilDrkbPgSC0MRNvwY+sMTNMv/PYvEFz/3HNLsC7ru
-         psQjCrDMipVDkbuXGyPjUuqIZVb4/Se1CYKS8J/ZOlvKXDmYKDQZ28dHy1sjbWMvJS+8
-         oRj0/k9ujBbEOcL3odWYdQCCW5J2pch4FILUBnnOHj+4Z5mmd1SF1VovKhHKgM9AlCj/
-         /G4d0EDpPjYEuHDErcUeLKdMkllBUBUmLeuk3nuIDwAEMC+FoqRUqmBUe5M0CLBdFOII
-         mWPw==
-X-Forwarded-Encrypted: i=1; AL+hErHML9HqNgMpOqVzQ1sIwcI7CaG4u9sUCcjIbh7EyFqqYVQufhT3tunFPGxFGKgwnbN3Vg4oIFf8be5t9nVcBI5E3EM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9SLfVd2LrRZ3l/kkBHq9iEWlqdH5iJ4Feq2EFxGuobJUV8hl6q
-	ctUQkhdpkDSgb/fy+ciNIVFtHL88Di4LSgmAeNxm2F3troA/tDYKd8ihjR/ibse+M/4gzskYcwa
-	TMPupJw+HSEEN5OjKCJsg9EiVDgcCVaj64yatm8hd
-X-Gm-Gg: AZFdTZeOzyMG1U+95qm5SGcaLoMYOQ9PANA2et0uJS8/L+eIYZWw5lpn3LCsnf/lBeS
-	PXRwgbw/chhyYrehCTNc6b7AG+IGhwyCa2JkAvpWX3G75sCvEm8P1b2Ye/AgLOSgVmfMMQ51rVn
-	v9pH0SV/snum7d0jhY4Y4vQTR5WvGU7BrUmFiP2t4kp2AHNa0pdDh19mMJg86SHCx5fBkNt5omN
-	PCb/MUNBfFdb7sUzwGvWe/oSXTK1skStksJgb4rbcEIam9VDq0RpeEOIxcyujO9b6k4YALFkElw
-	rBabJ8/DxZ7PCz9hENt/FjYVUhDH0Zez3nGqWa1vpiN1bAc+rOmrRUwmRLCaWlwBzQVhj2aA0fh
-	hQdIn2sVUnY/dE+serANV0xOQJcoqzUfpvADw4z/bSDUi9j6e/mgt0Q+Tb6ynYjRYFDE=
-X-Received: by 2002:a05:690e:1918:b0:67d:e4c3:d838 with SMTP id
- 956f58d0204a3-67df440a008mr1910475d50.29.1795214531587; Fri, 20 Nov 2026
- 14:42:11 -0800 (PST)
+        d=1e100.net; s=20260707; t=1795221754; x=1795826554;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Js5N6yiXwXXSTzZ4KgFGwIMSCZDX/tKTz1lwaDrh2ys=;
+        b=HMv578cTHklMi2QXLmNOcUPX+QjTb26S8y5nFGAe8i4YCyuahe1yRFX3qEdwN0fv/M
+         OJd6Jm09AvezJoJwc9w31IYXjsWoaH5jsAGJJRsleVy7JEEHFw0Na1DFueyg8gKut3lp
+         UIKXKnSM0no+w9bs22JHMVH7eUcCjdoLitCckdZuE+UXx5ty3yHG7jsFOTSLouuiejtt
+         PpzC7WOfMEZkbu+haOSk/8GRTdyPvWicq/HlLUT59mLm9hYLrYggTb41v0Jj9ruL8QZJ
+         0vgpIIKmETMyRmabHajZZa4GWJknuL/8lp1qGnyaChv57XlxHj4R8EvO/5plyxyhbnvS
+         8A8A==
+X-Forwarded-Encrypted: i=1; AL+hErEJRE3nqqrfxMj8xj5peHdPP2fvMDISzGt/SIXWMpHzQwD3eLywUVRWHXi7od4fm1dLfm2w+xOiWjy35NykVAwXjvc=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/kPQLqhEmOsS/3Ob4RV9i5ogRxAtZreG4sslIZI3U2UY4PpeQq
+	j25gdrcQ7YgjCwNqXsg+IyTUJe8cCRFItPhr5SZudkMTe0BCZ+FhDUG1
+X-Gm-Gg: AZFdTZcxOWcnoTWqcIYgr5tingsVgdlZ8GKkL9e9JxLTON5S1HtOmPKOIHqRTqA4vnz
+	K2I/ye9OYuWErZMngRBdYnX4Bbh1dqeQ4H4xGbC3qfegObBYTOTuT8Uyk11Hkra4+PeuUwITOgZ
+	Rx0Zfi4Hez2P0pxPSotsh6/cI0WQ3mUqaFFEsZmWzIrwRzgpGhITZ+NRG1G/33FLYnRHGgZ1fHn
+	Bu+fh/WVNj1kxsNBDWunxxFO28YGXlaymPURIN4Ri4fJs2BT/qF14EbyIU/BVCnqA9EvMMQBju8
+	yGr/M8Qh4j14drYJxjlzNKWVzLp4FmC9RcH1ZZxlJoj3F/eM1Et4NT1Ppg04Vys8LwFl7ea4CMN
+	1oLj3BbRZntT4meyD8mKZtIxBzrNUk/obUAUzulhw1UIi5CHfih0S4LVHswcl0N25B1x3irN8n+
+	u8DFUnIxpT10wXP9NVYDh5w9UcvMDN0Z3HvQAKYPjKC1ZXXrP8rUoNGbK8t8oyyICi43IzZ7EsA
+	ObLpAzr/cONcITu+pcbEzkL51Vcu4OlO1r+sWYu4mG9vP7ZoA5ZwhC5wsXoT4u/M1qxcnby3PT3
+	sGyLbJnzq7K3S7q4GfMs3plfuReLjXd6Vw==
+X-Received: by 2002:a05:693c:4091:b0:379:4197:5eef with SMTP id 5a478bee46e88-3856f65b3cfmr5387027eec.8.1795221754060;
+        Fri, 20 Nov 2026 16:42:34 -0800 (PST)
+Received: from localhost ([2408:840d:6820:1a1b:6def:d896:8796:4938])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567da4f85sm12699706eec.27.2026.11.20.16.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Nov 2026 16:42:33 -0800 (PST)
+Date: Sat, 21 Nov 2026 08:42:28 +0800
+From: Yao Yuan <yaoyuan0329os@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Yao Yuan <yaoyuan@linux.alibaba.com>, 
+	Alex Williamson <alex@shazbot.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, David Lechner <dlechner@baylibre.com>, 
+	Armin Wolf <W_Armin@gmx.de>, Thierry Reding <thierry.reding@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Karl Mehltretter <kmehltretter@gmail.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Marco Elver <elver@google.com>, Ethan Nelson-Moore <enelsonmoore@gmail.com>, 
+	Jeff Layton <jlayton@kernel.org>, Bradley Morgan <brads@mainlining.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>, 
+	Pnina Feder <pnina.feder@mobileye.com>, Mete Durlu <meted@linux.ibm.com>, 
+	Aaron Tomlin <atomlin@atomlin.com>, Rio <rioo.tsukatsukii@gmail.com>, 
+	Feng Tang <feng.tang@linux.alibaba.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-trace-kernel@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Yishai Hadas <yishaih@nvidia.com>, Longfang Liu <liulongfang@huawei.com>, 
+	Ankit Agrawal <ankita@nvidia.com>, Brett Creeley <brett.creeley@amd.com>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>, 
+	Julian Ruess <julianr@linux.ibm.com>, Nipun Gupta <nipun.gupta@amd.com>, 
+	Nikhil Agarwal <nikhil.agarwal@amd.com>, Eric Auger <eric.auger@redhat.com>, 
+	Mostafa Saleh <smostafa@google.com>, Pranjal Shrivastava <praan@google.com>, 
+	Ioana Ciornei <ioana.ciornei@nxp.com>, qat-linux@intel.com, virtualization@lists.linux.dev, 
+	intel-xe@lists.freedesktop.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] vfio: Allow untainted use of driver_override
+Message-ID: <awDok7Sm5Dgp-Ty-@sapienza>
+References: <DMYH4ED3GWDO.29DGXPK4M82VR@kernel.org>
+ <20261118235645.2907908-2-alex@shazbot.org>
+ <xzp5gljhburzbpol5bgnyyzwdrgpw3fj6ff3j23ein27raiidw@kti7moeuwvb5>
+ <awBUG7-QzXplEiUT@monoceros>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -101,271 +125,46 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261024-send-upstream-v7-0-abad13174b43@chromium.org>
- <20261024-send-upstream-v7-11-abad13174b43@chromium.org> <sashiko-outbox-183484@kernel.org>
-In-Reply-To: <sashiko-outbox-183484@kernel.org>
-From: Jingyuan Liang <jingyliang@chromium.org>
-Date: Fri, 20 Nov 2026 14:42:00 -0800
-X-Gm-Features: Aa3M54qwBjwBmrAzhDq76JOH0mkyHB45HQlbB0ykD_xKYZsQBf4Gvgfm3ggVaBs
-Message-ID: <CAEe3GZHSuQ2c2gOJPgJDu08T2+m+2RHLmcpGsE_0o+=UX96F_A@mail.gmail.com>
-Subject: Re: [PATCH v7 11/11] HID: spi-hid: add panel follower support
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, 
-	dmitry.torokhov@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <awBUG7-QzXplEiUT@monoceros>
 
-On Fri, Oct 23, 2026 at 6:10=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 2 potential issu=
-e(s) to consider:
-> - [Medium] HID: spi-hid: unrecovered deassert_reset() failure in spi_hid_=
-resume()
-> - [Medium] HID: spi-hid: improper wakeup teardown for panel followers in =
-probe
-> --
->
-> commit 35d9a38c1b6ffa8dbb3ab740ec9ce120c5b2e7a1
-> Author: Jingyuan Liang <jingyliang@chromium.org>
->
-> HID: spi-hid: add panel follower support
->
-> This commit adds DRM panel follower support to spi-hid so that a follower
-> device powers up and suspends in coordination with its panel rather than
-> during initial probe and standard system PM callbacks.
->
-> > diff --git a/drivers/hid/spi-hid/spi-hid-core.c b/drivers/hid/spi-hid/s=
-pi-hid-core.c
-> > index 3b8874ca0e1cc..496b33cdf3d46 100644
-> > --- a/drivers/hid/spi-hid/spi-hid-core.c
-> > +++ b/drivers/hid/spi-hid/spi-hid-core.c
->
-> [ ... ]
->
-> > @@ -325,28 +328,30 @@ static int spi_hid_resume(struct spi_hid *shid)
-> >               return 0;
-> >       }
+On Fri, Nov 20, 2026 at 03:10:38PM +0100, Uwe Kleine-König wrote:
+> On Fri, Nov 20, 2026 at 10:17:46AM +0800, Yao Yuan wrote:
+> > On Wed, Nov 18, 2026 at 04:56:44PM +0800, Alex Williamson wrote:
+> > > Driver overrides are the standard mechanism for binding vfio drivers
+> > > to devices.  With the introduction of the support_driver_override flag
+> > > in the core driver struct, it's now required for drivers to declare
+> > > themselves as driver_override compatible, otherwise driver_override
+> > > bindings will be denied or generate a kernel taint.
+> > >
 > >
-> > -     if (!device_may_wakeup(dev)) {
-> > -             if (shid->power_state =3D=3D HIDSPI_OFF) {
-> > -                     shid->ops->assert_reset(shid->ops);
-> > +     /*
-> > +      * Check power_state, not device_may_wakeup(): power/wakeup can c=
-hange
-> > +      * while the device is off.
-> > +      */
-> > +     if (shid->power_state =3D=3D HIDSPI_OFF) {
-> > +             shid->ops->assert_reset(shid->ops);
+> > Hi Alex,
 > >
-> > -                     shid->ops->sleep_minimal_reset_delay(shid->ops);
-> > +             shid->ops->sleep_minimal_reset_delay(shid->ops);
+> > > Set the support_driver_override flag on the driver struct across all
+> > > vfio drivers.
 > >
-> > -                     error =3D shid->ops->power_up(shid->ops);
-> > -                     if (error) {
-> > -                             dev_err(dev, "%s: could not power up: %d\=
-n", __func__, error);
-> > -                             /* Suspend runs next even if resume fails=
-. */
-> > -                             enable_irq(shid->spi->irq);
-> > -                             return error;
-> > -                     }
-> > -                     shid->power_state =3D HIDSPI_ON;
-> > -                     reinit_completion(&shid->reset_done);
-> > -                     error =3D shid->ops->deassert_reset(shid->ops);
-> > -                     if (error)
-> > -                             dev_err(dev, "%s: failed to deassert rese=
-t: %d\n",
-> > -                                     __func__, error);
-> > -                     else
-> > -                             was_reset =3D true;
-> > +             error =3D shid->ops->power_up(shid->ops);
-> > +             if (error) {
-> > +                     dev_err(dev, "%s: could not power up: %d\n", __fu=
-nc__, error);
-> > +                     /* Suspend runs next even if resume fails. */
-> > +                     enable_irq(shid->spi->irq);
-> > +                     return error;
-> >               }
-> > +             shid->power_state =3D HIDSPI_ON;
-> > +             reinit_completion(&shid->reset_done);
-> > +             error =3D shid->ops->deassert_reset(shid->ops);
-> > +             if (error)
-> > +                     dev_err(dev, "%s: failed to deassert reset: %d\n"=
-,
-> > +                             __func__, error);
-> > +             else
-> > +                     was_reset =3D true;
-> >       }
->
-> [Severity: Medium]
-> What happens if shid->ops->deassert_reset(shid->ops) fails in
-> spi_hid_resume()?
->
-> For non-followers, initial power-up goes through spi_hid_dev_init(), whic=
-h
-> powers down the device and returns the error when deassert_reset() fails.
-> For panel followers, spi_hid_core_probe() leaves shid->power_state as
-> HIDSPI_OFF and shid->hid as NULL, and spi_hid_panel_follower_work() relie=
-s
-> on spi_hid_resume() for the initial power-up as well as subsequent resume=
-s.
->
-> When deassert_reset() fails in spi_hid_resume(), was_reset remains false
-> while shid->power_state is set to HIDSPI_ON and the IRQ is enabled with t=
-he
-> device still held in reset:
->
-> drivers/hid/spi-hid/spi-hid-core.c:spi_hid_resume() {
->     ...
->         if (shid->hid) {
->                 if (was_reset && spi_hid_wait_for_reset(shid)) {
->                         /* No reset response: let recovery retry. */
->                         set_bit(SPI_HID_ERROR, &shid->flags);
->                         schedule_work(&shid->reset_work);
->                         return -ETIMEDOUT;
->                 }
->                 /* HID requests would fail while the device is not ready.=
- */
->                 if (!test_bit(SPI_HID_READY, &shid->flags))
->                         return 0;
->     ...
-> }
->
-> On the first power-up of a panel follower, shid->hid is NULL, so
-> spi_hid_resume() returns 0 without scheduling shid->reset_work. On subseq=
-uent
-> resumes where shid->hid is non-NULL, was_reset is false and SPI_HID_READY=
- was
-> cleared during spi_hid_suspend(), so spi_hid_resume() again returns 0 wit=
-hout
-> setting SPI_HID_ERROR or scheduling shid->reset_work.
->
-> Should a deassert_reset() failure in spi_hid_resume() trigger recovery (o=
-r
-> clean up and return the error) so the device is not left powered on in re=
-set
-> and permanently uninitialized?
-
-Same as the 10/11 comment; the next panel prepare retries the power
-up.
-
->
-> > @@ -1447,6 +1452,108 @@ static struct hid_ll_driver spi_hid_ll_driver =
-=3D {
->
-> [ ... ]
->
-> > +static int spi_hid_register_panel_follower(struct spi_hid *shid)
-> > +{
-> > +     struct device *dev =3D &shid->spi->dev;
-> > +
-> > +     shid->panel_follower.funcs =3D &spi_hid_panel_follower_prepare_fu=
-ncs;
-> > +
-> > +     /*
-> > +      * If we're not in control of our own power up/power down then we=
- can't
-> > +      * do the logic to manage wakeups. Give a warning if a user thoug=
-ht
-> > +      * that was possible then force the capability off.
-> > +      */
-> > +     if (device_can_wakeup(dev)) {
-> > +             dev_warn(dev, "Can't wakeup if following panel\n");
-> > +             device_set_wakeup_capable(dev, false);
-> > +     }
-> > +
-> > +     return drm_panel_add_follower(dev, &shid->panel_follower);
-> > +}
->
-> [ ... ]
->
-> > @@ -1523,21 +1618,19 @@ int spi_hid_core_probe(struct spi_device *spi, =
-struct spihid_ops *ops,
-> >               }
-> >       }
+> > LGTM.
 > >
-> > -     error =3D shid->ops->power_up(shid->ops);
-> > -     if (error) {
-> > -             dev_err(dev, "%s: could not power up: %d\n", __func__, er=
-ror);
-> > -             return error;
-> > -     }
-> > -
-> > -     error =3D shid->ops->deassert_reset(shid->ops);
-> > -     if (error) {
-> > -             dev_err(dev, "%s: failed to deassert reset: %d\n", __func=
-__, error);
-> > -             shid->ops->power_down(shid->ops);
-> > -             return error;
-> > +     if (shid->is_panel_follower) {
-> > +             /* Like the IRQ: the first panel_prepared resume enables =
-it. */
-> > +             disable_work(&shid->reset_work);
-> > +             error =3D spi_hid_register_panel_follower(shid);
+> > Reviewed-by: Yuan Yao <yaoyuan@linux.alibaba.com>
 >
-> [Severity: Medium]
-> Does calling device_set_wakeup_capable(dev, false) in
-> spi_hid_register_panel_follower() after devm_pm_set_wake_irq() in
-> spi_hid_core_probe() leave the wake IRQ configured and leak
-> dev->power.wakeup if wakeup was enabled on the device before probe?
->
-> In spi_hid_core_probe(), if the firmware node marked the device as wakeup
-> capable (for example via acpi_bind_one()), device_can_wakeup(dev) is true=
- and
-> devm_pm_set_wake_irq(dev, spi->irq) attaches a wake IRQ before
-> shid->is_panel_follower is checked:
->
-> drivers/hid/spi-hid/spi-hid-core.c:spi_hid_core_probe() {
->     ...
->         if (device_can_wakeup(dev)) {
->                 error =3D devm_pm_set_wake_irq(dev, spi->irq);
->                 if (error) {
->                         dev_err(dev, "%s: failed to set wake IRQ\n", __fu=
-nc__);
->                         return error;
->                 }
->         }
->
->         if (shid->is_panel_follower) {
->                 /* Like the IRQ: the first panel_prepared resume enables =
-it. */
->                 disable_work(&shid->reset_work);
->                 error =3D spi_hid_register_panel_follower(shid);
->     ...
-> }
->
-> Furthermore, if a wakeup_source was attached to dev->power.wakeup (for
-> example via sysfs power/wakeup before async or deferred probe completes),
-> calling device_set_wakeup_capable(dev, false) directly sets
-> dev->power.can_wakeup =3D false without detaching the wakeup source first=
-.
-> Subsequent calls to device_wakeup_disable(dev), including from
-> device_pm_remove() on unbind, check dev->power.can_wakeup and return earl=
-y:
->
-> drivers/base/power/wakeup.c:device_wakeup_disable() {
->         struct wakeup_source *ws;
->
->         if (!dev || !dev->power.can_wakeup)
->                 return;
->
->         ws =3D device_wakeup_detach(dev);
->         wakeup_source_unregister(ws);
-> }
->
-> Should spi_hid_register_panel_follower() use device_init_wakeup(dev, fals=
-e)
-> (which calls device_wakeup_disable(dev) before clearing wakeup capability=
-),
-> and should spi_hid_core_probe() skip devm_pm_set_wake_irq() when
-> shid->is_panel_follower is true?
 
-This follows i2c-hid's panel follower handling. The wake IRQ is
-not armed once can_wakeup is cleared, and the SPI core doesn't
-enable wakeup before probe.
+Hi Uwe,
+
+> I missed your reply when I sent the next revision of this patch. I had
+
+Thanks for your reminder, no big deal to me.
+Let me follow your link to have a look on v2 there :-)
+
+> to trim the recipients of the v2 because gmail refused to send it with
+> everyone on Cc: who was emitted by get_maintainer.pl. So please see
+> https://lore.kernel.org/kvm/fb0df5c89336b77a373ae0f890f63427e4adbb28.1795171088.git.u.kleine-koenig@baylibre.com
+>
+> But also note, that if v2 is picked up using `b4 am`, your Reviewed-by:
+> is considered as the patch didn't change.
+
 
 >
-> --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261024-send-ups=
-tream-v7-0-abad13174b43@chromium.org?part=3D11
+> Best regards
+> Uwe
