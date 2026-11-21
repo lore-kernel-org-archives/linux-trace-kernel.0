@@ -1,87 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.181
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795262609;
-	b=ZCmWAgHgTpk67FHd8H68Pla2VqE1JD0TaT1+k7+/62iG85+bI7XfoblsNFyKOaaOQU7C
-	 3PB/EDxUbL6lgSDYouHHgJ3eahiMr8hhR6VQh3Lez59UDa1akTuY8a/FG5KpieizKgpyK
-	 ziTlorPp8Tz5X802VspMNTg0Z2HrYOggli6bs8Pn+1JoCmvARvOH5AzoP5/bnNM0Ii1e7
-	 XbhTBDz5OVADtGECQ5D5evQIdYChpEt5WKehFB5rQu4CzgNERDa+CEax+HUXlDLYe8LQC
-	 LZ84M70juOP3pR8KYkUH54GwVShiT0vw/gMor6ntglAe+9DTsKKKIkR1NSKMXle/wXw==
+	t=1795262619;
+	b=4zQHsRFYn71L6IZLK+nHZEJp1H5pZzq9xdBquD0LawpNV0k42tRxh8Az7rTQyhvmpszV
+	 bvBo0b+PI/bHkaC0MlIVZXnWscHqn/1+bqL5QYVLd6tOytV+xWNzmjJrOD+GU7RedmW9A
+	 IGQ/e/B3uI0GmWs378hy7rtPKOw+dR/V977YJoeSkxhaDEAGb8lBD/kmttvLKKriEDw8t
+	 cq+8qgzlNacIasSfSGphhHgSk6BewUJiM+nz9zlWZHYUidbJ/hf+X2CeFAmMOV1DE+Vx+
+	 R0vSZnvScrsinWE7fc0PN0KLAOSU9mYkNmasoT+c+IiRvUDB4/wceNZbi98bGjQkONg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795262609;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795262619;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=vPA6qcxIxzfcfFCB423ZCb64SHQJPAgmU9OFUPgc7HE=;
-	b=bHtHyZIguZc6KvF9IhnhHNfow5Iin0kQNuq5aFbLgmylnhJbbTUg4/ZwfbnGYq8WmQ1Q
-	 9bAhFqdPe4zCMaWs64hImbCHt8eEPyxjX57NY9r4Y0MA3zK8o+L7OtkOM/vonTvFE3hF+
-	 ajk2AzKcqtrbLi3HWwQ2w//0claiIVchDn3xKcWvd7VmO3fSB+WRpS4TH2rmlMyJpO6Am
-	 P9rr/K3NRTHmjL4ATQ8vzBHnlr4+mFvNZI9d7pVa7oea6yNzwnNuySJ2R5xftIMSvB67j
-	 YgcdzqeTs0BM0GmSiNfQAvM9R8B46oblM048ScPlbbIab+NQ59LDk/+azsYCwHY7+Kg==
+	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=8S5/KqNfuIt27SJJNZdfEe4DOCxa4rr3UivWTDl1Z8Y=;
+	b=JM6lr1zjlvl/xqJ3VbZJ+BHtQ+NERT8QoTVGNq5R4WzFRA+tZaCDz2jdXgqs/ZlC0yX1
+	 ej2SdeJOVpRzae+Itc3icL2OgZuWbTFbxoVJVW3QFyNlntZqRwIIK2LUdQ19uCNqLz2rx
+	 wesNLQZBOOF2WyREPINEP07IpIGuo/y26/95mf08pT4lm/SbHMqnzrjUJSVB5F2gFv1lI
+	 0CuXGR3LojjJ1wKhoLhteS+d14XGNmfAGaoq/sBmKDRmbUdbNx1VMGGRX7oFPAKyNy3A0
+	 1pxRdxlUB8L85EEB+Qqz/rAsHwyXJIw9r0zg55dJoP/XCZwit6X+odOzhoTYONcLDIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZDAdsEjx;
-	arc=none smtp.remote-ip=209.85.216.49
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nVihNDy8;
+	arc=none smtp.remote-ip=209.85.214.181
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D609606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 12:03:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2D609606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AC1606A320
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 12:03:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 07AC1606A320
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZDAdsEjx
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3b413997581so1632302a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 04:03:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=nVihNDy8
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2f04244c3d0so15133605ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 04:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795262608; x=1795867408; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vPA6qcxIxzfcfFCB423ZCb64SHQJPAgmU9OFUPgc7HE=;
-        b=ZDAdsEjxlM5KAW3sIXGD7VaXwb32RltnO4d33r25eBtmGYJgqDeTnuefzeYZShjpKu
-         U1BWk9ye9ApCfPvuORkg7OBigwKMcJDockUnfmRTHk6JQooPhQmRcl8ygO6J8oq9IUDJ
-         ziCOkVgdqC/QBb03jJRTT+pnIZvtawwp75Ppm89rnKwcKvQMZhXgcsemnS01FZ8T3d8i
-         ojcI9o9JsYmepqn/fLjFPGRNg7EOSaEce2UlDWqgCXan6rLfFJmigq/ifvFsyXodEcbC
-         5LRI+IR0tsUntUDln+IjF8ihIwSbno4lEePqTm5r7mmZq2AQiTaPEBqJk1hkx/HRrFJA
-         +p9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795262608; x=1795867408;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+        d=gmail.com; s=20260707; t=1795262618; x=1795867418; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=vPA6qcxIxzfcfFCB423ZCb64SHQJPAgmU9OFUPgc7HE=;
-        b=ifpfOAjzRxY1C3oVMX8P9mNRNGAKZD0TK2mfYlBfxJkPXIhL1pmQ7emPwui/ZnSuGN
-         lrIxh+GOkUBciyQXCmC8Ous13QtCSd+hK4IuYvqtU2FVDIlI1OYx1p1XM7An08U8qjPO
-         UL38G9zk9ItPQroWJQGudINk4Mth8P9B4l4xPkg7CXtiXRftT0EwkQcUEmnuc9OfAXQg
-         2HiYI1b+7g2kU84Vhzd0XelRxZ+HBpkiQFpgrGqGlSYNV9ILBqe78cxyukd5kvPadvnk
-         Et+lXqvPKYfVVbkDNCnb5XxgNjIU7bB4aTsvMiumlQ8OeudZOQ6E7Q1VjoHj3DKQE3CD
-         TZgg==
-X-Gm-Message-State: APuU4Z8h92ysWzodlbqBuMTCevt4ziBS3J64UGphmDWsD6PNUK1oXc86
-	Ry0lKJah3mK5KjIt+y2tanvbdibQKx0GCCtv8RWSHrUGW8YpEqx5ooNmxH8/FDVr
-X-Gm-Gg: AZFdTZclNbwcsdcYWy76JO1LzEyed3mt/hvWoACZuanB1G0h6jpEFPLpWyireirA3Sh
-	J+ond9CA81Ka7wzahOW6EhUWMumrqg4qV4jlYDfEV8Js59Px/7wcjTgYojBnYn/4ynFsHSj9eSf
-	Ukx2EaGBzFZ5S5az090PwUZ/0dv9GJlQ5mcsXOcFzYVsRYVJKo45fsMuHpom/k8R4duaP7wmTCm
-	2sYhqzYCdpWZip32eNLj5/b7WhbcY8qjUssiZmKYfmDw7oybga++ybfOzfm8wpwV5pwpgefCg3K
-	Ail9UIl/z/r34Fz1QicjIUs4ZCbmf8w8J9PmnTCyQqSj1Fl3N2hPsCFJrM5+tnUYNA0SWVvpnNB
-	gDR1x04SwDMoZFCp2e1f3TRWfWHod8ZERqKWx2Yf5oO+iMS5icTfm1NM7DyzPPyL9PEoeaiPKdp
-	TuHA+VVE+ZXwE3e6nm/QKkR7oKPUM/LCBmXa/TWJUhmjfOZWvunCHuCYswGj/QuftGWkz1riQEK
-	rflO9o+0PJcvLRWqMe5p3jryCDjFp5Q+impfI8U/nb4WnZ6FjltmKGwKNoKVyJIapI0CHlgrmRr
-	bToogQuji0JWyO/54fgwhhh/DIi9cCUSOzZW/x7I4g==
-X-Received: by 2002:a17:90b:2c84:b0:3a5:c08:4c41 with SMTP id 98e67ed59e1d1-3b41c98a138mr5054210a91.50.1795262608391;
-        Sat, 21 Nov 2026 04:03:28 -0800 (PST)
+        bh=8S5/KqNfuIt27SJJNZdfEe4DOCxa4rr3UivWTDl1Z8Y=;
+        b=nVihNDy87HH1roi01mqOIvZ3A0P1CyQdsBF5oW+nMAaJbFW29GlWliLncjPJfM36ML
+         CPLZ7TRrDufMD4vRRsQguJBPbSNNQNUPpRUnWSqwBRTetjMbfExEnvLA4xljAFDhd0KM
+         uMP3keTZLAXh1xAuOXhjbdnKStCqM/X34BTLq6m8u5931YiG0SpFKL4XYwo4LlOhG2R1
+         6jwtck+XLxot766E5D1oQ8Y0fCLHaXShxvoEINR1+ra0cVWVhzEsuccfFf8aG3YrSaNW
+         mnGVRcvYdr7bBJPlsso4WuJLbSAU++xJyBQwyU+7ZZBu8vx+MglChEYiY7QmQ6VyMeaf
+         jKvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795262618; x=1795867418;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8S5/KqNfuIt27SJJNZdfEe4DOCxa4rr3UivWTDl1Z8Y=;
+        b=owcJ4xFf6m4wHgo0Np67Nxsi83ngWjo295Zn//OfCt2f8PweRjWA/o7YvKvZhvjFUE
+         xmqVbysBDThIVDoZ/f8pF0r8RDBkL8a+LVloLeE8CuBt0abE1RfQcMWLSTtq2Je1dWqc
+         6ojeY4G5hMePwdwd+HwMlUwOmWt97az7ujQ79Jv3KxMECB4LjMrXihvPQ57Hg57+vhZY
+         NmsWagAoRWg2qHiE9jGAOsrFnQGNeIjkfZAK7h6YPs9RK08+TeeJnb0meWKN2bhgYe9H
+         Y9jv19Jv2kR4I32DM/WfFjsgxiZnQbZDmDZ9mMuG9jFjSjoSZVVwbNrF53DCKBtx9Tho
+         meLw==
+X-Gm-Message-State: APuU4Z9Ho/ZW4rcQNGEUqFGhSujBr71eMfcSPG+NHgPNWOeROqHp6NqC
+	O2ZjYpbMmHrjkuNrRhh0WfPe9FHGfHQl76L5uDoAzYc0O/8xoL0e9BSrBp5NmDrT
+X-Gm-Gg: AZFdTZdmYyjcujbBR5EqqFH0WhjQLTj7bQIfJTxmDKW3WgusWe6JXyc3trm4KaNV+bI
+	k6emrtB6EWXcltjyUdK1iCdoXg7cexayPu4qxYmPtxokSjjYQeBJYa0WUgZrZxp/HnfknMgpy8/
+	bt9N+a4ZrCsFoKTsdEkHk8GV6ONUE/9VLiV+fL4a9LxZlqpKJ4kFx5I6b5iB70fF2vBsThxBZNA
+	6vQxtWpkwJbEJY2kyr6DUXTiyNKXAehnx8YgOk3G3mZZgiEvxMIdenOSHwU31ZmQjGhh2nqRPzK
+	9coSAJ0T1NO6Q0wjQ3JfIM1zIH/s5B16gFrbLed00kPJScPZoiKYnlqA46Z9fUatasSwxl/aFe9
+	X6ybnTpaUK+uc3y44FU41cnrDwcPFLD6UykDhlQAPj79vZBzNUVHqWKXblFBSy+g2oHJEDs/8Bt
+	NlFG62EVc/xqNt60J/wRPYPZREM4Lvk0eD3r89hc8qN3vN78ZUahiv8PIA7WJNjrmBozYexGC0J
+	Kq4WhxpffKROMENLBabm3cymFglWjordvyO+p7nUXkP2v9xdvCV9WTYmK9qFYEpNGaaguk0x5a7
+	NZN8AAybrYpLgsVVoGR7fHox5+4CcFaR8WnBSEvGdw==
+X-Received: by 2002:a17:903:2b0f:b0:2ef:d981:9576 with SMTP id d9443c01a7336-2f03f181ee6mr61370735ad.54.1795262618383;
+        Sat, 21 Nov 2026 04:03:38 -0800 (PST)
 Received: from [127.0.1.1] ([220.196.193.21])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b405d97356sm11171339a91.13.2026.11.21.04.03.25
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f0c2ab7sm25475535ad.15.2026.11.21.04.03.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 04:03:27 -0800 (PST)
+        Sat, 21 Nov 2026 04:03:36 -0800 (PST)
 From: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
 To: linux-trace-kernel@vger.kernel.org
 Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/2] rtla: handle SIGTERM and test abnormal exits
+Subject: [PATCH v4 1/2] rtla: handle SIGTERM during a run
 Date: Sat, 21 Nov 2026 20:03:22 +0800
-Message-ID: <cover.1795262546.git.chaosheng.qu.linux@gmail.com>
+Message-ID: <328ecfadb98649f317985124b6b49bae2d356bcf.1795262546.git.chaosheng.qu.linux@gmail.com>
+In-Reply-To: <cover.1795262546.git.chaosheng.qu.linux@gmail.com>
+References: <cover.1795262546.git.chaosheng.qu.linux@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -94,46 +98,41 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-v3 split the test changes into their own patch and fixed the commit
-messages, but the test still signalled as soon as the instance directory
-appeared plus one second.  On a slow guest that can beat set_signals(),
-which is the startup race sashiko described.  v4 waits until
-/proc/<pid>/status reports SIGTERM in SigCgt before signalling.
+rtla installs a handler for SIGINT, and for SIGALRM when a duration is
+given, but not for SIGTERM.  A run stopped by the system - a shutdown or
+a service manager - therefore dies without going through the cleanup
+path and leaves its tracefs instance behind, so the next invocation
+finds the instance name in use.
 
-Patch 1 is unchanged: it adds the SIGTERM handler that was missing.
-SIGINT, the -d/--duration timer and a failing --on-threshold action
-already reach the cleanup path; SIGTERM terminated the process and left
-its tracefs instance behind.
+Install the same handler for SIGTERM, and restore the default
+disposition in unset_signals().
 
-Patch 2 is the test, now with the readiness check.  With it, cleanup.t
-passes all five cases on a 7.3-rc7 guest, including SIGTERM; without the
-handler, SIGTERM leaves the instance behind and the test fails.
+Fixes: 2f3172f9dd58 ("tools/rtla: Consolidate code between osnoise/timerlat and hist/top")
+Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
+---
+ tools/tracing/rtla/src/common.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v3: https://lore.kernel.org/linux-trace-kernel/cover.1795258353.git.chaosheng.qu.linux@gmail.com/
-v2: https://lore.kernel.org/linux-trace-kernel/1794300001.11111.1234567890@gmail.com/
-v1: https://lore.kernel.org/linux-trace-kernel/20261017122359.402696-1-chaosheng.qu.linux@gmail.com/
-
-This replaces the v1 submission, the v2 series and v3.
-
-Changes since v3:
-- wait for the SIGTERM handler instead of a fixed sleep in the test
-- no change to patch 1
-
-Testing: cleanup.t on 7.3-rc7, 4 vCPU QEMU guest -- SIGINT, SIGTERM,
--d timer, action failure and repeated interrupts all pass.  With the
-handler removed, the SIGTERM case fails as expected.
-
-Chaosheng Qu (2):
-  rtla: handle SIGTERM during a run
-  rtla/tests: cover cleanup on abnormal exits
-
- tools/tracing/rtla/src/common.c               |   2 +
- tools/tracing/rtla/tests/cleanup.t            |  70 ++++++
- .../rtla/tests/scripts/check-cleanup.sh       | 219 ++++++++++++++++++
- 3 files changed, 291 insertions(+)
- create mode 100644 tools/tracing/rtla/tests/cleanup.t
- create mode 100755 tools/tracing/rtla/tests/scripts/check-cleanup.sh
-
+diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
+index 8c7f5e75b..b86a60076 100644
+--- a/tools/tracing/rtla/src/common.c
++++ b/tools/tracing/rtla/src/common.c
+@@ -39,6 +39,7 @@ static void stop_trace(int sig)
+ static void set_signals(struct common_params *params)
+ {
+ 	signal(SIGINT, stop_trace);
++	signal(SIGTERM, stop_trace);
+ 	if (params->duration) {
+ 		signal(SIGALRM, stop_trace);
+ 		alarm(params->duration);
+@@ -51,6 +52,7 @@ static void set_signals(struct common_params *params)
+ static void unset_signals(struct common_params *params)
+ {
+ 	signal(SIGINT, SIG_DFL);
++	signal(SIGTERM, SIG_DFL);
+ 	if (params->duration) {
+ 		alarm(0);
+ 		signal(SIGALRM, SIG_DFL);
 -- 
 2.43.0
 
