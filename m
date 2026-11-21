@@ -1,91 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795260734;
-	b=ZbZkcwHFrZfhTuspdzr5hgFLJL5zOD/ZEJ3+maUX0/NP8eQkiCQPwNgKEBGQT8OGeWQ1
-	 zJmBdgeE9PgC8SmKp8uMDSh6DShgHmG5nNQgLcD8usAcff7txEeRutQcYB1yqK/2N8BAR
-	 dvmlGDwoxM6F5Ka5M1a3eVpQ85b1MOq0plKTl0X87vD+y9sykBeQ9ziR9QLzUX6d84B0G
-	 LHRrSzPI89CnN7rUOzDlNapcObTDuQFrR0/ouyE8WcQMKKU7U4lNGxufy2RShqnl4XWnE
-	 ruTdpSecat/mYedSmG2cJkN85MBXJHVVabA2mnJTS+GbayTK7fzN05lRFWa0qO0Fzsw==
+	t=1795260743;
+	b=bxZxW687gs79rQTTE1zfMDHSHoMKRVkWqAgtZsroZbctjCVp+nzFUPO/RzMIxVyFTWJp
+	 cBBb2TwNZNC9VtSg/NK0xulUtzmi48/okxoye/auoJ8qtf5UbE70SJAwAYcnSvLPbMwiJ
+	 EnL4lfMIQQJRKbhX3x6HI29eR/YERg0M58BT4FPFS7B/trV9wjUUvZFEsuyA9v8NdhOQD
+	 z1nuehztE4lyEixLUgifsV5MrXJBddZKbog8REbpSEWWKT8re3HR3CJ4dF3QCwZ8VSaRA
+	 cLIZhzpoKNzZVX7KWDecoXmaci3eWs+hD4BJ8S+YXK/zhnE17D/o4rS46pEhTDTo84Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795260734;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795260743;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=eReobK1M/4MSKVVNxfhKdJx4Lmw1aJcPP01j44uODU0=;
-	b=CXEFzRBl1fR7JJMmmhfzsj7OKDc12TrcCfcphAmlvFSgOA6rYPFrMt5Vz4UIxUv2kHCR
-	 yoniIXgpCnNRGrG/2KJ8vu1GY2jYo2O6nsrSQWSDz5EnA9aKonc3JHy7Lg0tGPuxKDlBl
-	 BPlWv850itZxMVlzX/KeWDtH59T4owQRP9HWEbuBeR3ipOaEUn8VeF59F90fHhOCf1mHP
-	 4gF7YornFtBtDztQprC2qqlUjRqCRQ9xFpaLvkLIR05z4/zaoWbZSOMc88oAj/klz1vki
-	 iAP0hAKnSVC7yzhiC11z0UInjkDChm02+LRgkOrcb6DDxx0WMusA6PgBSbzlAg18/cA==
+	 Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=ZXuntybJT1A6GUEbL91LqiaVHs19KjdwrOYp+ImkAiY=;
+	b=MPVLXaiG2hR8phArVS812NpVDjxsiUTs+ul0/w8gZhoRFHm8wqtC5LZ/3j6/if1nwszv
+	 YcMTmjqwYNbh82l0CiXb/N/MbyBiAmnaqEcY1DXCyy7z1bgdaP2gOsS13GQuzSBZDJpFx
+	 G6ocql+hsXC98lTl+r1cG7bqcqMZyKazVef/HbiccyvldAdH9yY6/eqDDupBLSzV4GfJr
+	 bWuOQDMydiPldaNvCph7xqEznfmG1HC8Hicmlx1GrAonxwUDRjyzrUYJ/YgdejzMZmswi
+	 9neTfAB+mu4Z6wnjlKLSL3RvmztK58TuZFPpvcOVax1WP8LiNiBOs2J8XtNG7knfJrw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="Hk85h/gy";
-	arc=none smtp.remote-ip=209.85.215.177
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=awXHIMFU;
+	arc=none smtp.remote-ip=209.85.210.169
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8644606A325
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 11:32:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8644606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4862606A32A
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 11:32:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4862606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Hk85h/gy
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cc4be0e5351so1786076a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 03:32:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=awXHIMFU
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-8a06cc097c7so1359976b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 03:32:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795260733; x=1795865533; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=eReobK1M/4MSKVVNxfhKdJx4Lmw1aJcPP01j44uODU0=;
-        b=Hk85h/gywmD+mYbWlOQCBAKntNEl7TzJiiWWSQOQdan3JY4s5yzfxEryCNe9/rg/Lu
-         zMr+0BjRrnEwfhRrpEZhBu87WBgbFLEuse9gLwhJoixUx1Bz+KqBia4xOTCkUZgL0L+g
-         SW0cBAUS1xcf53dHN5FVs2r7QT0aqVYFfLrdahxefIQY8jz49alISdi/EY227XsSpQ8d
-         tfjydyOEo3Bq3i2zicGZyTKSSaaDU+VRpJJJ2YLW0ntFXCwBhDFumGSbtFH/b4Cm480F
-         bdWgLMHVpU75FG2mXCzV0tn23Svc/uUd0FnovbSAi+5y4qIH0lGaZ9P1K/kHVU3ndl0T
-         u5sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795260733; x=1795865533;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20260707; t=1795260742; x=1795865542; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=eReobK1M/4MSKVVNxfhKdJx4Lmw1aJcPP01j44uODU0=;
-        b=VPkeyUsh25s+3X6mfIf70EL1shfCIzv7RtO3diaYlJ8deq05O8i6KMUutoyROWD2ty
-         icA+e2NLtzVRx0VEvw1XSEBHlHy/f2Rcn6nEplsbMFAagcLvSdd8HCMBDAevpvCfSQPQ
-         tvAD5ByAo8ys0mB4oROVf2t0ZEhQYYgzsTz3q7mAau2+6LLh0sa5OQA0KPO2QXdwQzX0
-         P9dcZX7E4Wwg/976RJXv4oRHID8owvWbhZaXWjaGGaC3mP88CZOJwBwuSS0SG11Jodtk
-         JlLuMc85BkJUlQibl1wMwq0ZoaR1cGPuMHSjiIMBBENwQoT8n0vOmfLwEndSbPEC5lqK
-         LxdQ==
-X-Gm-Message-State: APuU4Z9BZ/TrerGfXELL7GOMU9QqGihz41jqE0tQkjVx8GgrDYPthYqx
-	JeV6UjJV4q+oYijeQGngaVWSbFfnJR9qAj4e8ESCKzr8oZP3l15XFqqJ
-X-Gm-Gg: AZFdTZcw+mFuupD6mH7qWfOzHyU82l2VNP9YeIYO47/MZTiq+IZ/9xfa2hu/Mnaurem
-	vgxl5hJz3B56eukCvAph3Fsb7nbb+DzwRp4bLTnMkOr+h1kDXwWEdnf9aBFfWA6WlXyZjVBdDjF
-	ER+PaH/Qv1Sp9lkJoza5KOsE0i7Q/K4Eo3z/GKn1dXRhbl5bk17owIW2nNSIL/FLhGtD3IR2Gn0
-	Y0RPcCWl0tJ8cq7gWR5iOgt1ls4z80JZRQCXkOBEnnUy22YeoqrVPOSN8ejJG8Qb/Ch/C2uPR90
-	qUvOIOfLvzGuMLWuG/BPwp4P0ar7FZXQzLzhmhDeYeGK1bsCRByaR5daxzUbVReEfsfkEkxUfPn
-	GS+75O5BuYC1XeqoegrjcIkntX9J7OB81ScV406U+1kMw+dmSe/FdhKAqHv90mP3VYW4SLlJfoK
-	Dex30+3nYi0vJPkfsuuLym6Tbm3vkMZzoWeFCNDgS4YRmcEqJgrFQWmxxtqlh/b3q4V2EbRq2gs
-	hfORaMWsnb6vouUgPc/l0dmrYwlOO7Ecph9guGdIjR3SwaKQXexkglEZqsytAPdo5NVepOXKIRV
-	jAwv7wGD8YYvfi6+cqcSsctEPFC5j8Zm45ZFdZMHUQ==
-X-Received: by 2002:a17:90b:4a48:b0:3a8:7096:9b48 with SMTP id 98e67ed59e1d1-3b41c7b5fb3mr5850701a91.1.1795260733085;
-        Sat, 21 Nov 2026 03:32:13 -0800 (PST)
+        bh=ZXuntybJT1A6GUEbL91LqiaVHs19KjdwrOYp+ImkAiY=;
+        b=awXHIMFU2iGkBZe5K4YcymCQ39mQgTUowtrLC42Vg6JWNnGurpc57y9EQ5kW2qJO2G
+         ycxwGQgRMLOWJ53Lo/YFyBjUXoyFGyF1490dIYY+rismXiSzV8jfoz9FYQXth0gqR8zr
+         iJrkabmvUyY7aYE5E6QIsU2YSAX3gF6A0NbAVg7aA+BAyTiRn2+7NGQUeOOzcIUcoylm
+         0YWhQcDYZOZIryPLNkXy+CD0C9TYUcAF2xhtxAO4Vjw6qOtr0/roLgvn9De/7vjSOPdV
+         QgfG+sK3FyLTCftx8IslTww9d/iCzuwBD1pacPaEsd01I2pSqFRaMs7tR8uVi6bwuGo9
+         oRWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795260742; x=1795865542;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZXuntybJT1A6GUEbL91LqiaVHs19KjdwrOYp+ImkAiY=;
+        b=bgP+VyswrcaMFIEfIoDwr53VUTOCVgy55aQY08cPu1PdfDF0Dr6pChDwcBIA49Jn03
+         cWuwvMUywp1NdM3R04XQ6UTrth9EXw1nNjeU23UqTIuZ1Z12jsMr/4hUBptQbeNIzISy
+         PrXYdMBsQaD8EY9CcVLtRvtZDQQ4oDFxvrBVbSgYprn+90IJbY+q1bGKqExwq72NaBOd
+         vvrik/kbXWT3O7XNbmRg2R0ljamK+GuoToV89nHIKLY/WjmPGPrmwlIZ9DitreshG75c
+         vdkZV6WXFFoGQfvoRv9daxF2xxDihzbqUy/LVqjDvJWuX0D8ZYyLkuG8wRrhdD7XvQeW
+         OGbQ==
+X-Gm-Message-State: APuU4Z80Xs4qr5m8g6moc9l5M3l4OfyG3wPDzrZGiSLvFFoca1jo8k2F
+	duozTjkDI8/bQQ7pTlYT+SqDUHmxhL71cXGfp0YN3xkyoqCiBgccoCNIlijMOQ==
+X-Gm-Gg: AZFdTZcu+X6Do9qgZ/lEKlJDIadhgMuWgNdyFKcasPUpu3wdY6t/eWkNHhSsItOdcgW
+	ZzrRPWN/FI/blLGI5zj3vFz2AFdQ6thQMfU1QHwd7sqovynzM+hp7DUgLR5cLnjRr4TeoO0IIoR
+	VMkpjqtqtu/MXmHOzN/i4IH+Sy1UMTOZUgMtPpW/YFhdrtjcc1S7B1oVkKdyWNfh7OkAWIvS+xK
+	QQgyKDZpBKLEhEUDtX/ZNyvQm95prsbKwmQ0MaU98c+OsMAMz37ODHqZhhiXAUgVZbtDBqdennd
+	oUNrmG9OddmDrNbVWk8X0DN/UePkY9qC8B24N6k9FFoj5qhmTD810FRP03eS7hw6f8V1WitNhZn
+	Z4FkaTOLK9fT55K+hnBaedJpGCxPln4AX57YJFkf93ytYwyA0pYB9bNKOp9C63u9htsYkKc+QDx
+	2xbxjhNdj0QbHuXjvI1TBvTy7N6xArHVJxDvGtKWXMpdWeAjVgT2oSxpNO0GUJ4ApiZ30o3oiv4
+	KAFk+rDPQUVARm2k5Ox4q4xgRJMyGinJ1LOml8Ob4ZOQNSB64dXK/983KhzCmhwdtlT68WZHSUH
+	Ws4kpd/YLvshbnDa4GLSyPBVUjKzl+gfOmBZc7OVzQ==
+X-Received: by 2002:a05:6a00:1818:b0:899:67fe:3c52 with SMTP id d2e1a72fcca58-8c87b4efad8mr6004537b3a.15.1795260742071;
+        Sat, 21 Nov 2026 03:32:22 -0800 (PST)
 Received: from [127.0.1.1] ([220.196.193.21])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b41abb2076sm8322610a91.2.2026.11.21.03.32.09
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c908a56acfsm2149772b3a.23.2026.11.21.03.32.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Nov 2026 03:32:12 -0800 (PST)
+        Sat, 21 Nov 2026 03:32:21 -0800 (PST)
 From: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] verification/rvgen: Cover an invalid monitor type
+To: linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] rtla: handle SIGTERM and test abnormal exits
 Date: Sat, 21 Nov 2026 19:31:27 +0800
-Message-ID: <0d9350979dc4cf67e8aed1171b74b9f6e56f6b52.1795252297.git.chaosheng.qu.linux@gmail.com>
-In-Reply-To: <cover.1795252297.git.chaosheng.qu.linux@gmail.com>
-References: <cover.1795252297.git.chaosheng.qu.linux@gmail.com>
+Message-ID: <cover.1795258353.git.chaosheng.qu.linux@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -98,30 +94,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Add a rejection test next to the other ones, so the new check is
-exercised.  Without the check the command exits 0 and leaves a generated
-tree behind, so the test fails on both the exit code and the message.
+v2 mixed the SIGTERM fix with fixes to the test harness and repeated the
+commit summary at the top of the commit body.  v3 splits the test changes
+into their own patch and writes both messages so that git am does not
+duplicate the summary.
 
-Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
----
- tools/verification/rvgen/tests/rvgen_monitor.t | 4 ++++
- 1 file changed, 4 insertions(+)
+Patch 1 adds the handler that was missing.  SIGINT, the -d/--duration
+timer and a failing --on-threshold action already reach the cleanup path;
+SIGTERM terminates the process and leaves its tracefs instance behind.
 
-diff --git a/tools/verification/rvgen/tests/rvgen_monitor.t b/tools/verification/rvgen/tests/rvgen_monitor.t
-index 5f2562600..2a48a7b54 100644
---- a/tools/verification/rvgen/tests/rvgen_monitor.t
-+++ b/tools/verification/rvgen/tests/rvgen_monitor.t
-@@ -64,6 +64,10 @@ check "invalid monitor class" \
- 	"$RVGEN monitor -c invalid -s tests/specs/test_da.dot -t per_cpu" 1 \
- 	"Unknown monitor class" "Traceback (most recent call last)"
- 
-+check "invalid monitor type" \
-+	"$RVGEN monitor -c da -s tests/specs/test_da.dot -t invalid" 2 \
-+	"invalid choice: 'invalid'" "Traceback (most recent call last)"
-+
- check "missing dot file" \
- 	"$RVGEN monitor -c da -s tests/specs/nonexistent.dot -t per_cpu" 1 \
- 	"No such file or directory" "Traceback (most recent call last)"
+Patch 2 adds the test for those paths.  Its content is unchanged from v2,
+which was run against 7.3-rc7 in a guest for the SIGINT, SIGTERM, timer,
+action-failure and repeated-interrupt cases.  Sashiko also pointed out that
+a signal delivered between instance creation and set_signals() can still
+escape cleanup.  That window is real and pre-existing; moving the handlers
+earlier changes the cleanup ordering and is left out of this fix.
+
+v2: https://lore.kernel.org/linux-trace-kernel/1794300001.11111.1234567890@gmail.com/
+v1: https://lore.kernel.org/linux-trace-kernel/20261017122359.402696-1-chaosheng.qu.linux@gmail.com/
+
+This replaces the v1 submission and the v2 series.
+
+Changes since v2:
+- split the test changes into a separate commit
+- drop the repeated subject from the commit body; the harness changelog is
+  gone from the commit message and the previous-version links are here
+- no functional change to either patch
+
+Testing: v2 was built and run in a 7.3-rc7 guest.  v3 only splits and
+rewrites the commits, so the code under test is identical.
+
+Chaosheng Qu (2):
+  rtla: handle SIGTERM during a run
+  rtla/tests: cover cleanup on abnormal exits
+
+ tools/tracing/rtla/src/common.c               |   2 +
+ tools/tracing/rtla/tests/cleanup.t            |  70 ++++++
+ .../rtla/tests/scripts/check-cleanup.sh       | 211 ++++++++++++++++++
+ 3 files changed, 283 insertions(+)
+ create mode 100644 tools/tracing/rtla/tests/cleanup.t
+ create mode 100755 tools/tracing/rtla/tests/scripts/check-cleanup.sh
+
 -- 
 2.43.0
 
