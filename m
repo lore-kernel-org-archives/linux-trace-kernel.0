@@ -1,56 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795364626;
-	b=fAT4cCzbA75jenxuKa1c+qQukVEtScIQwj+Mzs8ytq4fwuoSRfpGRIVMOE3pmvTWrHzP
-	 dmGrSHL2SzYBUaGonRP/tA9+btEySihwh0Hj1+sNkDNVwNpyoscqJrAXO2r9CFT4WE650
-	 2T4RvJnGoCkzzE+I/+5y6QRPFD2lbQ2iBiDReIC9TNKaTX+URl5jiwTrSbLFXcAjXPTb0
-	 G4Q6XVb/hldog+NcAsvf3CxM10t3tNuzH8xqQ/1fCRb8jj0667pGVJQGHcG8kXc+m1+dZ
-	 mqtSD2t4FA9YqW9nys/VKOttJxAoifAWLWGvuvkLurvEhf87t3YEYKu6n9/Mgt/sKFw==
+	t=1795377764;
+	b=bf0fE/YQI/jXrk24RwGY4mFQWh9IYwQf5mRvci55hWz1fGM1BNKvupGo4/x3KAUHBJ4F
+	 g98sq1nFsQTb5gNWE+LSsx8DJLJRwILfLWLtVXbNb/zsUbEkIzWlNJSwkv/NOgnyXAHNi
+	 XoHRy0sP/S9q6BG4NvB43spE95vPJBe7pxlW2KBeHHrK09QEIGS1rRFMhbnWpCfa+L4LF
+	 lGI2FxPvRWyw6lyixq41bR1BOie3VwJ1sq6ATIcGAPICA0cWoJAYuIWCkL5DfkC+QVewx
+	 vvvdhuvlz4ce13dqkCLUCEFjH6uv/VSFvgjR9dL8XP0Z7h8x56XDx8D3D2KKRfeCAzw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795364626;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Lo2HCtzdYoxMD+V8EX9WHHjmc1/XdQxN1XdnA69lyHo=;
-	b=U1lqXtswv2CnQT9J++EDpg9kfNetVtzBbcAl71MFQjd6s3yZCn2RE/X1AMKHv4R1JEWQ
-	 StdLl2E8gIZBPMWkkqKL8f8Ow/luhko6+QDhR6QA7+2oYlSYK4E5TQg16tl50gTvg2pi+
-	 zuMJCCQyab2rjXO5CUB7fSNsKZZsLRRmtTd/C3rGAIm5rdbF3UN++3MfMx0wGfpHpoA21
-	 V34oafMwF+fMV0PIAYvM/N4DQ9IRw4G3PcnZU2KntHJoGgwwiA/A5UoOi7HajNub3etRX
-	 GsVm8huMx/NlDSLxBrkchANFr59JJTdyH7cwoHtxLlVofaCdahRnetSQep6Z0xjvEIQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795377764;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=pMkwsGeFmNym3OzbToToZ481ja3lbFgl1IDUYm8MblA=;
+	b=mHlw4tslzOFeWUgXxLHmv6KFAqdYC2Tcdtj0Per7+3tRknBdYMLyW3uo4ub87ZRNXTYu
+	 hM4vYa7WB8itwqbwQXCOHd1veFJcV5Efdml5TEruoUz5wB3C40Rasr4rXcAMAhclNp9Ki
+	 K+YPrupHr8vf6Z7Gxp3BQZMCnhLwFSVG5hGOBWjL2ELYIBLy/uezdFGBeNs+tcEPkYnm1
+	 cUpywkOC5bS9QERWIRPhuHXGs2IAn9tFY0EmGCtC08/zy/yUvk49Sv26xyP3Ivzm2PFht
+	 BKcQjuvX2Knw8sGYiFPlxMf8V+RBwAnaN/BbmdOcQG0LS7hKphClJVTV98UZNhCq2ew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oSGUosr8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Zun7/Dpl";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CCC606A320
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Nov 2026 16:23:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C13606A31A;
+	Sun, 22 Nov 2026 20:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oSGUosr8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABE391F000C6;
-	Sun, 22 Nov 2026 16:23:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zun7/Dpl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16A71F000C6;
+	Sun, 22 Nov 2026 20:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795364625;
-	bh=Lo2HCtzdYoxMD+V8EX9WHHjmc1/XdQxN1XdnA69lyHo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oSGUosr8P3NgAzsYFxv54EDYPM+S4otBpBOUh+ivQnQ1m2F8q9WYuMlwGHckrMaF8
-	 5hOKBOTF7AuiUWh0YLAi9JVhWWFG5hSvW2KPGhL0ZYsv39Pc06FyzTtGim+hhios8l
-	 9r22TdpBGATf+H/f8J7rnK/nKQck7hov5K2p8TY4IroZbrPWJOEk6HE9fY4qXFo+zr
-	 2HAApMiiGeLmbQXK/bns1VPdT01xpbUH5EG0rzd+C3f4RTNKuKV85kbfLCFOT80JRJ
-	 iVDTibIwfp4c5reXBa9MfZILmZXg4dYCUz8Yqr+6oWJ/cXYE1aypV4oiLdB2QjWdKr
-	 58l6hS/6RGQhQ==
-Message-ID: <sashiko-outbox-228095@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] ftrace: Finish removing subops after a hash update
- failure
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Weiming Shi" <bestswngs@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261122155620.319722-1-bestswngs@gmail.com>
-References: <20261122155620.319722-1-bestswngs@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 22 Nov 2026 16:23:45 +0000
+	s=k20260515; t=1795377764;
+	bh=pMkwsGeFmNym3OzbToToZ481ja3lbFgl1IDUYm8MblA=;
+	h=From:To:Cc:Subject:Date;
+	b=Zun7/DplCWSw5lqUOySkd3OYY0S9kspejLyppqLyiqnZjmlI9jjG3l6T6V8JUbvVZ
+	 +3bhtyWFJNYmVZ8Zy6zgDzxSL1WyJ2SSdfnZCgn7RKOxPa71gVeT6ri8FsLWuCqmkt
+	 80XxN/JTLOxcVzr5Mkn+gQtewEaaxIZoEaCgNP6bXYpKrhNeQAG3Y1EwnMxlq3xMBo
+	 9psWdnGQ+eui9Wp9HDUaiccxXGkfrw4WkSA866CEoEAY1rTtzYlMVb30ujsgClQDG7
+	 QNZE86tq782mZ1sf8slLdi7SZupZV4LLywjVJIKtxnBteJwodKQeyd8TxnnxwXYlZG
+	 JLb+jgP1+9kEA==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCHv2 0/2] kprobes: Reduce registration lookup costs
+Date: Sun, 22 Nov 2026 21:02:37 +0100
+Message-ID: <20261122200239.1481088-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,139 +62,48 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Low] fgraph: unnecessary Tasks RCU waits in
-  unregister_ftrace_graph_finish()
-- [Low] ftrace: commit message omits reproduction commands requested on
-  v1
---
+hi,
+this is a smaller follow up to the v1 series [1]. This version does
+only partial fixes of what v1 addressed. Instead of the rbtree and
+iterators, it makes the existing per-address lookups cheaper:
 
-commit 74af33bd06338337070f4988ba978b843a4c1bea
-Author: Weiming Shi <bestswngs@gmail.com>
+  - increase the kprobe hash table from 64 to 4096 buckets, so the
+    get_kprobe() calls done for every byte or decoded instruction
+    around the new probe walk short chains instead of 300+ entries
+    per bucket with 20000 probes
 
-> ftrace: Finish removing subops after a hash update failure
->
-> When removing a non-final graph subop, ftrace_shutdown_subops() first
-> detaches it, then rebuilds and installs the manager hashes. If
-> rebuild_hashes() fails, the subop stays detached with its ENABLED and
-> SUBOP flags and manager pointer intact. If ftrace_update_ops() fails, the
-> subop is added back even though unregister_ftrace_graph() has already
-> removed its graph slot.
->
-> In the fprobe path, ftrace_free_filter() then warns and returns, while
-> __fprobe_graph_unregister() marks the shared graph operation unregistered.
-> A later registration follows the stale SUBOP state into an empty manager
-> list. rebuild_hashes() leaves its output pointers uninitialized in that
-> case, and ops_equal() dereferences one of them.
->
-> Complete non-final removal on both manager-hash failure paths and
-> initialize empty rebuild outputs to EMPTY_HASH. Keep direct dispatch
-> disabled after an update failure because the old manager hashes may cover
-> functions needed only by the removed subop; normal dispatch still applies
-> the remaining subops' filters.
->
-> Completing removal also lets the caller free the subop filter. Split graph
-> unregistration into removal and callback-wait helpers so Tasks RCU waits
-> run before saved_func or the operation can be released. For asynchronous
-> fprobe removal, remove the graph operation immediately and defer the wait
-> and filter release to a worker that is flushed before reuse. Gate return
-> callbacks on fprobe_graph_registered while cleanup is pending.
->
-> Oops: general protection fault, probably for non-canonical address 0xdfff=
-fc0000000802: 0000 [#1] SMP KASAN NOPTI
-> KASAN: probably user-memory-access in range [0x0000000000004010-0x0000000=
-000004017]
-> RIP: ops_equal (kernel/trace/trace.h:1011 kernel/trace/ftrace.c:3416)
-> Call Trace:
->  ftrace_update_ops (kernel/trace/ftrace.c:3464)
->  ftrace_hash_move_and_update_subops.isra.0 (kernel/trace/ftrace.c:3795)
->  ftrace_hash_move_and_update_ops (kernel/trace/ftrace.c:5095)
->  ftrace_set_hash (kernel/trace/ftrace.c:6006)
->  ftrace_set_filter_ips (kernel/trace/ftrace.c:6020 kernel/trace/ftrace.c:=
-6769)
->  register_fprobe_ips (kernel/trace/fprobe.c:290 kernel/trace/fprobe.c:102=
-0)
->  register_fprobe (kernel/trace/fprobe.c:979)
->  __register_trace_fprobe.part.0 (kernel/trace/trace_fprobe.c:838)
->  enable_trace_fprobe (kernel/trace/trace_fprobe.c:823 kernel/trace/trace_=
-fprobe.c:1483)
->  fprobe_register (kernel/trace/trace_fprobe.c:1553)
->  __ftrace_event_enable_disable (kernel/trace/trace_events.c:913)
->  event_enable_write (kernel/trace/trace_events.c:943 kernel/trace/trace_e=
-vents.c:1995)
->  vfs_write (fs/read_write.c:665)
->  ksys_write (fs/read_write.c:719)
->  do_syscall_64 (arch/x86/entry/syscall_64.c:61 arch/x86/entry/syscall_64.=
-c:89)
->  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
-> Kernel panic - not syncing: Fatal exception
->
-> Cc: stable@vger.kernel.org
-> Fixes: 0ae6b8ce200d ("ftrace: Fix accounting of subop hashes")
-> Reported-by: <co+bba0c6b49150bef3@bugs.sh>
-> Link: https://lore.kernel.org/r/20261103175832.3374540-2-bestswngs@gmail.=
-com
-> Assisted-by: LLM
-> Signed-off-by: Weiming Shi <bestswngs@gmail.com>
+  - use ftrace_location_range() in x86 __recover_probed_insn(), so we
+    skip the symbol lookup ftrace_location() does for every decoded
+    instruction that is not an ftrace location
 
-[Severity: Low]
-As reported by Steven Rostedt on v1 [1], could the commit message include t=
-he
-command lines that trigger the stale SUBOP state and the ops_equal() crash?
+Registering kprobes with the kprobe_many_example sample module [2] from
+v1 in a KVM guest goes from 4.71s to 1.30s for 20000 probes and from
+29.99s to 3.64s for 50000 probes with the hash table change, and the
+ftrace change brings 20587 probes from 4.02s to 3.70s. Please check the
+changelogs for more details, the first patch has numbers for different
+hash table sizes.
 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index ed455b53513be..92186e7f5d698 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
+v2 changes:
+  - dropped the static_call/jump_label indexes and the kprobe rbtree
+    and iterators [will be addressed later]
+  - added hash table size increase and the ftrace_location_range
+    change for __recover_probed_insn
 
-[ ... ]
+thanks,
+jirka
 
-> @@ -1460,7 +1478,28 @@ void unregister_ftrace_graph(struct fgraph_ops *go=
-ps)
->  		unregister_pm_notifier(&ftrace_suspend_notifier);
->  		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
->  	}
-> -	gops->saved_func =3D NULL;
->   out:
->  	gops->ops.flags &=3D ~FTRACE_OPS_FL_GRAPH;
-> +	return removed;
-> +}
-> +
-> +/**
-> + * unregister_ftrace_graph_finish - wait for callbacks using a removed o=
-peration
-> + * @gops: graph operation previously removed by unregister_ftrace_graph_=
-start()
-> + *
-> + * Wait for existing graph readers, then clear the saved callback. This =
-may
-> + * sleep. The caller may release @gops and its filter after this returns.
-> + */
-> +void unregister_ftrace_graph_finish(struct fgraph_ops *gops)
-> +{
-> +	/* Graph callbacks can run where RCU is not watching. */
-> +	synchronize_rcu_tasks_rude();
-> +	synchronize_rcu_tasks();
-> +	gops->saved_func =3D NULL;
-> +}
 
-[Severity: Low]
-As reported by Steven Rostedt on v1 [2], does
-unregister_ftrace_graph_finish() need synchronize_rcu_tasks_rude() and
-synchronize_rcu_tasks() instead of synchronize_rcu()?
+[1] https://lore.kernel.org/bpf/20261109194916.1089703-1-jolsa@kernel.org/                                                       
+[2] https://lore.kernel.org/bpf/20261109195827.1091410-1-jolsa@kernel.org/           
+---
+Jiri Olsa (2):
+      kprobes: Increase the kprobe hash table size
+      x86/kprobes: Use ftrace_location_range in __recover_probed_insn
 
-Both function_graph_enter_regs() and __ftrace_return_to_handler() enter via
-ftrace_test_recursion_trylock() -> trace_test_and_set_recursion(), which
-checks that RCU is watching via trace_warn_on_no_rcu() and disables
-preemption across all graph callbacks.  Using Tasks RCU here is inaccurate
-and stalls graph unregistration and fprobe cleanup waiting for voluntary
-context switches across all runnable tasks.
-
-[1] https://lore.kernel.org/r/20261118134146.3577fcad@gandalf.local.home
-[2] https://lore.kernel.org/r/20261118134146.3577fcad@gandalf.local.home
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261122155620.3197=
-22-1-bestswngs@gmail.com?part=3D1
+ arch/x86/kernel/kprobes/core.c | 6 +++++-
+ include/linux/ftrace.h         | 4 ++++
+ kernel/kprobes.c               | 2 +-
+ 3 files changed, 10 insertions(+), 2 deletions(-)
