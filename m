@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795340210;
-	b=hOzS3CuZ0nfXC+fgBWpD9cyNUPDPHyZ0+AG3wgDNlUgtsY/uXXlYY1feFIuL56W2Fml8
-	 F2Ul1mNSX9Y4v2c9eHVZ8XiJP8PljkDL6jEMjEZy1xF3IEpxq5AtAv1FKRzQ+xNsf1KXK
-	 B4bV1PhvzilzznWJ+CjQG6pKqhX6kIeKRhSnIffI263LNyaPXEK5MDfqJm8vmONp2bAzk
-	 ANjlMStMLxovVtlXqc36nEBm4LM+j1AEZkpLTwocUAJe3mbITvEsbee87n2fcXdaBF2/+
-	 kDPbdSg5xi8WKQqas8Gbm91P3egMVTswk7vGqW+fOMI7vT1prdiyZtUVDT9l2NZ1RlQ==
+	t=1795340243;
+	b=Nk/Zycr8SrecmLK96kphOuEuSnl5MquiqspYWbtWnkU0suTnfVyydVHnsiO2slz1PGwZ
+	 trGc0G+HnY+gcsOZ9jLFK3h4oAQWM3M42jf/acL/6mr0sRNCJG2CzA4zLKo0HSiYhvHuv
+	 60FT8SwW9B/5OogxdluUds7v0bwLXKXqOPCBfHvVfJ+l9RDmbSTRYd0kY5/D7nRbl1Ybb
+	 T6Ij7Gi55HdG/yjaY1Il2iw0XAUIVn1Ixru1/3kqCx6Wga0lzmou7rubE/f0/V1l+KQ1d
+	 NYYMga9sU8UmZbUgHZuAR7u/LOquFCinXgCOIGPaVNYJlnFDmB+hkZY0+dUN4CwPMpg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795340210;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795340243;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=fKC0bj+1Q1nPj8KcJcBKIYkcIVTCOn46jbf4wjPf5W4=;
-	b=jTdmCHwhox930/CIx7MzKjsj0k7nMXXVIVWdEPVursTKaAwryIZegPfJWdJxXB8MbYPD
-	 I3uVCg9LbGcaeXzCwJGG00lzOphWX2ulU6uKOiqmnyX0SyYvBVNae8VLEE2szwAbUVcZe
-	 tddOqaw1CXIjpcYVuJFsr7Mj489cFHyUX0YPfTAuImqZcLkr5cHhvZKLrhClc+oIOrfQ8
-	 2eomTsngIX+KOUzv/QB7eHuNJAne4YZW1D27Psthjx7lQNgIi4dLta2C6+S0jOc1/ZZOS
-	 I/xeXZ80MN4unqv/BQF/L8PbasI80cnKuQW7FWNSm1GF2zG39zzy/8KtD6Mgu5Uo9Bw==
+	bh=uGm5+Q+bg7RLevTmsUWVviOyHCsV6tux0kj64LnT9pw=;
+	b=j8nyDnR1ljjJGWA4tSktIpq8v6zu+DCNMHCebW8iK5CZtc8bs2xCLGQYb+8t6V1G7fst
+	 3RbCrUBAoXcABL0PvMXNLH0KwYPnRBxbua7eHrE+YqWay6ugCWbQ9qJxcKMjhXWF+EOEU
+	 r/t2Bf/cJt1mdDPu/ZPX1UXl1cVaVzyb/XEmYaza6xIv+K5RLrydKEuFPDnweUoa8i2B4
+	 GwyCGjqp3q8oyHkZByVj+jmYTfEoH5P7A7pTzwhKFnLRH0R5qB3PuPqCsvRBl8+Sstid1
+	 4QMQbCeQVgvzVhXFSPv0VeRgJi+9+fyMRW0laWzTe+kRkSbAkBVp6jSh0v8VMdexOFg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Doe4gtlv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oW69gayd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26137606A32A;
-	Sun, 22 Nov 2026 09:36:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55724606A331;
+	Sun, 22 Nov 2026 09:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Doe4gtlv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEDC61F000CA;
-	Sun, 22 Nov 2026 09:36:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oW69gayd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E5C21F000C0;
+	Sun, 22 Nov 2026 09:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795340209;
-	bh=fKC0bj+1Q1nPj8KcJcBKIYkcIVTCOn46jbf4wjPf5W4=;
+	s=k20260515; t=1795340242;
+	bh=uGm5+Q+bg7RLevTmsUWVviOyHCsV6tux0kj64LnT9pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Doe4gtlvRNq4X9oXZFr6j5wZfDlyWloJCbyfOxmNlvk5FBg4in+iZG8crtzZPsCDJ
-	 VBTXfM8vJb2GJLdawu+60PF9MmXNTdMLmaMt1omrbHioYB6i0xgnHyEL+UmRhw4Tw6
-	 aMMhk/bdr3eKANfhGGoK24RR3xpEkFDw+EcpEThUVQMbJyyFTlG21Tmi76yXL9ASWn
-	 lIUA7/d0BMp1gT0oDFAENqBXvoKXjwAu1SR0d2SheONByRUueUGk8ikM/MEL8+6O/r
-	 7o3cY4M0Bgxe06cLCzLWka5o7DILvjY4XjLSMMpJ8XIgHCHbCChJMr3U1N/reJnGIn
-	 1GnvK3vyOJsEA==
+	b=oW69gaydXSlZyudPmA1K2uXAdYlF4JMExjQGSpUGTsObgS9BnxYggoOp8Y91f59Tw
+	 8ZFl5pOaXHVV6wEjBbXLDRA5lZ1TtQYdby9mikD2A0emwD/dqSGyYRjLu1m15qGWrM
+	 upjOCCeeBZuigHWP6wgr66T4bE0HfXX6Pjnm0So6a0LWiGM/V/TgG1FVnqN76caQQk
+	 LuXFFrGlZxhZBSRLSZP3PG9AO1/Zj6qDk05pXYC05l8VbFJod0u08Gr2lf+pQVlADi
+	 hNJ6I9Sl0MtCFopxlsMICUmZS4mPUUqze/3USxlzkB2C9k6w0K+2TRqgb5GMU+u0uo
+	 GPazBA5Ok1n9g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-Cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] tools/bootconfig: Preserve all-f tracing CPU masks on export
-Date: Sun, 22 Nov 2026 18:36:47 +0900
-Message-ID: <undine-1795340207193471810-f6280e0e64aa2f7f@undined.local>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, corbet@lwn.net, linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tools/bootconfig: Use the registered global tracing parameter names
+Date: Sun, 22 Nov 2026 18:37:20 +0900
+Message-ID: <undine-1795340240141573056-b3b8376c0d49c0eb@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <80d300fad70b4168e2355e8aef73baaef68e49a5.1795307698.git.edumucelli@gmail.com>
-References: <cover.1795307698.git.edumucelli@gmail.com> <80d300fad70b4168e2355e8aef73baaef68e49a5.1795307698.git.edumucelli@gmail.com>
+In-Reply-To: <fecf6e33d4f7e2ddf031526e7a1abef27e28f754.1795307698.git.edumucelli@gmail.com>
+References: <cover.1795307698.git.edumucelli@gmail.com> <fecf6e33d4f7e2ddf031526e7a1abef27e28f754.1795307698.git.edumucelli@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,68 +61,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On Sun, 22 Nov 2026 01:34:59 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
-> ftrace2bconf.sh skips tracing_cpumask values consisting only of f
-> digits. For example, on a four-CPU system this drops the mask f. If the
-> mask is subsequently narrowed to 3, replaying the export cannot restore
-> tracing on all four CPUs because the configuration has no cpumask entry.
+On Sun, 22 Nov 2026 01:34:58 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
+> The boot-time tracing guide lists four kernel.* keys that do not match
+> the parameters registered by the tracing code. For example,
+> ftrace2bconf.sh emits kernel.fgraph_max_depth, which bootconfig passes
+> as fgraph_max_depth on the kernel command line. The function-graph
+> tracer registers ftrace_graph_max_depth.
 >
-> Always emit the observed mask as one quoted bootconfig value so a replay
-
-ftrace2bconf.sh intentionally omits default ftrace settings (such as
-tracing_on=1, current_tracer=nop, trace_clock=local, max_graph_depth=0, and
-default trace_options) because bootconfig is primarily meant for boot-time
-tracing where ftrace starts in its default state. So I think the current
-implementation is good enough.
-
-For replaying an exported bootconfig onto a live system, bconf2ftrace.sh
-provides --init (which calls initialize_ftrace() in
-tools/bootconfig/scripts/ftrace.sh). Rather than emitting default values in
-ftrace2bconf.sh, shouldn't initialize_ftrace() in
-tools/bootconfig/scripts/ftrace.sh be updated to reset tracing_cpumask
-back to all CPUs? Without --init, none of the other omitted defaults (e.g.
-tracing_on=1, current_tracer=nop, trace_clock=local) are restored on replay
-either.
-
-
-> can restore it.
+> Use the registered names in the guide and the exporter. Teach
+> bconf2ftrace.sh to read those names, with the previous script keys as
+> fallbacks so existing replay configurations still work.
 >
-> Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootconfig from ftrace")
-> Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-> ---
->  tools/bootconfig/scripts/ftrace2bconf.sh | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> Fixes: 47781947947a ("Documentation: tracing: Add boot-time tracing document")
 
-> diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
-> --- a/tools/bootconfig/scripts/ftrace2bconf.sh
-> +++ b/tools/bootconfig/scripts/ftrace2bconf.sh
-> @@ -278,9 +278,7 @@ instance_options() { # [instance-name]
->  		emit_kv $PREFIX.alloc_snapshot
->  	fi
->  	val=`cat $INSTANCE/tracing_cpumask`
-> +	emit_kv $PREFIX.cpumask = "\"$val\""
+Since this patch also fixes the key names in bconf2ftrace.sh and
+ftrace2bconf.sh (which were added later than the documentation), consider
+adding the corresponding Fixes tags as well:
 
-Unconditionally emitting `cpumask` here introduces a portability regression
-for boot-time tracing: if a user exports a bootconfig on a 4-CPU system
-with the default all-CPUs mask ("f"), this will now emit `ftrace.cpumask =
-"f"`. When that bootconfig is used to boot a machine with more CPUs (e.g.,
-8 or 16 CPUs), tracing will be silently restricted to CPUs 0-3 instead of
-tracing all CPUs.
-
-Skipping the default all-CPUs mask was intentional so exported bootconfigs
-remain portable across machines with different CPU counts. If the replay
-problem occurs with `bconf2ftrace.sh --init`, the right fix is to reset
-`tracing_cpumask` in
-`tools/bootconfig/scripts/ftrace.sh:initialize_ftrace()` rather than
-unconditionally emitting the default mask here.
+Fixes: 7e66ef0046cc ("tools/bootconfig: Add a script to generate ftrace
+shell-command from bootconfig")
+Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates
+bootconfig from ftrace")
 
 Thanks,
 
-> -		emit_kv $PREFIX.cpumask = "\"$val\""
-> -	fi
->  	val=`cat $INSTANCE/tracing_on`
+> Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+> ---
+>  Documentation/trace/boottime-trace.rst   |  8 ++++----
+>  tools/bootconfig/scripts/bconf2ftrace.sh | 21 ++++++++++++++++-----
+>  tools/bootconfig/scripts/ftrace2bconf.sh |  5 +++--
+>  3 files changed, 23 insertions(+), 11 deletions(-)
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
