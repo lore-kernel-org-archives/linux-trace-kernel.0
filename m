@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795309305;
-	b=yysI9PeSA4E+YPwvllSiJVqvvphv5xASzAGbjUiMphybPWTTx0iSOj0sEnubSco2buOl
-	 nCH4oNVzMze9JITWqhFX8saBDao1wZsBDRgY6OuCqvUCf50yYFp/guSifOJ97nhMihNBa
-	 tbLvERaNwn11MZGoE2dqYRHCbnozmynS9fXGw0tcP2m9XfdCqmXymd5A+jjeWHPXbOprz
-	 +wtmZnXai0rdxtAWlMdkKzVdqCN+501fySxz/q8QPNh/T3cQ93I0GomaBeM6m2tS/l3SA
-	 HnAYSZ/WCGiutsvMzgHDPSeSS1es28BPBazweS/LKL3gMJ61xrbvBwmkdVeFR8iMZfA==
+	t=1795309314;
+	b=axSdxrLRDmVpG2Sea0V4nxdEqJ63X5S101mHcUodU43wl9sN7P5KEoWn62sBzuVcIxTX
+	 MkEP52oZNGz4t7Wr5pPFbrHLLgwBa7YKWijxdDuV8kbU8SdOMAad0zswJuhh/wE9KC5Xt
+	 xIpE2HJSWh06S/4e+X7fHyuLUQ4btbFMq0/sqaBrhvaoQn8L8YPRqzNgeNQSz6Fh+Aic3
+	 M2hPVdHZ5PQGmYkuXTAhTX/GYVFgqOefBBGXTwRr83FaDuonwibjNnutmKNRJFwUuPZHl
+	 nfv+GW/ynOYZjrlXXpTr8NQV8/L6S9hGTZYlVSPQhHJnVmy9rrNA9E1VURP04MjX+4Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795309305;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795309314;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=f8oD3StepKAq57WQHx98dwXn6vomk0k4tBPHUkOr0Tc=;
-	b=1q2VCgpQ+kHMBgEMFqZyyajxTMld9yPwljive+c8mxujRcmOym6tef80OjKBCw51NJnI
-	 lp9ZBqH/150qVCrlvf/ce4cYp6suQYDcgsiY8H5ga+JMGDC1XJAGaKwAf1VmZsWnMFHu6
-	 H6eTJnVmL7slunSYbmpsCc1lOZoZ9poAFjTZ8XuTUMpTs8Jkwpasz/2j1xVSXfPQb3T4q
-	 AAUrQqC0BAW1Szi8vMQGtzS26Mhst3h9OTtMSnd3KbFq7PeHdEFfoGY0dlmf2Dv5lPSks
-	 x92SqzQo4rGuQbe49Qeu80mJPgZDYAXCLAiQL1piig+ivd0R75T24wrOv8jKUCEUXBg==
+	bh=TO2OayJ1Ir05pUCA7mnA5khhEAkASCecaweaOnkT+eo=;
+	b=cjFCriBOrnhy93b/bRS2zIezTuy2fXa6MbRpm+fx/xe1OGbeEydD530pYx1VqoGoQFBQ
+	 og48I6Dn7xY0nxSEVW5Qer+cFXmj+UFqUNprdoDnU0oQw2ey1NqhMigRvyK4udTVpfq6h
+	 EgTfbWGOiQnN4wmejs0Yzq7YdOiPJteQgJl+HLSa7WxFpx3+v21RuN5Y9bJdzMH0oOTtc
+	 bisX2dQzYMOp+0fR9sm+UMarwdGnPdUlN9C7+XET5eI+DhZJhAiEqpnlnzUWaY98DrsDC
+	 afSCZeVPUNlYScL8FZwBEMK2dgE4LHmcs47GfuXHvIiTnABpOLGcUiA9NCazxC+2KVw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Aa9GzVts;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="jo0TgLG/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F21606A32C;
-	Sun, 22 Nov 2026 01:01:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F24606A32C;
+	Sun, 22 Nov 2026 01:01:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Aa9GzVts
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8572C1F000C0;
-	Sun, 22 Nov 2026 01:01:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jo0TgLG/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79531F000C0;
+	Sun, 22 Nov 2026 01:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795309305;
-	bh=f8oD3StepKAq57WQHx98dwXn6vomk0k4tBPHUkOr0Tc=;
+	s=k20260515; t=1795309314;
+	bh=TO2OayJ1Ir05pUCA7mnA5khhEAkASCecaweaOnkT+eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Aa9GzVtsebKvnHbv1q0FrMuM08O8EM+cdv+emoLHL0IkUi/9B9W7wC5wPuq9WqHgk
-	 J0k2/apo2kCFoDaAWwpPuH8/uhVsQKjHddxJJOiPKh9xQUBjflOo05lc2dbJA2EaZ2
-	 NQ7OdGhxXGser0VyEku3SE2+RXgoCzwAtc1yxSZtnPhWL5QEO2s97FO6YoApBfcX1r
-	 uyhYhvahU6QDwGAbGdhHral6q4zT1R+sP9E8ULldfaxC6LLS6KCgj66ETSyD9bBVIO
-	 EqkC2NF4Vco+JWn7vIL2sIGyYAkYkbmjKCAb7PfkdCC5ZLWXGr1laVNRITpTmGpLhs
-	 zxi8Qkvuol5qg==
+	b=jo0TgLG/caA2i+fP3s7uTkuzWd+6K2Jh07WujIZCzAHT7Gjtcf8NoM1ENMTucSc0R
+	 +IYJDehiye/QiHv9w6We6OfyBnYS3/c2tWAGVwnNCnt55hGSfWi8jNEge06dmaiq2g
+	 wdw3UxnEyKlA62lPSI0lDGJ/S+ZIcziPAW9FN5c3Pfw00+svfovUGAFrtS+sz0L5hq
+	 Hpu+eDNe2VQWD08qazcbE6cLO3DA8Qlq1qX5IUYdqbaGulAdklPOuiZEkQa2nlj4wj
+	 61hE869LzHgtywU+oERqy7/jHSt53sBb52kPTNnWhpgJ+WK1ADyqkTyxsJmht+6bRI
+	 hpWDx9xsDu6Aw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Masami Hiramatsu <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 2/4] bootconfig: Fix xbc_node_compose_key_after() for value nodes
-Date: Sun, 22 Nov 2026 10:01:41 +0900
-Message-ID: <179530930140.109991.1418783350874051238.stgit@devnote2>
+Subject: [PATCH 3/4] bootconfig: Avoid out-of-bounds pointer arithmetic in xbc_snprint_cmdline_filter()
+Date: Sun, 22 Nov 2026 10:01:50 +0900
+Message-ID: <179530931041.109991.12049130742435464205.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179530928294.109991.3079999508446852151.stgit@devnote2>
 References: <179530928294.109991.3079999508446852151.stgit@devnote2>
@@ -67,50 +67,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fix two issues in xbc_node_compose_key_after() when @node is a value node:
+xbc_snprint_cmdline_filter() passes `buf ? buf + len : NULL` to
+snprintf(). While this avoids NULL pointer arithmetic when @buf is NULL,
+if @buf is non-NULL and the rendered output exceeds @size (len > size),
+evaluating `buf + len` forms a pointer past the end of the @buf
+allocation, which is undefined behavior in C even though rest(len, size)
+is 0.
 
-1. Since array values are chained via the child pointer in
-   xbc_parse_array(), the 2nd and subsequent value nodes of an array have
-   the preceding value node as their parent rather than the owning key
-   node. Climbing only one parent (if (xbc_node_is_value(node))) caused
-   preceding array value strings to be included in the composed key
-   (e.g. "foo.bar.val1" instead of "foo.bar").
+Pass `buf && len < size ? buf + len : NULL` so that snprintf() receives
+NULL whenever the remaining buffer capacity is 0.
 
-2. Checking `if (!node || node == root)` before climbing to the owning
-   key node allowed a value node belonging to the subtree @root key node
-   itself (e.g. `foo = "val"` with `@root = xbc_find_node("foo")`) to
-   pass the check, climb to @root, skip the key-collection loop
-   (depth == 0), and return 0 without writing anything (not even a NUL
-   terminator) to @buf.
-
-Climb parent pointers in a loop while the node is a value node, and
-perform the `if (!node || node == root)` check afterward.
-
-Fixes: ca24306d83a1 ("bootconfig: Change array value to use child node")
+Fixes: dec4d8118c17 ("bootconfig: fix NULL-pointer arithmetic in xbc_snprint_cmdline()")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- lib/bootconfig.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/bootconfig.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 026d88a65c5c..280b7e73321b 100644
+index 280b7e73321b..9ae9a215b1da 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -421,12 +421,12 @@ int __init xbc_node_compose_key_after(struct xbc_node *root,
- 	uint16_t keys[XBC_DEPTH_MAX];
- 	int depth = 0, ret = 0, total = 0;
+@@ -587,8 +587,8 @@ int __init xbc_snprint_cmdline_filter(char *buf, size_t size, struct xbc_node *r
  
-+	while (node && xbc_node_is_value(node))
-+		node = xbc_node_get_parent(node);
-+
- 	if (!node || node == root)
- 		return -EINVAL;
- 
--	if (xbc_node_is_value(node))
--		node = xbc_node_get_parent(node);
--
- 	while (node && node != root) {
- 		if (depth == XBC_DEPTH_MAX)
- 			return -ERANGE;
+ 		vnode = xbc_node_get_child(knode);
+ 		if (!vnode) {
+-			ret = snprintf(buf ? buf + len : NULL, rest(len, size),
+-				       "%s ", xbc_namebuf);
++			ret = snprintf(buf && len < size ? buf + len : NULL,
++				       rest(len, size), "%s ", xbc_namebuf);
+ 			if (ret < 0)
+ 				return ret;
+ 			len += ret;
+@@ -601,7 +601,8 @@ int __init xbc_snprint_cmdline_filter(char *buf, size_t size, struct xbc_node *r
+ 			 * whitespace.
+ 			 */
+ 			q = strpbrk(val, " \t\r\n") ? "\"" : "";
+-			ret = snprintf(buf ? buf + len : NULL, rest(len, size),
++			ret = snprintf(buf && len < size ? buf + len : NULL,
++				       rest(len, size),
+ 				       "%s=%s%s%s ", xbc_namebuf, q, val, q);
+ 			if (ret < 0)
+ 				return ret;
 
