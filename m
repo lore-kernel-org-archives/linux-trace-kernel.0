@@ -1,54 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795306718;
-	b=N1PFyx+8chcPcpMCxC9z47a5KpqqAlWQ91zPdV1RtF+hj796dL7BampdY+fQIeCQLOt3
-	 JfuD7DNUO+IuErijh+pZq5R7yb80bWsxBKMYFVIiu0c1HZd9sYf6ucMKsU7glg5fb+KCr
-	 WJ5biMxKOj9IifDNecN/y4SgP6VDdoEq7180JtgDfMZW20GJoRdG9BOMquTL/kmNJMe30
-	 oDYRtw6QmUzpZFapaV91b3/b+d/h48u3qWLR1nAP0vgUZDiT7hD1jFJvuOixSFdbT10Lj
-	 ZU32BKwEDJ5AMfc8pU4ftoIjSf24IMKe2RNUEKYlfhKsMU3RFVwvVmPZ1TuLmBF1aog==
+	t=1795307723;
+	b=QhR1Ugc2MBS6YpVeX82wASxOyQsZC0JV0bUBv3ZjeVRavrvQ0ozKsIQ+Xh1e77KeW0CJ
+	 l1oKS4g4/GtHAsMIaFWQlHR3Zazq5wAo3WLmaV0bGUnG3AHSX/R5Y+vO2MQyUChF07mSp
+	 /wFkhRT8eogy6L4vJnCUKTLoyKXTn77ex2yDRQkqzXQcGEvC42jVqAP132QthS3R2K1Fk
+	 hZQuq6IpUX3OMaXi/ltDohmQ6GtfZ0Mvn3FOnuTAKsOhE52KWUgpj1Mb4xxPb5nwaenpB
+	 dl3f7FBhFhXUdsR4sPX+ZVwJIaF9+cLAUXRkWd4Y4N+IECz02y9/DXadfZ2U07Z1wbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795306718;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:MIME-Version:X-Received:Date:
-	 X-Google-Appengine-App-Id:X-Google-Appengine-App-Id-Alias:Message-ID:
-	 Subject:From:To:Content-Type;
-	bh=MwfqkXqrvzQI+Lq7eYOVXI3WLvfgCGVzqZRqBbT9lcQ=;
-	b=LvOv1f9JCs82JF4NnX9ywPZw/J4bG5x/W1OKXAddqu9YM1mMXYww71tcldABQIuWeOrt
-	 pfDJ2mAlsbXAlpr85QDx5G5tdeY0BV7hF1HEypZ7+AxMZzJF9OeEsId8FL7aKieZEdjG0
-	 o8S/1KYjNWtiwdSbxyutKlN+NNz7w0ejx+dx87FKsJS3ia07B4PtGWYvwYTWslvdP6FF1
-	 aQONcRQTC9qlMYtvAacGPCdAfkSxIyrJzIGMtnWTtYTOcvAbNw9CJeKApYX6SO2zSs4lk
-	 yNM3HQzvADHwDubkAb0+EHevAJ5nfWwOb63W+Ie0nTv/W5b9feD0unYM2EvxonlQAtQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795307723;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=kjaMl1GYSNrUShVsKdQDcYu8vOCY8jN+h3QDwdEh4x0=;
+	b=i7ISaPaCWxVbGuEgMkA6B+T7fADVFy8+GN//dSPQwI+QyNxqrNb3cggFncJkUxEKqBNr
+	 zJWM/ztApfVCsz1HgNzH8KCg6BM7jGNZPtr2iITYyPnBnMD8g1ZDEB8bO4lTAE6mYz8J5
+	 /9QCXmP2m2iaNigS31P0wfBhlUkS434+KeEQ7drcBZGRqdvHheC4/hBPFYKhyD44qT3Zi
+	 l+4MnANu4Ef8IH0ttvpd/g5cLm9ONHu5zSY8FT2c1WE7cbZuYK5z0IvqZXSvb1O61m2qO
+	 4NBvNQkp2+hFWZtx6dFG25aaSd5BspYxXOMFDcK/mvWvYboUvu2huffDjV7CFr0POWw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=fail header.from=syzkaller.appspotmail.com;
-	spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com;
-	arc=none smtp.remote-ip=209.85.160.72
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=G7OdNw8u;
+	arc=none smtp.remote-ip=209.85.128.50
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898A8606A69D
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Nov 2026 00:18:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 898A8606A69D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-464fb819ac5so2123642fac.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 16:18:37 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCA0606A338
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 22 Nov 2026 00:35:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DCCA0606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=G7OdNw8u
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4a3517554f7so20394995e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Nov 2026 16:35:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795307721; x=1795912521; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=kjaMl1GYSNrUShVsKdQDcYu8vOCY8jN+h3QDwdEh4x0=;
+        b=G7OdNw8ubMfnu0UlmljrLYczxmam37Hvlt7nwb3a7fIYbFNVpqqckCTvlyUy1f4gwX
+         63fw7LL0vzy3rhl29hr2xbMTePxVpQvdpxLddNixhyBNaxZ45M/43wRuyMv/1gdQgFCy
+         ylAMaoojgKS69rcL33985uN2DvVtg3Xsf/hOI+B7tNZyJL3Mq0WlmBWQV2R87SbI0NKo
+         jg17r3X9bdBEPbNxBUheGepbPqBX8ql0Kcfa74PbzAVoEBOpxgXSDTdXx2sk/m27assf
+         jICviUjUsNVIg8krFyn90l/h5CgnJnRl3QcZOZIZQnzCIEEwuff/PMsKrATRzfZqC/+t
+         YtEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795306716; x=1795911516;
-        h=content-type:to:from:subject:message-id:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=MwfqkXqrvzQI+Lq7eYOVXI3WLvfgCGVzqZRqBbT9lcQ=;
-        b=q4rb3bz1rtsmPyCCBTPvJphz/c1pQvZWlKDpXuRMFGbzPTWOPjv1cWgeXNa6Dso6CL
-         jFMOiWnBgC/kGxT+QWWYmhIVKv9C2iQQP2ei4Chhqi7hKm7da+7OBMc70p9XiOOc/NTV
-         2hz3YAtV6VLXB6P4bGKrvceqc+CEU1mMxikDyyBRSJsWoQ1rdYWrIo0aCCWinaqKZg9k
-         t7JgY+TSw2QmIPdoWfbUgor0n/4QkRnvFZnulKuQwYnoHYVD1WpsfPV/M51HdVHoLZAK
-         /BUN/nMn6GQNbDfU+VWxEagmOimWtiSsrVcc6IqCBSIv7PVnMkHpU/cJ0ejOq0N/mRZp
-         ekuA==
-X-Forwarded-Encrypted: i=1; AL+hErHPgjstAf3QXMP/WIN3eHGiimsskurR6wUHEBDwYY+5hue8ru2hlndwx/1FsRD8+dQlYGd+E7TG6mMzdQi8+DG/+d0=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9lHvqEcqgA2QUlUWYwuKu9S/kuVJoAtNAVW/XIQW1BAEJG7wF3
-	4RsWaZFocFnB9ChPZqk0XnB4xMY+fjBHlUO8UXaUIwInv4jjlbI7W3u83vpbP+vmCOKSD2zyXag
-	ZJavbFr/7EeEysPYZO6/SSz+Iext2dtt5JKApx+Ymy37GaJtEPkdC8c8UBzg=
+        d=1e100.net; s=20260707; t=1795307721; x=1795912521;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=kjaMl1GYSNrUShVsKdQDcYu8vOCY8jN+h3QDwdEh4x0=;
+        b=Gc+hrqHfooBZvU7oN01ymJ4NuWsJmGdIis+cqKSm+SSrh/5WnHEWgZ0YkDCCdfigqm
+         UKgE8IvhQuEQ/zEdf+fts+HmgRqGkHmpMyMZOyMF99T18afMAilmpq7sKXwX16u/GW6N
+         dOkhabi+vyZT1x8raV6FzjMIeg1rD7jyiOHFhMpnYtn/72uRz53O3ceIL3fOeqvdKNSB
+         loyi+SPTsJnodmy5bOhRInOv770nxyupvZjOsVXZrpam0/2aU1GW8z20CUJ/y7OTFRJh
+         gNB58zxw7+YsLL1SROKoQeL9qSxu7EfyO5n3ZciilOfpKrC5I6/tSQUN7dSItyQxlJ6W
+         5QPQ==
+X-Forwarded-Encrypted: i=1; AL+hErHK6LazRzVWY4cZKGgn9L9JG+N4Ubbbwu/qJpYY/fdu3ILzJcnFxdZFmEbgL71BQDmlCaqaI+CcvQ96pgtnLzlsx/I=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/C/O9uHSngvVv6fx+MM/8xqo7wHYwVaxWe9ahmuRjSvzwQEaQw
+	aVgUG3St+jggAjLN91AK3Fh9vRagwjXpVZ6q+KgKGu1WtwlcYQdXN6r/
+X-Gm-Gg: AZFdTZezqOJNgh15/PRbSKenuuGBHo7Q2BT6EgHbdfZ3irCEPfwfNmDDZmmoNvWOITz
+	0jTASRbLOSPQZ1a151DApa7ZeGXgxjhRSG8gV5Jv+HPu1j+4ufvQGGGz7nNOVpPiOIcGOlHybXe
+	h7NuoMfQY+dUW0ILxTfjci+Sjdpe0zP8p0oUZti38wP06/SFji9qZA9gj/SgU9TPlTdHYHATGbv
+	nsXx5C7YkBDDj4vYTq1oc34aKLcIInZvHY8ek1Qm1mJTUpdAoGVTbYyFrxJt8B4k1HKWFirDAx+
+	XFKpknlHkqHBMXRKJDz3XkjWsRmzZjNxA7LnXmUR85GncOKpoVnG43izdzUVVjZAl07eOpDfC8+
+	sJ08Wd9OQMln0xiyyrLD6S6RubqAiBzs1fD8gwOBvdvbpUnAUK75AGED1EiuYvdg+gzKhRz3LTA
+	AvPsi8NIVjEq7BMXfC/H+OuHggm5hzldGnHFTWSlezwcpaE1LLDLmBq+QNSktggZVl8oyDhLU6H
+	p5RCPhjQwr1xy/Mj09clhYrubnER9zy5x6a0m9vKP0a2R5/nmxV6S7OtedLIDLgbR9aZeagXNIY
+	MAvzaazUFrlhgtjObihQglldm7NROm4zn5+Zm0oZt7EXlXKYfkWI8I8E8h5DxcQOE5U0u/mnpOH
+	lCaOMo25UzG2BdNYN48azW9LaQiLvmSqSUdMHg2vOmKOS+Jn+/1YhK6OcdzDjsNHD9lZ0lQDsqD
+	7vM//npIDXLOxOkoe1h0jdKnJLI9T3m/FMkc8NpxSi+3hV5eg+QWFqp4LSJmuobjmsm3wVHOc2N
+	4ygzCUx++qalVhyNg==
+X-Received: by 2002:a05:600c:45d4:b0:4bb:6994:abf0 with SMTP id 5b1f17b1804b1-4bb88817d91mr170289725e9.23.1795307721109;
+        Sat, 21 Nov 2026 16:35:21 -0800 (PST)
+Received: from longitude (2a02-8434-fda5-4201-2025-a95f-1d53-595d.rev.sfr.net. [2a02:8434:fda5:4201:2025:a95f:1d53:595d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb906817ccsm74017825e9.5.2026.11.21.16.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2026 16:35:20 -0800 (PST)
+From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+To: mhiramat@kernel.org
+Cc: rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] tools/bootconfig: Preserve tracing settings across export and replay
+Date: Sun, 22 Nov 2026 01:34:57 +0100
+Message-ID: <cover.1795307698.git.edumucelli@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,133 +101,33 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Received: by 2002:a05:6808:2208:b0:4d6:92b3:5c8d with SMTP id
- 5614622812f47-57a0dd479f9mr9859349b6e.67.1795306716624; Sat, 21 Nov 2026
- 16:18:36 -0800 (PST)
-Date: Sat, 21 Nov 2026 16:18:36 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6b0234dc.44b41460.34b83f.0019.GAE@google.com>
-Subject: [syzbot] [trace?] KCSAN: data-race in __trace_trigger_soft_disabled / apply_subsystem_event_filter
-From: syzbot <syzbot+1faa12be48036b80e416@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Masami,
 
-syzbot found the following issue on:
+Thanks for reviewing the earlier bootconfig fixes. I found two more cases
+where a tracefs export loses a setting when you use it again. The graph
+depth is exported under a name the kernel doesn't recognize at boot, and
+an all-f CPU mask is left out entirely.
 
-HEAD commit:    d0f871bfb831 Merge tag 'arm64-fixes' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12708a03580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=886d2ddd2d6b664e
-dashboard link: https://syzkaller.appspot.com/bug?extid=1faa12be48036b80e416
-compiler:       Debian clang version 22.1.8 (1~deb13u4), Debian LLD 22.1.8
+I checked the rendered kernel command line and exercised export and replay
+on my Ubuntu machine using a tracefs fixture. The series is based on
+bootconfig/core, including the earlier CPU mask quoting fix.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thanks,
+Eduardo
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/018edb90159d/disk-d0f871bf.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b27112368dea/vmlinux-d0f871bf.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/1f2c7b502c76/bzImage-d0f871bf.xz
+Eduardo Mucelli Rezende Oliveira (2):
+  tools/bootconfig: Use the registered global tracing parameter names
+  tools/bootconfig: Preserve all-f tracing CPU masks on export
 
-AI-generated root cause summary:
-`filter_disable()` (and its counterpart `event_set_filtered_flag()`) in
-`kernel/trace/trace_events_filter.c` updates `struct trace_event_file::flags`
-using non-atomic read-modify-write operations (`file->flags &=
-~EVENT_FILE_FL_FILTERED`) instead of atomic bit operations
-(`test_and_clear_bit()`/`test_and_set_bit()`). Meanwhile, tracepoint handlers
-such as `trace_trigger_soft_disabled()` and `__trace_trigger_soft_disabled()`
-read `file->flags` locklessly without `READ_ONCE()`. Writing a failing subsystem
-filter via `subsystem_filter_write()` triggers `filter_disable()` while
-`sched_switch` concurrently executes `__trace_trigger_soft_disabled()` on
-another CPU, causing a KCSAN data race on `file->flags`.
-
-full analysis:  https://syzkaller.appspot.com/x/ai_root_cause?x=1faa12be48036b80e416
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1faa12be48036b80e416@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in __trace_trigger_soft_disabled / apply_subsystem_event_filter
-
-write to 0xffff888100172888 of 8 bytes by task 5433 on cpu 0:
- filter_disable kernel/trace/trace_events_filter.c:1325 [inline]
- process_system_preds kernel/trace/trace_events_filter.c:2331 [inline]
- create_system_filter kernel/trace/trace_events_filter.c:2486 [inline]
- apply_subsystem_event_filter+0x28f/0xcd0 kernel/trace/trace_events_filter.c:2574
- subsystem_filter_write+0x79/0xd0 kernel/trace/trace_events.c:2523
- vfs_write+0x24f/0x9b0 fs/read_write.c:665
- ksys_write+0xdc/0x1a0 fs/read_write.c:719
- __do_sys_write fs/read_write.c:730 [inline]
- __se_sys_write fs/read_write.c:727 [inline]
- __x64_sys_write+0x40/0x50 fs/read_write.c:727
- x64_sys_call+0x154e/0x2550 arch/x86/include/generated/asm/syscalls_64.h:2
- do_syscall_x64 arch/x86/entry/syscall_64.c:61 [inline]
- do_syscall_64+0x11e/0x3a0 arch/x86/entry/syscall_64.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff888100172888 of 8 bytes by task 5440 on cpu 1:
- __trace_trigger_soft_disabled+0x20/0x1a0 kernel/trace/trace_events_trigger.c:217
- trace_trigger_soft_disabled include/linux/trace_events.h:777 [inline]
- do_trace_event_raw_event_sched_switch include/trace/events/sched.h:220 [inline]
- trace_event_raw_event_sched_switch+0x186/0x1a0 include/trace/events/sched.h:220
- __traceiter_sched_switch+0x3f/0x60 include/trace/events/sched.h:220
- __do_trace_sched_switch include/trace/events/sched.h:220 [inline]
- trace_sched_switch include/trace/events/sched.h:220 [inline]
- __schedule+0xc3d/0xd30 kernel/sched/core.c:7383
- preempt_schedule_common+0x12/0x40 kernel/sched/core.c:7565
- preempt_schedule_thunk+0x16/0x40 arch/x86/entry/thunk.S:12
- __raw_spin_unlock include/linux/spinlock_api_smp.h:201 [inline]
- _raw_spin_unlock+0x1e/0x30 kernel/locking/spinlock.c:213
- spin_unlock include/linux/spinlock.h:401 [inline]
- zap_pte_range mm/memory.c:2076 [inline]
- zap_pmd_range mm/memory.c:2134 [inline]
- zap_pud_range mm/memory.c:2162 [inline]
- zap_p4d_range mm/memory.c:2183 [inline]
- __zap_vma_range+0x273e/0x2ed0 mm/memory.c:2223
- unmap_vmas+0x216/0x310 mm/memory.c:2292
- exit_mmap+0x1a2/0x650 mm/mmap.c:1315
- __mmput+0x28/0x1f0 kernel/fork.c:1192
- mmput+0x51/0x60 kernel/fork.c:1215
- exit_mm+0x12d/0x1d0 kernel/exit.c:586
- do_exit+0x44a/0x1530 kernel/exit.c:967
- do_group_exit+0xfe/0x140 kernel/exit.c:1123
- get_signal+0xc49/0xd30 kernel/signal.c:3113
- arch_do_signal_or_restart+0x96/0x480 arch/x86/kernel/signal.c:337
- __exit_to_user_mode_loop kernel/entry/common.c:66 [inline]
- exit_to_user_mode_loop+0x161/0x940 kernel/entry/common.c:101
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
- syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:343 [inline]
- do_syscall_64+0x23b/0x3a0 arch/x86/entry/syscall_64.c:107
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 UID: 0 PID: 5440 Comm: syz.1.454 Not tainted syzkaller #0 PREEMPT(lazy) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/06/2026
-==================================================================
+ Documentation/trace/boottime-trace.rst   |  8 ++++----
+ tools/bootconfig/scripts/bconf2ftrace.sh | 21 ++++++++++++++++-----
+ tools/bootconfig/scripts/ftrace2bconf.sh |  9 ++++-----
+ 3 files changed, 24 insertions(+), 14 deletions(-)
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+base-commit: 0ad31c3252d4c626a93ae6251340ef86b18342d0
+-- 
+2.53.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
