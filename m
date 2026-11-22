@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795340399;
-	b=bCiH/fEyzmvbfBneFqN9C1kvO4gA/Km30+lztEed9hKXnKMNALKk6oLtBT7WibGTNSCn
-	 tl+T4JOTCd+RbyZ16km1jiaom3hdOhFd9uquCphQG8MWNYuC29CLrUW8IuQ9fM8yQN1T2
-	 nhe//Or98piAy7Q9zS6viVOCN44+I2qDBwSJHSFfCwT6ib+m8pai449+NrhmwfBXo4BQ+
-	 CxW+Gc8uWU078jlk1LQ5YLPN449lCpHIvb1eKQ4MOAsWuFa4ddrDtn9t2oHZhEqyEJ9LA
-	 61IqCyQqoNIfTVkj4oGtBPh+xJg7ndtu2t4OhxYmGT1OX6HOWQ8dhupoXqgFNDhEfMA==
+	t=1795340655;
+	b=UpDGSTnMNQ7/c/FxHAPznd8eHPkLry6XspsVCMpmhnZrGX+PVk0Wl/q4oiNMOtHFFbP4
+	 v1h1xm6kEcz6AKHQ/kZcSK6v70V2XDDlWxWGARHlt/IY76qm0sz6+fFQaUC9PHA5obOMR
+	 4eGC3WWjDzK6ZL5B5WMiI4eVArCLK/ldNLnIHgDOgLcOLsn2MvdxeyMsuQrz4VnTKVlLA
+	 V0nSY1wVfrSxp4zotuuehL2zdmJ54/IAHf5u6Oroc3zVVyAYXk2V7iLsT6MY0vRF917M6
+	 8bDO7+O8j6iF3NVRkwCGp9mqssGPqLFsOxH45pN4y0+YkescbSJWA8iJukqXd75Gruw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795340399;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795340655;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=mSaw5zdS1mtlO86FGGVxC95UV//gWZDw3sHxp1UvTno=;
-	b=uOiO2KnIzBdukpmztUQrc/7aoAHYOTQv3caIKqVQ7NQdY3Ronwo2Z4sILFLl9MIswno7
-	 eiio0pn3LJMFKSSLMwRSIkZD62ph6MnAR5JhqYehG8mfGfdDofa7PSQbjxrYX8MuGyiqA
-	 v5jDJ2Sl5EGRIfBiwSdtTUXFJLYzetRxbT/6YU8K2zVqmwNLzcIruUL9SQT1z88VjbN/l
-	 j/9F0oS43UQ6m6SqFOUpR4OwqmOKQwg6vZgWJJbHx7JgPKPWSbwh+aMRncIWCJErpvLKb
-	 Mtr8z8Vz6Tjsu59gcnrenMosXxZydPZPR6kYgTnN24PRPyjPPAI/L9o+ghElP0K1meg==
+	bh=jG647zLaKDOa4ikcmyWqfAVgJu2lrwpR7ZtVwyZzKa4=;
+	b=ZYg3awKeJVIOgyPTvEfNwVvwbHIq0oquDZ5K/tzWQZindmCMNA7aDI/tNXs++qp0Kle9
+	 KFEIDToKbCQb7PZMNgdkGGTMb+fVGv2w/+yGwmz+QzN+2yngbDBbBOz13APftWyaLHse9
+	 Ym/RG8YDjYx6+BXZIHzJi1lJFPfjgk1+SdO09rJDMx2bSjP3WvG4o1QyCvOn4NeVm34xl
+	 WQevwYHudh3SofKtqdYYaqpvAeTpgwUDSoBOdWsTgORKR3vY/xbdYAjiF48W01f2aeCnU
+	 PiHfW2z+USIoJJ5ScAck6WJfhZUSNtF/ZD5fnF7EX8wXokhOYiOnhFHvtK84dFkPJZg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PqfSf4RI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mL8pnkIe;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74130606A32A;
-	Sun, 22 Nov 2026 09:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0416606A320;
+	Sun, 22 Nov 2026 09:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PqfSf4RI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 513FD1F000C6;
-	Sun, 22 Nov 2026 09:39:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mL8pnkIe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B5D1F000C0;
+	Sun, 22 Nov 2026 09:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795340399;
-	bh=mSaw5zdS1mtlO86FGGVxC95UV//gWZDw3sHxp1UvTno=;
+	s=k20260515; t=1795340654;
+	bh=jG647zLaKDOa4ikcmyWqfAVgJu2lrwpR7ZtVwyZzKa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=PqfSf4RILDatlHNMd9zBmY1nEOLIriB7QjldZUWMt5PT2UT4+zp+/9X0JD5iTI1Xk
-	 jw0xOyd9ukNRqh2wLIquOXtu8AqInWiLs7VROvP0whhj+loLyEJAx37fPHFo5xWL+A
-	 C3e4BxM+jtwct7XVge0M1kxsOxvAQGktY6lrmypyqO9L32oUiisdjgbgj2SSlAYikq
-	 wDEwxbaouSWPJYy6NjD8RcEIG6PC7OWPEkaVGhV8QG6diGDCuXhPA5i/osydazg8Wk
-	 jquc0IO28n4AIcnIiM5qjn05lNbBDSXyWvmIjNJtrHm0xvRDBhH8UJAPXW1NNefMIW
-	 dQtV8fiq5R7lA==
+	b=mL8pnkIe8Oj21MLgrwC+7bKOwfvrpfn8Qa7Wj+Xq/WsWv7iBtUecV1zPwKTEhic29
+	 VD3FQzU6FSn8G7AXdMq67n5e0ZZunbsWwGwARgkIq/xDBps6xEK4DTihOELNNrOJ8N
+	 WzwgfiKpr2xYfNAr2LvUIMBbLXqG+yYFxtVkzIYlEInHxYiqumSWDOIGg5+xKd8Fg4
+	 cpOT+7+coAi0WZx+lekoMoR8HUR9adeBmuHUgYWBD057ar08KtbqXhYkhg5k0avDyQ
+	 tKQ4Fq33FvDiYTxLr1TfMuhFB6TPrCgWsmhu4tp25jM3d0lsoG+VtNM9V2PKZKkQUC
+	 QU1PvgD4E68yQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, corbet@lwn.net, linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] tools/bootconfig: Use the registered global tracing parameter names
-Date: Sun, 22 Nov 2026 18:39:55 +0900
-Message-ID: <undine-1795340395802979275-8df591c357ed0841@undined.local>
+To: Yifan Feng <evanfengff@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland <mark.rutland@arm.com>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/fprobe: Do not let KASAN check the $stackN read
+Date: Sun, 22 Nov 2026 18:44:11 +0900
+Message-ID: <undine-1795340651865886565-b6ba73d13d584735@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <undine-1795340240141573056-b3b8376c0d49c0eb@undined.local>
-References: <cover.1795307698.git.edumucelli@gmail.com> <fecf6e33d4f7e2ddf031526e7a1abef27e28f754.1795307698.git.edumucelli@gmail.com> <undine-1795340240141573056-b3b8376c0d49c0eb@undined.local>
+In-Reply-To: <20261118003205.59804-1-evanfengff@gmail.com>
+References: <20261118003205.59804-1-evanfengff@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,49 +61,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Sun, 22 Nov 2026 18:37:20 +0900, Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> On Sun, 22 Nov 2026 01:34:58 +0100, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com> wrote:
-> > The boot-time tracing guide lists four kernel.* keys that do not match
-> > the parameters registered by the tracing code. For example,
-> > ftrace2bconf.sh emits kernel.fgraph_max_depth, which bootconfig passes
-> > as fgraph_max_depth on the kernel command line. The function-graph
-> > tracer registers ftrace_graph_max_depth.
-> >
-> > Use the registered names in the guide and the exporter. Teach
-> > bconf2ftrace.sh to read those names, with the previous script keys as
-> > fallbacks so existing replay configurations still work.
-> >
-> > Fixes: 47781947947a ("Documentation: tracing: Add boot-time tracing document")
+On Tue, 17 Nov 2026 16:32:05 -0800, Yifan Feng <evanfengff@gmail.com> wrote:
+> ftrace_regs_get_kernel_stack_nth() reads the Nth entry of the kernel
+> stack for the $stackN argument of fprobe and tracepoint probe events.
+> That entry can be in the redzone of another stack frame, so with
+> CONFIG_KASAN_STACK every hit of such an event is reported:
 > 
-> Since this patch also fixes the key names in bconf2ftrace.sh and
-> ftrace2bconf.sh (which were added later than the documentation), consider
-> adding the corresponding Fixes tags as well:
+>   # echo 'f:fp_read vfs_read $stack10' >> dynamic_events
+>   # echo 1 > events/fprobes/fp_read/enable
+>   BUG: KASAN: stack-out-of-bounds in process_fetch_insn+0xac9/0xcb0
 > 
-> Fixes: 7e66ef0046cc ("tools/bootconfig: Add a script to generate ftrace
-> shell-command from bootconfig")
-> Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates
-> bootconfig from ftrace")
+> Use READ_ONCE_NOCHECK(), as arm64 does in regs_get_kernel_stack_nth()
+> for kprobe events.
+> 
+> Fixes: 0566cefe73b9 ("tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS")
+> Signed-off-by: Yifan Feng <evanfengff@gmail.com>
 
-BTW, I will update the Fixes tag and pick this patch in the series
-to bootconfig/fixes because it is obvious a buggy description.
+Looks good to me. Let me pick this to fixes branch.
 
-So you can only update 2/2.
+Thanks!
 
-Thank you,
-
+> ---
+> Tested on v7.4-rc3 in QEMU with KASAN: 6 reports before, 0 after.
+> Found and written with the help of an AI coding assistant.
 > 
-> Thanks,
+>  include/linux/ftrace.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-> > ---
-> >  Documentation/trace/boottime-trace.rst   |  8 ++++----
-> >  tools/bootconfig/scripts/bconf2ftrace.sh | 21 ++++++++++++++++-----
-> >  tools/bootconfig/scripts/ftrace2bconf.sh |  5 +++--
-> >  3 files changed, 23 insertions(+), 11 deletions(-)
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 1c2056a1a68b..bdb6ee6bc3b9 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -270,7 +270,7 @@ ftrace_regs_get_kernel_stack_nth(struct ftrace_regs *fregs, unsigned int nth)
+>  	stackp = (unsigned long *)ftrace_regs_get_stack_pointer(fregs);
+>  	if (((unsigned long)(stackp + nth) & ~(THREAD_SIZE - 1)) ==
+>  	    ((unsigned long)stackp & ~(THREAD_SIZE - 1)))
+> -		return *(stackp + nth);
+> +		return READ_ONCE_NOCHECK(*(stackp + nth));
+>  
+>  	return 0;
+>  }
 > 
+> base-commit: 63fdb511c27afcebce797e3db580b3534ddfa639
 > -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
+> 2.39.3 (Apple Git-146)
 > 
 >
 
