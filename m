@@ -1,71 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795407308;
-	b=SHTcqpNl66SmaYwyKrLUHCPh6xnjvY8FC9QgnCdN4mwvOMAg3+mCjsjCobf9LwPJrd/f
-	 DXZQSN5lYh+KulfAgPR0aUNQ+vmFxVh22NcyZ3oDokF88R7CIpuekRmA5lyl1xS+rsNLV
-	 oUBJF/rDMxm+Cr3KNx2xss9jsSPAGPLkhrrUut0Ktoo3yVizdCg1iIz77fFZJJnyMdfUY
-	 zUKidBMqKmYYR19p9krZSDtdM6SVUKQVNfaKtpdq04sZjI8uunpGmTpdllkUhMgIlmy/j
-	 izb74hYQm3+pHoB/w1Y0/a6THKSQK+AQ3EBha6NODf1UPmqs3J1cO+/fOc//TypgVxg==
+	t=1795418465;
+	b=nTy00UoRJhmDkaJkqhDYobss8QSapIY8Xzuzlf9vB7uJBFxbVhnG6lOjxfrDogNgKo98
+	 /t4OLmcZqmsCCeH5zPW4c2hkqkzLSlRQELzqY0FgInP40ndIVxyqeUuB/0asTo/NMwEe9
+	 d6PkAWb7+TVyWL8hSTYROgq4B86ciGVj8PxkNWVDffjtetOCuS3F90e5JEF33xxaD7Qzn
+	 NvF2yY553GFzYwfdj9/p49QH4QPOAeXAyHSg8Fcrh5GJQczYPAbDZ0UIekY+RKRRMgUm6
+	 z9lKoaB/jSt1SRGcyabM+4DRmiLl2SP/aaRGePPoErEMJ+CYmVPlMOaa8vj5a7iUVOA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795407308;
-	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:CFBL-Feedback-ID:
-	 CFBL-Address:X-Forward-Email-ID:X-Forward-Email-Sender:
-	 X-Forward-Email-Version:X-Forward-Email-Website:X-Complaints-To:
-	 X-Report-Abuse:X-Report-Abuse-To:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:Autocrypt:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=3QGxftQLxKTSOBvApzYyCE8MPukN07SFGrj9IZ2HX7c=;
-	b=UvTaStI8Xc2bIayKZxw6a1RALrahHunCtxei5SdX6Za2x7bqn8d7Q1EN8sWlztgUR+7o
-	 zOfRSMg7pqL3HuQSKKBz1vVwxNq3dKmswTcMTnBaHv13Q3h897+q/X1MYOsPdgSvCpcko
-	 v4RUqcSxuFkmC3pWe90HlIWb5bWidFsuJKg4HwliFCxYDhQYcvvBo80oHADrtr/20BB3g
-	 PMmQ0jLvcnyWbGz0HtPCkbJDumDU9cpxA7MWXW0yKH30Tkng2P1jMO3TXb7ojrnJuvjfs
-	 kRFNUrvaj+QoLxrxk+uSin5aWYjHc7nH/nY8/TuoMnfHxuLjsHSuZPFjDJoZHev34HA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795418465;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=rUpMUM+HhWr+QKptHzgmQzAAdEuAZRjEoOiMRQIuit0=;
+	b=BfDgnr42EA8Sd8Wnyegqyz95u54pEK7ghFOcS62miiOYIA0EQ0BZ/zg+ySUo99gSn+qy
+	 yen3AzjVkRSWT3f7DNllWK2Qds6gB68lnFoWymLz1ag7cHCDwyn5TyCwcZMW/nbXMYfXR
+	 ZdpJ9Zb1wwWxwORy0YaO8Zd6DTNATvWgjwVbvOpYmo/3sW42pa0j0SwDYg6bFxeSmEZpg
+	 zUMwDp5be1AiZeL0KOEXBZRmy14B0drY+/n+XY31IsnDsVlTPemjtmdPlHh91mbHgzY2c
+	 XtgU2E0aJtxd3FNVpieRS3xsiWne84beyEGVckU+95i2Lt+Ud/hAZSU/4iekYjGnzhg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=ovn.org;
-	spf=pass smtp.mailfrom=fe-bounces.ovn.org;
-	dkim=pass header.d=ovn.org header.i=@ovn.org header.a=rsa-sha256 header.s=fe-13eddc7e57 header.b=I8evzlW8;
-	dkim=pass header.d=forwardemail.net header.i=@forwardemail.net header.a=rsa-sha256 header.s=default header.b=UF57ilPY;
-	arc=none smtp.remote-ip=121.127.44.73
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=com4i27i;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBD9606A333
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 04:15:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EBBD9606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ovn.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.ovn.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE78606A31A;
+	Mon, 23 Nov 2026 07:21:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ovn.org header.i=@ovn.org header.a=rsa-sha256 header.s=fe-13eddc7e57 header.b=I8evzlW8;
-	dkim=pass (1024-bit key) header.d=forwardemail.net header.i=@forwardemail.net header.a=rsa-sha256 header.s=default header.b=UF57ilPY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ovn.org;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: Autocrypt: From:
- Content-Language: References: Cc: To: Subject: MIME-Version: Date:
- Message-ID: CFBL-Address: CFBL-Feedback-ID; q=dns/txt; s=fe-13eddc7e57;
- t=1795407307; bh=3QGxftQLxKTSOBvApzYyCE8MPukN07SFGrj9IZ2HX7c=;
- b=I8evzlW8F6LHjaewHupTrqsLO+7DEGwHTuT5Rs7GKxkKJBphSIpJvuu2YrTVxBiOMG3FIR3RH
- mcSsu91IGIK3y2mzEh3VZC07DjNJOvFe2uWlbj8AMEsJ0O07QG7Rpw9WH0EE4ZRRGLyjOcdVuyP
- jNY3bbrVoZDotunT4FVyY1s=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=forwardemail.net;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: Autocrypt: From:
- Content-Language: References: Cc: To: Subject: MIME-Version: Date:
- Message-ID: CFBL-Address: CFBL-Feedback-ID; q=dns/txt; s=default;
- t=1795407307; bh=3QGxftQLxKTSOBvApzYyCE8MPukN07SFGrj9IZ2HX7c=;
- b=UF57ilPYJXcH/4byHzSDtWIZ3tbg/jrEdesx2ADBOnM+OIEwLRKuyFx1zAn4or7e1jNll17xe
- oqfz8EdzGHC0gbo3V1Asm30TW5+NCoIrWh8kwPNx5CV450egc81EakQtSVc2Of73Qf2ZyNrm0ry
- o6IoTNHUSc0nCYVBHo+iLl0=
-CFBL-Feedback-ID: 6b03bdca9ac7a1bf66975566:d42d2194a37096a761e7117f94e43a90
-CFBL-Address: abuse@forwardemail.net; report=arf
-X-Forward-Email-ID: 6b03bdca9ac7a1bf66975566
-X-Forward-Email-Sender: rfc822; i.maximets@ovn.org, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 2.19.37
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <fe3d59b0-d5cc-4b54-8339-35c30bb86036@ovn.org>
-Date: Mon, 23 Nov 2026 05:15:02 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=com4i27i
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ABD41F000C0;
+	Mon, 23 Nov 2026 07:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795418465;
+	bh=rUpMUM+HhWr+QKptHzgmQzAAdEuAZRjEoOiMRQIuit0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=com4i27ieOVaMX8wjif5QFLPdsps4B/ZX8LlPrI7YJquPs98vS8t/ztq11JKOqvcR
+	 UIxc1YfBFow0LOnH7ack0TWtyNoK6cOXyI9Cxgzdrtqfkm1na5B63gBIqVHfvNfAjB
+	 /Ww4h08bIGr1XypDQqMoXo65BksqDsInbkWpF5yE4dg+XR8TOrna2TP+ss6DplhbgO
+	 xjAPd9I3l5y7rSNh4bKAY4dh3ceG2aNIOQDHjXHDcGUFJbRXvHU8NogASvgy5uya+P
+	 AQWcK4a7L/8DDHDMHZ/n0zDJH6nD2HdhJzS3YAnsIfsbDBNxTiRmGImdqch3wykuHM
+	 K6031nEaovoBQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: "Masami Hiramatsu" <mhiramat@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Lukas Zobernig <lukas.zobernig@gmail.com>, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Pablo Fraile Alonso <pablo@pablofraile.net>, Edgecombe Rick P <rick.p.edgecombe@intel.com>
+Subject: Re: [PATCH 0/5] x86/insn, uprobes: Fix opcode map handling for multi-byte, REX2, and VEX/EVEX/XOP instructions
+Date: Mon, 23 Nov 2026 16:21:00 +0900
+Message-ID: <undine-1795418460053955073-5d1cb26ac71ed1bf@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <179540203033.233843.12951034848925983867.stgit@devnote2>
+References: <179540203033.233843.12951034848925983867.stgit@devnote2>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -75,151 +58,104 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 3/4] net: dropreason: use new __print_sym() in tracing
-To: Johannes Berg <johannes@sipsolutions.net>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ilya Maximets <i.maximets@ovn.org>, Matthieu Baerts <matttbe@kernel.org>,
- Aaron Conole <aconole@redhat.com>, Eelco Chaudron <echaudro@redhat.com>,
- dev@openvswitch.org, Adrian Moreno <amorenoz@redhat.com>,
- Antoine Tenart <atenart@kernel.org>, Johannes Berg <johannes.berg@intel.com>
-References: <20261119155133.355849-6-johannes@sipsolutions.net>
- <20261119155133.355849-9-johannes@sipsolutions.net>
-Content-Language: en-US
-From: Ilya Maximets <i.maximets@ovn.org>
-Autocrypt: addr=i.maximets@ovn.org; keydata=
- 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
-In-Reply-To: <20261119155133.355849-9-johannes@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On 11/19/26 4:48 PM, Johannes Berg wrote:
-> From: Johannes Berg <johannes.berg@intel.com>
+Oops, it should be my extension bug... From is wrong.
+
+On Mon, 23 Nov 2026 11:47:10 +0900, None@smtp.subspace.kernel.org <None@smtp.subspace.kernel.org> wrote:
+> Hi,
 > 
-> The __print_symbolic() could only ever print the core
-> drop reasons, since that's the way the infrastructure
-> works. Now that we have __print_sym() with all the
-> advantages mentioned in that commit, convert to that
-> and get all the drop reasons from all subsystems. As
-> we already have a list of them, that's really easy.
+> Following up on Pablo Fraile Alonso's report and patch [1], as well as the
+> additional review points from Sashiko and Rick Edgecombe, this series fixes
+> the underlying x86 instruction decoder issues and the related opcode-map
+> assumptions in x86 uprobes.
 > 
-> This is a little bit of .text (~100 bytes in my build)
-> and saves a lot of .data (~17k).
+> Originally, the x86 instruction decoder was designed primarily for
+> instructions typically emitted in the kernel. Since uprobes uses it on
+> arbitrary user-space instruction encodings, several issues around multi-byte,
+> REX2, and VEX/EVEX/XOP encodings have surfaced:
 > 
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> 1. insn_is_nop() in arch/x86/lib/insn-eval.c mutates insn->opcode.value
+>    in-place for REX2 M0=1 instructions without updating insn->opcode.nbytes,
+>    corrupting struct insn for subsequent callers (e.g. uprobe_init_insn()
+>    and branch_setup_xol_ops()).
+> 2. gen-insn-attr-x86.awk skips emitting INAT_REX2_VARIANT for 0xa1 (JMPABS)
+>    because the check is placed after 'if (length(flags) == 0) continue'.
+> 3. insn_get_opcode() never checks INAT_NO_REX2 / INAT_REX2_VARIANT or
+>    invalid REX2 encodings such as REX2 M0=0 + 0x0f or REX2 M0=1 + 0x38/0x3a.
+> 4. insn->opcode.nbytes represents the physical opcode byte count (needed for
+>    field offset calculations such as insn_offset_modrm()), so REX2 M0=1 and
+>    VEX/EVEX/XOP instructions all have insn->opcode.nbytes == 1. Callers
+>    need a helper to determine the logical opcode map; insn_masking_exception()
+>    also lacked this check and could misidentify non-map-0 0x1f/0x8e opcodes.
+> 5. In arch/x86/kernel/uprobes.c, bit 0x0f in good_insns_{32,64} bypassed
+>    good_2byte_insns, and uprobe_init_insn(), branch_setup_xol_ops(),
+>    arch_uprobe_analyze_insn(), and riprel_analyze() assumed map-0 or 1-byte
+>    REX encodings, causing misidentification of AVX/VEX instructions such as
+>    VZEROUPPER (c5 f8 77), VPSHUFD (c5 f9 70), VPOR (c5 f9 eb), and VCMPPS
+>    (c5 f8 c2), as well as REX2 prefix corruption in riprel_analyze().
+> 
+> Patch overview:
+> - Patch 1: Fix insn_is_nop() not to mutate struct insn.
+> - Patch 2: Fix gen-insn-attr-x86.awk to emit INAT_REX2_VARIANT.
+> - Patch 3: Reject invalid REX2 encodings in insn_get_opcode().
+> - Patch 4: Add insn_opcode_map() / insn_last_opcode() helpers and fix
+>            insn_masking_exception().
+> - Patch 5: Fix opcode validation, branch/fixup analysis, and REX2 RIP-rel
+>            handling in arch/x86/kernel/uprobes.c.
+> 
+> Notes:
+> - checkpatch.pl reports warnings on patch 5 for using -ENOTSUPP and -ENOSYS
+>   in arch/x86/kernel/uprobes.c. Those match the existing error code
+>   conventions of uprobe_init_insn() and branch_setup_xol_ops() across
+>   uprobes; cleaning up error codes across uprobes should be done separately
+>   and is intentionally left out of scope for this fix series.
+> - Auditing whether Group 15 (0f ae: lfence/mfence/sfence, fxsave/fxrstor,
+>   CET instructions, etc.) should be enabled in good_2byte_insns (as raised
+>   by Rick Edgecombe) is also left for a separate follow-up discussion/patch.
+> - Uprobes should audit the three-byte opcodes and provide good_3bytes1_insns
+>   and good_3byte2_insns bit table if needed.
+> 
+> Testing:
+> - insn_decoder_test on vmlinux .text (7,926,007 instructions): 0 errors
+> - insn_sanity (64-bit and 32-bit, 1,000,000 random insns each): 0 errors
+> - Host unit tests covering REX2 (valid/invalid), JMPABS, VEX2, POP/MOV SS
+> - QEMU (KVM, -cpu host) uprobe runtime test verifying rejection of 8
+>   disallowed/invalid encodings (0f 05, 0f 0b, REX2 M0=0+0f/e8/a1,
+>   REX2 M0=1+05, 10-byte REX2 M0=1, EVEX map 4) and clean XOL/emulation
+>   execution + trace hits for 7 allowed instructions (bswap, nop10,
+>   vzeroupper, vcmpps, vpshufd, vpor, crc32).
+> 
+> [1] https://lore.kernel.org/r/20261116-x86-uprobes-two-byte-opcode-v1-1-2b6dbabead52@pablofraile.net
+> 
+> Thank you,
+> 
 > ---
-> v7: update the selftest accordingly
-> ---
->  include/net/dropreason.h                      |  5 +++
->  include/trace/events/skb.h                    | 13 ++----
->  net/core/skbuff.c                             | 43 +++++++++++++++++++
->  .../selftests/net/openvswitch/openvswitch.sh  | 17 ++------
->  4 files changed, 55 insertions(+), 23 deletions(-)
+> Masami Hiramatsu (5):
+>   x86/insn-eval: Do not mutate struct insn in insn_is_nop()
+>   x86/insn: Fix gen-insn-attr-x86.awk to emit INAT_REX2_VARIANT
+>   x86/insn: Reject invalid REX2 encodings in insn_get_opcode()
+>   x86/insn: Add insn_opcode_map() helper and fix insn_masking_exception()
+>   uprobes/x86: Fix opcode validation and analysis for multi-byte, REX2, and VEX/EVEX/XOP instructions
+> 
+>  arch/x86/include/asm/inat.h                | 10 +++
+>  arch/x86/include/asm/insn.h                | 43 +++++++++++++
+>  arch/x86/kernel/uprobes.c                  | 97 +++++++++++++++++++++---------
+>  arch/x86/lib/insn-eval.c                   | 17 ++++--
+>  arch/x86/lib/insn.c                        | 16 +++++
+>  arch/x86/tools/gen-insn-attr-x86.awk       |  6 +-
+>  tools/arch/x86/include/asm/inat.h          | 10 +++
+>  tools/arch/x86/include/asm/insn.h          | 43 +++++++++++++
+>  tools/arch/x86/lib/insn.c                  | 16 +++++
+>  tools/arch/x86/tools/gen-insn-attr-x86.awk |  6 +-
+>  10 files changed, 225 insertions(+), 39 deletions(-)
+> 
+> base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+>
 
-[...]
-
-> diff --git a/tools/testing/selftests/net/openvswitch/openvswitch.sh b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-> index 21444657a040..b5dbdfb29089 100755
-> --- a/tools/testing/selftests/net/openvswitch/openvswitch.sh
-> +++ b/tools/testing/selftests/net/openvswitch/openvswitch.sh
-> @@ -236,7 +236,7 @@ ovs_drop_reason_count()
->  	local reason=$1
->  
->  	local perf_output=`perf script -i ${ovs_dir}/perf.data -F trace:event,trace`
-> -	local pattern="skb:kfree_skb:.*reason: $reason"
-> +	local pattern="skb:kfree_skb:.*reason: $reason$"
->  
->  	return `echo "$perf_output" | grep "$pattern" | wc -l`
->  }
-> @@ -900,15 +900,6 @@ test_psample() {
->  # - drop packets and verify the right drop reason is reported
->  test_drop_reason() {
->  	which perf >/dev/null 2>&1 || return $ksft_skip
-> -	which pahole >/dev/null 2>&1 || return $ksft_skip
-> -
-> -	ovs_drop_subsys=$(pahole -C skb_drop_reason_subsys |
-> -			      awk '/OPENVSWITCH/ { print $3; }' |
-> -			      tr -d ,)
-> -	if [ -z "$ovs_drop_subsys" ]; then
-> -		info "failed to get OVS drop subsys ID"
-> -		return $ksft_skip
-> -	fi
->  
->  	sbx_add "test_drop_reason" || return $?
->  
-> @@ -952,7 +943,7 @@ test_drop_reason() {
->  		"in_port(2),eth(),eth_type(0x0800),ipv4(src=172.31.110.20,proto=1),icmp()" 'drop'
->  
->  	ovs_drop_record_and_run "test_drop_reason" ip netns exec client ping -c 2 172.31.110.20
-> -	ovs_drop_reason_count 0x${ovs_drop_subsys}0001 # OVS_DROP_FLOW_ACTION
-> +	ovs_drop_reason_count OVS_DROP_LAST_ACTION
->  	if [[ "$?" -ne "2" ]]; then
->  		info "Did not detect expected drops: $?"
->  		return 1
-> @@ -969,7 +960,7 @@ test_drop_reason() {
->  
->  	ovs_drop_record_and_run \
->              "test_drop_reason" ip netns exec client nc -i 1 -zuv 172.31.110.20 6000
-> -	ovs_drop_reason_count 0x${ovs_drop_subsys}0004 # OVS_DROP_EXPLICIT_ACTION_ERROR
-> +	ovs_drop_reason_count OVS_DROP_EXPLICIT_WITH_ERROR
->  	if [[ "$?" -ne "1" ]]; then
->  		info "Did not detect expected explicit error drops: $?"
->  		return 1
-> @@ -977,7 +968,7 @@ test_drop_reason() {
->  
->  	ovs_drop_record_and_run \
->              "test_drop_reason" ip netns exec client nc -i 1 -zuv 172.31.110.20 7000
-> -	ovs_drop_reason_count 0x${ovs_drop_subsys}0003 # OVS_DROP_EXPLICIT_ACTION
-> +	ovs_drop_reason_count OVS_DROP_EXPLICIT
->  	if [[ "$?" -ne "1" ]]; then
->  		info "Did not detect expected explicit drops: $?"
->  		return 1
-
-For the OVS test part:
-
-Reviewed-by: Ilya Maximets <i.maximets@ovn.org>
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
