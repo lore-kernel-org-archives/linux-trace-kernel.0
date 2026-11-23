@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795472630;
-	b=jwRIRLCgmfYmQrEUJ+d83wV1EZiggATvH0d62ltoe5/9uVan0xcBE9iKgKXlt2OwgK31
-	 Csp6r0/oBqd0s10kC5DYBusy53ZwCM7P037qZ1N5xy27Ze9tv+IGuAOg4PylTKXyAZl1G
-	 LlI9jLm11579W2RVbSppwQvdqZuQtCF9gZehTrslxEQsQr3WjkT0NH7FtRFxYndW9fV8i
-	 ZdHNfYgzh4JN5tczKl784n2PgICQYRC7pv5CLGmgzW+iVYTexYcnBUQgPZWjyyMtY1BMC
-	 SG8zmWT8Tqr4+3VHREENPFlCzxfER6tj+tR0a7Ar4oresPT4qNYIMdXpsaYcQXMVLxQ==
+	t=1795472641;
+	b=UHINMEyUGqjnDmA71u/QvJUONBQgQ/GlCfJ6rmrWCpRlW5j/WY9DsUUXXQume7Njki/a
+	 gwprajRF1CV76trSfmGUUHGrhAqEQSDfCSkZHvsK3iv8jZ282BDUgfevQybr5KQfO4HCo
+	 Pkc/vJDAM2IezzuQ+gzCf1qK3t/pKxTBLTWu9TTJnwvHqo0duqARDKmCOr4g0DdD9ZIc3
+	 rzIyJckq6XQ9K7cvlWL2FgCbeW8ZOSlTU/UGd3yw0StHYZ01Tu8xF/hKKVso8g+XDPiDK
+	 hDhERlse/J+07D/DZ1Cy3aup5Ee34F2RP9qn9QxqxOUixg+qwByLOBgb298RGmlTcMw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795472630;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795472641;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=4NgAHlgiACfP9WNr97wsTdXrW6wyD1bio75846g2GlU=;
-	b=lZU12NXqVJSVE/NaoqYPBXJF2zFqk6z4rF56RTot5dEEkVoMflLRZFQ8QLr2DiCCXxhG
-	 HO3S/Rj88Kavz0HXZtvwpKyiCjoRnPkEZBaMxce3DOi0SWxj3pmNl11eSH8hdIb1vAw59
-	 w/EtYkrCMvu4jB4b1YjNtFSpeDjOy3l8vc/CPQMks31oOCSNcppftzJU0+qqad+oV9/4+
-	 mo4KXw+8TCBbdtz1+M/n9Fq8VQ5KR3EfLuDRVHPO8jQRIwdYFj94ozsZoZjeUfS3Desw1
-	 Q81MqYye28uzFRIS9qJFygbYfk+pU6613y016D0PI3EY9pTWhUe4EbPtOE2FLgC6nWg==
+	bh=w/EDch5cn3q5fGmwJDkw1LiwddtdffCknsqNOpXSWKo=;
+	b=BCx74ladQTKYQIvYejqK5+fNuoh+CkcWdd0w57mfLDQc0B9s6mMD+FfQ89ULs2sApJh+
+	 x5DI/uACQE/0t0MUL6a8WjY2WAcvyOWgi5U6sZupEblcrhVoKAYusBjZ2MtvQrkigIX+c
+	 qHsrQKHYBmcpFDoo2meaxFGp6k8DSVwBZfHp2lpVFpx9fQ/VgGSvXfKi0Lac07dgrtcLr
+	 /YUNXtiGNTcbewGIs82yDEiNKo39KINzL6Ej6A24vZAb7GFAC2smgHVBtO/5YCm14amo5
+	 BEGoxzatRYH60i0LFW4J3CqWR3pzbmSoc/1C3+8M5dNAUd7YzoaSezQdklOLMPU7D3A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="bp/4FdGS";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="T3Vn/2Q3";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DCC606A31E;
-	Mon, 23 Nov 2026 22:23:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EDF606A31E;
+	Mon, 23 Nov 2026 22:24:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bp/4FdGS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABFFE1F000C6;
-	Mon, 23 Nov 2026 22:23:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T3Vn/2Q3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55E9C1F000D2;
+	Mon, 23 Nov 2026 22:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795472629;
-	bh=4NgAHlgiACfP9WNr97wsTdXrW6wyD1bio75846g2GlU=;
+	s=k20260515; t=1795472640;
+	bh=w/EDch5cn3q5fGmwJDkw1LiwddtdffCknsqNOpXSWKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bp/4FdGSMwoiUia8GIG3WWWmTcVgZzRRXFpG+Eub+X2bSSd/NMlHVmcSucPH5CMGE
-	 JknqdFxH/Ggw52kD7tY5I/DzhsYSIsnqcgJhN4khQgSWWMpTDfUbE/sQfcCsLa7Y8U
-	 0K86C6grOoqqptKr8eo7LY1cwzvjEODgAzfA8EYjfk0SXK6hwaqcCjVLwnPgkKYmRZ
-	 /fL6xPBM26KNZc3764bshirm/jBITchd5Y2bXMnNYQ+IIj4+6T9/o6zePjn+XTKWSh
-	 n5Kythi2nn7aTl58V3clSN11E3U6H3lbKZ7W3iLR2BfrlGb2zUlVdXRBEi9sv+CBAu
-	 lRP6Ime7DP+pQ==
+	b=T3Vn/2Q3dGTtwsn0LmIm1wfqLQR4SFCK9XFl/yTjAW20WtDVS5or9tVwOjmfZ3Y4D
+	 HXhHkU3mkm8KspoN1cVExAIsYKF3ufim1Jsct3eOi417dtP1da/JDv6sxHlpr8OpNU
+	 I84D0CT7Dfjz0856jKDM944qngqK0SGPWvAEkAQB8CuPvDAOIazesYheNvHFIZFTu7
+	 YhThAqguYvQ7NM7OwxZziOwzIGm54TbZclwUS5x+TaFSsRfThQ0OvZLGjvTvBbZsB3
+	 0tPfm3vS36OUU3TDpSkvL1udfMSzX4tK9su4llTg/ARvZE4SSPZTimL5RHHxwWe5i9
+	 hS2FQ9UR7y7sQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -55,9 +55,9 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Pablo Fraile Alonso <pablo@pablofraile.net>,
 	Edgecombe Rick P <rick.p.edgecombe@intel.com>
-Subject: [RESEND PATCH 2/5] x86/insn: Fix gen-insn-attr-x86.awk to emit INAT_REX2_VARIANT
-Date: Tue, 24 Nov 2026 07:23:44 +0900
-Message-ID: <179547262427.326766.7702369325507569446.stgit@devnote2>
+Subject: [RESEND PATCH 3/5] x86/insn: Reject invalid REX2 encodings in insn_get_opcode()
+Date: Tue, 24 Nov 2026 07:23:55 +0900
+Message-ID: <179547263496.326766.3048022446114454399.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179547260053.326766.11540305553612301074.stgit@devnote2>
 References: <179547260053.326766.11540305553612301074.stgit@devnote2>
@@ -76,70 +76,120 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-In gen-insn-attr-x86.awk, the check for the (REX2) superscript tag was
-placed after 'if (length(flags) == 0) continue'. For opcode 0xa1
-('MOV rAX,Ov (!REX2) | JMPABS O (REX2),(o64)'), the JMPABS alternative
-has no flags set by convert_operands(), so the loop skipped before
-emitting INAT_REX2_VARIANT and no entry in inat-tables.c ever received
-INAT_REX2_VARIANT.
+Although INAT_NO_REX2 and INAT_REX2_VARIANT attributes are generated from
+x86-opcode-map.txt, insn_get_opcode() never checked them for REX2-prefixed
+instructions. It also accepted REX2 M0=0 followed by an escape byte (0x0f),
+legacy/REX/REX2/VEX prefix bytes, or 64-bit invalid opcodes, as well as
+REX2 M0=1 followed by 3-byte escape opcodes (0x38/0x3a) or VEX-only
+opcodes.
 
-Move the rex2_expr check before the empty-flags skip so INAT_REX2_VARIANT
-is properly added to flags and emitted in inat-tables.c.
+In particular, REX2 M0=0 + 0x0f (0xd5 0x00 0x0f) returned success with
+opcode.bytes[0] = 0x0f and opcode.nbytes = 1, which can confuse callers
+such as uprobes.
+
+Add inat_is_no_rex2() and inat_is_rex2_variant() helpers and reject
+invalid REX2 encodings with -EINVAL in insn_get_opcode().
 
 Fixes: eada38d575a2 ("x86/insn: Add support for REX2 prefix to the instruction decoder logic")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- arch/x86/tools/gen-insn-attr-x86.awk       |    6 ++++--
- tools/arch/x86/tools/gen-insn-attr-x86.awk |    6 ++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/inat.h       |   10 ++++++++++
+ arch/x86/lib/insn.c               |   16 ++++++++++++++++
+ tools/arch/x86/include/asm/inat.h |   10 ++++++++++
+ tools/arch/x86/lib/insn.c         |   16 ++++++++++++++++
+ 4 files changed, 52 insertions(+)
 
-diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index 7ea1b75e59b7..186506a3db22 100644
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -354,6 +354,10 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 		if (match(ext, no_rex2_expr))
- 			flags = add_flags(flags, "INAT_NO_REX2")
- 
-+		# check REX2 variant
-+		if (match(ext, rex2_expr))
-+			flags = add_flags(flags, "INAT_REX2_VARIANT")
+diff --git a/arch/x86/include/asm/inat.h b/arch/x86/include/asm/inat.h
+index 1b3060a3425c..26edd32dbabc 100644
+--- a/arch/x86/include/asm/inat.h
++++ b/arch/x86/include/asm/inat.h
+@@ -263,4 +263,14 @@ static inline int inat_is_invalid64(insn_attr_t attr)
+ {
+ 	return attr & INAT_INV64;
+ }
 +
- 		# check REX prefix
- 		if (match(opcode, rex_expr))
- 			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
-@@ -395,8 +399,6 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 			lptable3[idx] = add_flags(lptable3[idx],flags)
- 			variant = "INAT_VARIANT"
- 		}
--		if (match(ext, rex2_expr))
--			table[idx] = add_flags(table[idx], "INAT_REX2_VARIANT")
- 		if (!match(ext, lprefix_expr)){
- 			table[idx] = add_flags(table[idx],flags)
- 		}
-diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index 7ea1b75e59b7..186506a3db22 100644
---- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -354,6 +354,10 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 		if (match(ext, no_rex2_expr))
- 			flags = add_flags(flags, "INAT_NO_REX2")
- 
-+		# check REX2 variant
-+		if (match(ext, rex2_expr))
-+			flags = add_flags(flags, "INAT_REX2_VARIANT")
++static inline int inat_is_no_rex2(insn_attr_t attr)
++{
++	return attr & INAT_NO_REX2;
++}
 +
- 		# check REX prefix
- 		if (match(opcode, rex_expr))
- 			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
-@@ -395,8 +399,6 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 			lptable3[idx] = add_flags(lptable3[idx],flags)
- 			variant = "INAT_VARIANT"
++static inline int inat_is_rex2_variant(insn_attr_t attr)
++{
++	return attr & INAT_REX2_VARIANT;
++}
+ #endif
+diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
+index 225af1399c9d..36c477daf370 100644
+--- a/arch/x86/lib/insn.c
++++ b/arch/x86/lib/insn.c
+@@ -335,6 +335,22 @@ int insn_get_opcode(struct insn *insn)
+ 			insn->attr = inat_get_escape_attribute(op, pfx_id, esc_attr);
+ 		} else {
+ 			insn->attr = inat_get_opcode_attribute(op);
++			if (inat_is_legacy_prefix(insn->attr) ||
++			    inat_is_rex_prefix(insn->attr) ||
++			    inat_is_rex2_prefix(insn->attr) ||
++			    inat_is_vex_prefix(insn->attr) ||
++			    inat_is_invalid64(insn->attr)) {
++				insn->attr = 0;
++				return -EINVAL;
++			}
++		}
++		if (inat_is_escape(insn->attr) ||
++		    inat_must_vex(insn->attr) ||
++		    (inat_is_no_rex2(insn->attr) &&
++		     !inat_is_rex2_variant(insn->attr))) {
++			/* This instruction is bad */
++			insn->attr = 0;
++			return -EINVAL;
  		}
--		if (match(ext, rex2_expr))
--			table[idx] = add_flags(table[idx], "INAT_REX2_VARIANT")
- 		if (!match(ext, lprefix_expr)){
- 			table[idx] = add_flags(table[idx],flags)
+ 		goto end;
+ 	}
+diff --git a/tools/arch/x86/include/asm/inat.h b/tools/arch/x86/include/asm/inat.h
+index 099e926595bd..5e7648e50c2b 100644
+--- a/tools/arch/x86/include/asm/inat.h
++++ b/tools/arch/x86/include/asm/inat.h
+@@ -263,4 +263,14 @@ static inline int inat_is_invalid64(insn_attr_t attr)
+ {
+ 	return attr & INAT_INV64;
+ }
++
++static inline int inat_is_no_rex2(insn_attr_t attr)
++{
++	return attr & INAT_NO_REX2;
++}
++
++static inline int inat_is_rex2_variant(insn_attr_t attr)
++{
++	return attr & INAT_REX2_VARIANT;
++}
+ #endif
+diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
+index 1d1c57c74d1f..9eb81232874a 100644
+--- a/tools/arch/x86/lib/insn.c
++++ b/tools/arch/x86/lib/insn.c
+@@ -335,6 +335,22 @@ int insn_get_opcode(struct insn *insn)
+ 			insn->attr = inat_get_escape_attribute(op, pfx_id, esc_attr);
+ 		} else {
+ 			insn->attr = inat_get_opcode_attribute(op);
++			if (inat_is_legacy_prefix(insn->attr) ||
++			    inat_is_rex_prefix(insn->attr) ||
++			    inat_is_rex2_prefix(insn->attr) ||
++			    inat_is_vex_prefix(insn->attr) ||
++			    inat_is_invalid64(insn->attr)) {
++				insn->attr = 0;
++				return -EINVAL;
++			}
++		}
++		if (inat_is_escape(insn->attr) ||
++		    inat_must_vex(insn->attr) ||
++		    (inat_is_no_rex2(insn->attr) &&
++		     !inat_is_rex2_variant(insn->attr))) {
++			/* This instruction is bad */
++			insn->attr = 0;
++			return -EINVAL;
  		}
+ 		goto end;
+ 	}
 
