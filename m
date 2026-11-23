@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795402048;
-	b=2ybXhj1YNHs0DZZ4lF724dZ2mC/uYYNu8dRcgR8oikNZAAsVC3rdRip8PQD4Tzw5qNld
-	 F42ofYLiLLBERQ8m0KNrh9YrDDrUCnAiP8dOZAGOPXUML7UBA6INKUYMPEG5ZkcV3BwNu
-	 ZbMBhmfRZHogUcJJgovnxawMcN4QU+4AUjZ5FjIsZUaSTtGpRfcuk5NB1VC29ZlAjmEVg
-	 JduIqW7sZnF4yZL0prkOI6vqe1vTEMOCgBmYcSrSSdnCg2u+sDn7tzlRE1QsNPf4bxmlD
-	 XmmsMa+tI6j1mlHVU51L0sC1RrWGaodHD5ybX8en3+T5xHFMf0K3cxarY2yHzvGO08Q==
+	t=1795402059;
+	b=uK0eaNYdSNWZLdx3NcwCAsckZUBNYseYZM+wl2JRCoVW9QAHRU+R4/bt1gVWq1EKtECi
+	 Bq+1RknaUbzBs8bSDA0EqbPYC7HjdcQpQV5RPMPf5Q7Jc6fAut2dI0ta0VJZ0IezJBtAu
+	 D6ouwxZggOfEVlLC8UIn3zcQMdyzkjQbHN3cK0lWDwMcWqPYxU2ER79+zF+3ONCs+6X99
+	 8cXV3nK0xKSKlHPCr9dXfg53EhzjvJDFIZw3P9qg/06f1IyNXv45Efy6yQmjhR+naZ4ho
+	 6UiKZb96pgyFyh+LApnNaMJUctHVvf3WLpGv5ss4AVqj2wZJRHhWn0Cg1yzWB/J2vlA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795402048;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795402059;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=JNjk/4HiJWkwvqdmrflK9/BOHpzuJMO4asKwUdIyFFE=;
-	b=lFpUVJCVAeO3Ep7y5GHfeo39C/zCCHHvsV6B3Gd4rh/zFupmng52TTnR2+pQsxYibbna
-	 hXNaqraEA8beGcHT9EQ0GEPhzOGl3Z4Y5anaSkrlnEguGvwYdMjItVHIEe8/iw33THmjM
-	 fuQMP4om/I366qxtwcQqb5YP/37n4vODU7/jhrXxuurvHJuva9csUwDlwagkaUnEROsG4
-	 GTU9hAsa20SZ5TZpYxhnhZLGHg86OUYAUPAFYdhn1uR2H+ghgyzLojDEcyET7Wf8Ka10w
-	 0RkZYMt7DV8J/9de9aC89D9AkWltVL4xbqBRnN0fkwxK4GEcA+I5Ytzd/v9/IkLtMXQ==
+	bh=4NgAHlgiACfP9WNr97wsTdXrW6wyD1bio75846g2GlU=;
+	b=zht2sLBLZ+CANL7pTzWqb/8/pnCKyF75QLJAPZjxA5P8nPUyYrHMx+MGyqAJMoL2U9mz
+	 M8xdD2Bw3O/3R3ZqD663YZKIFL/4v92refcJJSbkFU+iZ5kbp+BO4KpNi3qDKvJJNfYOK
+	 M++GztavIt9JMl6ywg0HYDLNEENOqVeLRqvquIY+OMN2S+ScNFMe/gZVNuNGh23PchKlt
+	 kdPZMmgGwIt0Aca4HO7PT1ciPqd1ZiWnuxfC6lU14k1JNDAjg7vdge2IAjXcdkOSe1pEX
+	 SnDBp9FaylOxtGHBrWVlzhCBhazd2RrZridUhbeSf8eaExmo+ezeyEOmmw1rYDSzWdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OeuNhyq6;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MsoHMHYP;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0039C606A683;
-	Mon, 23 Nov 2026 02:47:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19483606A31E;
+	Mon, 23 Nov 2026 02:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OeuNhyq6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 671181F000C0;
-	Mon, 23 Nov 2026 02:47:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MsoHMHYP
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753CB1F000C6;
+	Mon, 23 Nov 2026 02:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795402047;
-	bh=JNjk/4HiJWkwvqdmrflK9/BOHpzuJMO4asKwUdIyFFE=;
+	s=k20260515; t=1795402058;
+	bh=4NgAHlgiACfP9WNr97wsTdXrW6wyD1bio75846g2GlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OeuNhyq65QQ7xxi+CyE1E+2SXTdZLYJltj0+mNNlVqbWrvwVuY/Fo2PAiaXIVFhlI
-	 V8dPtmUVK/HRaQvgFrFDBGO+ocoCoOsYxFWlqc+jo5gY51jfvcC34rwKDwEjt2IdOh
-	 v1usx2wS71ZwY9SQHjuusTxjj1yKXGgDyyH2kuMpDLoJid7a/N2ZCTMjbzXNRIwfUK
-	 +byfdwdPuewQE3P/19eYnzlFaqSZGpIEJVN8O8Lg9kTp4wWcJ22oV1cvJyvV1Oc1hI
-	 mKOPnWWDx3wyXwqfjHeaBA+Ks7zS4kMLLZD2b+rqNg9GdXkn1lh++aBFJwcsY3mMFk
-	 IlwPNrflbvJxg==
+	b=MsoHMHYPlxhuXmneGllAp7IwF/VK4DRYJ9PkX1XgI8gZd9sN4zSllozH3f8voZ3Sr
+	 yUR2TlR4kDenYjf1hIgtZ8TPQdTMmMM7k8O87vKWfjajXjhujv2c89ZaJsG0S0izG8
+	 oyLOcrY8RiFXlgLmPUGdMqN37LjlHxayqpVU7UBNJy+I5GTN1y5u7s8Ens+KNreyhH
+	 keP8gEFt9ELyTxm0M+vNE6VzJPd/RgWnUytjBEEf14seMhaK3ztpPxBqiI3uJHX0xV
+	 kWeW6azize8vFSi62GgXnajLSnEyADJl9NRwZjGVMDathNxEGdm8In9q0aXE45TBzu
+	 VmBp5F/Jlj3EA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -55,9 +55,9 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Pablo Fraile Alonso <pablo@pablofraile.net>,
 	Edgecombe Rick P <rick.p.edgecombe@intel.com>
-Subject: [PATCH 1/5] x86/insn-eval: Do not mutate struct insn in insn_is_nop()
-Date: Mon, 23 Nov 2026 11:47:22 +0900
-Message-ID: <179540204209.233843.2595774240986518615.stgit@devnote2>
+Subject: [PATCH 2/5] x86/insn: Fix gen-insn-attr-x86.awk to emit INAT_REX2_VARIANT
+Date: Mon, 23 Nov 2026 11:47:33 +0900
+Message-ID: <179540205326.233843.2135456283107403299.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179540203033.233843.12951034848925983867.stgit@devnote2>
 References: <179540203033.233843.12951034848925983867.stgit@devnote2>
@@ -76,76 +76,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-For REX2 M0=1 (map 1) instructions, insn_is_nop() shifts insn->opcode.value
-left by 8 bits and ORs in 0x0f in-place without updating
-insn->opcode.nbytes.
+In gen-insn-attr-x86.awk, the check for the (REX2) superscript tag was
+placed after 'if (length(flags) == 0) continue'. For opcode 0xa1
+('MOV rAX,Ov (!REX2) | JMPABS O (REX2),(o64)'), the JMPABS alternative
+has no flags set by convert_operands(), so the loop skipped before
+emitting INAT_REX2_VARIANT and no entry in inat-tables.c ever received
+INAT_REX2_VARIANT.
 
-This corrupts the decoded struct insn for subsequent callers. For example,
-in uprobes arch_uprobe_analyze_insn(), can_optimize() ->
-is_optimizable_nop10() calls insn_is_nop() on any 10-byte instruction
-before uprobe_init_insn(), leaving OPCODE1(insn) == 0x0f with
-opcode.nbytes == 1, and a second call from branch_setup_xol_ops() shifts
-it a second time.
+Move the rex2_expr check before the empty-flags skip so INAT_REX2_VARIANT
+is properly added to flags and emitted in inat-tables.c.
 
-Use local variables for the opcode bytes instead of mutating insn->opcode.
-
-Fixes: 8a5c6cbfe4a3 ("x86/insn,uprobes,alternative: Unify insn_is_nop()")
+Fixes: eada38d575a2 ("x86/insn: Add support for REX2 prefix to the instruction decoder logic")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- arch/x86/lib/insn-eval.c |   17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ arch/x86/tools/gen-insn-attr-x86.awk       |    6 ++++--
+ tools/arch/x86/tools/gen-insn-attr-x86.awk |    6 ++++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index e03eeec55cfe..c67f8ac375c4 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -1700,6 +1700,7 @@ bool insn_is_nop(struct insn *insn)
- 	u8 sib = 0, sib_scale, sib_index, sib_base;
- 	u8 nrex, rex;
- 	u8 p, rep = 0;
-+	u8 op0, op1;
+diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
+index 7ea1b75e59b7..186506a3db22 100644
+--- a/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -354,6 +354,10 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 		if (match(ext, no_rex2_expr))
+ 			flags = add_flags(flags, "INAT_NO_REX2")
  
- 	if ((nrex = insn->rex_prefix.nbytes)) {
- 		rex = insn->rex_prefix.bytes[nrex-1];
-@@ -1745,21 +1746,25 @@ bool insn_is_nop(struct insn *insn)
- 	}
++		# check REX2 variant
++		if (match(ext, rex2_expr))
++			flags = add_flags(flags, "INAT_REX2_VARIANT")
++
+ 		# check REX prefix
+ 		if (match(opcode, rex_expr))
+ 			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
+@@ -395,8 +399,6 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 			lptable3[idx] = add_flags(lptable3[idx],flags)
+ 			variant = "INAT_VARIANT"
+ 		}
+-		if (match(ext, rex2_expr))
+-			table[idx] = add_flags(table[idx], "INAT_REX2_VARIANT")
+ 		if (!match(ext, lprefix_expr)){
+ 			table[idx] = add_flags(table[idx],flags)
+ 		}
+diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+index 7ea1b75e59b7..186506a3db22 100644
+--- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -354,6 +354,10 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 		if (match(ext, no_rex2_expr))
+ 			flags = add_flags(flags, "INAT_NO_REX2")
  
- 	/*
--	 * Opcode map munging:
-+	 * Opcode map handling:
- 	 *
- 	 * REX2: 0 - single byte opcode
- 	 *       1 - 0f second byte opcode
- 	 */
- 	switch (m) {
--	case 0: break;
--	case 1: insn->opcode.value <<= 8;
--		insn->opcode.value |= 0x0f;
-+	case 0:
-+		op0 = insn->opcode.bytes[0];
-+		op1 = insn->opcode.nbytes == 2 ? insn->opcode.bytes[1] : 0;
-+		break;
-+	case 1:
-+		op0 = 0x0f;
-+		op1 = insn->opcode.bytes[0];
- 		break;
- 	default:
- 		return false;
- 	}
- 
--	switch (insn->opcode.bytes[0]) {
-+	switch (op0) {
- 	case 0x0f: /* 2nd byte */
- 		break;
- 
-@@ -1811,7 +1816,7 @@ bool insn_is_nop(struct insn *insn)
- 		return false;
- 	}
- 
--	switch (insn->opcode.bytes[1]) {
-+	switch (op1) {
- 	case 0x1f:
- 		return modrm_reg == 0; /* 0f 1f /0 -- NOPL */
- 
++		# check REX2 variant
++		if (match(ext, rex2_expr))
++			flags = add_flags(flags, "INAT_REX2_VARIANT")
++
+ 		# check REX prefix
+ 		if (match(opcode, rex_expr))
+ 			flags = add_flags(flags, "INAT_MAKE_PREFIX(INAT_PFX_REX)")
+@@ -395,8 +399,6 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 			lptable3[idx] = add_flags(lptable3[idx],flags)
+ 			variant = "INAT_VARIANT"
+ 		}
+-		if (match(ext, rex2_expr))
+-			table[idx] = add_flags(table[idx], "INAT_REX2_VARIANT")
+ 		if (!match(ext, lprefix_expr)){
+ 			table[idx] = add_flags(table[idx],flags)
+ 		}
 
