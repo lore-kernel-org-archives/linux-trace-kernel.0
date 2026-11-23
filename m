@@ -1,102 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795471461;
-	b=JcEVrksEzlpIswRRwMdsGVdk8+rr1cX1KCeZyWgKVf0ZBbl+X/weURzb5q2Vd7Y3iXUh
-	 rl/dBjnfim50w1a8Gu2Ox3/twNiH/ivPHj6vp1tfvIFIplK4FvLoClK+UMTHB6RP/ehEj
-	 yKzSpiwzDUOwOivPqBB+qvZhKCNnTigPA31p8rnJypgEGW909H2c/5iQoLzetLieDH0Z8
-	 CHnXKqwFhGxlkJOqbPaqpRLnyNRHhpijLIkJEOwHM3c5RezJHHCGgR6hIKiyR+o77E4g9
-	 sePstjxO88tnbMqTj9eTib2vIy+mw0uy5RclhdWBp2C/nrQplpDji5rnvfFSL5NcRAw==
+	t=1795471791;
+	b=XsPV6HQl8iQma7HrJaumERozXu8HnfLmZi24SbuFZ8ciUvi7J26ngvrGxQavuK1NZ44u
+	 H0ZPnpJ2iDzHbPJ29SE3E3YijJ3BSw+NKgxJHgJapfjlKsFZ2IjRTrbTTg018/TaLzGMo
+	 3T3m2plh8+sK8sE2zLkguJVTK6OJmFAMSC7faYi64k7YSXBjV7diYjpRt5OLG9lo6X1eC
+	 hxyrYcOwPiPZWIFlFHfkCnEtlwXeySBNDXU+TRlE2pIMKIMxhokInK+ILCBl0S2mOlOja
+	 EwslZnlH8Satg5NXaOepxxaefoAPHVKnt6aRC7Nn8VuZJkYV6KfNuaoOFEArrurnBpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795471461;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471791;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
 	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=2f3F7pReyCVh5ohj9DIUA9RqsDOv9jV9G6uqHApB7O0=;
-	b=Jd5/qCQoA97M8yMawFZ/zIQVqO/SkGaspnEjcyHGGH5fXSxW8YQ1Zxa4foeBD5pCF+zu
-	 139BFhW+nT23wc75tklPCvVGc4XkAsYkvKxAbQdZDZl/5dsAq+D/5fivjMDE0QiKIOMsj
-	 mTWZMAkLLlHWOjLOqtDJLfMxjPloqToY/ssSXwN0aVVleXPlIPsxFxs1IsklT4Y8xZZiy
-	 mOgYKh3tXBPcC4FXlX07XkyYDNAexBp0+5D5sKw2rg/IeoMnBsrhXCkF0vrvTFjBqu8Ct
-	 YkCcX12mMvtk3FW3XQMesK1AcZdwXFXKvrLanr72gm1166GK+kb3VRqwmJrsghLsdyg==
+	bh=Vz58Cre/aXSIBNc6xkRmR7HEG/rtQyKHMhQgyqCK6QY=;
+	b=ebNabqDk2GsUsG3vzfkh7DQOvHycw8FKcJARONuREmYTaojRd4pBcT5IWQoDMzFm98wt
+	 bDVcdGKbUaRmohhzJ+GCbOnr06pp/GjCENvSz+ObWK42rrr3oDwKvG7EKPRfHu+oqOFbx
+	 fBTrffvSPnCZi2tFH2RIYpQI7tbjPUATM1zJe/HRBnBmuTdwlUwuH3k+gekg3QVCHa4YP
+	 ayRFSankh4Go3Fuw0EOI+rAvGn1GYqs4o6cV43PLQLeEqHzgq0RY0e0DetkdTpAswF+Vs
+	 y07KyUaA11+qMI6fdo0k3Dsn/5yQc5zGeu9mBnVaRygzUIrN2VxaB1PfLpP02JL18MQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wtVnmpzv;
-	arc=none smtp.remote-ip=209.85.128.47
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HLTOpMWJ;
+	arc=none smtp.remote-ip=209.85.128.53
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3483606A327
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 22:04:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3483606A327
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5F5606A687
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 22:09:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AE5F5606A687
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wtVnmpzv
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4bb64ef5a14so40486915e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 14:04:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HLTOpMWJ
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4bb606491faso21419365e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 14:09:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795471459; x=1796076259; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795471789; x=1796076589; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:date:from:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=2f3F7pReyCVh5ohj9DIUA9RqsDOv9jV9G6uqHApB7O0=;
-        b=wtVnmpzvYZCD0GaLZu5xfru9ELcjZM/X3gc10J+KIN5n8p5arnhGlxvdZtuiEyO+SF
-         mXICRZeaJ2Yi+kfmmdhQdJJsugjTetjy6sSEz9ogL2VfZiBVbHasEkV22gWyrwSX/9iG
-         gXP5KWXVdP09JEupsR0PUyqFKWnmmNcnY1K6WK4XNiptsVNjkbR83Oe++P10kA8oCycU
-         syRoavExVO4TMq6Rf94nzquu91XYDe0jrE3mOWRkel5ldFIFYGjyxM9BnJB5iIqlQKty
-         ZwnmN8MZDypLgKC1fNGIYoSh2uoC1c1DYQyWGPsAypQxJiD5h5LhoNSwIqSiXUZTNEJA
-         rwsA==
+        bh=Vz58Cre/aXSIBNc6xkRmR7HEG/rtQyKHMhQgyqCK6QY=;
+        b=HLTOpMWJk38/ystWWFTF7kDJo03Nx/0EQqU7gU1AzYiAhqkOfXtEz0J7jRtoau8Gi1
+         emkvpoMxiOH5a+Cw5eXud4Pkrow26A61n1gKW0ki1KbbdozKJX7EYAy1AqP76FccnU62
+         tWqcvQSeVuS2T7LwXn4cbQTh8wqaAIsBGvEchHB9chtzRZSUA9jqPDSRWQJYRQVwSHPV
+         QTJt/JLh4o4RBM5t2mlFIVsCmCRNlzWTHZw4gR1GOalV97ggx14xwaHr269HbkXb4tiJ
+         FV+xs3dSiuDx244qqYRhVgkUifkcmB+/hUL/2JTRMVHltcQr3tpwIldPSjOBtvUdVQeR
+         LnFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795471459; x=1796076259;
+        d=1e100.net; s=20260707; t=1795471789; x=1796076589;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2f3F7pReyCVh5ohj9DIUA9RqsDOv9jV9G6uqHApB7O0=;
-        b=BEj823t3VGQ3JWfIo066zzwN3bIGeB+2ecFNibAbyj18Vaw5r4oUaS0bHoaHaolajG
-         mH6PEc5hq60+meUauq10TTZdVZLJ4tbdiQvWT3ddVvM2mmhYUWP4pO1TfjJuctE7CjIz
-         WYm9o58BNvERvP9WQnK3Dy5rGp4bs5MFKu1HwnuFdc0hvLUjGpmWzrdxZxbiPCVQXqEB
-         TvDz9/JI4cIPyz7uy0vV2tAq/Cxc3HejL2vIz4Kjw6ztY6/v5cxv5E2J/AWtXk3ld1pa
-         CsWyQvMJY1H2Mdyj8d4FcTBRUg0RZ8okjynH8JnLoTMvoOevAfYdGrA5dYviQo8g3dC8
-         z5fQ==
-X-Forwarded-Encrypted: i=1; AL+hErH2XfalTtCtQ1KOF2LB1Cx/bs9OrXgZ/CwGWboco7hS/CQNHARh6uXfhZGiqynL6rPt4a/E9zT06yHwqGYEyeMEh+c=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9+hhiDcGNU+plxfQ6te09PP7rWulXh/1d+uOI8w1yqbnN/gShr
-	FBAtHB5anzRpOe8YkhjoojSLBSyE3RERrleRyhdV6Elyse6ckqYc28WT
-X-Gm-Gg: AZFdTZfTfdKWfyykJb0kTOkGH+lB4XEZzanqLPEbn6OJ/+OqP+/CfsKV91QE6fC68oa
-	rx34bTTZMPc8z3/pWSIKPqYxaEBeLHNoGuoMntUJPNxRyxRGojvGriyMrPcLIcqBS6L/sGDclok
-	fH/CgkUGDBA9o8W8imROBZVXOWF5GqsVbpYwGURHPBYs3cQL+C076yuJQArDyo/vMfoBU7pdyoj
-	xTBSDjWpGINc1MPttVqQ/zt/wJXbqwkPVKQaVk4FuoG5yiJnNjm342fvEqNDf07zcHWJoEzzc83
-	hcNs7VOQ9U/CLD7Rl6Qn+nglc9BEGU7YzKjOSnKmw5eOuAVow1mB3dt1u+of640361LlRD7sImu
-	uEcg7vMZKi3dT37fwgSH98cSxQkRpDBwXUnMCL7TW1SmSpgjxTSOx8lzjluzCa5zd4lxTMxqaVv
-	GcqN8FRGkBnJOlHhSwrq4GNprKv2p8mDK/NzOD2zRzCkcRRke386jndL2SJNHPLK+L5yrUL3DYo
-	UCVP/l31/He0RVRXHe7LtS6XnFQZMDjVzNaWf4F7762CLzh/tIA3SGdWlB1i2dYZxqRLNiRSoC9
-	iq21U1azt8QUzAZb
-X-Received: by 2002:a05:600c:1c0e:b0:4a1:ddaa:571e with SMTP id 5b1f17b1804b1-4bb88824f38mr302199135e9.15.1795471458927;
-        Mon, 23 Nov 2026 14:04:18 -0800 (PST)
+        bh=Vz58Cre/aXSIBNc6xkRmR7HEG/rtQyKHMhQgyqCK6QY=;
+        b=QoLlRMdus0L1w7WW+2pjQ1B44JJ7hPKJ1kP4KjtHOLLxkb69kheofxBUWHpg+lvejx
+         BZr1YkGAIwnn1DiHLbAoZDh/nNeMfSfuvp/X5++PWq5t2ViLopBF9jGhTRJf+sWBQCma
+         KL+vJWk/vKinHYFHUP+cB8pSv1DTqrWOmDb5ZziREe3A0euwU15Sgehv39gss/of5cZj
+         aNsmREIf8+I6G9VEDa8DDvNKPKY1Otv4gWFZugGdE4m6Q4t/+CEHY+h0fWiTFz6jXcST
+         jSbM+p9Ztf6ZknWLHbW/uVp6Eb42ae3dmRDgYfMrzdEtjz8TJBzc5g8Yu7261AsHoK8u
+         U7Nw==
+X-Forwarded-Encrypted: i=1; AL+hErElgIKLhY/toM7dO17qf+UgZjLn/XhxwaEqeNQsb7tEahBGiTeyY54LGjjlnsLpw4mgaGNuVJYM1VHj9FES6hE/Crk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z93XKsxCegH24Zsm41M7/CS0yKHaAkdNCyCtdZaLnPzAfWvLWFn
+	BchJiUDIwa5e1UaUNbmudC4K443UUAruqA59LFjA2hqRuTVFph248r1u
+X-Gm-Gg: AZFdTZeNw24d+rcbHiHY7WUDhcnPx9p2wBT6XZu7CZAeQu2QhPhfkpp/Kct7j602Xd4
+	7ty2Cnwu4kXs7gfm8bOXSuKdbByQpqw/QozHmU9wBnFKCB/JghnvWCXNe1+INu+FvMEb09Fa/GE
+	czR0C6DDbPtzUZwBPaatUE4MetlEx5D9tBzvcVsafiohVIv6KzedpQnRWcL6Zvl8f8j4tE/fOwT
+	fG1iNriVg6iZ3ngmglCbkHhcKSTjjyRFXzd5VibYyvowJY+dIpDzDplSOr5amt4KqetaKpLgq54
+	zE6NosxaKJbdLsao9a2+WsQzQ6eelBu104ko9P6zG2LNaFY+ENPOHEA5OzIjjmrkB4lDMeM+FOD
+	54NppdCkYed3xefEetlsjCRJooR01DKUC42V1NTFhTu/OjiJfKIOdKFXEces8VL/gW3e0/cxLj/
+	UdrHV50Rm/4sBf93w4AUdmsAtcIXmM6pRIaGT+3TLQQ6SXfook/PGfJD9vqGKy8y9N+y/QPLHFD
+	9dKz8oGvHpZjrV895CWpAH1wiv5iAu8rmyPnxNwpdcdmpiAhapysCh3tJ40roQdrl6c91xdF8RI
+	5UkRdhhKF3OKJt4H
+X-Received: by 2002:a05:600d:82d3:b0:49f:e701:51c8 with SMTP id 5b1f17b1804b1-4bb8880f0ebmr292245375e9.9.1795471789043;
+        Mon, 23 Nov 2026 14:09:49 -0800 (PST)
 Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853a1e8bsm324214035e9.9.2026.11.23.14.04.17
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb85399d52sm372260275e9.6.2026.11.23.14.09.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 14:04:18 -0800 (PST)
+        Mon, 23 Nov 2026 14:09:48 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 23 Nov 2026 23:04:16 +0100
-To: bot+bpf-ci@kernel.org
-Cc: leon.hwang@linux.dev, bpf@vger.kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
-	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev,
-	song@kernel.org, yonghong.song@linux.dev, emil@etsalapatis.com,
-	ihor.solodrai@linux.dev, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, kpsingh@kernel.org,
-	matt@bobrowski.net, shuah@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	netdev@vger.kernel.org, martin.lau@kernel.org, mason@kernel.org
-Subject: Re: [PATCH bpf-next v3 7/9] selftests/bpf: Test tracing_multi
- link_create logs
-Message-ID: <awS4YG9LyfxIbE-m@krava>
-References: <20261123152743.19629-8-leon.hwang@linux.dev>
- <d3920bd7ae0cc6a941895e00534e8f8818402a673351894d0bf98639272f7d7e@mail.kernel.org>
+Date: Mon, 23 Nov 2026 23:09:46 +0100
+To: sashiko-reviews@lists.linux.dev
+Cc: Leon Hwang <leon.hwang@linux.dev>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v3 1/9] bpf: Add log support for tracing
+ link_create
+Message-ID: <awS5qgoIeSAheK-w@krava>
+References: <20261123152743.19629-1-leon.hwang@linux.dev>
+ <20261123152743.19629-2-leon.hwang@linux.dev>
+ <sashiko-outbox-229589@kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -108,68 +102,67 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3920bd7ae0cc6a941895e00534e8f8818402a673351894d0bf98639272f7d7e@mail.kernel.org>
+In-Reply-To: <sashiko-outbox-229589@kernel.org>
 
-On Mon, Nov 23, 2026 at 04:04:41PM +0000, bot+bpf-ci@kernel.org wrote:
-> > selftests/bpf: Test tracing_multi link_create logs
+On Mon, Nov 23, 2026 at 03:38:47PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Low] bpf: non-UAPI field name tgt_fd logged in
+>   bpf_tracing_prog_attach()
+> --
 > 
-> TL;DR: Test issue: the migrate_disable denylist subtest's skip may not trigger
-> on !CONFIG_SMP kernels, since the function still exists in BTF, so it could
-> fail instead of skipping.
+> commit 476f541041ef9d87251f0598129c4def280d1320
+> Author: Leon Hwang <leon.hwang@linux.dev>
 > 
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_link.c b/tools/testing/selftests/bpf/prog_tests/tracing_link.c
-> > --- a/tools/testing/selftests/bpf/prog_tests/tracing_link.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/tracing_link.c
-> [ ... ]
-> > +static void test_multi_log_denylist(void)
-> > +{
-> > +	const char *msg = "Cannot attach to denylist btf id %u.\n";
-> > +	const char *target = "migrate_disable";
-> > +	struct btf *btf;
-> > +
-> > +	btf = btf__load_vmlinux_btf();
-> > +	if (!ASSERT_OK_PTR(btf, "btf__load_vmlinux_btf"))
-> > +		return;
-> > +
-> > +	/* migrate_disable is only in the denylist on SMP kernels. */
-> > +	if (btf__find_by_name_kind(btf, target, BTF_KIND_FUNC) == -ENOENT)
-> > +		test__skip();
-> > +	else
-> > +		test_multi_log_target(btf, "fentry", target, -EINVAL, msg);
+> bpf: Add log support for tracing link_create
 > 
-> Is this skip reachable on a !CONFIG_SMP kernel?
+> This commit adds verifier log reporting to tracing BPF_LINK_CREATE for
+> attach parameter validation, reattachment checks, and target compatibility
+> checks in bpf_check_attach_target().
 > 
-> kernel/sched/core.c always builds an out-of-line, exported
-> migrate_disable() with no CONFIG_SMP guard:
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index ec8e787929112..80504011403f6 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -3677,7 +3677,8 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+> >  				   int tgt_prog_fd,
+> >  				   u32 btf_id,
+> >  				   u64 bpf_cookie,
+> > -				   enum bpf_attach_type attach_type)
+> > +				   enum bpf_attach_type attach_type,
+> > +				   struct bpf_verifier_log *log)
+> >  {
+> >  	struct bpf_link_primer link_primer;
+> >  	struct bpf_prog *tgt_prog = NULL;
+> > @@ -3714,6 +3715,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+> >  	}
+> >  
+> >  	if (!!tgt_prog_fd != !!btf_id) {
+> > +		bpf_log(log, "target_fd and target_btf_id must be both set or both unset.\n");
+> >  		err = -EINVAL;
+> >  		goto out_put_prog;
+> >  	}
+> > @@ -3726,12 +3728,14 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
+> >  		 * attach_tracing_prog flag is set.
+> >  		 */
+> >  		if (prog->type != BPF_PROG_TYPE_EXT) {
+> > +			bpf_log(log, "target_fd is only allowed for freplace prog.\n");
+> >  			err = -EINVAL;
+> >  			goto out_put_prog;
+> >  		}
+> >  
+> >  		tgt_prog = bpf_prog_get(tgt_prog_fd);
+> >  		if (IS_ERR(tgt_prog)) {
+> > +			bpf_log(log, "Invalid tgt_fd.\n");
 > 
->     void migrate_disable(void)
->     {
->             __migrate_disable();
->     }
->     EXPORT_SYMBOL_GPL(migrate_disable);
-> 
-> while the denylist in kernel/bpf/verifier.c adds it only under
-> CONFIG_SMP:
-> 
->     BTF_SET_START(btf_id_deny)
->     BTF_ID_UNUSED
->     #ifdef CONFIG_SMP
->     BTF_ID(func, ___migrate_enable)
->     BTF_ID(func, migrate_disable)
->     BTF_ID(func, migrate_enable)
->     #endif
-> 
-> So btf__find_by_name_kind() should find migrate_disable even when
-> CONFIG_SMP=n, and test__skip() would never run.
-> 
-> On such an x86_64 kernel, bpf_check_attach_btf_id_multi() would not deny
-> the id, the link would be created, and the subtest would fail at
-> ASSERT_LT(fd, 0, "bpf_link_create") instead of skipping.
-> 
-> Should the skip check the kernel's SMP configuration directly, for
-> example through a __kconfig extern, or should the comment and skip be
-> dropped?
+> [Severity: Low]
+> As reported by Alexei Starovoitov on v2 [1], should this log "Invalid
+> target_fd.\n" to match the link_create.target_fd UAPI field name used by
+> the other log messages in bpf_tracing_prog_attach()?
 
-I don't think we care, but if we do perhaps we could use __rcu_read_lock instead
+with this fixed, the tracing_multi changes lgtm
 
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
 jirka
