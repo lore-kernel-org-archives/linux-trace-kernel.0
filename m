@@ -1,59 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795457261;
-	b=gDmq+Ph2P0noNJ9ckX+fGvJHp2dFVixnEWYupYiw2voU/4aFXDy8hnpqarlipXKyf9W1
-	 H76tEZC39Wq/buBDBn3hC7LhzDSXSnqG0hEiE8N9VHP/KeUk2HtwG5BJnH5mJD6beep4B
-	 XnTFAEYt0GWup+jfJGSlYzxp1iz9JJ4OUSytKkMVR5KkvNUT3w1WUzYs6/iuWzH9Wz3nq
-	 FGKF9qAWKnUDVroRvew4VBWaJmSLUpFQ9zHpe8TlgTLl6B5mGxgfJvx5GIxYgNWcSSV3a
-	 m6d7idLb+IB9sDkNacq3NgjAUw66IpZY6DWU4DLNZvxhk+0VexmEStYcneAYrqIPtKg==
+	t=1795463976;
+	b=GRGhUe19GV1CwB5vzO8BraPGoeOT7bN+bBivzoGXATpg7SsKUkn84nT9R7xLpChliuQi
+	 VKZh4Kj9lbgUZbXwo4Vfn4t8OEHPjhtxuxYFS/gDNM8cFYLFCoV6igsyvGvoPuCknJBuA
+	 0Fw3PUVaeP/YWGvDXQ0COH97gnIja3Ab/h5Zncd3BFqhao0ZNFBdMYiEAnkDyySEfzSjL
+	 8vsqiZ5gn24u2FyNeeTPuCQodvt1uyLf1xCbOyNUkkJEFGqVntjAY3u817Uu3mUwDAOqq
+	 IQK7pWwa5jZ6aQgkls5UePCHau8ADA6rzs54iXNwM9HczTujtWmQM8VOEWMNv44qu7A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795457261;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795463976;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
-	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=O1sGPyXUc9bPDWnQAdr+MIOIAp5+yAtJPc4tls2ompc=;
-	b=dOYkNbHqierleMr6HNTgzPwWQT0N0hNH9U0Kh9aITk2OCRwhplpsoHaqRtTFHpnSM9Z/
-	 rb6ASOtpT62pdzWQI7SNV2iEzHaaApz8FM24obQpGq3d9aTlQXfyYGWJ//GAjbK15kgIS
-	 al/9w+ikmWuGbSJTsk4HPJR0bJ8RIEXOV3KbqBWGm+lWbNJHsTcDLIEhBDgWHdjEnFE6y
-	 Xygzr8QiQAf2S6u8USOJZhXCk5kdb4XHWcsfi9NBa8SY+YX2m0NQJXWWWEyrkebqSnXNQ
-	 9ArVPfxlWnCb7OI6z06WIopiHzZOMz2WJgbw4DWvj5Dz8Y7NJiqjz4vbrI9YIm76+RA==
+	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:X-Rspamd-Server:
+	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=ZNbXBfNTO0fkyqJpgqenKi8rMrZeuWlZGWMB2B9tSTE=;
+	b=KoUVH0NaXhNqEVgZA1dp+xkZ51gSS6faYppl2e2pTPKQkUVbA3vhMAIaey03elzSGh0i
+	 5a5DApjHfnKOaXT+iqdHq9kdJ/YYeqQKe/UG/TJivqevFGes3HsJcpUMWjMjbHzpiXKAF
+	 QQr6ra5BL1IBJNus7NcPglJ72F0z3HVUC/Z7ccU66Og38uH2CbeZ8nyBasiTndgMKb3Kz
+	 oBQpjD06eeqMLRJEbljBAwX/ccgm7WBJoAsiyVBclF0+wjLwsu25zv1cQSzAdB8kynqjy
+	 Ah5m9hNingbEx8MJEjFAxbbTpo8mzjpS+qMYY7KtT07gY5naYpkcAtRh2+pq9aKBC4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=aI1cIg5x;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=tmEBZJIm;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B36606A31F;
-	Mon, 23 Nov 2026 18:07:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69B36606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209A4606A31E;
+	Mon, 23 Nov 2026 19:59:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 209A4606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=aI1cIg5x
-Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 3A57616095D;
-	Mon, 23 Nov 2026 18:07:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id EFF0F17;
-	Mon, 23 Nov 2026 18:07:29 +0000 (UTC)
-Date: Mon, 23 Nov 2026 13:07:28 -0500
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=tmEBZJIm
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id DFFC680971;
+	Mon, 23 Nov 2026 19:59:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 28CA13D;
+	Mon, 23 Nov 2026 19:59:26 +0000 (UTC)
+Date: Mon, 23 Nov 2026 14:59:18 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Naveen N Rao
- <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- x86@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCHv2 2/2] x86/kprobes: Use ftrace_location_range in
- __recover_probed_insn
-Message-ID: <20261123130728.6e1e9f89@gandalf.local.home>
-In-Reply-To: <20261122200239.1481088-3-jolsa@kernel.org>
-References: <20261122200239.1481088-1-jolsa@kernel.org>
-	<20261122200239.1481088-3-jolsa@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kselftest
+ <linux-kselftest@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH] tracing/selftests: Make sure trace_printk is set to top
+ instance
+Message-ID: <20261123145918.0d7f3728@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,89 +61,72 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: EFF0F17
-X-Stat-Signature: bdygsegicskjsrpjed81ijwfaryinbt5
-X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 28CA13D
+X-Stat-Signature: hgrz3uyr311sg5h7isysrg7czimairt3
+X-Rspamd-Server: rspamout07
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/3S8xkynlWy2q1CYyyaQCibAXZKXMbUHk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=O1sGPyXUc9bPDWnQAdr+MIOIAp5+yAtJPc4tls2ompc=; b=aI1cIg5xIlw902dfRoCNkqPGqMRPa2mglps1azEb7Vr4HzCZzqK0/liUmaFN6cvbRVtqG7rom1ET+e6tPPVoe2vbhf6TJjOJS7DFaZWy1pRqGKwQ9r/mrzwmaXuK/6nj7Wdj+laWFNy6HLQBCsMowZFvBtNDpjqfjO/T8lPL/Ro=
-X-HE-Tag: 1795457249-925218
-X-HE-Meta: U2FsdGVkX1/4Id+e+sAZuY/BDz6Eq3nMflt+ZgbBhYvYjKnUKdCYiUMq5fcu/TuqtqlbSyNZs/RSajICqJlOrVv6moeGFcA9nZRjOPbEThEDOG10Nk4oFyTSBEYf2c44XzfrzAVsdp+T8TOkxkhpjJOfGAEsiKQUAcWchpzvssAv9NL3v1Lynq3jxZXNiFRbjmtGFseKCBJfcz+bP4GPMQ8gsCZdD8QCp6ydg43vxcGj/8qxWnwztGwqUVaQW2Ni9TlEaCRjq3I8L+LvLlLnb8GAvP51fuPNSP1iBEaMtTTAnhKNBvcl8IaeVglo+6a/r0RH6yZ0W+pYNDW3IHrOksrkCikaw8haPjkhutCdIfZBe90C+DRRf0FOwO8NbbNm0VjURbGhee5oITirfqn6rQ==
+X-Session-ID: U2FsdGVkX1+sdHlsPREMg0Mr5WaqVHQMrbDKAwQwaTE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ZNbXBfNTO0fkyqJpgqenKi8rMrZeuWlZGWMB2B9tSTE=; b=tmEBZJImdXo0GlRBLGG9UucuYerRP7qQXPM/VqlM3JI5h/BKGl0HacyXXbB6Cp5fNvwy4QizO6syEULY5+Hn0aDM9Kwmr/o5HrQDt7CNGMFsFmXbjEJjXn6dFOTQ9ONCQoYIEsm0pEPwRGfEsmeV16zOpz6Dq8XiGv6AdZR/p5E=
+X-HE-Tag: 1795463966-961497
+X-HE-Meta: U2FsdGVkX19diIAY0Lc1gKibLW6OutddK+lv8YadxSDrdEKf8H01kTg48u7G3f4YYSJCufAKYGelbTq3s8C1IebOzb3GOXFzcZo8HANhbomsTAQ7Sh+4MNoVpkdE47AjhhfzGNXFVfMG7g1I3/+1Td6FoDDCw+sU9lg3AJNHjZe/g2vFWKta8eXjuWTUB8wB0E87klMORXprRaoDYPyJ2iGTCFO3Y/yIZpz2X0gHzyrQ7f2MsRUhK46pldMDyrb1KcA3bQ3XQIjZbW1IzpWbRqbDQB0WdcLsuyO4YWeNhXbsq/p+EYiaNxFNFu8gB/xLG086SEwckL44CZrG/XX5eWIbw/iJJkRFEkvonr4KfH+ny0Aey6V+lZnvTMuhD8mg8wXNDZ08b4g43lc5sl3ZZpVJyuScBQ84
 
-On Sun, 22 Nov 2026 21:02:39 +0100
-Jiri Olsa <jolsa@kernel.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> The __recover_probed_insn function is called for every instruction
-> decoded on the way to the probed address and it uses ftrace_location
-> to find out whether the instruction is the ftrace location.
-> 
-> When the address is not ftrace location, ftrace_location does also
-> the symbol lookup to map the sym+0 address to its ftrace location.
-> But __recover_probed_insn only checks if the returned location is
-> the address itself, and that can't be the result of the mapping
-> after the lookup of the address failed, so the symbol lookup is
-> done for nothing for almost every decoded instruction.
-> 
-> Using ftrace_location_range for the address instead, which does
-> just the lookup of the address.
-> 
-> Adding the missing ftrace_location_range stub for the config
-> without dynamic ftrace.
-> 
-> Registering 20587 kprobes (as disabled) with the kprobe_many_example
-> sample module [1] in qemu with 8 CPUs goes from 4.02s to 3.70s.
-> 
-> The sample module was posted as the last patch of the kprobes
-> lookup cost series [1] only to demonstrate the testing, it is not
-> merged and is not going to be.
-> 
-> [1] https://lore.kernel.org/bpf/20261109195827.1091410-1-jolsa@kernel.org/
-> 
+In order to debug a kernel crash, the boot command line added
+the traceprintk flag to have trace_printk() go to the persistent ring
+buffer. When the fix was found, the command line wasn't updated.
 
-Hmm, we probably should create a bool ftrace_location_addr() helper
-function that does this internally. But that could come later as a clean up.
+Later, when running the ftrace selftests, the direct function tests were
+failing. The reason for this was because these tests would load the
+ftrace-direct.ko module which would add a trampoline that did a
+trace_printk. The test would then search the top level instance buffer for
+the trace_printk output. The issue is that the kernel command line had
+moved the destination to the persistent ring buffer causing the writes of
+trace_printk to go there and not the top level instance and because the
+tests did not find the output it was looking for, they failed.
 
-Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+Update the tests to set the trace_printk destination to the top level
+instance at the start of the tests to force the output to go there so that
+the tests will not fail in such a case again.
 
--- Steve
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ .../testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 5 +++++
+ .../testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/kernel/kprobes/core.c | 6 +++++-
->  include/linux/ftrace.h         | 4 ++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-> index 133ff20caccd..34d71907e6d1 100644
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -207,7 +207,11 @@ __recover_probed_insn(kprobe_opcode_t *buf, unsigned long addr)
->  	bool faddr;
->  
->  	kp = get_kprobe((void *)addr);
-> -	faddr = ftrace_location(addr) == addr;
-> +	/*
-> +	 * Only the exact ftrace location matters, so skip the symbol
-> +	 * lookup ftrace_location() does to map sym+0 to its location.
-> +	 */
-> +	faddr = ftrace_location_range(addr, addr) == addr;
->  	/*
->  	 * Use the current code if it is not modified by Kprobe
->  	 * and it cannot be modified by ftrace.
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 1c2056a1a68b..255751899682 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -1075,6 +1075,10 @@ static inline unsigned long ftrace_location(unsigned long ip)
->  {
->  	return 0;
->  }
-> +static inline unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-> +{
-> +	return 0;
-> +}
->  
->  /*
->   * Again users of functions that have ftrace_ops may not
+diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+index d75a8695bc21..359257123e6d 100644
+--- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
++++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+@@ -2,6 +2,11 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # description: Test ftrace direct functions against tracers
+ 
++# Make sure trace_printk goes to the main buffer
++if [ -f options/trace_printk_dest ]; then
++	echo 1 > options/trace_printk_dest
++fi
++
+ rmmod ftrace-direct ||:
+ if ! modprobe ftrace-direct ; then
+   echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
+diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+index e52e470a1f8f..b22e3fb1c468 100644
+--- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
++++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+@@ -3,6 +3,11 @@
+ # description: Test ftrace direct functions against kprobes
+ # requires: kprobe_events
+ 
++# Make sure trace_printk goes to the main buffer
++if [ -f options/trace_printk_dest ]; then
++	echo 1 > options/trace_printk_dest
++fi
++
+ rmmod ftrace-direct ||:
+ if ! modprobe ftrace-direct ; then
+   echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
+-- 
+2.53.0
 
