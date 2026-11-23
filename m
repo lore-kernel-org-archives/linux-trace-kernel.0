@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795402070;
-	b=yvGikpQ+1jrWMI4gvua8PGoB1joM/nFViJGDMdredwhQz7MXCQRzCTOcUE5d2KlLrxKa
-	 jhjP4t3/fLeNAwKDujsxdSTJf0sGbBOnV/eWPCrjFwP2fnOvHkJy24u3qSSkYLh2ym1ZK
-	 c3mF2LHgfPpg893cqqNhEwYhD1NHqPPZkZsKO971gWth4V/Hx3bwcWQxT7p9MRjBT/Ay1
-	 0NobgNhHPqEKMpbacQcTk1KCDW5NpkrrQZBboGyk4E1qGDyeXGrBrhlN7nzuANvuZwGbc
-	 0X9Dv3r0YQW9kBRMeQwaZZEse+pfLjDWJe3xklOYMuEZ6xqUEWqO9E2zLJO70xGsxdg==
+	t=1795402081;
+	b=vsduvvyUpl2E0AIP7kGYmMTNHospef//zLesQ56bzfGBnLCLfADYlUyYU3MID/QJ/kA3
+	 T6EuO1iwW5X1xp5HoT5zUaeR5BtN+5j76PUkH1fr/lqqjLwLWzLDlTnl6N71RH5o60+QE
+	 NAphKV2IJAX6+qHBuvcktpYE1rkY2OgtGx6y9PhUA/BEoMZbWdcquDKmyiftqaiC2ldty
+	 JbNBZABkvzsFQdMVhZV4ly+Prqa7bgidSH7b0lurRhmU16OalMPVN8HRzsHMVwbk70rtp
+	 kJ7zFTYRiKoaXrNYs4WlUZjcisrcEpTQsEQwyo4HHdEJcGILFk/+XA8QHbamiknaNdg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795402070;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795402081;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=w/EDch5cn3q5fGmwJDkw1LiwddtdffCknsqNOpXSWKo=;
-	b=FpMQTwlVNgwjeevcYhk5/c6DsMrgYeALYjeX0lRVRnUtRcvsTYo5WmBrENCZxAMzP/xM
-	 SIxotn8Uf9Gse6qSBP2z0lAMc0qNkEEQZbrCruhXWFww4a90gR2a6xNTBSWhic3ReQC14
-	 thD3lNyqquGYHnA9ol3eVrLApEk1zOCZY0kFw+dblsn4HZppBU3W7CZaYPeG/XDEzQf17
-	 VbPB/wJPkAPW+BBJ71lF+Pqpz02Rt3XTWNAM4WIt6C5glRFqhdJd2hQcJiH5AW618XVe3
-	 l+RWOJno6m8aXbNAbu1V64fhG4XUcA4n0GJ9JB8LBadnECtHjGMR4ctBxH/mg46RGeQ==
+	bh=qlcLxBToIY1DJGdgDhmblSmI1AAESowRHaa1T7+NBVE=;
+	b=vLM+MXdULgU9WtyQ7/SdDhMuUmzLNBOmuLsaFX3MANZ14G50/JZ60bCvC1yCf0sN6q71
+	 o5aiO1ClWnb+6174L2WH9nBedX19lXbUZB95vbJDvocld4Q0LWgi5y/y4gF3eZjk1AnT0
+	 5E3hVYeBhhi7lPLa68qjsuoRqZ5B5N67Aq/g+pUaUAze67SLMsMzEcxoT6riw91mqKDZ9
+	 /vPDey8oxHTkjiAcAm3/D38TYDrWro9ZU5JrhR+3oXd2/rv8YeA0/s0cxaYCismHSXrsi
+	 Y2xgmB6Mv1WmMlO0ZBcNjvDf4Q3JasDDHIzc5Do+9YrH4LCR6CyxiL/rkx6+bHdXSig==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="G/Wbqf0a";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ClPVih9C;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23B2606A31A;
-	Mon, 23 Nov 2026 02:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3F6606A31E;
+	Mon, 23 Nov 2026 02:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G/Wbqf0a
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9A71F000CF;
-	Mon, 23 Nov 2026 02:47:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ClPVih9C
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4DC31F000E6;
+	Mon, 23 Nov 2026 02:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795402069;
-	bh=w/EDch5cn3q5fGmwJDkw1LiwddtdffCknsqNOpXSWKo=;
+	s=k20260515; t=1795402081;
+	bh=qlcLxBToIY1DJGdgDhmblSmI1AAESowRHaa1T7+NBVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=G/Wbqf0aiFlLq+dVgb7Jh5UkkAXZznHLQDCfFrIci4wio3CzgKQuOoqj26RhOUoRg
-	 IGwiF9NQvM1xt9a49knvRK2VBJqSVVMY9dShPYkT+d/1G95fmoRpNrsr1gnnMWwfKi
-	 elqUhdlbrO2PZ9JaOZUWm9e+j976xeRZUm0Ywa6mqdAI42xhjMplcY/QcqUUSUYtdT
-	 ql3MXLFSk9YpKtkQlTBXPGDQ+MsblQPTP5+gouEDiXUAgn87hASpoffGaSHZzro188
-	 VNwegnqxRBkXYYhb5JuDPb44qTiB0IcgNq2b88G3y/QFaYIIPcyZqI+wpWTHv7VN3S
-	 0SXQM1HgxSS9A==
+	b=ClPVih9CGRaQScnb4wg7TmAwib3PxzfnH0knT/R3NTiXgb6ZPJrC+759nILX5PPZE
+	 ANbkCbN5euGHeC/LsAfS48653jOnKRzcv1M75kjir9IwR0frL/m5GdmvKdaTEdr/DE
+	 6znlJiRcfb4FfkB8CIrJP/e/y8dgMby/iNfIcpXzHY2t9aXZH2dPXoT2gZg6F67adZ
+	 fKqVnuyeFhRGUwl9CR/LPWgTlHchPkrPX38RuySPebQTqCVuUel57ASkdV+q0CCYG8
+	 12+ewOTL55wh7QbO2byiZ4achsVzBLA8FvZDRtfZst4L4q5YI1QgEmgGq7bn0hHFjF
+	 zX94yVzSoz31Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -55,9 +55,9 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Pablo Fraile Alonso <pablo@pablofraile.net>,
 	Edgecombe Rick P <rick.p.edgecombe@intel.com>
-Subject: [PATCH 3/5] x86/insn: Reject invalid REX2 encodings in insn_get_opcode()
-Date: Mon, 23 Nov 2026 11:47:44 +0900
-Message-ID: <179540206412.233843.17514240300180929695.stgit@devnote2>
+Subject: [PATCH 4/5] x86/insn: Add insn_opcode_map() helper and fix insn_masking_exception()
+Date: Mon, 23 Nov 2026 11:47:55 +0900
+Message-ID: <179540207562.233843.3618280650654568620.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179540203033.233843.12951034848925983867.stgit@devnote2>
 References: <179540203033.233843.12951034848925983867.stgit@devnote2>
@@ -76,120 +76,149 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Although INAT_NO_REX2 and INAT_REX2_VARIANT attributes are generated from
-x86-opcode-map.txt, insn_get_opcode() never checked them for REX2-prefixed
-instructions. It also accepted REX2 M0=0 followed by an escape byte (0x0f),
-legacy/REX/REX2/VEX prefix bytes, or 64-bit invalid opcodes, as well as
-REX2 M0=1 followed by 3-byte escape opcodes (0x38/0x3a) or VEX-only
-opcodes.
+The x86 instruction decoder stores the physical opcode bytes in
+insn->opcode.bytes[] and their physical byte count in insn->opcode.nbytes,
+which is required for field offset calculations such as
+insn_offset_modrm(). As a result, REX2 M0=1 (map 1) and VEX/EVEX/XOP
+instructions all have insn->opcode.nbytes == 1 even though their opcodes
+do not belong to map 0.
 
-In particular, REX2 M0=0 + 0x0f (0xd5 0x00 0x0f) returned success with
-opcode.bytes[0] = 0x0f and opcode.nbytes = 1, which can confuse callers
-such as uprobes.
+Add insn_opcode_map() and insn_last_opcode() helpers so callers can
+reliably determine the logical opcode map and final opcode byte across
+legacy, REX2, VEX, EVEX, and XOP encodings.
 
-Add inat_is_no_rex2() and inat_is_rex2_variant() helpers and reject
-invalid REX2 encodings with -EINVAL in insn_get_opcode().
+Use insn_opcode_map() in insn_masking_exception() so that non-map-0
+instructions (e.g. VEX/EVEX/XOP or REX2 M0=1 instructions with opcode
+0x1f or 0x8e) are not misidentified as POP SS or MOV SS.
 
-Fixes: eada38d575a2 ("x86/insn: Add support for REX2 prefix to the instruction decoder logic")
+Fixes: ee6a7354a362 ("kprobes/x86: Prohibit probing on exception masking instructions")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- arch/x86/include/asm/inat.h       |   10 ++++++++++
- arch/x86/lib/insn.c               |   16 ++++++++++++++++
- tools/arch/x86/include/asm/inat.h |   10 ++++++++++
- tools/arch/x86/lib/insn.c         |   16 ++++++++++++++++
- 4 files changed, 52 insertions(+)
+ arch/x86/include/asm/insn.h       |   43 +++++++++++++++++++++++++++++++++++++
+ tools/arch/x86/include/asm/insn.h |   43 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+)
 
-diff --git a/arch/x86/include/asm/inat.h b/arch/x86/include/asm/inat.h
-index 1b3060a3425c..26edd32dbabc 100644
---- a/arch/x86/include/asm/inat.h
-+++ b/arch/x86/include/asm/inat.h
-@@ -263,4 +263,14 @@ static inline int inat_is_invalid64(insn_attr_t attr)
+diff --git a/arch/x86/include/asm/insn.h b/arch/x86/include/asm/insn.h
+index 8fb92da1a2c4..9861560efc36 100644
+--- a/arch/x86/include/asm/insn.h
++++ b/arch/x86/include/asm/insn.h
+@@ -326,6 +326,46 @@ static inline int insn_offset_immediate(struct insn *insn)
+ #define POP_SS_OPCODE 0x1f
+ #define MOV_SREG_OPCODE 0x8e
+ 
++/*
++ * Return the logical opcode map number for @insn:
++ *  0: 1-byte opcode map (legacy / REX / REX2 M0=0)
++ *  1: 2-byte opcode map (0x0f / REX2 M0=1 / VEX m=1 / EVEX m=1)
++ *  2: 3-byte opcode map (0x0f 0x38 / VEX m=2 / EVEX m=2)
++ *  3: 3-byte opcode map (0x0f 0x3a / VEX m=3 / EVEX m=3)
++ *  4..7: EVEX/VEX maps 4..7
++ *  8..31: XOP maps
++ */
++static inline int insn_opcode_map(struct insn *insn)
++{
++	if (insn_is_avx_or_xop(insn)) {
++		if (avx_insn_is_xop(insn))
++			return insn_xop_map_bits(insn);
++		return insn_vex_m_bits(insn);
++	}
++
++	if (insn_is_rex2(insn))
++		return insn_rex2_m_bit(insn) ? 1 : 0;
++
++	if (insn->opcode.nbytes == 1)
++		return 0;
++	if (insn->opcode.nbytes == 2)
++		return 1;
++	if (insn->opcode.nbytes == 3) {
++		if (insn->opcode.bytes[1] == 0x38)
++			return 2;
++		if (insn->opcode.bytes[1] == 0x3a)
++			return 3;
++	}
++	return -1;
++}
++
++static inline insn_byte_t insn_last_opcode(struct insn *insn)
++{
++	if (!insn->opcode.nbytes)
++		return 0;
++	return insn->opcode.bytes[insn->opcode.nbytes - 1];
++}
++
+ /*
+  * Intel SDM Vol.3A 6.8.3 states;
+  * "Any single-step trap that would be delivered following the MOV to SS
+@@ -336,6 +376,9 @@ static inline int insn_offset_immediate(struct insn *insn)
+  */
+ static inline int insn_masking_exception(struct insn *insn)
  {
- 	return attr & INAT_INV64;
- }
++	if (insn_opcode_map(insn) != 0)
++		return 0;
 +
-+static inline int inat_is_no_rex2(insn_attr_t attr)
+ 	return insn->opcode.bytes[0] == POP_SS_OPCODE ||
+ 		(insn->opcode.bytes[0] == MOV_SREG_OPCODE &&
+ 		 X86_MODRM_REG(insn->modrm.bytes[0]) == 2);
+diff --git a/tools/arch/x86/include/asm/insn.h b/tools/arch/x86/include/asm/insn.h
+index 1d2903508bbe..e7fba77f0b11 100644
+--- a/tools/arch/x86/include/asm/insn.h
++++ b/tools/arch/x86/include/asm/insn.h
+@@ -326,6 +326,46 @@ static inline int insn_offset_immediate(struct insn *insn)
+ #define POP_SS_OPCODE 0x1f
+ #define MOV_SREG_OPCODE 0x8e
+ 
++/*
++ * Return the logical opcode map number for @insn:
++ *  0: 1-byte opcode map (legacy / REX / REX2 M0=0)
++ *  1: 2-byte opcode map (0x0f / REX2 M0=1 / VEX m=1 / EVEX m=1)
++ *  2: 3-byte opcode map (0x0f 0x38 / VEX m=2 / EVEX m=2)
++ *  3: 3-byte opcode map (0x0f 0x3a / VEX m=3 / EVEX m=3)
++ *  4..7: EVEX/VEX maps 4..7
++ *  8..31: XOP maps
++ */
++static inline int insn_opcode_map(struct insn *insn)
 +{
-+	return attr & INAT_NO_REX2;
++	if (insn_is_avx_or_xop(insn)) {
++		if (avx_insn_is_xop(insn))
++			return insn_xop_map_bits(insn);
++		return insn_vex_m_bits(insn);
++	}
++
++	if (insn_is_rex2(insn))
++		return insn_rex2_m_bit(insn) ? 1 : 0;
++
++	if (insn->opcode.nbytes == 1)
++		return 0;
++	if (insn->opcode.nbytes == 2)
++		return 1;
++	if (insn->opcode.nbytes == 3) {
++		if (insn->opcode.bytes[1] == 0x38)
++			return 2;
++		if (insn->opcode.bytes[1] == 0x3a)
++			return 3;
++	}
++	return -1;
 +}
 +
-+static inline int inat_is_rex2_variant(insn_attr_t attr)
++static inline insn_byte_t insn_last_opcode(struct insn *insn)
 +{
-+	return attr & INAT_REX2_VARIANT;
++	if (!insn->opcode.nbytes)
++		return 0;
++	return insn->opcode.bytes[insn->opcode.nbytes - 1];
 +}
- #endif
-diff --git a/arch/x86/lib/insn.c b/arch/x86/lib/insn.c
-index 225af1399c9d..36c477daf370 100644
---- a/arch/x86/lib/insn.c
-+++ b/arch/x86/lib/insn.c
-@@ -335,6 +335,22 @@ int insn_get_opcode(struct insn *insn)
- 			insn->attr = inat_get_escape_attribute(op, pfx_id, esc_attr);
- 		} else {
- 			insn->attr = inat_get_opcode_attribute(op);
-+			if (inat_is_legacy_prefix(insn->attr) ||
-+			    inat_is_rex_prefix(insn->attr) ||
-+			    inat_is_rex2_prefix(insn->attr) ||
-+			    inat_is_vex_prefix(insn->attr) ||
-+			    inat_is_invalid64(insn->attr)) {
-+				insn->attr = 0;
-+				return -EINVAL;
-+			}
-+		}
-+		if (inat_is_escape(insn->attr) ||
-+		    inat_must_vex(insn->attr) ||
-+		    (inat_is_no_rex2(insn->attr) &&
-+		     !inat_is_rex2_variant(insn->attr))) {
-+			/* This instruction is bad */
-+			insn->attr = 0;
-+			return -EINVAL;
- 		}
- 		goto end;
- 	}
-diff --git a/tools/arch/x86/include/asm/inat.h b/tools/arch/x86/include/asm/inat.h
-index 099e926595bd..5e7648e50c2b 100644
---- a/tools/arch/x86/include/asm/inat.h
-+++ b/tools/arch/x86/include/asm/inat.h
-@@ -263,4 +263,14 @@ static inline int inat_is_invalid64(insn_attr_t attr)
++
+ /*
+  * Intel SDM Vol.3A 6.8.3 states;
+  * "Any single-step trap that would be delivered following the MOV to SS
+@@ -336,6 +376,9 @@ static inline int insn_offset_immediate(struct insn *insn)
+  */
+ static inline int insn_masking_exception(struct insn *insn)
  {
- 	return attr & INAT_INV64;
- }
++	if (insn_opcode_map(insn) != 0)
++		return 0;
 +
-+static inline int inat_is_no_rex2(insn_attr_t attr)
-+{
-+	return attr & INAT_NO_REX2;
-+}
-+
-+static inline int inat_is_rex2_variant(insn_attr_t attr)
-+{
-+	return attr & INAT_REX2_VARIANT;
-+}
- #endif
-diff --git a/tools/arch/x86/lib/insn.c b/tools/arch/x86/lib/insn.c
-index 1d1c57c74d1f..9eb81232874a 100644
---- a/tools/arch/x86/lib/insn.c
-+++ b/tools/arch/x86/lib/insn.c
-@@ -335,6 +335,22 @@ int insn_get_opcode(struct insn *insn)
- 			insn->attr = inat_get_escape_attribute(op, pfx_id, esc_attr);
- 		} else {
- 			insn->attr = inat_get_opcode_attribute(op);
-+			if (inat_is_legacy_prefix(insn->attr) ||
-+			    inat_is_rex_prefix(insn->attr) ||
-+			    inat_is_rex2_prefix(insn->attr) ||
-+			    inat_is_vex_prefix(insn->attr) ||
-+			    inat_is_invalid64(insn->attr)) {
-+				insn->attr = 0;
-+				return -EINVAL;
-+			}
-+		}
-+		if (inat_is_escape(insn->attr) ||
-+		    inat_must_vex(insn->attr) ||
-+		    (inat_is_no_rex2(insn->attr) &&
-+		     !inat_is_rex2_variant(insn->attr))) {
-+			/* This instruction is bad */
-+			insn->attr = 0;
-+			return -EINVAL;
- 		}
- 		goto end;
- 	}
+ 	return insn->opcode.bytes[0] == POP_SS_OPCODE ||
+ 		(insn->opcode.bytes[0] == MOV_SREG_OPCODE &&
+ 		 X86_MODRM_REG(insn->modrm.bytes[0]) == 2);
 
