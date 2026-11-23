@@ -1,60 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795471003;
-	b=Y5MkeXoPDFt8g8rTF6QTIUqW1zA8Dx1ZEEjoOQk87pyQ1q7+b6dNmSZ9480JoAgEfUJH
-	 dNehxFBT83AXVBLklFwANMI4A519h7iFr4493vUWNVJbr+vMfDq0SjQfWkPmp1vhGdZPw
-	 rw3FiKMKOLN8oQuHUMirQfDJNYn906BbAqMSgJt9UWRFIuGlAloC/6kY6ITx5Ny/C58Z+
-	 u7DjhcgH6zQnpioyOXvecOh9ufUiPpifFQWN3CuMwKrXcy1ylZtbY60mH/OmoJJ12O35w
-	 0reBAcxcPZWX/Ov6cvfhykNjMRzd33MORXiXJKACXBgswApjjX2e7ugD+dFYswacRbg==
+	t=1795471461;
+	b=JcEVrksEzlpIswRRwMdsGVdk8+rr1cX1KCeZyWgKVf0ZBbl+X/weURzb5q2Vd7Y3iXUh
+	 rl/dBjnfim50w1a8Gu2Ox3/twNiH/ivPHj6vp1tfvIFIplK4FvLoClK+UMTHB6RP/ehEj
+	 yKzSpiwzDUOwOivPqBB+qvZhKCNnTigPA31p8rnJypgEGW909H2c/5iQoLzetLieDH0Z8
+	 CHnXKqwFhGxlkJOqbPaqpRLnyNRHhpijLIkJEOwHM3c5RezJHHCGgR6hIKiyR+o77E4g9
+	 sePstjxO88tnbMqTj9eTib2vIy+mw0uy5RclhdWBp2C/nrQplpDji5rnvfFSL5NcRAw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795471003;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
-	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=se2Dv26Z/48b9YJDecdodAx/gKOEn8umjmUKLpeNdcE=;
-	b=Dro1AoBulFQxoWKCHTXbCe5QQ9ZXlLjBSSaz0K0ADKtfkPebH6nf+O1aTOxnhizW9pxr
-	 KULftUjXwZ5HV9NqRAU5qN/uwzY9b6suzwwETNawWTI+QOhkpCeunf94Ceeeo6zrFvExV
-	 VB8t4cULeFhkIXwESBejHiZIjqU/Vs+RnvBYWrhKlvYJRd0+7nUgmyEOE0fPg90MxUMQL
-	 UWJLkiKKbsCJ/64zvQRqZjdXTmbNNsukaBTHjZ6vUKfnEBH9hBgAAYXNJV0wiL9T4ZBnr
-	 1HLToG9dH+bqvJR0EJPWwWE5MuCxMbAzLcTEKmavyyAJKQv5Cay1hJvWSPWLgSGxm5Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471461;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=2f3F7pReyCVh5ohj9DIUA9RqsDOv9jV9G6uqHApB7O0=;
+	b=Jd5/qCQoA97M8yMawFZ/zIQVqO/SkGaspnEjcyHGGH5fXSxW8YQ1Zxa4foeBD5pCF+zu
+	 139BFhW+nT23wc75tklPCvVGc4XkAsYkvKxAbQdZDZl/5dsAq+D/5fivjMDE0QiKIOMsj
+	 mTWZMAkLLlHWOjLOqtDJLfMxjPloqToY/ssSXwN0aVVleXPlIPsxFxs1IsklT4Y8xZZiy
+	 mOgYKh3tXBPcC4FXlX07XkyYDNAexBp0+5D5sKw2rg/IeoMnBsrhXCkF0vrvTFjBqu8Ct
+	 YkCcX12mMvtk3FW3XQMesK1AcZdwXFXKvrLanr72gm1166GK+kb3VRqwmJrsghLsdyg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=W+34totZ;
-	arc=none smtp.remote-ip=216.40.44.17
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wtVnmpzv;
+	arc=none smtp.remote-ip=209.85.128.47
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BC2606A31E;
-	Mon, 23 Nov 2026 21:56:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81BC2606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3483606A327
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 22:04:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3483606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=W+34totZ
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id B0CC1A8676;
-	Mon, 23 Nov 2026 21:56:40 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 7C94520010;
-	Mon, 23 Nov 2026 21:56:38 +0000 (UTC)
-Date: Mon, 23 Nov 2026 16:56:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Barnes <jeffbarnes@linux.microsoft.com>
-Cc: mhiramat@kernel.org, shuah@kernel.org, mathieu.desnoyers@efficios.com,
- reddybalavignesh9979@gmail.com, richard.weiyang@gmail.com,
- michael.bommarito@gmail.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] tracing/user_events: Share event state with
- existing threads
-Message-ID: <20261123165632.2c8ee68c@gandalf.local.home>
-In-Reply-To: <20261006164720.3940272-3-jeffbarnes@linux.microsoft.com>
-References: <20261002153934.798176-1-jeffbarnes@linux.microsoft.com>
-	<20261006164720.3940272-1-jeffbarnes@linux.microsoft.com>
-	<20261006164720.3940272-3-jeffbarnes@linux.microsoft.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=wtVnmpzv
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4bb64ef5a14so40486915e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 14:04:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795471459; x=1796076259; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=2f3F7pReyCVh5ohj9DIUA9RqsDOv9jV9G6uqHApB7O0=;
+        b=wtVnmpzvYZCD0GaLZu5xfru9ELcjZM/X3gc10J+KIN5n8p5arnhGlxvdZtuiEyO+SF
+         mXICRZeaJ2Yi+kfmmdhQdJJsugjTetjy6sSEz9ogL2VfZiBVbHasEkV22gWyrwSX/9iG
+         gXP5KWXVdP09JEupsR0PUyqFKWnmmNcnY1K6WK4XNiptsVNjkbR83Oe++P10kA8oCycU
+         syRoavExVO4TMq6Rf94nzquu91XYDe0jrE3mOWRkel5ldFIFYGjyxM9BnJB5iIqlQKty
+         ZwnmN8MZDypLgKC1fNGIYoSh2uoC1c1DYQyWGPsAypQxJiD5h5LhoNSwIqSiXUZTNEJA
+         rwsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795471459; x=1796076259;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=2f3F7pReyCVh5ohj9DIUA9RqsDOv9jV9G6uqHApB7O0=;
+        b=BEj823t3VGQ3JWfIo066zzwN3bIGeB+2ecFNibAbyj18Vaw5r4oUaS0bHoaHaolajG
+         mH6PEc5hq60+meUauq10TTZdVZLJ4tbdiQvWT3ddVvM2mmhYUWP4pO1TfjJuctE7CjIz
+         WYm9o58BNvERvP9WQnK3Dy5rGp4bs5MFKu1HwnuFdc0hvLUjGpmWzrdxZxbiPCVQXqEB
+         TvDz9/JI4cIPyz7uy0vV2tAq/Cxc3HejL2vIz4Kjw6ztY6/v5cxv5E2J/AWtXk3ld1pa
+         CsWyQvMJY1H2Mdyj8d4FcTBRUg0RZ8okjynH8JnLoTMvoOevAfYdGrA5dYviQo8g3dC8
+         z5fQ==
+X-Forwarded-Encrypted: i=1; AL+hErH2XfalTtCtQ1KOF2LB1Cx/bs9OrXgZ/CwGWboco7hS/CQNHARh6uXfhZGiqynL6rPt4a/E9zT06yHwqGYEyeMEh+c=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9+hhiDcGNU+plxfQ6te09PP7rWulXh/1d+uOI8w1yqbnN/gShr
+	FBAtHB5anzRpOe8YkhjoojSLBSyE3RERrleRyhdV6Elyse6ckqYc28WT
+X-Gm-Gg: AZFdTZfTfdKWfyykJb0kTOkGH+lB4XEZzanqLPEbn6OJ/+OqP+/CfsKV91QE6fC68oa
+	rx34bTTZMPc8z3/pWSIKPqYxaEBeLHNoGuoMntUJPNxRyxRGojvGriyMrPcLIcqBS6L/sGDclok
+	fH/CgkUGDBA9o8W8imROBZVXOWF5GqsVbpYwGURHPBYs3cQL+C076yuJQArDyo/vMfoBU7pdyoj
+	xTBSDjWpGINc1MPttVqQ/zt/wJXbqwkPVKQaVk4FuoG5yiJnNjm342fvEqNDf07zcHWJoEzzc83
+	hcNs7VOQ9U/CLD7Rl6Qn+nglc9BEGU7YzKjOSnKmw5eOuAVow1mB3dt1u+of640361LlRD7sImu
+	uEcg7vMZKi3dT37fwgSH98cSxQkRpDBwXUnMCL7TW1SmSpgjxTSOx8lzjluzCa5zd4lxTMxqaVv
+	GcqN8FRGkBnJOlHhSwrq4GNprKv2p8mDK/NzOD2zRzCkcRRke386jndL2SJNHPLK+L5yrUL3DYo
+	UCVP/l31/He0RVRXHe7LtS6XnFQZMDjVzNaWf4F7762CLzh/tIA3SGdWlB1i2dYZxqRLNiRSoC9
+	iq21U1azt8QUzAZb
+X-Received: by 2002:a05:600c:1c0e:b0:4a1:ddaa:571e with SMTP id 5b1f17b1804b1-4bb88824f38mr302199135e9.15.1795471458927;
+        Mon, 23 Nov 2026 14:04:18 -0800 (PST)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853a1e8bsm324214035e9.9.2026.11.23.14.04.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2026 14:04:18 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 23 Nov 2026 23:04:16 +0100
+To: bot+bpf-ci@kernel.org
+Cc: leon.hwang@linux.dev, bpf@vger.kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
+	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev,
+	song@kernel.org, yonghong.song@linux.dev, emil@etsalapatis.com,
+	ihor.solodrai@linux.dev, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, kpsingh@kernel.org,
+	matt@bobrowski.net, shuah@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org, martin.lau@kernel.org, mason@kernel.org
+Subject: Re: [PATCH bpf-next v3 7/9] selftests/bpf: Test tracing_multi
+ link_create logs
+Message-ID: <awS4YG9LyfxIbE-m@krava>
+References: <20261123152743.19629-8-leon.hwang@linux.dev>
+ <d3920bd7ae0cc6a941895e00534e8f8818402a673351894d0bf98639272f7d7e@mail.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -64,148 +106,70 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7C94520010
-X-Stat-Signature: 6sa3ug34qu5mdm8ksdka44npyc15x34t
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/uBX6/3tbn76JHR3U5aQYtJrpJS9Koy88=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=se2Dv26Z/48b9YJDecdodAx/gKOEn8umjmUKLpeNdcE=; b=W+34totZkPIIsNWWYcmmOVB17FzfxSGPV1pqe/pEVdZWKOWqsaOFSQ/dBRKzfmu972RTG01JhMYUHqaUiOfeoW+I61nooD5LmoynGjsx0cEIXOQq2B9MFOEyBqvvixWXabTav8lk2O8+ckxk/KUAuSCEit70OysErm5NvJwmD08=
-X-HE-Tag: 1795470998-466939
-X-HE-Meta: U2FsdGVkX1+RoU68q4rtQsUxPbFc20Cs6LH5N7dhfrhJtss/kxET501XK/uyQwS5wCFTShkk5qjJpPgY8n+Hvc0W6bilHo7m2c4lcYgzInhZ4P+rcRlrOXrZJJCMAAj74QXduUtAgJ3ieny6Rklvefr5Koqv8Xrm6b68XeW9GoJJE5UCaZzWdTkUSicbbBRihEjCmU6DhkPfmUWH+qBTs7n6gnEZQgs+aphWfE1a0y6KQ9+4Yd+J0X68NWldCEUXZ/42JSioTm8n7cqR/JmH1NM6/X7hR7nRW4MpDt94HzzWPO3qMkVYlDJ7xWfk7sk5msyBKTGzjQJudB065Xv2AEBiSash9WNa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3920bd7ae0cc6a941895e00534e8f8818402a673351894d0bf98639272f7d7e@mail.kernel.org>
 
-On Tue,  6 Oct 2026 12:47:19 -0400
-Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
+On Mon, Nov 23, 2026 at 04:04:41PM +0000, bot+bpf-ci@kernel.org wrote:
+> > selftests/bpf: Test tracing_multi link_create logs
+> 
+> TL;DR: Test issue: the migrate_disable denylist subtest's skip may not trigger
+> on !CONFIG_SMP kernels, since the function still exists in BTF, so it could
+> fail instead of skipping.
+> 
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_link.c b/tools/testing/selftests/bpf/prog_tests/tracing_link.c
+> > --- a/tools/testing/selftests/bpf/prog_tests/tracing_link.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/tracing_link.c
+> [ ... ]
+> > +static void test_multi_log_denylist(void)
+> > +{
+> > +	const char *msg = "Cannot attach to denylist btf id %u.\n";
+> > +	const char *target = "migrate_disable";
+> > +	struct btf *btf;
+> > +
+> > +	btf = btf__load_vmlinux_btf();
+> > +	if (!ASSERT_OK_PTR(btf, "btf__load_vmlinux_btf"))
+> > +		return;
+> > +
+> > +	/* migrate_disable is only in the denylist on SMP kernels. */
+> > +	if (btf__find_by_name_kind(btf, target, BTF_KIND_FUNC) == -ENOENT)
+> > +		test__skip();
+> > +	else
+> > +		test_multi_log_target(btf, "fentry", target, -EINVAL, msg);
+> 
+> Is this skip reachable on a !CONFIG_SMP kernel?
+> 
+> kernel/sched/core.c always builds an out-of-line, exported
+> migrate_disable() with no CONFIG_SMP guard:
+> 
+>     void migrate_disable(void)
+>     {
+>             __migrate_disable();
+>     }
+>     EXPORT_SYMBOL_GPL(migrate_disable);
+> 
+> while the denylist in kernel/bpf/verifier.c adds it only under
+> CONFIG_SMP:
+> 
+>     BTF_SET_START(btf_id_deny)
+>     BTF_ID_UNUSED
+>     #ifdef CONFIG_SMP
+>     BTF_ID(func, ___migrate_enable)
+>     BTF_ID(func, migrate_disable)
+>     BTF_ID(func, migrate_enable)
+>     #endif
+> 
+> So btf__find_by_name_kind() should find migrate_disable even when
+> CONFIG_SMP=n, and test__skip() would never run.
+> 
+> On such an x86_64 kernel, bpf_check_attach_btf_id_multi() would not deny
+> the id, the link would be created, and the subtest would fail at
+> ASSERT_LT(fd, 0, "bpf_link_create") instead of skipping.
+> 
+> Should the skip check the kernel's SMP configuration directly, for
+> example through a __kconfig extern, or should the comment and skip be
+> dropped?
 
->  static void user_event_mm_attach(struct user_event_mm *user_mm, struct task_struct *t)
->  {
->  	unsigned long flags;
-> @@ -817,14 +831,18 @@ void user_event_mm_remove(struct task_struct *t)
->  	might_sleep();
->  
->  	mm = t->user_event_mm;
-> +
-> +	spin_lock_irqsave(&user_event_mms_lock, flags);
-> +
->  	t->user_event_mm = NULL;
->  
-> -	/* Clone will increment the tasks, only remove if last clone */
-> -	if (!refcount_dec_and_test(&mm->tasks))
-> +	/* Clones and attached tasks increment this count. */
-> +	if (!refcount_dec_and_test(&mm->tasks)) {
-> +		spin_unlock_irqrestore(&user_event_mms_lock, flags);
->  		return;
-> +	}
->  
-> -	/* Remove the mm from the list, so it can no longer be enabled */
-> -	spin_lock_irqsave(&user_event_mms_lock, flags);
-> +	/* Prevent new tasks from attaching after the last-task transition. */
->  	list_del_rcu(&mm->mms_link);
->  	spin_unlock_irqrestore(&user_event_mms_lock, flags);
+I don't think we care, but if we do perhaps we could use __rcu_read_lock instead
 
-
-Actually the above can be written better as:
-
-@@ -832,26 +832,22 @@ static void delayed_user_event_mm_put(struct work_struct *work)
- void user_event_mm_remove(struct task_struct *t)
- {
- 	struct user_event_mm *mm;
--	unsigned long flags;
- 
- 	might_sleep();
- 
- 	mm = t->user_event_mm;
- 
--	spin_lock_irqsave(&user_event_mms_lock, flags);
-+	scoped_guard(spinlock_irqsave, &user_event_mms_lock) {
-+		t->user_event_mm = NULL;
- 
--	t->user_event_mm = NULL;
-+		/* Clones and attached tasks increment this count. */
-+		if (!refcount_dec_and_test(&mm->tasks))
-+			return;
- 
--	/* Clones and attached tasks increment this count. */
--	if (!refcount_dec_and_test(&mm->tasks)) {
--		spin_unlock_irqrestore(&user_event_mms_lock, flags);
--		return;
-+		/* Prevent new tasks from attaching after the last-task transition. */
-+		list_del_rcu(&mm->mms_link);
- 	}
- 
--	/* Prevent new tasks from attaching after the last-task transition. */
--	list_del_rcu(&mm->mms_link);
--	spin_unlock_irqrestore(&user_event_mms_lock, flags);
--
- 	/*
- 	 * We need to wait for currently occurring writes to stop within
- 	 * the mm. This is required since exit_mm() snaps the current rss
->  
-> @@ -894,11 +912,25 @@ static bool
->  current_user_event_enabler_exists(struct user_event_group *group,
->  				  unsigned long uaddr, unsigned char bit)
->  {
-> -	struct user_event_mm *user_mm = current_user_event_mm();
-> +	struct user_event_mm *user_mm = current->user_event_mm;
-> +	unsigned long flags;
->  	bool exists;
->  
->  	lockdep_assert_held(&group->reg_mutex);
->  
-> +	if (!user_mm) {
-> +		spin_lock_irqsave(&user_event_mms_lock, flags);
-> +
-> +		user_mm = user_event_mm_find_locked(current->mm);
-> +
-> +		if (user_mm) {
-> +			refcount_inc(&user_mm->tasks);
-> +			current->user_event_mm = user_mm;
-> +		}
-> +
-> +		spin_unlock_irqrestore(&user_event_mms_lock, flags);
-> +	}
-
-and this with:
-
-@@ -919,22 +915,17 @@ current_user_event_enabler_exists(struct user_event_group *group,
- 				  unsigned long uaddr, unsigned char bit)
- {
- 	struct user_event_mm *user_mm = current->user_event_mm;
--	unsigned long flags;
- 	bool exists;
- 
- 	lockdep_assert_held(&group->reg_mutex);
- 
- 	if (!user_mm) {
--		spin_lock_irqsave(&user_event_mms_lock, flags);
--
-+		guard(spinlock_irqsave)(&user_event_mms_lock);
- 		user_mm = user_event_mm_find_locked(current->mm);
--
- 		if (user_mm) {
- 			refcount_inc(&user_mm->tasks);
- 			current->user_event_mm = user_mm;
- 		}
--
--		spin_unlock_irqrestore(&user_event_mms_lock, flags);
- 	}
- 
- 	if (!user_mm)
-
--- Steve
-
-> +
->  	if (!user_mm)
->  		return false;
->  
-> @@ -906,8 +938,6 @@ current_user_event_enabler_exists(struct user_event_group *group,
->  	exists = user_event_enabler_exists(user_mm, uaddr, bit);
->  	mutex_unlock(&event_mutex);
->  
-> -	user_event_mm_put(user_mm);
-> -
->  	return exists;
->  }
->  
-
+jirka
