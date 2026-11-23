@@ -1,111 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795425561;
-	b=4QpYcEqk887/h7a0x4diS0SsLcyweaSTfyXcyORlvFoS/E3ztdVMdge4+MhQNoZ/Spsg
-	 XogxIJKAjHLeLdkiy0Lg/lpkdOgIKtpBHGgSoBbu6rNfxkbybnTr9edOqrU7/zEmUrm+T
-	 ztxyiQLpPuds3XeuvfxrNVisTfRSfCHmhWhqtl8ifgDfRkJz9gWVd8fqaC3EG0ovVfkYw
-	 eIhlml7DEDqHxp6+EBHAc+mtzYkcflmNXoOYVyJzWlZTFVrlO+33P6nXLyJI03OjA/Cfn
-	 Ge82kjT9SLDTWjl/3ty7XqEWeUFIS2d5xOsqSZOsfwQwDgYscQJXd1JIrQD65TQbBng==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795425561;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
-	 Subject:From:To:Cc:Date:In-Reply-To:References:Autocrypt:User-Agent:
-	 MIME-Version:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
-	 X-Mimecast-Originator:Content-Type:Content-Transfer-Encoding;
-	bh=LYIir9UbeEi2CT2gDPhDzZBEiArUOUKkyz2EAXQH95Q=;
-	b=u9lHqQlE77CNX4ewStN/ANmILq02+95HqN9ddk0vRh9AfsluBNsAVffkcs9+qmkoOJUR
-	 JgY2WcwMJ3v57F6KDHT/CrjBDOGWKx3cevfRjkzQUWFO2JEYiWL1Sns2VoADTK7RcaOyz
-	 iFFeVVGQvB3dK2WxVrlR01QfwWbrZ8TS3bB0z/z/VnLrIWWUhJt909aOCqHQqBIuycgB5
-	 FRrYm6Q/mWP0vk5aEfBSmM03Z1IrRxCqZ13vA2KB+Lc3dojCUVwvZKpCUZqFjhGqAjiW6
-	 o/Lv5RK4uFls4ijdqRsEs9oxf4+hD37neOEyvU5IjAYQ2YC657Dkr+cNBguZ33PpVHw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="MT6Kc3/K";
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.51
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795438017;
+	b=k1vUclp4FJsiNXnsZ/elIoGRAj09aVwVTf1IB+qE5gMhMxqu0y2qlxNNtqgWm+lbutyS
+	 m2yPsc8KS2EJVBm3nFHb02Krxxfl/HWYKmqTAuyhyw8n/GBVfr19kZOXcKM7CesLYtAyH
+	 9UZBXUc7KKhDy/idH8haRGNjpgpLIUVuKx30yTvhaLm+zsRGq0KjN/H+n+p+QpDFh3btG
+	 wpAS5V8UcOoQP0dALsiL42YbvsSBE/19xJs/JxAXFyyMiN50ybR2LIPz9yUAOOoR/ciDw
+	 811mqTZJGVffwxDAoKrUOBPdpMdGOa550U1jIi/lERJqCTFQ+xlCnUDWxcILi7rHdaA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795438017;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=KDkZDqK4FJQoP/w58gPsz+MrboHrJj/4Mpu9CUS1Qq4=;
+	b=3tulTbA0r/ALDo0Qv2lKV+YcPS0tJFMvWpgstI2pjI4HAQptIOIW1Uad1YDl/TLmUr0Q
+	 SVeJTA50HPdo4HNRmAylcwJ4dJlqh+ZtIhfRcxQQgf6KQk8H2bmvLLTHAYzLdcpK9N5hx
+	 UI5P+zllMZevg6oJ77bdxyhVdcVSfG2MJJbY78GAsyxule+STWG10+peP3l8+YQg/s3UG
+	 Q/xD/elLTNb9unzzlxwOi1Ak/fGmVhk9w6w3h4780VGPoFFHxuMeWiijjUYVHOjq2OSu3
+	 hPJJEzPPXv/hiPIbnG6skU35rIzXKBd5chwtxMzdcnfyreZltZwyha2IxvyPfdCewaQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=sentinelone.com;
+	spf=pass smtp.mailfrom=sentinelone.com;
+	dkim=pass header.d=sentinelone.com header.i=@sentinelone.com header.a=rsa-sha256 header.s=google header.b=pXRgNTbM;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.51
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E62606A321
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 09:19:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61E62606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F124606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 12:46:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F124606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sentinelone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sentinelone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MT6Kc3/K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795425559;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LYIir9UbeEi2CT2gDPhDzZBEiArUOUKkyz2EAXQH95Q=;
-	b=MT6Kc3/K4+jZUKko057P+AVb+j8CAn/NIYowTP01ipWKBedAWKSZIvWJMvmV5FO1nDG00T
-	S5nhgypU8RSeTH2T9ERFVevP0J98iZsfNrk/Q9Lt8oCM9LjP2xoWcLDWHCGeP+WI3zwPOu
-	qI+nbBYoekR6AnX7dNkRgebRVSYhTgw=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-_tQodSPBPROQ7BI4lPRDzQ-1; Mon, 23 Nov 2026 09:19:17 +0000
-X-MC-Unique: _tQodSPBPROQ7BI4lPRDzQ-1
-X-Mimecast-MFC-AGG-ID: _tQodSPBPROQ7BI4lPRDzQ_1795425556
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a70b42bab0so29576315e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 01:19:17 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=sentinelone.com header.i=@sentinelone.com header.a=rsa-sha256 header.s=google header.b=pXRgNTbM
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3b48847e58bso111844a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 04:46:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795438017; cv=none;
+        d=google.com; s=arc-20260327;
+        b=cCzPBXEI7UT2UyMW9hb9l+1Xf6s5jr6qVu4c+DV2V1vXGBJU3yU6RKJJl+A2YHYfKk
+         6E5c2k8IMuchTvhWWCbhrWMENpyX91wu8c4mXyp8YAoPml/keRvZmW+sEIim3rYUmK5i
+         +iXEQryY0dQuaGBSxX84575lXousLvz4sKMDcMpG5ymz81EVVmcclKNHDvuwC3MCpgXh
+         uxC/ownwme2cfJj7mx1WdjL2t1DqhVP+1rp9UiD4y23v0sRxLAamRhiNCXBnUnqZbOZy
+         9v5kvj3S2wtf1oi181WGvRwDKhzXgkSSWXWptXz0Bg8hPfDNR7KpsKfQqYxAXjsLjrUs
+         NpqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=KDkZDqK4FJQoP/w58gPsz+MrboHrJj/4Mpu9CUS1Qq4=;
+        fh=Kh+Y/6JJgJkxg9cosL+fApgUnADrSNSVdoOwdiJQoJ0=;
+        b=oLfT4Autt0aKvaFl9HMG4xCFtqz8244OeIsksYIeZzenx3HoVCTj+hm4eY8h3vuLx8
+         7u37PyUZQHVZVjNkV67uTXSiI2Hzq9APVGjlEXWqtV6ToKCqoMqNGViIJ/Kni2Y8auJ+
+         /ZCqsH2wFOu73Wz1kehigbI2cbJ/RUzS1gplNg4qcdONXJoLkxGZa9ErVfyJbyES6uN6
+         X3uD9Wihg52WeLXIFkJkTnshiIR8mAmy1161cd34XefijljOGY//PfNVIMrb5+M9GV2h
+         lDjIhdLHgaHQPN+V1AxgavLrNUakxSTSwbhTna5abXTlEsGTjaM7MBUGDlyErVfziZXq
+         Ea2g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sentinelone.com; s=google; t=1795438017; x=1796042817; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=KDkZDqK4FJQoP/w58gPsz+MrboHrJj/4Mpu9CUS1Qq4=;
+        b=pXRgNTbMkIXjMzPbu17WG0l8GOiu3EuIwmuf+7ud7ElnfnYfbsWUT2RU3cBhoqc+Eo
+         bPFK6qFLclLuIIC2qPTWHHWgmZZc+SbwdqrzmoLmuBtwv/Iht3ZwAUYgH+427EUwKdTK
+         o6qvchedkYZ51RSKw1no5KmHPSRDyIGHlka7H0VBYETPlwEmN2WlLbtuLivJfxlYA2H7
+         ++524aGwTcmBv1zCW/4QY0SP1fL+PHgNqCL/2z3yPH3TnhcgortPr/5cG6OXrsSFPfWD
+         iuaobfvQheHH36CQ4jUyTfxB7iNoiwQdk0PKfN18G51O9AZh0f5egpBN3lq7KgqYcEzj
+         BcHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795425556; x=1796030356;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=LYIir9UbeEi2CT2gDPhDzZBEiArUOUKkyz2EAXQH95Q=;
-        b=mTcKJZaGGzFYMStXIHuP82J/CPzBJhLe8Iyd4bBVVDsA37pISDCdthieTfJl/7t1dP
-         UCMQuzK9PI3PJ7YUSWJ29yCBjbDljVuVVNci7YarnqyrvC0pBBFVI0Gfdl/DBvEhkXEZ
-         W8eCPqEtpFiw4KXJZTY1DeNbDyfkdF34HGxtZpPQ1AINPExAmja0BsItMA5IyvRjQIN7
-         ZGir1rYR31d1N2zTIHYswjO/Amej12N5Cc8S9bCtc0FVHbtTy196MUXIEKCVeS2jd3+D
-         qd04+0tU9WKjCkwwAob6zBwA0RXwWURIhhOjpTN1ZfuX6HFA+2o4weBfD8/XPk90WsXx
-         7o9g==
-X-Gm-Message-State: APuU4Z/GCuGBhjdKhGgz/W0K7rO7fUL26brZWbRbFcDsf4YGavTHtfqB
-	4VfW4hLwZYF/36qDRfbzjrIfb3C6+zYPaR60ZUj5HKbDrzgOzPBs1W0Bvuit1VxDxuDjQYDQXxe
-	bK9gNvacUwkawoPVHlQQlg+yI1TIZkw6h7J4GCBtfNsZtcBgViynCVsRm4JB1zjSSi7zayDsJoA
-	==
-X-Gm-Gg: AZFdTZdvOLqBSVUrIxaTNgL7qBSobChvciLKQGtBImhSg6aRMZaITsWEYJCipcxoi7A
-	P7tLwY5DixVGdpqCZgpC3gdufHb8DYXe5hbCfIItWbqQzTilok5izbNFbWQNCklx0xXeQX2r5Dp
-	5uu1zayIgqUTfp76ks4TXABy3YsVwmP4gN3tjIzI+Oi1NT6t+F+ejovm5VKP8YTvj7T8DFDu8wR
-	jPlU5udQ1Bn862nvmFqYIQi2ZGlxpP/65FLs+6/pQPkd6v4+sGG9nSVAjTcKxbbgeX/9abuBMPt
-	Ey5NLsnG33DXeSNw8PLJY4zHU0UDWrd9SX/uLRfP7V7NOxoNomZ17jKJOtAsfDQEE4ySWMVgoOc
-	XH/PKgXM7MH42cRnA/BI2ZBguJDQJriiuQSavvVidSSx4K2J4cuprUNKUVFHe5nMvzyeEZp63BF
-	M3
-X-Received: by 2002:a05:600c:828e:b0:4a2:526b:d40f with SMTP id 5b1f17b1804b1-4bb88785898mr234333165e9.0.1795425556197;
-        Mon, 23 Nov 2026 01:19:16 -0800 (PST)
-X-Received: by 2002:a05:600c:828e:b0:4a2:526b:d40f with SMTP id 5b1f17b1804b1-4bb88785898mr234332685e9.0.1795425555832;
-        Mon, 23 Nov 2026 01:19:15 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb906635c7sm166276135e9.2.2026.11.23.01.19.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 01:19:15 -0800 (PST)
-Message-ID: <58930dc60d410ae8dac5a5bbe5e9048501b5b1db.camel@redhat.com>
-Subject: Re: [PATCH v2 1/2] verification/rvgen: Validate the monitor type
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Chaosheng Qu <chaosheng.qu.linux@gmail.com>, Steven Rostedt
-	 <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 23 Nov 2026 10:19:14 +0100
-In-Reply-To: <cf05914335850f6835ae79b34d6b4ad891128948.1795252297.git.chaosheng.qu.linux@gmail.com>
-References: <cover.1795252297.git.chaosheng.qu.linux@gmail.com>
-	 <cf05914335850f6835ae79b34d6b4ad891128948.1795252297.git.chaosheng.qu.linux@gmail.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
+        d=1e100.net; s=20260707; t=1795438017; x=1796042817;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=KDkZDqK4FJQoP/w58gPsz+MrboHrJj/4Mpu9CUS1Qq4=;
+        b=PclMh9LbJMBzFZTj7+LhEcJFPFjOuxulAPxAS0JadtigJG30xVa1DG3BgKXr+QdcTs
+         QmHS6xwY3nsjBZuIw6TuFhkSulWL57C31hSha8/nSzwi//IFylvHw9GBUevALBp891dd
+         A7ClvQk2gvL7Jn+TFbMNclhvDhLM/SxFA/1tjzp5RyJ3n8Jp+rlYkVfk+eW5YEr6NaON
+         O4k6P7fKHRCnQ/YZIS6IvA5k+B66gpOXsoytdKhGQcVwui0dm+v0K2+RGkIVnoWQ79a2
+         cb7nvM8QZUULL7zfYqSVvsZVghGpQDMzzzqQkxSvrN8F+E1bvs+5oyAUUi62hJZ/93p4
+         y6tg==
+X-Forwarded-Encrypted: i=1; AL+hErGeFC8ERbmpAY/sRIy6q+cBAn8XA8/VLPnmzBFiRqC/YINYz5OpclH4I+o4y41Q4E3vi+p2cpzyHcndAvOJbEUyQYY=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+LZcNPXivz+Po0vBzpZZ0o890j7ZmowT6QdNkVQ3rRklWO+iAD
+	EJwVgLGBwfL+CgoGenaKUlz8er278W+8vDc+Q7Zzogd4wRSmSawomn1I/4TXf4LhhwxvygnIFNd
+	1rjzpDQx9jWTmqUOxzBLMK50JBN86hTpu9yUCg8Vexw==
+X-Gm-Gg: AZFdTZdGGLC3mrrnPAAcQTha7lR/XjrAntzW6ITzzi8ientBwwgJfOdLD6alXoXmVFc
+	3XJT3pvPv11qsf8uOGdedSIfJVuTZP0TaNpsgnFLqMZi6PFFKVe1lBftkoG/koRyIA0IkH4lUkU
+	osdvw/ppcmmf1nmFskNkwQkoPPUmLs+3RkgKgCLXPdBFlOId/tCmNRckWhwrw3kzP0MXHgV0ulr
+	iDM0eNIm3JZIFW9TBbTUy8xSwgrvDYXwkgU/vaM/kxT7qA2wBX40OcaTJBCDxCIH99w5MH0SnVY
+	Iz1uTurL99lM9mav6Z9HcUKBoehgmXkBbUKksrSCtWWMyx9A5SJRcoS1pqH0MJGqwwvuOm9LaVT
+	xhtea9kwu4Y1+DDpCXgrLgdR2FpdPd8YQE2EOo8mslUfMx0v4zwYeS8k0
+X-Received: by 2002:a17:90a:e705:b0:3b0:9e2c:9b55 with SMTP id
+ 98e67ed59e1d1-3b41c803ae0mr16166809a91.2.1795438016707; Mon, 23 Nov 2026
+ 04:46:56 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -115,64 +103,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: P_P6dWBemqvABxZgvCpdOYwzqvdW1t1ABFjKFVbny_8_1795425556
-X-Mimecast-Originator: redhat.com
+References: <20261117-bpf-preempt-v2-r2-v3-0-5687f2b53b57@sentinelone.com>
+In-Reply-To: <20261117-bpf-preempt-v2-r2-v3-0-5687f2b53b57@sentinelone.com>
+From: Mike Bazov <mikeba@sentinelone.com>
+Date: Mon, 23 Nov 2026 14:46:59 +0200
+X-Gm-Features: Aa3M54p4sO9o8A2kmO51dBuRGf5c0KYrhMd-49WQIyuTD5aiNinuGhI6siMAx_M
+Message-ID: <CAPnbwjpJ6z9SQPGS-hOezBeE6fRjD_bo2aCFAnKT0N0en=WPaA@mail.gmail.com>
+Subject: Re: [EXT.MSG] [PATCH bpf-next v3 0/4] bpf: Check recursion per task
+ for preemptible programs
+To: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Emil Tsalapatis <emil@etsalapatis.com>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	JP Kobryn <jp.kobryn@linux.dev>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2026-11-21 at 19:31 +0800, Chaosheng Qu wrote:
-> The monitor type is pasted into the generated monitor as RV_MON_<TYPE>.
-> Nothing checks it, so a typo yields a monitor that cannot build and the
-> tool still exits 0:
->=20
-> =C2=A0=C2=A0=C2=A0 $ rvgen monitor -c da -s test_da.dot -t bogus_type -n =
-bm
-> =C2=A0=C2=A0=C2=A0 $ grep RV_MON_TYPE bm/bm.c
-> =C2=A0=C2=A0=C2=A0 #define RV_MON_TYPE RV_MON_BOGUS_TYPE
->=20
-> include/linux/rv.h defines only RV_MON_GLOBAL, RV_MON_PER_CPU,
-> RV_MON_PER_TASK and RV_MON_PER_OBJ, so that macro never resolves.
->=20
-> The accepted set is already in Monitor.monitor_types, which the help text
-> prints.=C2=A0 Pass it to argparse as choices.
->=20
-> Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
-> ---
+A friendly ping on this series.
 
-Looks good now, thanks. I'm taking both.
+One update: I measured the per-task array from the v2 review
+against walking the chain. It is not faster. The numbers are in the
+3/4 thread.
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+The question from the cover letter is still open:
 
-> =C2=A0tools/verification/rvgen/__main__.py | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/tools/verification/rvgen/__main__.py
-> b/tools/verification/rvgen/__main__.py
-> index 246b43fa2..6053db5e5 100644
-> --- a/tools/verification/rvgen/__main__.py
-> +++ b/tools/verification/rvgen/__main__.py
-> @@ -38,6 +38,7 @@ if __name__ =3D=3D '__main__':
-> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-s', "--spec", dest=
-=3D"spec", required=3DTrue,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3D"Monitor specification=
- file")
-> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-t', "--monitor_typ=
-e", dest=3D"monitor_type",
-> required=3DTrue,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 choices=3Dlist(Monitor.monitor_type=
-s.keys()),
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3Df"Available options: {=
-',
-> '.join(Monitor.monitor_types.keys())}")
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0 container_parser =3D subparsers.add_parser("cont=
-ainer",
-> parents=3D[parent_parser])
+> One question: the marking is automatic. A flag that the program's
+> author sets would avoid the second trade-off, but existing programs
+> would keep losing runs until they are rebuilt. Which do you prefer?
 
+Either way the program marks can be reduced later. Each has one reason:
+
+- Timed may_goto: its count and timestamp are per-CPU memory that
+  every entry resets. Possibel solution would be to keep them per
+  invocation, in the stack of the main prog.
+- Per-CPU maps: a run keeps data in this CPU's slot until it ends.
+  Turn preemption off from the first per-CPU access to the end of the
+  run, as Alexei suggested on v2.
+- Tail calls and freplace: the target may use a per-CPU map. With the
+  access itself protected, they need no mark.
+
+Thanks,
+Mike
