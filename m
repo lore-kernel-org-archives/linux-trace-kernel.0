@@ -1,66 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795472663;
-	b=Y71ojkHIa8V3ZAea3tFwwQIoQUXZt3YGoBM0WtNOyWcxU8IVLPtQWg9CeWK0ZQA4nZsC
-	 o9A8/vpbO4PdN6hqjojI2HNqk63qUiwRELf5DEqKkzgplPBpABmttojwZaFUzzgJBr6lp
-	 D/jS58mmFBWCXq0BR6RXhs0mj7JdBMQLD1wiy2wus+EVv7JeRXQEqN7EYx2c2nZ/Z2lpB
-	 hCqiISDfzBv12yGN6EXJsJBflih0cfauostx31Gel/btYrZ04qynmIm6LwZxPD5fu686K
-	 C7Vah4JC3yZSLok+QK5hw/izQgQywFhRcopF0SnOnvnrbE9iMmiB+bB877qnZc6fw5g==
+	t=1795473157;
+	b=NGAuzZ5Y/OjoeF43qOVZ4+C18IB7v4Q2Urt5F7ridxvSDO7fpOGa4tzS8Gdkn+qFDzVK
+	 eajjJAhSswK0oip2PWa/eN33eB5AE7vIjjbKt8SZ4m7H/kQkaAATa7PFZdzBJcNHYz5WW
+	 nVRG6ytV31ocNnhXE4gjciWyJ3Q4b7Oe/YQhcbN7HLBRBxCWze4veSkgf1AnvITzMb8Fc
+	 Gcy9CH+ykiLG5DCzomkUReZWYThMkrtwr2sODtdEGLR4TDPld/ot6W3CBkGXtMCLZlhEf
+	 gWGtebT0tgPeB0aw5J5+2w8+IMz/pdYlo6DCxuGm7Ljoa0o+c9+mtXaZ4LTjGmh6fyw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795472663;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795473157;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=foOOFJ27yYtkd5trsPb+eLtTc+SPVgM6R98ixku6o3I=;
-	b=X4PfhKfe8s2hHSm1HPhxfjiYJLxD8rViN9q4ODvAdCk9tqv0exo1zfFJPDJgH1gBeEb/
-	 FTWtxX3jQhrx0Q6P0uvIG2I3qhPpl9jyGnK+vktl0otF5SV6mhV1jCdhvyuEp9PNBukPG
-	 9X36GrDSqUKzwWBWV8SrFaWNoAprWzPd7+hfuR4QXNlyFrDy3jQDWPBXLPbQ6KZzLTtc6
-	 KJm7XeUfN0vbB8lMO3+Zi50JnjHru9iLeK0HiwAflSSgJXv5daqlm/QHN9DWLnkxmKPFA
-	 hdhiGDBsSu4A887N1Ca9Zzx7Ql7AeRp+jE1PVEwtG9GBDtmZVDIHvI8Uwt70qf8s/aw==
+	 User-Agent:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=VZBmX+wJbHFR1TFVelBEGt/GVLJYNNJoOLGKVI23VUs=;
+	b=L4xG+eCTlYZHrmoehOGK7iXdAzu1m8Jq4t+rDombrHalXS6qCbgX9RyFtyvRq7+RyvHn
+	 GWaGDaG3qAlctI5WTiSivhwoee+qsb8jOTW1PVC0wGVusMN8XOsd/nX9HfPX0xORbfm90
+	 MprGZsIxN4m4guo14tt0k8u8eL8UuMzfEj3V2zg9Q+xjIsNNt45wAV1cIRe1WYsO4ZgjO
+	 sB9hQlcT/REZoepztIlwXhdMH0Jv6pVAPr3J1dEZ6HfUcNi/DEJDSw5ep5ffRqm9b0Krt
+	 CuzfDgZtg+FSES7SM9qtFiiDe78kUgHYbKjACS87WwaYy4UE5nwh5xTJYOvscEkyvZg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lr6bVwWn;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Ph/1n0yx";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA34606A31E;
-	Mon, 23 Nov 2026 22:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46365606A31E;
+	Mon, 23 Nov 2026 22:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lr6bVwWn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246BD1F000D3;
-	Mon, 23 Nov 2026 22:24:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ph/1n0yx
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45EB31F000C0;
+	Mon, 23 Nov 2026 22:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795472663;
-	bh=foOOFJ27yYtkd5trsPb+eLtTc+SPVgM6R98ixku6o3I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Lr6bVwWn9ASV4Ds9g0NYhGOwy+rdmjVr++ZGvqlSLkWE+UKlvFRHpGJ7JqfZ6jCky
-	 ruxyPy3/cufG2Mt4Uk95FSCsuzNT7j4dfun7zSiIQw602yEXcI4AImHlySnbH54lea
-	 40uKJNuRZsHo4p2sokY0ByK1h5+5iOKRi8dlnRJCFLOWPjIQI/sIuLsTLYbigA7flK
-	 PsGol/j9zpX2x/PAFgIptHyyttLUIeXTztEAd6LzJxIFnuPTKNzJxf9VygLlMh+dtH
-	 bFs/7IbCFhDC7ucsH2sfecoJDu1jKKrlyoCmIJQH+3r7Fn6Zha439qSWHAPDZcpb1K
-	 YJRSbEMKQJg+Q==
+	s=k20260515; t=1795473156;
+	bh=VZBmX+wJbHFR1TFVelBEGt/GVLJYNNJoOLGKVI23VUs=;
+	h=From:To:Cc:Subject:Date;
+	b=Ph/1n0yx+rsyjeZERwwNt6HBU9wJtqFiLdUYajjIqk5gcPQhHvyXJFz2FdeKEflAG
+	 scJ3R7Frhzw3GDTuoq6TUwpjuT6T821KI4RHCa6/Zt5Js9SFuYxcH4asTsgBQuCpuM
+	 7VOJ+7I7ETKMm9BkBMfgTG9g08cLkKQfgv7v/JnBrqF4l9QqHq3mHMgR8/IUyRHQOZ
+	 oB1hBemONwpgkpF2LvbAbUaBsQg30ZOngEf2OUTAgSYHffMLD5XOdMsYxljueOxwEi
+	 oqztnJ6f+y4ek2RhU+7gf0L5E3ybUdd8w5u3qeGRnTIBzE4tgMwdtUtuIKFxBMHRZd
+	 kA3Wy9+vnWmww==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Lukas Zobernig <lukas.zobernig@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Pablo Fraile Alonso <pablo@pablofraile.net>,
-	Edgecombe Rick P <rick.p.edgecombe@intel.com>
-Subject: [RESEND PATCH 5/5] uprobes/x86: Fix opcode validation and analysis for multi-byte, REX2, and VEX/EVEX/XOP instructions
-Date: Tue, 24 Nov 2026 07:24:17 +0900
-Message-ID: <179547265765.326766.1146639213721357500.stgit@devnote2>
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: Remove non-existent CONFIG_RESERVE_MEM from config
+Date: Tue, 24 Nov 2026 07:32:32 +0900
+Message-ID: <179547315291.329986.16935545207857031949.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <179547260053.326766.11540305553612301074.stgit@devnote2>
-References: <179547260053.326766.11540305553612301074.stgit@devnote2>
 User-Agent: StGit/0.19
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,203 +66,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Commit 67fc809217dc ("uprobes/x86: Fix 1-byte opcode tables") set bit
-0x0f in good_insns_32 and good_insns_64, assuming 0x0f would not appear
-in OPCODE1(insn). Because the x86 instruction decoder stores 0x0f in
-insn->opcode.bytes[0], uprobe_init_insn() returned 0 immediately for all
-0x0f-escaped instructions, bypassing good_2byte_insns (including SYSCALL).
+CONFIG_RESERVE_MEM does NEVER exist in Kconfig. The reserve_mem= boot
+parameter and reserve_mem_find_by_name() are built unconditionally in
+mm/memblock.c, and persistent ring buffer instances via trace_instance=
+do not require a separate Kconfig option either.
 
-Furthermore, several places in arch/x86/kernel/uprobes.c assume that
-OPCODE1(insn) always refers to a map-0 legacy 1-byte opcode, which breaks
-for REX2 M0=1 (map 1) and VEX/EVEX/XOP instructions (all of which have
-insn->opcode.nbytes == 1):
+Remove the non-existent CONFIG_RESERVE_MEM=y entry from the ftrace
+selftest config fragment and the boottime test README.
 
-- uprobe_init_insn() checks REX2 M0=1 and VEX/EVEX/XOP opcodes against
-  good_insns_64 (map 0) instead of their actual opcode maps, and does
-  not reject unsupported REX2 JMPABS (0xa1) or EVEX map 4 (APX) opcodes.
-- branch_setup_xol_ops() can misidentify VEX/EVEX/XOP or REX2 M0=1
-  instructions whose opcode byte matches 0x70..0x7f, 0xe8, 0xe9, or 0xeb
-  (e.g. VZEROUPPER 0xc5 0xf8 0x77, VPSHUFD, VPOR) as branches.
-- arch_uprobe_analyze_insn() switches on OPCODE1(&insn) without checking
-  the opcode map, misidentifying e.g. VCMPPS/VCMPPD (VEX.0F.C2) as RET
-  (0xc2) and skipping UPROBE_FIX_IP.
-- riprel_analyze() clears bit 0 of the first REX byte, which for a 2-byte
-  REX2 prefix corrupts 0xd5 into 0xd4 instead of clearing B3/B4 in byte 1.
-
-Clear bit 0x0f in good_insns_32/good_insns_64, use insn_opcode_map() and
-insn_last_opcode() to dispatch opcode validation and analysis properly,
-and fix REX2 handling in riprel_analyze().
-
-Fixes: 67fc809217dc ("uprobes/x86: Fix 1-byte opcode tables")
-Reported-by: Pablo Fraile Alonso <pablo@pablofraile.net>
-Link: https://lore.kernel.org/r/20261116-x86-uprobes-two-byte-opcode-v1-1-2b6dbabead52@pablofraile.net
-Cc: stable@vger.kernel.org
+Fixes: e666e6528359 ("selftests/ftrace: Add generic boot tracing test framework")
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- arch/x86/kernel/uprobes.c |   97 ++++++++++++++++++++++++++++++++-------------
- 1 file changed, 68 insertions(+), 29 deletions(-)
+ tools/testing/selftests/ftrace/boottime/README |    1 -
+ tools/testing/selftests/ftrace/config          |    1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 0f60c0d076b6..5ea8e9c92259 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -89,7 +89,7 @@
- static volatile u32 good_insns_32[256 / 32] = {
- 	/*      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f         */
- 	/*      ----------------------------------------------         */
--	W(0x00, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1) | /* 00 */
-+	W(0x00, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0) | /* 00 */
- 	W(0x10, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0) , /* 10 */
- 	W(0x20, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) | /* 20 */
- 	W(0x30, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) , /* 30 */
-@@ -151,7 +151,7 @@ static volatile u32 good_insns_32[256 / 32] = {
- static volatile u32 good_insns_64[256 / 32] = {
- 	/*      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f         */
- 	/*      ----------------------------------------------         */
--	W(0x00, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1) | /* 00 */
-+	W(0x00, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0) | /* 00 */
- 	W(0x10, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0) , /* 10 */
- 	W(0x20, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0) | /* 20 */
- 	W(0x30, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0) , /* 30 */
-@@ -279,6 +279,7 @@ static bool is_prefix_bad(struct insn *insn)
- static int uprobe_init_insn(struct arch_uprobe *auprobe, struct insn *insn)
- {
- 	u32 volatile *good_insns;
-+	int map;
+diff --git a/tools/testing/selftests/ftrace/boottime/README b/tools/testing/selftests/ftrace/boottime/README
+index 1eb0191d75d4..5371907c7f0d 100644
+--- a/tools/testing/selftests/ftrace/boottime/README
++++ b/tools/testing/selftests/ftrace/boottime/README
+@@ -45,7 +45,6 @@ Additional feature-specific config options enable respective testcases:
+ - `CONFIG_EPROBE_EVENTS=y` (for eprobe tests)
+ - `CONFIG_FPROBE_EVENTS=y` (for fprobe and tracepoint probe tests)
+ - `CONFIG_FUNCTION_TRACER=y` (for tracer options)
+-- `CONFIG_RESERVE_MEM=y` (for persistent ring buffer tests)
  
- 	if (is_prefix_bad(insn))
- 		return -ENOTSUPP;
-@@ -287,17 +288,44 @@ static int uprobe_init_insn(struct arch_uprobe *auprobe, struct insn *insn)
- 	if (insn_masking_exception(insn))
- 		return -ENOTSUPP;
- 
-+	map = insn_opcode_map(insn);
-+
-+	if (insn_is_avx_or_xop(insn)) {
-+		/*
-+		 * EVEX map 4 (APX) includes control-flow and privileged
-+		 * instructions (e.g. Grp5 indirect call/jmp, INVEPT/INVPCID)
-+		 * that are not yet handled by uprobes.
-+		 */
-+		if (insn_is_evex(insn) && map == 4)
-+			return -ENOTSUPP;
-+		return 0;
-+	}
-+
- 	if (insn->x86_64)
- 		good_insns = good_insns_64;
- 	else
- 		good_insns = good_insns_32;
- 
--	if (test_bit(OPCODE1(insn), (unsigned long *)good_insns))
--		return 0;
--
--	if (insn->opcode.nbytes == 2) {
--		if (test_bit(OPCODE2(insn), (unsigned long *)good_2byte_insns))
-+	switch (map) {
-+	case 0:
-+		/* REX2 0xa1 is JMPABS, which is not yet supported by uprobes. */
-+		if (insn_is_rex2(insn) && OPCODE1(insn) == 0xa1)
-+			return -ENOTSUPP;
-+		if (test_bit(OPCODE1(insn), (unsigned long *)good_insns))
- 			return 0;
-+		break;
-+	case 1:
-+		if (test_bit(insn_last_opcode(insn), (unsigned long *)good_2byte_insns))
-+			return 0;
-+		break;
-+	case 2:
-+	case 3:
-+		/*
-+		 * Preserve existing behavior for legacy three-byte opcodes
-+		 * (0f 38 / 0f 3a), which have not yet been audited against
-+		 * a dedicated allowlist.
-+		 */
-+		return 0;
- 	}
- 
- 	return -ENOTSUPP;
-@@ -470,10 +498,14 @@ static void riprel_analyze(struct arch_uprobe *auprobe, struct insn *insn)
- 	 * Clear REX.b bit (extension of MODRM.rm field):
- 	 * we want to encode low numbered reg, not r8+.
- 	 */
--	if (insn->rex_prefix.nbytes) {
-+	if (insn->rex_prefix.nbytes == 1) {
- 		cursor = auprobe->insn + insn_offset_rex_prefix(insn);
- 		/* REX byte has 0100wrxb layout, clearing REX.b bit */
- 		*cursor &= 0xfe;
-+	} else if (insn->rex_prefix.nbytes == 2) {
-+		cursor = auprobe->insn + insn_offset_rex_prefix(insn) + 1;
-+		/* REX2 payload has M0 R4 X4 B4 W R3 X3 B3 layout, clear B4 and B3 */
-+		*cursor &= 0xee;
- 	}
- 	/*
- 	 * Similar treatment for VEX3/EVEX prefix.
-@@ -1493,6 +1525,9 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
- 	if (insn_is_nop(insn))
- 		goto setup;
- 
-+	if (insn_is_avx_or_xop(insn) || insn_is_rex2(insn))
-+		return -ENOSYS;
-+
- 	switch (opc1) {
- 	case 0xeb:	/* jmp 8 */
- 	case 0xe9:	/* jmp 32 */
-@@ -1658,31 +1693,35 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	 * Figure out which fixups default_post_xol_op() will need to perform,
- 	 * and annotate defparam->fixups accordingly.
- 	 */
--	switch (OPCODE1(&insn)) {
--	case 0x9d:		/* popf */
--		auprobe->defparam.fixups |= UPROBE_FIX_SETF;
--		break;
--	case 0xc3:		/* ret or lret -- ip is correct */
--	case 0xcb:
--	case 0xc2:
--	case 0xca:
--	case 0xea:		/* jmp absolute -- ip is correct */
--		fix_ip_or_call = 0;
--		break;
--	case 0x9a:		/* call absolute - Fix return addr, not ip */
--		fix_ip_or_call = UPROBE_FIX_CALL;
--		break;
--	case 0xff:
--		switch (MODRM_REG(&insn)) {
--		case 2: case 3:			/* call or lcall, indirect */
--			fix_ip_or_call = UPROBE_FIX_CALL;
-+	if (insn_opcode_map(&insn) == 0) {
-+		switch (OPCODE1(&insn)) {
-+		case 0x9d:		/* popf */
-+			auprobe->defparam.fixups |= UPROBE_FIX_SETF;
- 			break;
--		case 4: case 5:			/* jmp or ljmp, indirect */
-+		case 0xc3:		/* ret or lret -- ip is correct */
-+		case 0xcb:
-+		case 0xc2:
-+		case 0xca:
-+		case 0xea:		/* jmp absolute -- ip is correct */
- 			fix_ip_or_call = 0;
- 			break;
-+		case 0x9a:		/* call absolute - Fix return addr, not ip */
-+			fix_ip_or_call = UPROBE_FIX_CALL;
-+			break;
-+		case 0xff:
-+			switch (MODRM_REG(&insn)) {
-+			case 2: case 3:			/* call or lcall, indirect */
-+				fix_ip_or_call = UPROBE_FIX_CALL;
-+				break;
-+			case 4: case 5:			/* jmp or ljmp, indirect */
-+				fix_ip_or_call = 0;
-+				break;
-+			}
-+			fallthrough;
-+		default:
-+			riprel_analyze(auprobe, &insn);
- 		}
--		fallthrough;
--	default:
-+	} else {
- 		riprel_analyze(auprobe, &insn);
- 	}
- 
+ Usage
+ -----
+diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
+index 29f05f7c6e2c..c43f24755c64 100644
+--- a/tools/testing/selftests/ftrace/config
++++ b/tools/testing/selftests/ftrace/config
+@@ -22,7 +22,6 @@ CONFIG_MODULE_UNLOAD=y
+ CONFIG_PREEMPTIRQ_DELAY_TEST=m
+ CONFIG_PREEMPT_TRACER=y
+ CONFIG_PROBE_EVENTS_BTF_ARGS=y
+-CONFIG_RESERVE_MEM=y
+ CONFIG_SAMPLES=y
+ CONFIG_SAMPLE_FTRACE_DIRECT=m
+ CONFIG_SAMPLE_TRACE_EVENTS=m
 
