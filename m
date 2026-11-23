@@ -1,45 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795449884;
-	b=t8FshaiL82Igrzm5D3/7fhYqEdfnQwVIVunNAW2759LhzBtxj+8GXcNLX1mMha8aTH54
-	 AlmgVuyVUBnOZVBNH8UUrdcMi/QvhBCKqDYbHoa8wxt++eS7qZNUcu6PF+vycq8T40S7T
-	 3p/kU6Dyc+1/78KL/gyDt/R51P4DkrJBFtGc4RYFeKcSKpqh0CqJmgJhaCUgCseenST+P
-	 C3/1vu/vvCQ/8Z5pjqEL08Mya/RX2TRd5VtEkciAaXI42cqyRnFAVSXZlAutYaWd47EJ9
-	 vWaxoiGsgNu2aUjFiZm6cLpClm5QpDXrzWtHoUTb7f5Wsx8ewUfu0032rgeFjyZZPFw==
+	t=1795453521;
+	b=IeeJCjgo6z0yeM5UAQxiGYFakm7ts4f7gFL79MznSatxYqbevHnJI6jk79zM3kaIYokF
+	 5HDZgILFAv/dOmY5h23r/xtZksnr8EFRkHV8TCCIKG/oEpRhIOm3zaXzxNbccjh+a3bOo
+	 HB2MkjeMdsS8Qlx1u4i9VUuRmvweiCsznH+s4092fKg5Tu1xPILedkhHQPobPJax9hs9z
+	 G/0IP0vFTvoB21E6LuklAdkENf+P6pBpC+PiV7xctjSPH5BfduvpiaXWJzfZqjrMtiEW5
+	 1D11U5urbu0l0YAQtBoowSYbZNKSLXx3y2aiybxU445u7A15y3XoWsZroRjuZD3NZ3g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795449884;
-	h=Received:DKIM-Signature:Content-Type:MIME-Version:Message-Id:
-	 In-Reply-To:References:Subject:From:To:Cc:Date;
-	bh=JXF19oCv45/26B2URve3iHY/PwWZHPECRP1mP/rGn9s=;
-	b=qmOq/20F8FI4Y5GR+wpitRzkSbxEni3Ts7BS2wb7DyUYT06RCv7ZtvDGpzzRJHPeb/HN
-	 JhAguNqj+BqmnwLBcFgBNg0c0vPHsCmTx6yskhv6lJ6E+/HBeyLGk/w+irIjujV2byscV
-	 v4hJcZ7il+TIUmEiHXSKr+heVs3/q03QLm85yUEKgMZSxOeJFfw13nkNe7QHoUzFTWr/B
-	 BgU5V5zA2cXTULXcB9mhkTupVJ2v6hyMAeoRHM7WdUYwb4fKcMzC8VnNfNLEPesXBSqOB
-	 mKrxchxDMDh7K/F4kpjh+M6KlxG5UtJAZsXiIM7ijgSkidvuNnFoD7gnEmgAKTewaqg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795453521;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=dcW5cGcK21Y3UH7CNytXeKsD8qoNAseQRFgVTZx89HQ=;
+	b=yUNqEh13tnRn5kGTxr9ik2GFXbioM4eO3ksMW2L62XAjegMxiiijn4v9nNyG+6npoCA/
+	 5JEfY0O2WpSPk805S+uDbp/TYhZsVVBgNdVb7VmhH3kn3X7Z5+EhqE5tLiOmvXTShtKI2
+	 C4Rn/b910dhCQCacmRb42swbovU7zyxlEIH2NCBoPMALRLusVeXw10XpWufgLIlgLv6yM
+	 ZWEl2mrYHmkvle36pqqF2FB21jf8zBCKZ/zPF5XIa8owYNfXcr0vra8chAzOuQKrcRWr6
+	 s4l+Vk8clLVRSLrO7LxmBevfLcfiyPODdPlK4Oz4f052EAJ0k7bDN3ZHWLPg4Ui0gsg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aoRNsUdI;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=imRsXZpQ;
+	arc=none smtp.remote-ip=216.40.44.17
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2F5606A31F;
-	Mon, 23 Nov 2026 16:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C5C606A321;
+	Mon, 23 Nov 2026 17:05:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F1C5C606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aoRNsUdI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FA2C1F000D0;
-	Mon, 23 Nov 2026 16:04:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795449884;
-	bh=JXF19oCv45/26B2URve3iHY/PwWZHPECRP1mP/rGn9s=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=aoRNsUdIaNfcVa236VVofCAmbV8oEgvab3Jsb7vFzHtwQ3PPnDEO64CS60tu2+8Bs
-	 89LpNdymL0WBHszAHakvjT/Awt3onzNFZhMxjSqTunnDIBZ0xQcdHy3a/njIVWNru8
-	 LtuPQjPBcOZ231b504Han7ThKxpnR5/zbC0UHJmjWr693bwNo2hRPwC8oQiETKY2Nv
-	 2ldihjBzwjX8KE5f9AG5r8NIGmG+SGVPnwE+C6MXJf/GAvBshDbgBqHz6SiQ+LnJ3o
-	 XBNtu5d6tZh2bK9A82RYPvSgKO+6SpxQnsV27YeF45K3VINnntis53I2LoJEkoGl5T
-	 Y+CjNYONrRqww==
-Content-Type: multipart/mixed; boundary="===============7834733793104834582=="
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=imRsXZpQ
+Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 9540AA821F;
+	Mon, 23 Nov 2026 17:05:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 4CCBC2002E;
+	Mon, 23 Nov 2026 17:05:11 +0000 (UTC)
+Date: Mon, 23 Nov 2026 12:05:09 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: =?UTF-8?B?6auY57+U?= <gaoxiang17@xiaomi.com>
+Cc: Vincent Donnefort <vdonnefort@google.com>, Xiang Gao
+ <gxxa03070307@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, Donggeun
+ Yoo <donggeunyoo.kernel@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lorenzo Stoakes <ljs@kernel.org>, gao xu
+ <gaoxu2@honor.com>, =?UTF-8?B?5Y2w6Zev?= <yinchuang1@xiaomi.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [External Mail]Re: [PATCH v5 1/4] ring-buffer: add
+ ring_buffer_memory_size()
+Message-ID: <20261123120509.3e59bdad@gandalf.local.home>
+In-Reply-To: <9d178b02ddd9464982757b0f23b86011@xiaomi.com>
+References: <20261105140221.44614-1-gaoxiang17@xiaomi.com>
+	<20261105140221.44614-2-gaoxiang17@xiaomi.com>
+	<avhteUQSrWPFuQ3a@google.com>
+	<aac878d9f74e49d7b3bccd0f352b700c@xiaomi.com>
+	<avxg8M4dcs7Gphc0@google.com>
+	<9d178b02ddd9464982757b0f23b86011@xiaomi.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -49,88 +70,112 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <d3920bd7ae0cc6a941895e00534e8f8818402a673351894d0bf98639272f7d7e@mail.kernel.org>
-In-Reply-To: <20261123152743.19629-8-leon.hwang@linux.dev>
-References: <20261123152743.19629-8-leon.hwang@linux.dev>
-Subject: Re: [PATCH bpf-next v3 7/9] selftests/bpf: Test tracing_multi link_create logs
-From: bot+bpf-ci@kernel.org
-To: leon.hwang@linux.dev,bpf@vger.kernel.org
-Cc: ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com,kpsingh@kernel.org,matt@bobrowski.net,shuah@kernel.org,leon.hwang@linux.dev,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-kselftest@vger.kernel.org,netdev@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Mon, 23 Nov 2026 16:04:41 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: eso6s38mnxyoj6enn47tjubdn1xqehg6
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 4CCBC2002E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Aa3NnRv+ETU+ZQkJN6EcsK4iqPfC+w9g=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=dcW5cGcK21Y3UH7CNytXeKsD8qoNAseQRFgVTZx89HQ=; b=imRsXZpQDYiFYcb39U6LSM6TVnQiwg9vMANZy3EQW8l2/1eoHcAP7YQb/iKBhvS7bgrCoro/Ai+5FGvs5Dop+iTgUC24V1dOl6eOimQz7fmDf1lLeRpIQpAh1nrscZBQYOZi4xkbUPHERlOEsCPtoxJaQwpckPjM8+nP9O1XfkE=
+X-HE-Tag: 1795453511-28984
+X-HE-Meta: U2FsdGVkX1+VX/FmN0Z7S3lYNTElvSiXXEuL0rHm0CZLh5vUxm8JNbDml7q61afmgce4IpMekEWM17cmr3KGqJ0fvp+WA7clijLfiSOp4hOT9zoYryEvcDuRLNjSrBS6RA9M62b3CVyvQBFhg7/YPOsY3zSCQzBncj8EwClOTB1Woa/++zhz7L/33Sv3IEMwOJWmYj6WcYXtQaduJuk87OqSA7lcn5bKec2jfDSQas+qtlbQdvcNbKLoPebt3EKIiJOIGTq4JI2yGTjzdAOQQiYaxBT59T5MVaenP3v8oKsG8barGMtCHh1CPU1wVmjCl9r2hrKtAZxUhOtHSmh+S67m7pi6hDqC
 
---===============7834733793104834582==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Mon, 23 Nov 2026 11:13:06 +0000
+=E9=AB=98=E7=BF=94 <gaoxiang17@xiaomi.com> wrote:
+>=20
+> > Actually I am more and more convinced a more generic helper is better.
+> > This could be ring_buffer_nr_subbufs() which only reads
+> > cpu_buffer->nr_pages. =20
+>=20
+>=20
+> Agreed. One thing I want to confirm: the reader page is one page per CPU
+> for every buffer type. normal, range, and remote all allocate it in
+> rb_allocate_cpu_buffer(), so trace_stat would add one sub-buffer page
+> per CPU unconditionally. Your earlier "if the caller knows if a
+> cpu_buffer is a remote or persistent" comment made it sound like the +1
+> is conditional, but I think it always applies.
 
-> selftests/bpf: Test tracing_multi link_create logs
+It should still get the information directly from the ring buffer and not
+make any assumptions.
 
-TL;DR: Test issue: the migrate_disable denylist subtest's skip may not trigger
-on !CONFIG_SMP kernels, since the function still exists in BTF, so it could
-fail instead of skipping.
+>=20
+>=20
+> > Regarding the "meta" pages, we can have a separate accessor. e.g.
+> > ring_buffer_nr_meta_pages(). The caller could easily "guess" this
+> > value, but as they are ring buffer internals, I suppose an accessor is
+> > alright. =20
+>=20
+>=20
+> Agreed. To confirm the semantics: meta_page is one page per CPU and is
+> only allocated when the buffer is user-mapped (rb_alloc_meta_page()), so
+> ring_buffer_nr_meta_pages() would return 0 or 1 per CPU.
 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/tracing_link.c b/tools/testing/selftests/bpf/prog_tests/tracing_link.c
-> --- a/tools/testing/selftests/bpf/prog_tests/tracing_link.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/tracing_link.c
-[ ... ]
-> +static void test_multi_log_denylist(void)
-> +{
-> +	const char *msg = "Cannot attach to denylist btf id %u.\n";
-> +	const char *target = "migrate_disable";
-> +	struct btf *btf;
-> +
-> +	btf = btf__load_vmlinux_btf();
-> +	if (!ASSERT_OK_PTR(btf, "btf__load_vmlinux_btf"))
-> +		return;
-> +
-> +	/* migrate_disable is only in the denylist on SMP kernels. */
-> +	if (btf__find_by_name_kind(btf, target, BTF_KIND_FUNC) == -ENOENT)
-> +		test__skip();
-> +	else
-> +		test_multi_log_target(btf, "fentry", target, -EINVAL, msg);
+It can also be allocated at boot up for the persistent ring buffer. Again,
+something the ring buffer needs to supply information about.
 
-Is this skip reachable on a !CONFIG_SMP kernel?
+>=20
+>=20
+> > And actually writing the paragraph above made me realise it would be
+> > worth splitting the commit between ring buffer data allocations and
+> > meta-page allocations (and perhaps showing the difference in
+> > trace_stat). The sync for data and meta-page is slightly different. =20
+>=20
+>=20
+> That makes sense. I was thinking of splitting trace_stat as well: the
+> buffer categories report data pages only, and the meta pages are summed
+> into a separate line, for example:
+>=20
+>=20
+>   global:          XXX     (data pages)
+>   instances:       XXX     (data pages)
+>   snapshots:       XXX     (data pages)
+>   persistents:     XXX     (data pages)
+>   remotes:         0
+>   meta_pages:      XXX     (sum over global and all instances)
+>   total_system:    XXX     (=3D global + instances + snapshots + remotes
+>                              + meta_pages)
+>   total_carveout:  XXX     (=3D persistents)
+>=20
+>=20
+> Do you have a preference between a single meta_pages line and a
+> per-category data/meta split?
 
-kernel/sched/core.c always builds an out-of-line, exported
-migrate_disable() with no CONFIG_SMP guard:
+Not sure what you mean by the above. The meta pages should include all
+allocations that contain meta data only.
 
-    void migrate_disable(void)
-    {
-            __migrate_disable();
-    }
-    EXPORT_SYMBOL_GPL(migrate_disable);
+>=20
+>=20
+> > If being off by at most one page is acceptable... (well, one subbuf
+> > per trace_pipe_raw reader) then why accounting for it at all? :-) =20
+>=20
+>=20
+> Fair enough. To make sure I understand: free_page is not just the single
+> cached page in cpu_buffer->free_page, but also one page held by each
+> trace_pipe_raw reader while it consumes the buffer. That makes the count
+> depend on the number of readers, so it cannot be accounted without a
+> racy read. I will drop it.
 
-while the denylist in kernel/bpf/verifier.c adds it only under
-CONFIG_SMP:
+Yes, the free page is simply a cache that is stored for reuse and is not
+created per-se. It is simply reserved when a previous free happens.
 
-    BTF_SET_START(btf_id_deny)
-    BTF_ID_UNUSED
-    #ifdef CONFIG_SMP
-    BTF_ID(func, ___migrate_enable)
-    BTF_ID(func, migrate_disable)
-    BTF_ID(func, migrate_enable)
-    #endif
+>=20
+>=20
+> > ring_buffer_memory_size() still hit a race with
+> > ring_buffer_set_subbuf_order(). and existing accessors like
+> > ring_buffer_capacity() do too. It is down to the caller to resolve
+> > this race, if necessary. =20
+>=20
+>=20
+> Understood. trace_stat already holds trace_types_lock while walking
+> ftrace_trace_arrays, but it does not hold buffer->mutex, so subbuf_order
+> and nr_pages are read without the resize lock. The reported value can
+> therefore be momentarily stale while a resize is in flight. I think that
+> is acceptable for a memory-usage statistic; please tell me if you would
+> rather have trace_stat serialize against resize.
 
-So btf__find_by_name_kind() should find migrate_disable even when
-CONFIG_SMP=n, and test__skip() would never run.
+Yes that is acceptable as even if we had locking, the information could
+become stale as soon as it reaches user space. No need to protect against r=
+aces that can happen when user space is reading it anyway.
 
-On such an x86_64 kernel, bpf_check_attach_btf_id_multi() would not deny
-the id, the link would be created, and the subtest would fail at
-ASSERT_LT(fd, 0, "bpf_link_create") instead of skipping.
-
-Should the skip check the kernel's SMP configuration directly, for
-example through a __kconfig extern, or should the comment and skip be
-dropped?
-
-> +
-> +	btf__free(btf);
-> +}
-[ ... ]
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/45209424655
---===============7834733793104834582==--
+-- Steve
