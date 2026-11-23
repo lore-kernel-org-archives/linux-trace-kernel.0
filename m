@@ -1,112 +1,81 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795445007;
-	b=LZzJmpzsuM0HvvTPVIAzdqlJ1GlU7OyP0NqR1JVeS9Bs7BxTUhUMI1rQSiqmRObOPdrH
-	 NoMGV0hugBkym52WjKWVY3ioFGY39u+is/9It8jFtsVqPnjOTx+k9fb7qPpwzUrwRGODa
-	 K9edcq6MCoQ/mOJeBJ35+O7YKTQWndeMbBPhY+HbgsqgbZAvLlno12Lp+zPfdzAWbmr/T
-	 /57HE/DELCU8FL1qnzorDL5e48fXhDOO+sk9xSs4YyiaUrKtFg14jH9al0PNW0XbAK3kr
-	 PlG/c8UXQetOYu28imJd1lsc5qfFUyw57Cnkpy0ne3eJr+g4VEHcK9X4oZXL5PCtkPA==
+	t=1795445140;
+	b=t69B7TqbYSpKpHswVogHhjV59yUsCWzUmcPZ8i4d7T0c7k9O3qZ7V6BceSaAX88+lIiw
+	 PW836XYJAlV2sZlVThigICAakvIPQcydHhnVG1M8hR51RPlwMLJRLYnYGrM1TsUX4lqlM
+	 zjgS7o3yuGeP80ECqoEpLl3wXE96yBh7Vzu0AMxEmuzYZK6Inf7kxCyLhfW9YuExi/cfW
+	 pp7pQbl8K3M/ngbgC+OJrPcL8jB97E3jLuijU8DWFA8IE3K1nCe4r1OJBIA/MhVQGjYbT
+	 R561M3Xkhd6N3R5vxp1UUhr4t0TY+l9HOdfwJJa/PoEqgcNnDzMMn9iqHRX7tu3zP1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795445007;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795445140;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:In-Reply-To:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=pdcWROCO3O0LeKiFXMJqWflTzNA/CicS+wgfgye+MdY=;
-	b=bukfKOPkkwnhHsrcX063HT8wJcVPkTW0NHAjq9frF12M3GfdxvH/ml3kfNE25roxUUCo
-	 XK9S7Ki6efGZg6/7+QKanVo8FZElVxEajoCSJVSBHmFnNZ3fHiaRi7rj/3WfrDhCdltbt
-	 RYhqK8lGSTaGuifqVphAmY9N4WxIONuuw2mQ1l/Gz1N4jjEGB8OcXe4g997N4/V4BujUY
-	 J/pMNG32QKOCGEp0ATppcUfDhjWOntIt9YHujHtKRpsvmR9rbiOg3u4VZQeszmQUtIsy9
-	 TZPim+9XEqmLf6yoKY4KVqz7WZ9IFHr4C/yxRZtM5oMQkNuZ6hXwwPwxlskWLgwqWlg==
+	 Content-Disposition;
+	bh=EJQxp1b8WsNMfoVFurNpPhpxRv6/KYmR7xfHGB3nybg=;
+	b=QSFhhxCYyl2dsB+JhwJO5SoAJd6eS09WBVPvE4MEUzopbIwuQtAejHWjvUElvNy8KuUZ
+	 oL7udUzTIY0x4LtHIf1OfQQ1xk7VaaQyhSzlkakWnnNZH7JRpMENdtJIuldC/jxW0cDBZ
+	 F0+1ietwnB49ilfPMFcmMet/YFTCgdzNL2gJn55vQErHJnkT6Xjr6oXRegchK1kVNxSXR
+	 1kMLmdSXPtdi4Se5W6bDnxtJ2n+L3wMDarfuYcTiKGRDQF/0kqgbhhPIiJTbgzXJKzj1u
+	 BzaKPkwBFfM/hjaZ0wLQeNtfn5aUMN8Q/dFT01QFGmVlZjA/JmTykJu6GBK6Hsn69rA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=CVFYpkIF;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AXtOBYlO;
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB66606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 14:43:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6CB66606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0182F606A333
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 14:45:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0182F606A333
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=CVFYpkIF
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AXtOBYlO
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795445005;
+	s=mimecast20190719; t=1795445139;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=pdcWROCO3O0LeKiFXMJqWflTzNA/CicS+wgfgye+MdY=;
-	b=CVFYpkIFrBWibMZPbRc7ZrQNEbD0PisStdr9k8xC0r4tUq5g0FRY0xoC3JjTikXFnqD02F
-	BAYuOWQfODkxW+DzHci99j5uGSIvTG9q1UbOOWALxJQX11R0+OhmbEAkUeZElcHQezVI0B
-	lR/jGr8lUouDGI/jhXXGlUrx1hL7sXc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-96-KHo87BHxMrKK9stwaYlYZg-1; Mon, 23 Nov 2026 14:43:23 +0000
-X-MC-Unique: KHo87BHxMrKK9stwaYlYZg-1
-X-Mimecast-MFC-AGG-ID: KHo87BHxMrKK9stwaYlYZg_1795445002
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4bb68d624baso5675855e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 06:43:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795445002; x=1796049802;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=pdcWROCO3O0LeKiFXMJqWflTzNA/CicS+wgfgye+MdY=;
-        b=kuhsuIwQkqLuYImILNFWEp5FwmtOkTMUoUAnuqXZLmTzhRxuOAPRm5p/9iZptKe87n
-         H6sz39FcYjTz7vGrofkxfriplqxsUsEkTIUft8N+864X/iw9B9blN/7Ha4/kTypABK1w
-         Q69EQekdgjWPUQehzUe4f0xKgtzIoXRNMxEKUKBo8nbRJGlkuJFG6+SKEY7FPYOS7mzY
-         KZcLQ8T+mf2lgNffZpwoIWI0o69qb2WwoO6TXsfjMv+kN9pDfFUQI0fHI58nuKMeh5yG
-         AO382so9jUTLT0VPuh/tbLEWPz1hlIQkhtupkki7DMj/YqF2wfoPCHRZbiOLYrkwSARy
-         JrWg==
-X-Forwarded-Encrypted: i=1; AL+hErHm/htQdE83zyOADW7vb561YmJ/zBpJpN2ojf71Q784C5b5KhOyzWbF0pf6oijAR3c/uOCIyAj69fBp0PUl7+8Q1Go=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8Lm9zTpbBmzovJaTFGsAYSOEq2tZ0qwzFW4374wIJYO7vNAxex
-	kdiF02sJKSxQmzHujMhu6wtkuf4665lit5cogLq+EMAENAQMfP/zBev5dqdmA5DHFCfEeLeSuqc
-	UKa+bGzLZZOYmgm3RNsedUC8YijAWOqY7Kj4YpgJZKmzXouQCPvKlb3A3sfLpFmHkwOrQUnm4GN
-	aZlYXyWgNu
-X-Gm-Gg: AZFdTZchEAFueOLEsVyGn3wqk6dnF2dpOgZNjkiMZ9xoQ+gS6W/eWOK5a2vGIKNIzmk
-	52xBdxiC1FVqCO3kTI9q3eKXP2hkPD18xMxCOnA0yxao3J1LE3cVNycwBrY3IhIj9SKqkfoiPpV
-	TNY8UwrpdUwSi9YRm71DxVquqMVw18btIs6P+9OWxM8BXYgKWNDc4T9rxegyYhIf4CQWkG8kXuy
-	l6Y9FAdWDhYAXd6lahzS36gbHfFrm6B6uIVpE0S0M6lsUXe7qK2Et9C7H+GBxvQ6p1V+mwX/z3V
-	EK6HoDBDJgnaljynsOzjvHOmvrOo+apCfbUqYhxiIwBUI7yql/UMa1eHweaakSGY2veWemGdpFw
-	Zfj5ivUH26KUyfUcBm4ZfZwQ7cHiq9ABc0FghJWN2z92c3BBi9FLhjPmWfE/b0CRMUpcFaejuH+
-	yl
-X-Received: by 2002:a05:600c:4f4a:b0:4bb:6752:8413 with SMTP id 5b1f17b1804b1-4bb8880015bmr273057935e9.8.1795445001899;
-        Mon, 23 Nov 2026 06:43:21 -0800 (PST)
-X-Received: by 2002:a05:600c:4f4a:b0:4bb:6752:8413 with SMTP id 5b1f17b1804b1-4bb8880015bmr273057625e9.8.1795445001514;
-        Mon, 23 Nov 2026 06:43:21 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6b110ba3sm18481531f8f.35.2026.11.23.06.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 06:43:21 -0800 (PST)
-Message-ID: <a0ea5b88df11b325895a446a2e6ed18a60807ea8.camel@redhat.com>
-Subject: Re: [PATCH] rv: Fix empty tail container detection
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Avi Weiss <thnkslprpt@gmail.com>, rostedt@goodmis.org
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 23 Nov 2026 15:43:20 +0100
-In-Reply-To: <20261116084530.87088-1-thnkslprpt@gmail.com>
-References: <20261116084530.87088-1-thnkslprpt@gmail.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJQxp1b8WsNMfoVFurNpPhpxRv6/KYmR7xfHGB3nybg=;
+	b=AXtOBYlO+1jF4aXb9zRJk3lyOFjpCDlYnrih5S6XMRPI0ll3SSQlg9Va2D3LO9OSyqIjKy
+	cYq6Jl5fm1UZ1f7Za+UYlbQCohSVK2ip0+JBaIwuaRERGUibLQFeG8IMCmSiijZ7OhJdOx
+	/dbQ0285rTe/kz/0ztmxwUjd7Z2al7E=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-274-j0KvJMa_O22XrITh9ygvgw-1; Mon,
+ 23 Nov 2026 14:45:32 +0000
+X-MC-Unique: j0KvJMa_O22XrITh9ygvgw-1
+X-Mimecast-MFC-AGG-ID: j0KvJMa_O22XrITh9ygvgw_1795445129
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 622581955D7C;
+	Mon, 23 Nov 2026 14:45:28 +0000 (UTC)
+Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 12FE1345;
+	Mon, 23 Nov 2026 14:45:23 +0000 (UTC)
+Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
+	oleg@redhat.com; Mon, 23 Nov 2026 15:45:28 +0100 (CET)
+Date: Mon, 23 Nov 2026 15:45:22 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Keenan Dong <keenanat2000@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: clear extra_consumers before pooling return
+ instances
+Message-ID: <awRRgnRmeMDUvUWz@redhat.com>
+References: <20260408100247.2065245-1-keenanat2000@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -116,53 +85,57 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: K_dxB-bh-Bs0D0GrAfXbxF87SSn52nQaSL5kzjiLDrg_1795445002
+In-Reply-To: <20260408100247.2065245-1-keenanat2000@gmail.com>
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: MAi_8NuGr5eKaSi92dX9VfdaMsEFtTPBMaiLqapm30c_1795445129
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 2026-11-16 at 10:45 +0200, Avi Weiss wrote:
-> rv_is_container_monitor() returns false for the last list entry
-> before checking its enable callback. With CONFIG_RV_MON_DEADLINE=3Dy
-> and CONFIG_RV_MON_NOMISS=3Dn, the empty deadline container can be
-> last. Enabling it then calls a NULL callback through
-> rv_enable_single(), causing a kernel oops.
->=20
-> An empty non-tail container already enables successfully: it is
-> marked enabled without activating any child monitors. Preserve this
-> behavior regardless of list position by checking the tail entry's
-> enable callback. Keep the tail check before list_next_entry() to
-> avoid accessing the list head as a monitor.
->=20
-> Fixes: 8d7861ac507d ("rv: Fix out-of-bound memory access in
-> rv_is_container_monitor()")
-> Signed-off-by: Avi Weiss <thnkslprpt@gmail.com>
+Andrii, can you take a look? I never understood this code in details,
+and today I forgot everything...
+
+On 04/08, Keenan Dong wrote:
+>
+> ri_pool_push() returns a return_instance to the per-task pool for
+> later reuse. The pool reset clears cons_cnt, but it leaves
+> extra_consumers behind.
+
+So at first glance this doesn't look right no matter what...
+
+> A reused return_instance can later grow a fresh extra_consumers
+> array and then reach the cleanup path with a stale pointer from its
+> previous lifetime, leading to a double free of the recycled object.
+
+Can you add more details to explain the possible double free?
+This is not immediately obvious, at least not to me.
+
+Oleg.
+
+> Free and clear extra_consumers before putting the instance back into
+> the pool so every reused entry starts from a clean state.
+> 
+> Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
+> Reported-by: Keenan Dong <keenanat2000@gmail.com>
+> Signed-off-by: Keenan Dong <keenanat2000@gmail.com>
 > ---
-
-Well, this is not really a supported configuration, but since we can't easi=
-ly
-block it in KConfig and your change is neat and simple, it's still a good
-addition, thanks.
-
-Acked-by: Gabriele Monaco <gmonaco@redhat.com>
-
-> =C2=A0kernel/trace/rv/rv.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index 29f155c6968b..a142e877e940 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-> @@ -222,7 +222,7 @@ bool rv_is_container_monitor(struct rv_monitor *mon)
-> =C2=A0=09struct rv_monitor *next;
-> =C2=A0
-> =C2=A0=09if (list_is_last(&mon->list, &rv_monitors_list))
-> -=09=09return false;
-> +=09=09return !mon->enable;
-> =C2=A0
-> =C2=A0=09next =3D list_next_entry(mon, list);
-> =C2=A0
->=20
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+>  kernel/events/uprobes.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 923b24b321cc..24b9884a2667 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1945,6 +1945,8 @@ unsigned long uprobe_get_trap_addr(struct pt_regs *regs)
+>  
+>  static void ri_pool_push(struct uprobe_task *utask, struct return_instance *ri)
+>  {
+> +	kfree(ri->extra_consumers);
+> +	ri->extra_consumers = NULL;
+>  	ri->cons_cnt = 0;
+>  	ri->next = utask->ri_pool;
+>  	utask->ri_pool = ri;
+> -- 
+> 2.43.0
+> 
 
