@@ -1,93 +1,93 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795421958;
-	b=0HpJCK4W/D1hXwnGUGIGMUsF979JCtjI20IY7absFa06yB7+JvhitR+lhL8xlODqNIF0
-	 iK/4tmFrsYtVHCzDtCNLBONmbpMBstc81vWeCyRWanAo2czKqdW2M5m5giHed7S+cpJDc
-	 JtNwPJyAKEWIqpK6upRitJLzKlCnlL1qnYxQQB7vA7araGajWw1c+sWZjwJs9GoEgcrqi
-	 lWd041UjwYeAfqU5hrWqd0RoKlnS0lRyI3NFlO/YOf2eeeMaw57Gqgck+fvRyVrN7eyaw
-	 Y0jVzWaSJX7NXBveRtrUSq3SQlNo5FskCPF0alSkRFEEG6CggnppOl9Q/o4JBu+1FmQ==
+	t=1795422298;
+	b=wSLUwGlwCy7jWLxcdFeK7qR/rcageWMCO2id4A5dvMPRcLslUAh89HBWbvFLs6Yfxr6O
+	 R22rbb6in9g99b3I/IhPcucPNnHivinMxlK/j+g8F3D+6XfUHeYnXDlOCCh4UGoTJPuwP
+	 Nc5WncSM+X1RAPHh6kpm8IWgtGUUExSG5P3ArX+7fAKu4q3H8v4VvmGS0tWqucDBiFm63
+	 Kq7MLCjpQuPbM0tTDFweIfZQHjVYkQGNQ6Pd8k4gML3QAU/SI1/mLteyrC6XUzFQvvB7g
+	 I1TnVTP2TghVZUVkeI3SKPgh8nw3HFYeRgoJxvbyRZsFMD82yPenniu1Jqm5/EySwMQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795421958;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795422298;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
 	 Subject:From:To:Cc:Date:In-Reply-To:References:Autocrypt:User-Agent:
 	 MIME-Version:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
 	 X-Mimecast-Originator:Content-Type:Content-Transfer-Encoding;
-	bh=9jE+uofMXoiZymIaqbcidfP1LV+ue1j2jIO0vLCpJvk=;
-	b=nq92Afq4RmIePtZJvDVE/Th26AYsdvmQbWGJ7E7KGVYXRgLSjRptCZU7rS5JwSkqXpa4
-	 JGWX+79DfKD4eb8Twe2Pfe5CnmER8Er+fJX1rlgf0Hy4TobqNcLt+CNIIQhy9TlOXzpdG
-	 w4K++uzC9JSjGHfztz8MQS5LVvMVcDRpQzVYwaHgiW2y/s8fNGEwrWl2pi3mPiMPSl2tJ
-	 srfR6leLUmEJ7qgDRYelkxyu3CqwVu42WlFDJdvw5gC6iUN+dmhSRemdGuKy4ovbO9Tif
-	 +HflIP7NAVHsHSk1c1ZdjX76EJki58OQ+JP5eDcmL81vkwAtue65wMVr/UC0YEty+XQ==
+	bh=0tki+M1BefXqILboQVq61NA/8ZpvcacjXKbcQqfpqGA=;
+	b=xjdKnCqeFaH9e022OK3/NCXEqmh3AD3l+IMGUxChWEl1y+U23eqQ0jclIEWl6mLHqwoD
+	 jH+BKrXBh16uubL3vdm+kT5yiNZxqeF+yrDhgDAk+oTTIWSuvvXF/ga3/4sntJCihmuNg
+	 zctJWnM4DyyYE2GMBBJIjZBiKjS6WgieHCx/xf+qvZM9oh70QWIR20nK9hBNbUW8dUt1l
+	 L5SuAl/TauoANTlvYH39qdg+d2SBJmSjOhuzrkZZZPl5BqeH3ONbh0WkV2kTQsbKopiJG
+	 rkcu+bHfk3t9MLGokVvOa5NzsIDmDPSptHbJAU+7+kyqwLJ6OqYfdJWvcpOpt5/cOUA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BmRjcpxR;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EoJX3YA7;
 	arc=none smtp.remote-ip=170.10.133.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F34606A31F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 08:19:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 19F34606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE8B606A31A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 08:24:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4EE8B606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BmRjcpxR
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EoJX3YA7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795421957;
+	s=mimecast20190719; t=1795422297;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9jE+uofMXoiZymIaqbcidfP1LV+ue1j2jIO0vLCpJvk=;
-	b=BmRjcpxR35Ezne6Ter/ntrkHo/DxKOhqu72orlaBjGPXiGZqLDFuBMB9CgyUVuBhp3pCnp
-	VdcdEu6nnugx3y9duSipneVQWk+osSzHiyM+YDclJxYOToZx91Quv7Va9lBGlKJQs4iop0
-	yapHELeMCc/SKpvT6gAgts14+aJT8mY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=0tki+M1BefXqILboQVq61NA/8ZpvcacjXKbcQqfpqGA=;
+	b=EoJX3YA78otZc5wIcbEVNNbpv3o5HV5drVX3ZXalqgCIgCIFvFWBg5JP2bU9VZS0pshry1
+	rZ2kGZhhiiYd9SfVrbyxH4WIc9fVxZqTyPsuLnnFdcD7FBs3o4ne+aiByQ0Qu04NYbIvft
+	VTW2AAXhTDV23u4A5CrSe/hvzQhkUjA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-8QqUDN-rOiaOQuML91VsJA-1; Mon, 23 Nov 2026 08:19:13 +0000
-X-MC-Unique: 8QqUDN-rOiaOQuML91VsJA-1
-X-Mimecast-MFC-AGG-ID: 8QqUDN-rOiaOQuML91VsJA_1795421952
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-4915ba023d4so1766149f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 00:19:13 -0800 (PST)
+ us-mta-684-L6NVCy3hMpO3AZ_uP65ROA-1; Mon, 23 Nov 2026 08:24:55 +0000
+X-MC-Unique: L6NVCy3hMpO3AZ_uP65ROA-1
+X-Mimecast-MFC-AGG-ID: L6NVCy3hMpO3AZ_uP65ROA_1795422294
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4bb67b2c00cso19043085e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 00:24:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795421952; x=1796026752;
+        d=1e100.net; s=20260707; t=1795422294; x=1796027094;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=9jE+uofMXoiZymIaqbcidfP1LV+ue1j2jIO0vLCpJvk=;
-        b=dEBaxm6SXPAMj0NrIVAj8KUyEcRK5s98X6OrmAq3RpQ7kUD+AABaMEFHYYKrRD1GSQ
-         i3hrwnrMFmZWbTkJQadyC4kMaurnBloG5QGp9QfwLY1yyn/7tbV20bprWSpF/lMX2I4b
-         oT5isrP1zlqxy40zgd1i0oxQLEUsjf11kDK97WeQcAf/9E22lfPMSzH9ReGJZcT592ro
-         teAwP5t2l0gKvqQwDKzEdpc7wqAiBXVmwMCqB8JvG5WwYdxYYMttaEZZ2t47nIg503Uh
-         dhsz7SdNZwtlbviWQfBS+VQLpLbOVJ1Mw98DpQe8s5g5ELnE4O/AEfynaZixq0jqrTQs
-         epYg==
-X-Gm-Message-State: APuU4Z9nZOROC7bO9mwV/75jFiF98obRGbshsD6PkqU/OlnVp5MHbUnQ
-	IezXtks3D8mVcb+DQAGfiOnY5PiZd1Y8zLSQxyESYHgse5QPNs9iEw560zb32nrXm3H+uACXmFN
-	EOvaUS06jZjfXZmJaH5oOp84EGKZxm4V17JKaS632nqGFLcTTpMsVvYeUoNjGWggftthOnQ61sA
+        bh=0tki+M1BefXqILboQVq61NA/8ZpvcacjXKbcQqfpqGA=;
+        b=DA2Iox4s7M/+uYREHOTHIO9aL2ozuNNbv5Ioe45AJx+2h+8UHI3vv7W0KOAZW3drMG
+         HdUv6KqARBCL4WslexGVOshlve/j3IwufaMqNCEmnSyWPw7X2WHSjzH2hCWhlLIsPsbg
+         U7R3Ur+JS/yqf872iaE4J25cGymdVJnjzoukwVQdkEHAj9tAjlDawVVmThcvRBblIr5Y
+         rv5C7er+MasA2Szha9gSqhZAHuq+q2QM+WNRmCJegOT0XKc+YS0HPJq1FwleeN9F+2jq
+         ag3v8doqSURs5/UgN+29jLmtEXvgXkXtHK4eKJbBC0yqzTQX7qj8nwToKohSHrS/qC5y
+         V8ZQ==
+X-Gm-Message-State: APuU4Z/s+kny0v3sKqfRS893S+mxSeCl8H5brTy1V2yQCwNDidnrqIdH
+	sGrc9s0UqbC5+/3IVkJ+aQuytEB5E+WwGhflXArGDGo1cZZlR+3kawIpG/p4D4RbqfDToN9OmVF
+	QceJQc0S136ez04M9jaespLWQdQKjOdV+yxYlvCLArGByu1Ds6UlzCivSLOj52C6K0ZQ6hnZ0VQ
 	==
-X-Gm-Gg: AZFdTZeOQbr5Yy8ekNUf85PWpWFC0ZXnVaVw5ULVNhR20cQlSJ9O5GnEbKikpDRo4jJ
-	WB8jAGw/mdV/XzTyysc/pPQVgiQBqq7icQ8xcjxCNpOuYoaEqctES9PgmMS0ez4zeQmYN1oBBWP
-	EvWkpIVCVZX+zn7UJTjFkKV+yuJdItxjpZq7EGDjNDYM5zjB2LsE3mCeHe3WpV89sxFidK9mK7k
-	PAjJ/M2WFlxMIWT1oKbL7iNaYUpOty0e2FaNlxjP7D3L6WGH/E1phqoklswW3uqZxiflkiMacHF
-	il/VskV/zSSo+Kj+Send8t0fPvLwhrsHCOtPZoi517wvy9fiksoQGy2i7H5fLeF09rQ53DlZCVq
-	G26Bo9EGHN6F7RkMI/DBpWFn/H+Vqm3nBtapU/0kY04n/eObaN6f+T+9wcBvKcDr8MVsJI7X159
-	o7
-X-Received: by 2002:a05:6000:29ce:b0:4a7:1fca:e52d with SMTP id ffacd0b85a97d-4abb0e46a88mr13607776f8f.9.1795421952516;
-        Mon, 23 Nov 2026 00:19:12 -0800 (PST)
-X-Received: by 2002:a05:6000:29ce:b0:4a7:1fca:e52d with SMTP id ffacd0b85a97d-4abb0e46a88mr13607762f8f.9.1795421952164;
-        Mon, 23 Nov 2026 00:19:12 -0800 (PST)
+X-Gm-Gg: AZFdTZd1zlcDttKVpCjwkfOErqtZtjpEZ/kJlYGMu5Ae4dOWi42EadJ0K96C4nAAE3L
+	7wjpUrX5mValEExt79RFOjWEuZGL5cQU5XmtbpgNEncuB/qIUrfKCXVLfJcS8wJtMrHw54aPB0B
+	Y80Pt1FcmQtbIf3RBt9s0feZLsUCINbfcuVPb7xCjDlqfEjVjUe5wCsWexFfeZjhdQz0ttWwAKK
+	g95IGfEldGcfBr04VwY9a6mpXS00ErREpbiAposvFTHftmZYSrajN+B7BeRTrOe9rez8WmYAD7M
+	3W5RDUACyo6FIH3Ocw0K6S3nozlLQ3UgEc7l7Cc2NF6L6+iGBB6K/wxVowyn4ZpbgP17Ecqm8hY
+	Ef8SWYVNeTEU55w6WHwwkBfNhq9qd0LsP/V5o2GIyv5WxZKjZrf20sp8ZHyKSNIiqBjDNBFfVyn
+	9J
+X-Received: by 2002:a05:600c:a39d:b0:4bb:679b:fc6 with SMTP id 5b1f17b1804b1-4bb86157a2bmr176756165e9.12.1795422294372;
+        Mon, 23 Nov 2026 00:24:54 -0800 (PST)
+X-Received: by 2002:a05:600c:a39d:b0:4bb:679b:fc6 with SMTP id 5b1f17b1804b1-4bb86157a2bmr176755785e9.12.1795422293941;
+        Mon, 23 Nov 2026 00:24:53 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6b110c50sm20595686f8f.37.2026.11.23.00.19.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab658e2d60sm21170713f8f.3.2026.11.23.00.24.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 00:19:11 -0800 (PST)
-Message-ID: <adf958e52bab320a5568ae5786435979d9a904a1.camel@redhat.com>
-Subject: Re: [PATCH 2/6] rv: Update monitors through a quiesce helper
+        Mon, 23 Nov 2026 00:24:53 -0800 (PST)
+Message-ID: <7b5bbd08396e7478b68c941f1f20e111a1623869.camel@redhat.com>
+Subject: Re: [PATCH 5/6] tools/rv: Parse the mixed enable state of containers
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Wei Li <liwei1412@hotmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
  Jonathan Corbet
@@ -96,10 +96,10 @@ To: Wei Li <liwei1412@hotmail.com>, Steven Rostedt <rostedt@goodmis.org>,
  Desnoyers <mathieu.desnoyers@efficios.com>, Nam Cao <namcao@linutronix.de>
 Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
 	liwei391@huawei.com
-Date: Mon, 23 Nov 2026 09:19:09 +0100
-In-Reply-To: <CY8PR19MB7009AD3DA7BC39C8D5419B1EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+Date: Mon, 23 Nov 2026 09:24:51 +0100
+In-Reply-To: <CY8PR19MB700974075298C61A1DB70C3EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
 References: <CY8PR19MB70098BF493A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-	 <CY8PR19MB7009AD3DA7BC39C8D5419B1EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+	 <CY8PR19MB700974075298C61A1DB70C3EB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -120,200 +120,86 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: bzwrUOJqP_ZjQXwRD4a8oWy-G0aLW2Qkr6N7auOjIAk_1795421952
+X-Mimecast-MFC-PROC-ID: Y2Gny0fArLxrhgnKL8Xa4YBY0DhoIulOQF1TFPiLyrE_1795422294
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, 2026-11-04 at 17:21 +0800, Wei Li wrote:
 > From: Wei Li <liwei391@huawei.com>
->=20
-> The reactor swap inlines the disable-update-re-enable pattern in
-> monitor_swap_reactors_single(). The nested flag splits one helper into
-> two behaviors. The container path re-enables every nested monitor,
-> including the ones the user left off. This abnormal logic seems to be a
-> temporary strategy from the comments.
->=20
-> Add rv_update_monitor() helper with callback for generic update
-> processing. A monitor is updated with it quiesced and keeps its enabled
-> state, including the children of a container.
->=20
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> ---
-> =C2=A0kernel/trace/rv/rv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 49 +++++++++++++++++++++++++++++++++++
-> =C2=A0kernel/trace/rv/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 2 ++
-> =C2=A0kernel/trace/rv/rv_reactors.c | 34 +++++-------------------
-> =C2=A03 files changed, 58 insertions(+), 27 deletions(-)
->=20
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index 29f155c6968b..4e689d4590ae 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-> @@ -289,6 +289,19 @@ static int rv_enable_single(struct rv_monitor *mon)
-> =C2=A0=09return retval;
+...
+
+> --- a/tools/verification/rv/src/in_kernel.c
+> +++ b/tools/verification/rv/src/in_kernel.c
+> @@ -29,21 +29,38 @@ static char *config_reactor;
+> =C2=A0 *
+> =C2=A0 * __does not log errors.
+> =C2=A0 *
+> - * Returns the current status, or -1 if the monitor does not exist,
+> - * __hence not logging errors.
+> + * Returns 0 if disabled, 1 if enabled, 2 if a container with children
+> + * in mixed states, or -1 if the monitor does not exist, __hence not
+> + * logging errors.
+
+Instead of documenting the meaning of integers, why don't you copy the
+enum here too?
+It doesn't necessarily need to match (that is, obviously use the same,
+but if it ever diverges, nothing is going to happen). I think it gets
+more readable.
+
+> =C2=A0 */
+> =C2=A0static int __ikm_read_enable(char *monitor_name)
+> =C2=A0{
+> =C2=A0=09char path[MAX_PATH];
+> -=09long long enabled;
+> -=09int retval;
+> +=09char *buffer;
+> +=09int enabled;
+> =C2=A0
+> =C2=A0=09snprintf(path, MAX_PATH, "rv/monitors/%s/enable", monitor_name);
+> =C2=A0
+> -=09retval =3D tracefs_instance_file_read_number(NULL, path, &enabled);
+> -=09if (retval < 0)
+> +=09buffer =3D tracefs_instance_file_read(NULL, path, NULL);
+> +=09if (!buffer)
+> =C2=A0=09=09return -1;
+> =C2=A0
+> +=09switch (buffer[0]) {
+> +=09case '0':
+> +=09=09enabled =3D 0;
+> +=09=09break;
+> +=09case '1':
+> +=09=09enabled =3D 1;
+> +=09=09break;
+> +=09case 'X':
+> +=09=09enabled =3D 2;
+> +=09=09break;
+> +=09default:
+> +=09=09enabled =3D -1;
+> +=09}
+> +
+> +=09free(buffer);
+> +
+> =C2=A0=09return enabled;
 > =C2=A0}
 > =C2=A0
-> +static int rv_update_single(struct rv_monitor *mon, rvmon_update_fn_t up=
-date,
-> void *data)
+> @@ -370,7 +387,8 @@ int ikm_list_monitors(char *container)
+> =C2=A0=09=09=09list_monitor =3D 1;
+> =C2=A0=09=09=09printf("%s%-*s %s %s\n", indent ? " - " : "",
+> =C2=A0=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 indent ? MAX_DA_NAME_=
+LEN - 3 :
+> MAX_DA_NAME_LEN,
+> -=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ikm.name, ikm.desc, ikm.en=
+abled ? "[ON]" :
+> "[OFF]");
+> +=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ikm.name, ikm.desc,
+> +=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ikm.enabled =3D=3D 2 ? "[M=
+IX]" : ikm.enabled ?
+> "[ON]" : "[OFF]");
 
-So are you passing a function and a void* only not to export enable/disable
-functions?
-It's probably simpler if you handle this directly in rv_reactors.c
-Kinda like it is right now but with your new logic.
+This double ternary operator needs parentheses, otherwise we are relying
+on some non-trivial operator precedence rules.
 
 Thanks,
 Gabriele
-
-> +{
-> +=09int retval =3D 0;
-> +=09int enabled;
-> +
-> +=09enabled =3D __rv_disable_monitor(mon, true);
-> +=09update(mon, data);
-> +=09if (enabled)
-> +=09=09retval =3D rv_enable_single(mon);
-> +
-> +=09return retval;
-> +}
-> +
-> =C2=A0static void rv_disable_container(struct rv_monitor *mon)
-> =C2=A0{
-> =C2=A0=09struct rv_monitor *p =3D mon;
-> @@ -321,6 +334,22 @@ static int rv_enable_container(struct rv_monitor *mo=
-n)
-> =C2=A0=09return retval;
-> =C2=A0}
-> =C2=A0
-> +static int rv_update_container(struct rv_monitor *mon, rvmon_update_fn_t
-> update, void *data)
-> +{
-> +=09struct rv_monitor *p =3D mon;
-> +=09int retval =3D 0;
-> +
-> +=09list_for_each_entry_continue(p, &rv_monitors_list, list) {
-> +=09=09if (retval || p->parent !=3D mon)
-> +=09=09=09break;
-> +=09=09retval =3D rv_update_single(p, update, data);
-> +=09}
-> +=09if (retval)
-> +=09=09rv_disable_container(mon);
-> +=09update(mon, data);
-> +=09return retval;
-> +}
-> +
-> =C2=A0/**
-> =C2=A0 * rv_disable_monitor - disable a given runtime monitor
-> =C2=A0 * @mon: Pointer to the monitor definition structure.
-> @@ -355,6 +384,26 @@ int rv_enable_monitor(struct rv_monitor *mon)
-> =C2=A0=09return retval;
-> =C2=A0}
-> =C2=A0
-> +/**
-> + * rv_update_monitor - update and reenable a given runtime monitor
-> + * @mon: Pointer to the monitor definition structure.
-> + * @update: Pointer to the monitor update callback.
-> + * @data: Context data passed to the update().
-> + *
-> + * Returns 0 on success, error otherwise.
-> + */
-> +int rv_update_monitor(struct rv_monitor *mon, rvmon_update_fn_t update, =
-void
-> *data)
-> +{
-> +=09int retval;
-> +
-> +=09if (rv_is_container_monitor(mon))
-> +=09=09retval =3D rv_update_container(mon, update, data);
-> +=09else
-> +=09=09retval =3D rv_update_single(mon, update, data);
-> +
-> +=09return retval;
-> +}
-> +
-> =C2=A0/*
-> =C2=A0 * interface for enabling/disabling a monitor.
-> =C2=A0 */
-> diff --git a/kernel/trace/rv/rv.h b/kernel/trace/rv/rv.h
-> index 2c0f51ff9d5c..d0e89b8a66ac 100644
-> --- a/kernel/trace/rv/rv.h
-> +++ b/kernel/trace/rv/rv.h
-> @@ -26,8 +26,10 @@ extern struct mutex rv_interface_lock;
-> =C2=A0extern struct list_head rv_monitors_list;
-> =C2=A0
-> =C2=A0struct dentry *get_monitors_root(void);
-> +typedef void (rvmon_update_fn_t)(struct rv_monitor *mon, void *data);
-> =C2=A0int rv_disable_monitor(struct rv_monitor *mon);
-> =C2=A0int rv_enable_monitor(struct rv_monitor *mon);
-> +int rv_update_monitor(struct rv_monitor *mon, rvmon_update_fn_t update, =
-void
-> *data);
-> =C2=A0bool rv_is_container_monitor(struct rv_monitor *mon);
-> =C2=A0bool rv_is_nested_monitor(struct rv_monitor *mon);
-> =C2=A0
-> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.=
-c
-> index ea52f50e6453..06f21bcdd6cf 100644
-> --- a/kernel/trace/rv/rv_reactors.c
-> +++ b/kernel/trace/rv/rv_reactors.c
-> @@ -177,45 +177,25 @@ static const struct seq_operations
-> monitor_reactors_seq_ops =3D {
-> =C2=A0=09.show=09=3D monitor_reactor_show
-> =C2=A0};
-> =C2=A0
-> -static void monitor_swap_reactors_single(struct rv_monitor *mon,
-> -=09=09=09=09=09 struct rv_reactor *reactor,
-> -=09=09=09=09=09 bool nested)
-> +static void monitor_update_reactor(struct rv_monitor *mon, void *data)
-> =C2=A0{
-> -=09bool monitor_enabled;
-> +=09struct rv_reactor *reactor =3D data;
-> =C2=A0
-> -=09/* nothing to do */
-> -=09if (mon->reactor =3D=3D reactor)
-> +=09if (mon->reactor =3D=3D data)
-> =C2=A0=09=09return;
-> =C2=A0
-> -=09monitor_enabled =3D mon->enabled;
-> -=09if (monitor_enabled)
-> -=09=09rv_disable_monitor(mon);
-> -
-> =C2=A0=09mon->reactor =3D reactor;
-> =C2=A0=09mon->react =3D reactor->react;
-> -
-> -=09/* enable only once if iterating through a container */
-> -=09if (monitor_enabled && !nested)
-> -=09=09rv_enable_monitor(mon);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void monitor_swap_reactors(struct rv_monitor *mon, struct rv=
-_reactor
-> *reactor)
-> =C2=A0{
-> -=09struct rv_monitor *p =3D mon;
-> -
-> -=09if (rv_is_container_monitor(mon))
-> -=09=09list_for_each_entry_continue(p, &rv_monitors_list, list) {
-> -=09=09=09if (p->parent !=3D mon)
-> -=09=09=09=09break;
-> -=09=09=09monitor_swap_reactors_single(p, reactor, true);
-> -=09=09}
-> =C2=A0=09/*
-> -=09 * This call enables and disables the monitor if they were active.
-> -=09 * In case of a container, we already disabled all and will enable
-> all.
-> -=09 * All nested monitors are enabled also if they were off, we may
-> refine
-> -=09 * this logic in the future.
-> +=09 * Update the reactor with the monitor quiesced: enabled monitors are
-> +=09 * disabled, updated and re-enabled, disabled ones are only updated.
-> +=09 * Children of a container keep their enabled state.
-> =C2=A0=09 */
-> -=09monitor_swap_reactors_single(mon, reactor, false);
-> +=09rv_update_monitor(mon, monitor_update_reactor, reactor);
-> =C2=A0}
-> =C2=A0
-> =C2=A0static ssize_t
 
