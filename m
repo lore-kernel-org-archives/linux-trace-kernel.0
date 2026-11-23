@@ -1,51 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.113
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795447699;
-	b=J83bat2agP3vrIyNOPwV+kuDzNHynFclbtybuCbCokK4hTTYTl/AT/AbKry3JhaBxvYG
-	 xt077WL7a6P5aqIgnhcqiap7QrcMdeScguJXyHhUurDxM/pur4YeWResG+C4LrLgjx+vE
-	 XUws0wwFmHaqenhFjVPP7mAC7pBUfS9cYOgM6uGR1X4q/tQkTbX5AXgX5ECa+sLdnCJ6F
-	 KGemRVmobvP1lqcl2YKcn87a41etQ9/p9oVKj1/DZI5cRBKqhzkRGifhl+2hXerE3Dp3L
-	 ia+s5DjY7eAMbEFdXmj0luFbj0cNc56wyXz/AffUovCeN1SJy2fustnLNo4cnKf3xmg==
+	t=1795447710;
+	b=OE9w2UmizrdOYYUCUPQVC5WHG1ZQ3Cmu9JwSCCjKiU+L8SIWGwYUli3GkGlRFzltMLHL
+	 E0zN3rivvmUXBT/0bO+7Y/Y6s87dlfwQMm7MSj5ean0Z3JIVH+laLWHqOXPZ6kaO9wosF
+	 ApiE0zMbLHibdalVIa+iGxnJWkp3Nj1LoeIMpLmLyuF+/Be9fy7SOtFywChDGgY5Y9R1m
+	 onPLmXiRtoJXtJnO/4tpiwIyQzM8Ie3XcinrT2fq2GLuUyVrFFAWSLZddKoVMzs+Ke0IY
+	 /YN2AEa2RFhd9qtwxmv5ZtxptN0rbc2N7iGZsFB1wCvuncIclBMlqnbCey54DqN1+0Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795447699;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795447710;
 	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
 	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=k2smxzHeXRAx0A9z7lTFzNe4DM2FcGUPVbeO/1UWiUg=;
-	b=mWFqfPHXsTuwRNlE+slaPtg/Bv7yV+5lIjXmS0xKhC9rJQQnD2gngdyLchdgGXVv75U+
-	 BMxrSm8BS6JAU0kuACyn4nlWGMq+OL30XgNWNckGB76z4+qJGRp58SMqzgKwUFEJVehu3
-	 GcaBdoFQ4LGzisoZoLqAvbtSVy9yzZvEFzJX5ci7RFVpCDcA9VD/iFBPPvBjahWXul03o
-	 Wujq1EziJKmm3vDIIsK8UPCH1SGLiMobBMgwVAnlKX1N/WELV9lAFabca8yflcFi38L1S
-	 23LjRpzhHfquSuJZIt5bWmvLX2OfC6h96H38R0wxY1yDT7uA4qXwFLV4Sj5Rp4pOg7g==
+	bh=Xs14XeQIZZkFw3Clk4NIQHwRh+SuvZy2JNfCZ3YgPSk=;
+	b=AsgbjVNZylXZeh+VjuMZiGmkt4jcpTaTfsq2LOUOlrBorNmAvZHhKDkYNthlboRoR3qc
+	 PvVphuDhpSUcCObw/XKKdZuAoiVWFoPNSP5awXEhNgQI9MpucfaMEvs5utecHDjX/D+Bw
+	 Rh71Sxienpk90HV0x7icnsqCv+bCfoPmAf+CfEWwI52/xMfu+m0ayUkjsoW4cyoabrL/W
+	 fENvjzJs7ImNwz9xBXakN9wwS/La6qtp6qFxZVxCJsp6UUdh9nrP6P2GDGGHaazjID28U
+	 jcmh0KyXtH8J0BPOa72FcNdVogMYtkdxLbwW95MvMiwG6wMYyje6bRDZCgPzU7E8JeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.dev;
 	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=IVMIpWMJ;
-	arc=none smtp.remote-ip=95.215.58.101
-Received: from mta1.migadu.com (out-101.mta1.migadu.com [95.215.58.101])
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ZI6uBJU5;
+	arc=none smtp.remote-ip=95.215.58.113
+Received: from mta1.migadu.com (out-113.mta1.migadu.com [95.215.58.113])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA365606A683
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 15:28:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BA365606A683
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE768606A687
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 15:28:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DE768606A687
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=IVMIpWMJ
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=ZI6uBJU5
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=tQhfe9M78QeSxuJpsngJzIgLiVUwdC4ph20evAlvyIE=;
+DKIM-Signature: a=rsa-sha256; bh=eN/P0YGXODFl8WgmNNVBV2e2BDrvPZXuR1IIeoT2jzg=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795447695; v=1; x=1796052495;
- b=IVMIpWMJ+8sm6gEH8mC6KRrJRMXUDjkUgXfa9mlc3vZv3a0SnYwZGhHLHtstJX8+atPI744+
- ertWE/muz9NkF+hrxX9/uzbXXxpSUFXfQNaBPDrLfpP2nXmRV4uRnk3koIi0VLRA/HEcxiPlOSM
- u0HBq1htbCMge2p1BtPwSyj0=
+ t=1795447708; v=1; x=1796052508;
+ b=ZI6uBJU53DWqPSRDIHqYitrRs3RX9N6IHPEl4JFfo39wOZAHsjF45hO5dMNbdD1dB6mdaNsy
+ c1a3lNe5RVmReBERVbozhIivoqXLB1z6JvlGnhql0fxr6qjjjvYad7bkhEL0Gtg+lLFNlJXzSQy
+ IfPb3KWB4+aB1P0toGotHjI4=
 X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 3d2481252eb3e6e7;
-	Mon, 23 Nov 2026 15:28:15 +0000
-X-Mizu-Trace-ID: 3d2481252eb3e6e7
+Received: by smtp.migadu.com with ESMTPS id b990c6dbfefbb923;
+	Mon, 23 Nov 2026 15:28:27 +0000
+X-Mizu-Trace-ID: b990c6dbfefbb923
 X-Migadu-Flow: FLOW_OUT
 From: Leon Hwang <leon.hwang@linux.dev>
 To: bpf@vger.kernel.org
@@ -72,9 +72,9 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH bpf-next v3 2/9] bpf: Add log support for tracing_multi link_create
-Date: Mon, 23 Nov 2026 23:27:36 +0800
-Message-ID: <20261123152743.19629-3-leon.hwang@linux.dev>
+Subject: [PATCH bpf-next v3 3/9] bpf: Add log support for iter link_create
+Date: Mon, 23 Nov 2026 23:27:37 +0800
+Message-ID: <20261123152743.19629-4-leon.hwang@linux.dev>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261123152743.19629-1-leon.hwang@linux.dev>
 References: <20261123152743.19629-1-leon.hwang@linux.dev>
@@ -89,314 +89,120 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-tracing_multi BPF_LINK_CREATE returns errors without identifying the
-failed parameter or target check.
+iter BPF_LINK_CREATE returns an error without explaining invalid target
+FDs, flags, or iterator information, or an unsupported program.
 
-Report excessive counts, invalid flags and target FDs, and duplicate IDs
-through the link creation log. Also report BTF target validation errors,
-including unsupported prototypes, missing ftrace locations and disallowed
-sleepable attachment.
+Pass the BPF_LINK_CREATE log to the iter attach path and report these
+failures.
 
 Signed-off-by: Leon Hwang <leon.hwang@linux.dev>
 ---
- include/linux/bpf.h          |  6 +++--
- include/linux/bpf_verifier.h |  3 ++-
- include/linux/trace_events.h |  7 ++++--
- kernel/bpf/syscall.c         |  2 +-
- kernel/bpf/trampoline.c      |  5 ++--
- kernel/bpf/verifier.c        | 45 ++++++++++++++++++++++++++++--------
- kernel/trace/bpf_trace.c     | 27 ++++++++++++++++------
- 7 files changed, 70 insertions(+), 25 deletions(-)
+ include/linux/bpf.h   |  3 ++-
+ kernel/bpf/bpf_iter.c | 27 +++++++++++++++++++++------
+ kernel/bpf/syscall.c  |  2 +-
+ 3 files changed, 24 insertions(+), 8 deletions(-)
 
 diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 4e9a4d15af0e..a1ba3f54ba6a 100644
+index a1ba3f54ba6a..e6d6a34a2818 100644
 --- a/include/linux/bpf.h
 +++ b/include/linux/bpf.h
-@@ -1640,7 +1640,8 @@ void bpf_trampoline_put(struct bpf_trampoline *tr);
- int arch_prepare_bpf_dispatcher(void *image, void *buf, s64 *funcs, int num_funcs);
+@@ -3272,7 +3272,8 @@ void bpf_iter_unreg_target(const struct bpf_iter_reg *reg_info);
+ int bpf_iter_prog_supported(struct bpf_prog *prog);
+ const struct bpf_func_proto *
+ bpf_iter_get_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog);
+-int bpf_iter_link_attach(const union bpf_attr *attr, bpfptr_t uattr, struct bpf_prog *prog);
++int bpf_iter_link_attach(const union bpf_attr *attr, bpfptr_t uattr, struct bpf_prog *prog,
++			 struct bpf_verifier_log *log);
+ int bpf_iter_new_fd(struct bpf_link *link);
+ bool bpf_link_is_iter(struct bpf_link *link);
+ struct bpf_prog *bpf_iter_get_info(struct bpf_iter_meta *meta, bool in_stop);
+diff --git a/kernel/bpf/bpf_iter.c b/kernel/bpf/bpf_iter.c
+index f0b29a170935..4a9e08fb8e75 100644
+--- a/kernel/bpf/bpf_iter.c
++++ b/kernel/bpf/bpf_iter.c
+@@ -5,6 +5,7 @@
+ #include <linux/anon_inodes.h>
+ #include <linux/filter.h>
+ #include <linux/bpf.h>
++#include <linux/bpf_verifier.h>
+ #include <linux/rcupdate_trace.h>
  
- int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
--				struct bpf_tracing_multi_link *link);
-+				struct bpf_tracing_multi_link *link,
-+				struct bpf_verifier_log *log);
- void bpf_trampoline_multi_detach(struct bpf_prog *prog,
- 				 struct bpf_tracing_multi_link *link);
- void bpf_trampoline_set_flags(struct bpf_trampoline *tr, u32 flags);
-@@ -1758,7 +1759,8 @@ static inline bool bpf_prog_has_trampoline(const struct bpf_prog *prog)
- 	return false;
+ struct bpf_iter_target_info {
+@@ -528,7 +529,7 @@ bool bpf_link_is_iter(struct bpf_link *link)
  }
- static inline int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
--					      struct bpf_tracing_multi_link *link)
-+					      struct bpf_tracing_multi_link *link,
-+					      struct bpf_verifier_log *log)
+ 
+ int bpf_iter_link_attach(const union bpf_attr *attr, bpfptr_t uattr,
+-			 struct bpf_prog *prog)
++			 struct bpf_prog *prog, struct bpf_verifier_log *log)
  {
- 	return -ENOTSUPP;
- }
-diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-index 151b5781606d..f86b95da1b1e 100644
---- a/include/linux/bpf_verifier.h
-+++ b/include/linux/bpf_verifier.h
-@@ -2492,7 +2492,8 @@ int bpf_fixup_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
- 			 struct bpf_insn *insn_buf, int insn_idx, int *cnt);
+ 	struct bpf_iter_target_info *tinfo = NULL, *iter;
+ 	struct bpf_link_primer link_primer;
+@@ -538,24 +539,36 @@ int bpf_iter_link_attach(const union bpf_attr *attr, bpfptr_t uattr,
+ 	bpfptr_t ulinfo;
+ 	int err;
  
- /* Functions exported from verifier.c, used by trampoline.c */
--int bpf_check_attach_btf_id_multi(struct btf *btf, struct bpf_prog *prog, u32 btf_id,
-+int bpf_check_attach_btf_id_multi(struct bpf_verifier_log *log, struct btf *btf,
-+				  struct bpf_prog *prog, u32 btf_id,
- 				  struct bpf_attach_target_info *tgt_info);
+-	if (attr->link_create.target_fd || attr->link_create.flags)
++	if (attr->link_create.target_fd) {
++		bpf_log(log, "Invalid target_fd.\n");
++		return -EINVAL;
++	}
++	if (attr->link_create.flags) {
++		bpf_log(log, "Invalid flags.\n");
+ 		return -EINVAL;
++	}
  
- /* Functions in fixups.c, called from bpf_check() */
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 321f2f3a6c8e..bb825ea5d09c 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -16,6 +16,7 @@ struct tracer;
- struct dentry;
- struct bpf_prog;
- union bpf_attr;
-+struct bpf_verifier_log;
+ 	memset(&linfo, 0, sizeof(union bpf_iter_link_info));
  
- /* Used for event string fields when they are NULL */
- #define EVENT_NULL_STR		"(null)"
-@@ -796,7 +797,8 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
- 			    unsigned long *missed);
- int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
- int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
--int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr);
-+int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr,
-+			     struct bpf_verifier_log *log);
- #else
- static inline unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx)
- {
-@@ -855,7 +857,8 @@ bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
- 	return -EOPNOTSUPP;
- }
- static inline int
--bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
-+bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr,
-+			 struct bpf_verifier_log *log)
- {
- 	return -EOPNOTSUPP;
- }
+ 	ulinfo = make_bpfptr(attr->link_create.iter_info, uattr.is_kernel);
+ 	linfo_len = attr->link_create.iter_info_len;
+-	if (bpfptr_is_null(ulinfo) ^ !linfo_len)
++	if (bpfptr_is_null(ulinfo) ^ !linfo_len) {
++		bpf_log(log, "iter_info and iter_info_len must be both set or both unset.\n");
+ 		return -EINVAL;
++	}
+ 
+ 	if (!bpfptr_is_null(ulinfo)) {
+ 		err = bpf_check_uarg_tail_zero(ulinfo, sizeof(linfo),
+ 					       linfo_len);
+-		if (err)
++		if (err) {
++			bpf_log(log, "Invalid iter_info_len.\n");
+ 			return err;
++		}
+ 		linfo_len = min_t(u32, linfo_len, sizeof(linfo));
+-		if (copy_from_bpfptr(&linfo, ulinfo, linfo_len))
++		if (copy_from_bpfptr(&linfo, ulinfo, linfo_len)) {
++			bpf_log(log, "Invalid iter_info.\n");
+ 			return -EFAULT;
++		}
+ 	}
+ 
+ 	prog_btf_id = prog->aux->attach_btf_id;
+@@ -570,8 +583,10 @@ int bpf_iter_link_attach(const union bpf_attr *attr, bpfptr_t uattr,
+ 	if (!tinfo)
+ 		return -ENOENT;
+ 
+-	if (!bpf_iter_target_support_prog(tinfo, prog))
++	if (!bpf_iter_target_support_prog(tinfo, prog)) {
++		bpf_log(log, "The iter target does not support the bpf prog.\n");
+ 		return -EINVAL;
++	}
+ 
+ 	link = kzalloc_obj(*link, GFP_USER | __GFP_NOWARN);
+ 	if (!link)
 diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 80504011403f..d3ab9c695129 100644
+index d3ab9c695129..f485e68a14ee 100644
 --- a/kernel/bpf/syscall.c
 +++ b/kernel/bpf/syscall.c
-@@ -5954,7 +5954,7 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr, struct bpf_common_a
+@@ -5950,7 +5950,7 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr, struct bpf_common_a
+ 			ret = bpf_raw_tp_link_attach(prog, NULL, attr->link_create.tracing.cookie,
+ 						     attr->link_create.attach_type);
+ 		else if (prog->expected_attach_type == BPF_TRACE_ITER)
+-			ret = bpf_iter_link_attach(attr, uattr, prog);
++			ret = bpf_iter_link_attach(attr, uattr, prog, log);
  		else if (prog->expected_attach_type == BPF_LSM_CGROUP)
  			ret = cgroup_bpf_link_attach(attr, prog);
  		else if (is_tracing_multi(prog->expected_attach_type))
--			ret = bpf_tracing_multi_attach(prog, attr);
-+			ret = bpf_tracing_multi_attach(prog, attr, log);
- 		else
- 			ret = bpf_tracing_prog_attach(prog,
- 						      attr->link_create.target_fd,
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index 5f2b792de8f9..96454443441b 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -1723,7 +1723,8 @@ static void bpf_trampoline_multi_attach_rollback(struct bpf_trampoline *tr)
- 	for_each_mnode_cnt(mnode, link, link->nodes_cnt)
- 
- int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
--				struct bpf_tracing_multi_link *link)
-+				struct bpf_tracing_multi_link *link,
-+				struct bpf_verifier_log *log)
- {
- 	struct bpf_tracing_multi_data *data = &link->data;
- 	struct bpf_attach_target_info tgt_info = {};
-@@ -1736,7 +1737,7 @@ int bpf_trampoline_multi_attach(struct bpf_prog *prog, u32 *ids,
- 	for_each_mnode(mnode, link) {
- 		rollback_cnt = i;
- 
--		err = bpf_check_attach_btf_id_multi(btf, prog, ids[i], &tgt_info);
-+		err = bpf_check_attach_btf_id_multi(log, btf, prog, ids[i], &tgt_info);
- 		if (err)
- 			goto rollback_put;
- 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 58d3588ffc84..4927d3674021 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -24150,8 +24150,12 @@ btf_attach_func_proto(struct bpf_verifier_log *log, struct btf *btf, u32 func_id
- 	int implicit;
- 
- 	func = btf_type_by_id(btf, func_id);
--	if (!func || !btf_type_is_func(func))
-+	if (!func)
-+		return NULL;
-+	if (!btf_type_is_func(func)) {
-+		bpf_log(log, "Type of id %u is not function.\n", func_id);
- 		return NULL;
-+	}
- 	name = btf_name_by_offset(btf, func->name_off);
- 
- 	/*
-@@ -24906,7 +24910,8 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
- 	return 0;
- }
- 
--int bpf_check_attach_btf_id_multi(struct btf *btf, struct bpf_prog *prog, u32 btf_id,
-+int bpf_check_attach_btf_id_multi(struct bpf_verifier_log *log, struct btf *btf,
-+				  struct bpf_prog *prog, u32 btf_id,
- 				  struct bpf_attach_target_info *tgt_info)
- {
- 	const struct btf_type *t;
-@@ -24920,28 +24925,40 @@ int bpf_check_attach_btf_id_multi(struct btf *btf, struct bpf_prog *prog, u32 bt
- 	/* Check noreturn attachment. */
- 	if ((prog->expected_attach_type == BPF_TRACE_FEXIT_MULTI ||
- 	     prog->expected_attach_type == BPF_TRACE_FSESSION_MULTI) &&
--	     btf_id_set_contains(&noreturn_deny, btf_id))
-+	     btf_id_set_contains(&noreturn_deny, btf_id)) {
-+		bpf_log(log,
-+			"Cannot attach fexit/fsession_multi prog to noreturn btf id %u.\n",
-+			btf_id);
- 		return -EINVAL;
-+	}
- 	/* Check denied attachment. */
--	if (btf_id_set_contains(&btf_id_deny, btf_id))
-+	if (btf_id_set_contains(&btf_id_deny, btf_id)) {
-+		bpf_log(log, "Cannot attach to denylist btf id %u.\n", btf_id);
- 		return -EINVAL;
-+	}
- 
- 	/* Check and get function target data. */
- 	t = btf_type_by_id(btf, btf_id);
--	if (!t)
-+	if (!t) {
-+		bpf_log(log, "Cannot resolve type of btf id %u.\n", btf_id);
- 		return -EINVAL;
-+	}
- 	tname = btf_name_by_offset(btf, t->name_off);
- 	if (!tname)
- 		return -EINVAL;
--	t = btf_attach_func_proto(NULL, btf, btf_id);
-+	t = btf_attach_func_proto(log, btf, btf_id);
- 	if (!t || !btf_type_is_func_proto(t))
- 		return -EINVAL;
--	err = btf_distill_func_proto(NULL, btf, t, tname, &tgt_info->fmodel);
-+	err = btf_distill_func_proto(log, btf, t, tname, &tgt_info->fmodel);
- 	if (err < 0)
- 		return err;
- 	if (tgt_info->fmodel.ret_size > 8 &&
--	    attach_uses_trampoline_retval(prog->expected_attach_type))
-+	    attach_uses_trampoline_retval(prog->expected_attach_type)) {
-+		bpf_log(log,
-+			"Attach to target %u:%s with a >8 byte return value is not supported for this attach type.\n",
-+			btf_id, tname);
- 		return -EOPNOTSUPP;
-+	}
- 	if (btf_is_module(btf)) {
- 		/* The bpf program already holds reference to module. */
- 		if (WARN_ON_ONCE(!prog->aux->mod))
-@@ -24950,14 +24967,22 @@ int bpf_check_attach_btf_id_multi(struct btf *btf, struct bpf_prog *prog, u32 bt
- 	} else {
- 		addr = kallsyms_lookup_name(tname);
- 	}
--	if (!addr || !ftrace_location(addr))
-+	if (!addr) {
-+		bpf_log(log, "Cannot resolve address of target %u:%s.\n", btf_id, tname);
-+		return -ENOENT;
-+	}
-+	if (!ftrace_location(addr)) {
-+		bpf_log(log, "Target %u:%s is not ftrace attachable.\n", btf_id, tname);
- 		return -ENOENT;
-+	}
- 
- 	/* Check sleepable program attachment. */
- 	if (prog->sleepable) {
- 		err = btf_id_allow_sleepable(btf_id, addr, prog, btf);
--		if (err)
-+		if (err) {
-+			bpf_log(log, "Target %u:%s is not sleepable.\n", btf_id, tname);
- 			return err;
-+		}
- 	}
- 	tgt_info->tgt_addr = addr;
- 	return 0;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 4f1be6cd2e13..e5dd5c4dbf44 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3898,7 +3898,7 @@ static void ids_swap_r(void *a, void *b, int size __maybe_unused,
- 	swap(*id_a, *id_b);
- }
- 
--static int check_dup_ids(u32 *ids, u64 *cookies, u32 cnt)
-+static int check_dup_ids(u32 *ids, u64 *cookies, u32 cnt, struct bpf_verifier_log *log)
- {
- 	void *data[2] = { ids, cookies };
- 	int err = 0;
-@@ -3912,6 +3912,7 @@ static int check_dup_ids(u32 *ids, u64 *cookies, u32 cnt)
- 
- 	for (int i = 1; i < cnt; i++) {
- 		if (ids[i] == ids[i - 1]) {
-+			bpf_log(log, "id %u is in tracing_multi.ids more than once.\n", ids[i]);
- 			err = -EINVAL;
- 			break;
- 		}
-@@ -3919,7 +3920,8 @@ static int check_dup_ids(u32 *ids, u64 *cookies, u32 cnt)
- 	return err;
- }
- 
--int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
-+int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr,
-+			     struct bpf_verifier_log *log)
- {
- 	struct bpf_tracing_multi_link *link = NULL;
- 	struct bpf_tramp_node *fexits = NULL;
-@@ -3935,10 +3937,19 @@ int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
- 
- 	if (!cnt || !uids)
- 		return -EINVAL;
--	if (cnt > MAX_TRACING_MULTI_CNT)
-+	if (cnt > MAX_TRACING_MULTI_CNT) {
-+		bpf_log(log, "tracing_multi.cnt %u is above the limit %u.\n",
-+			cnt, MAX_TRACING_MULTI_CNT);
- 		return -E2BIG;
--	if (attr->link_create.flags || attr->link_create.target_fd)
-+	}
-+	if (attr->link_create.flags) {
-+		bpf_log(log, "flags must be zero.\n");
-+		return -EINVAL;
-+	}
-+	if (attr->link_create.target_fd) {
-+		bpf_log(log, "target_fd must be zero.\n");
- 		return -EINVAL;
-+	}
- 
- 	ids = kvmalloc_objs(*ids, cnt);
- 	if (!ids)
-@@ -3962,7 +3973,7 @@ int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
- 		}
- 	}
- 
--	err = check_dup_ids(ids, cookies, cnt);
-+	err = check_dup_ids(ids, cookies, cnt, log);
- 	if (err)
- 		goto error;
- 
-@@ -3991,7 +4002,7 @@ int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
- 	link->cookies = cookies;
- 	link->fexits = fexits;
- 
--	err = bpf_trampoline_multi_attach(prog, ids, link);
-+	err = bpf_trampoline_multi_attach(prog, ids, link, log);
- 	kvfree(ids);
- 	if (err) {
- 		bpf_link_cleanup(&link_primer);
-@@ -4009,8 +4020,10 @@ int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
- 
- #else
- 
--int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
-+int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr,
-+			     struct bpf_verifier_log *log)
- {
-+	bpf_log(log, "This kernel does not support tracing_multi.\n");
- 	return -EOPNOTSUPP;
- }
- 
 -- 
 2.55.0
 
