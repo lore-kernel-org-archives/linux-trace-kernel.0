@@ -1,75 +1,115 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795423091;
-	b=InEMApQjtB95fXnF657RNa+XvqvIWSfTwYxoVJhEHTyp/KX6I5V1DrnxqsNv4N4dnveQ
-	 VfHkpq3tPMRFDcl97oJdOtwJyoL0Zmgy+1nG4OZC+Nd5RcKFyP5nH9H2yWN65B639GXEw
-	 WyQWalD9rvkJ4lQ9myRatl0yk4aQq5caxIlNF9gKIV3bKeVkI9zg2or0ih+E12qLlv75u
-	 v8TF6uMEo/xHieIwpjovmeRjTflBRY3fjhfy5I2UUnXBTuuuyaeFxuMOJW6i+ap2Waalc
-	 rEmFnZmng2arvCVj/NaHgw+TTYNdmZVeiE46nNTppJ21Pf8iD+1cvnrfYAxZdox/GbA==
+	t=1795425044;
+	b=qUnVYf+bd88RANJdA5w88woS/dkBOz7DUyLfp0y23CVMUiayr9uEDpVz30cZiOFtycad
+	 SO/eGQXIMYhw2VzHm3EfgUT93+JXTn+EswOZkoJ2AQWazouHiBQJqCDgMNUEb3/siM6WZ
+	 FjVHoOi+MtFsK4Jt3ZEYZyVdPDH6fXPgVumv6kX+aqwJkbcsgdUg2b3l3Yzn3IZFDmPgk
+	 /XSIhyc84tLlfkMz/sRgUFcI2taxO+/eNC5yuaW9EdS2onre/ebj4DcZTJq2OqWNuEJah
+	 Uery1O5Vhwx5L2lXjx350jfmPHfpb2b3mdkCZ6p1uWGnvcy/r8J/PClurQ55/gvmTmg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795423091;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795425044;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:From:To:Cc:Subject:Date:
-	 Message-ID:MIME-Version:X-Scanned-By:X-Mimecast-MFC-PROC-ID:
-	 X-Mimecast-Originator:Content-Transfer-Encoding:content-type;
-	bh=w+rD7afdzLZsy+xn6lHm0qZL7x2DifgHL8w+M+UbnJo=;
-	b=INdKWgX7D5ldN9/x4I7SQus/Q/K12AffYligjxZ+dMsBKl2mKI+1m0h6I8a1mQStkGw+
-	 TdW74edcCO3RV1T6arcw7GjYU9nbcQ6cZF1KX/0P6S9lq+uDzPA2kvOvXlfF2kVzk/5Mm
-	 RwRgNjoBBIootCGymglD/eFn8BJP6boKpUiCAdmxFg+VICvg/Sq6xio6HtcRUJ8HiWPHk
-	 vNWUoZ/gqMb4cTV50jvnRoZeJO4sm9AwqxgsEMqSrKeswKzZ7Jrx6KpmcKkZdr2gJ2wac
-	 8jZ0J8Vkj2InQnwkL+3p0dN1mGCyyZw+1OKUmvMtpfs1qnTwN+371lHu9RS30fItFFw==
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Subject:From:To:Cc:Date:In-Reply-To:References:Autocrypt:User-Agent:
+	 MIME-Version:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
+	 X-Mimecast-Originator:Content-Type:Content-Transfer-Encoding;
+	bh=ecm2PV2gI1P0bnbXEOX8qjFIo1KpUBcbqXWnncfBn1c=;
+	b=irYqcLruIGtK5Mxsguz51+HMWbgPiXZXTgfY2xxNpQjlT49fdrgJhB8Ql0m5KBcgi3nN
+	 e4yQmnzIQGQNIEBw8dMp0zs3hWyeu81IYNhQwY3WYKh6LxSA04zvaHP3ykIorIkDqJucq
+	 KVNXC1atqrvzl/yRuvtctkSh1iSr+hawTTZvoogecf580t0QNwqebhwoLNBvvSj8dUy7h
+	 EsOBTvu2IMpUPgq7FmSjzE30sX5aGhkrNYrd46WZqqHtNd37NDjTuuChMif1h5Ou7YeE5
+	 Kpvhp8xOQdB+pRDA93CyJv3iHPY9vfoQ99rDzTAr15PQE7pY8u6dqMNBsTtWiyHi+BA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WBzk0CFt;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PZq1TMse;
 	arc=none smtp.remote-ip=170.10.129.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ECC606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 08:38:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E7ECC606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC5B606A32A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 09:10:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2CC5B606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WBzk0CFt
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PZq1TMse
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795423089;
+	s=mimecast20190719; t=1795425043;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=w+rD7afdzLZsy+xn6lHm0qZL7x2DifgHL8w+M+UbnJo=;
-	b=WBzk0CFtvTxI9EgDyNfd2twFyf3/89bRFmuCU0suEfjJSs1DiPJdZMF4dLm4TNoLd7O2UA
-	l6Jw4yKrzvR7yozIis2nL1UkRSAtzFkAwAFJL1E3abO+aAaPN1UKL0+rd1L4KJhJczGDrx
-	uO+0qA649xuNJULWj6OPCTxIG4IzaTQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-cjO5B6rYPtSZFg9jstMiig-1; Mon,
- 23 Nov 2026 08:38:05 +0000
-X-MC-Unique: cjO5B6rYPtSZFg9jstMiig-1
-X-Mimecast-MFC-AGG-ID: cjO5B6rYPtSZFg9jstMiig_1795423084
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BAA6F195604E;
-	Mon, 23 Nov 2026 08:38:03 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2BEE13001DA7;
-	Mon, 23 Nov 2026 08:38:00 +0000 (UTC)
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ecm2PV2gI1P0bnbXEOX8qjFIo1KpUBcbqXWnncfBn1c=;
+	b=PZq1TMse/ERr17WHnFn6Fwa6tzq1FOrQ1gOmwo4GD1YHbn8sHV+8R5nM0jmfBwH7PWzosv
+	hXupiLkut1Du425A4UAmqV7eTWQefct0xhb8e428fxkMu46WX0u2lWA6gSBS4GeFT4qQxI
+	VlpfHMB1xEm+Pur9rJ27tNbjLdkbquU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-117-zMYlng-kMfK4R_8zLnA06g-1; Mon, 23 Nov 2026 09:10:41 +0000
+X-MC-Unique: zMYlng-kMfK4R_8zLnA06g-1
+X-Mimecast-MFC-AGG-ID: zMYlng-kMfK4R_8zLnA06g_1795425040
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4bb6bbc025aso23176355e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 01:10:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795425040; x=1796029840;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=ecm2PV2gI1P0bnbXEOX8qjFIo1KpUBcbqXWnncfBn1c=;
+        b=WPkVjHSQHJTElXNXAnksvUZmItjjWT3Ek+f9+YEsFPK2b20VFs1qJOH1KyexYL/Uqz
+         zmK+Jj575Kd9aG7yGJldkIpdt4LnWuRaHzSD3JN2glos+jbwkXsgrIfZsEOFF+n6Km6P
+         ZXi2K21fq6VNbqFYRfIjX9XPUPwvT77uGYV4lTnRAVMxrNwRlW7muyNHlQtsJKsnzh/v
+         HnUfNLfsdGnJMBdhD0PpveuJFPpjl50ychJGILBPGC9oOc86dncmHu/cQ9X3X/fn6ra7
+         kwn1y4qdl8l+nuYhsIwe1bjRdqpBVd15X4gtb6P+z1o0Dzq9XKXzASi4HNsHOu0/k2//
+         FLIQ==
+X-Gm-Message-State: APuU4Z+88oztVatW6lR3ePUHWQMQ3wCrsri1D9r/HbFMSn+5s0bfyZOh
+	VONI3jYkmIHgObdpMIKndRECfN0RlQsKszX+vlSKM86QIS8Cbkbl9ZTIfn82MKFIOpPPFsAx+Nj
+	ADbTeN/5htlQoFFmHD/begUXESjCaOZ+rZ3B2br4XZpZ3dYDLRE1y0qa1gWsa9/OUSQDuw4YmDg
+	==
+X-Gm-Gg: AZFdTZfW7LhzNGeq4IuSt2Yor5S0RiVyHQ+T8zmh+ckWG2+u5RxVtYTJ3PjakihuQ5k
+	i3bDNtipmp3uwV9Rzi2kzaaTTSER4p4n/waxjxLWzjOgdpFXO6gYCTOY+WCikT3h29fr5/+SkYB
+	B0UdLdWzaKTw0TO72UD4yQM+8hkPG1lYjszygJu19ezTZlK25cpdG22MBrltQ3uNXOaQHPI/Th8
+	/tQ0QhY/2sg1Fb8ztDwHk6CXxY7hwdY9//NotKs4kH4NqAUZwG1sf6lENwUcPayQxj1PutQheBK
+	QtnhGRd4jyrSuiV/EFEjMpmYdnJWNI9XqlaannOPH8+BZvqO2Ult0072qCr4HTcaJ9WHCMiWIYJ
+	AgUgOqDfYBbXGi8mY2cfo0TLOvhkE3jK/xkq3licqhhmlY6JG8U1g6K5jD3sIwl+g9/nHXwMKy1
+	tt
+X-Received: by 2002:a05:600c:5246:b0:4bb:60ba:49e0 with SMTP id 5b1f17b1804b1-4bb88930707mr236628875e9.26.1795425040212;
+        Mon, 23 Nov 2026 01:10:40 -0800 (PST)
+X-Received: by 2002:a05:600c:5246:b0:4bb:60ba:49e0 with SMTP id 5b1f17b1804b1-4bb88930707mr236628515e9.26.1795425039893;
+        Mon, 23 Nov 2026 01:10:39 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb884a3a3dsm317775305e9.10.2026.11.23.01.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2026 01:10:39 -0800 (PST)
+Message-ID: <96080be96fbb96ec77e3e015779da807fa4ce64e.camel@redhat.com>
+Subject: Re: [PATCH 6/6] rv: Do not send the trailing NUL to userspace
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Tobias Schaffner <tobias.schaffner@siemens.com>
-Subject: [PATCH] rv: Fix BTF confusion in rv.h
-Date: Mon, 23 Nov 2026 09:37:08 +0100
-Message-ID: <20261123083709.62502-1-gmonaco@redhat.com>
+To: Wei Li <liwei1412@hotmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Jonathan Corbet
+	 <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap
+	 <rdunlap@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Nam Cao <namcao@linutronix.de>
+Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	liwei391@huawei.com
+Date: Mon, 23 Nov 2026 10:10:36 +0100
+In-Reply-To: <CY8PR19MB7009D39FB627A9576A9868AFB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+References: <CY8PR19MB70098BF493A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+	 <CY8PR19MB7009D39FB627A9576A9868AFB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
+ cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
+ T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
+ eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
+ 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
+User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -79,76 +119,77 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: sd2r8CD6wAPfV7ZE1tf-BVDkKs8C9zMkeZ1JsuIb3uM_1795423084
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: TejPI8bzX1_lhexLpclxHBz911fRtTpS7z2A-kldps0_1795425040
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The private rv.h header includes directly the private ../trace.h header,
-this brings a series of unneeded dependencies and, if included with
-da_monitor.h, may cause failures for duplicated symbols in BTF (namely,
-the events symbol).
+On Wed, 2026-11-04 at 17:21 +0800, Wei Li wrote:
+> From: Wei Li <liwei391@huawei.com>
+>=20
+> In the rv module, there are three read handlers that pass
+> 'strlen(buff) + 1' to simple_read_from_buffer(). The terminator byte is
+> not data, so the read returns one extra byte. Pass strlen(buff)
+> instead.
+>=20
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
 
-Only import what is really necessary:
- * trace.h is necessary only in rv.c (init function)
- * the public tracepoint.h covers most uses
- * other specific headers are now needed (interrupt.h)
- * re-define RV_MODE_* as it is only private in trace
+Good catch, thanks!
 
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- kernel/trace/rv/monitors/sts/sts_kunit.c | 1 +
- kernel/trace/rv/rv.c                     | 1 +
- kernel/trace/rv/rv.h                     | 6 +++---
- 3 files changed, 5 insertions(+), 3 deletions(-)
+Acked-by: Gabriele Monaco <gmonaco@redhat.com>
 
-diff --git a/kernel/trace/rv/monitors/sts/sts_kunit.c b/kernel/trace/rv/monitors/sts/sts_kunit.c
-index a07316fff091..92836adbc620 100644
---- a/kernel/trace/rv/monitors/sts/sts_kunit.c
-+++ b/kernel/trace/rv/monitors/sts/sts_kunit.c
-@@ -3,6 +3,7 @@
- #include <linux/rv.h>
- #include <rv/kunit.h>
- #include <trace/events/sched.h>
-+#include <linux/interrupt.h>
- #include "sts_kunit.h"
- 
- #if IS_REACHABLE(CONFIG_RV_MON_STS)
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 29f155c6968b..e37f0f7c990b 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -142,6 +142,7 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include "../trace.h"
- 
- #ifdef CONFIG_RV_MON_EVENTS
- #define CREATE_TRACE_POINTS
-diff --git a/kernel/trace/rv/rv.h b/kernel/trace/rv/rv.h
-index 62779e6b74bd..dbcb7a3a41a8 100644
---- a/kernel/trace/rv/rv.h
-+++ b/kernel/trace/rv/rv.h
-@@ -9,12 +9,12 @@ struct rv_interface {
- 	struct dentry		*monitors_dir;
- };
- 
--#include "../trace.h"
-+#include <linux/tracepoint.h>
- #include <linux/tracefs.h>
- #include <linux/rv.h>
- 
--#define RV_MODE_WRITE			TRACE_MODE_WRITE
--#define RV_MODE_READ			TRACE_MODE_READ
-+#define RV_MODE_WRITE			0640
-+#define RV_MODE_READ			0440
- 
- #define rv_create_dir			tracefs_create_dir
- #define rv_create_file			tracefs_create_file
-
-base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
--- 
-2.56.1
+> =C2=A0kernel/trace/rv/rv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 4 ++--
+> =C2=A0kernel/trace/rv/rv_reactors.c | 2 +-
+> =C2=A02 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+> index 7846e4092b9c..835d53978961 100644
+> --- a/kernel/trace/rv/rv.c
+> +++ b/kernel/trace/rv/rv.c
+> @@ -483,7 +483,7 @@ static ssize_t monitor_desc_read_data(struct file *fi=
+lp,
+> char __user *user_buf,
+> =C2=A0
+> =C2=A0=09snprintf(buff, sizeof(buff), "%s\n", mon->description);
+> =C2=A0
+> -=09return simple_read_from_buffer(user_buf, count, ppos, buff,
+> strlen(buff) + 1);
+> +=09return simple_read_from_buffer(user_buf, count, ppos, buff,
+> strlen(buff));
+> =C2=A0}
+> =C2=A0
+> =C2=A0static const struct file_operations interface_desc_fops =3D {
+> @@ -752,7 +752,7 @@ static ssize_t monitoring_on_read_data(struct file *f=
+ilp,
+> char __user *user_buf,
+> =C2=A0
+> =C2=A0=09buff =3D rv_monitoring_on() ? "1\n" : "0\n";
+> =C2=A0
+> -=09return simple_read_from_buffer(user_buf, count, ppos, buff,
+> strlen(buff) + 1);
+> +=09return simple_read_from_buffer(user_buf, count, ppos, buff,
+> strlen(buff));
+> =C2=A0}
+> =C2=A0
+> =C2=A0static void turn_monitoring_off(void)
+> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.=
+c
+> index 06f21bcdd6cf..8a4f0740e3ab 100644
+> --- a/kernel/trace/rv/rv_reactors.c
+> +++ b/kernel/trace/rv/rv_reactors.c
+> @@ -353,7 +353,7 @@ static ssize_t reacting_on_read_data(struct file *fil=
+p,
+> =C2=A0
+> =C2=A0=09buff =3D rv_reacting_on() ? "1\n" : "0\n";
+> =C2=A0
+> -=09return simple_read_from_buffer(user_buf, count, ppos, buff,
+> strlen(buff)+1);
+> +=09return simple_read_from_buffer(user_buf, count, ppos, buff,
+> strlen(buff));
+> =C2=A0}
+> =C2=A0
+> =C2=A0static void turn_reacting_off(void)
 
