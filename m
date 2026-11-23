@@ -1,44 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795472607;
-	b=TIHDw4K2ZFD0IODMyFAXxaJoPRHFm7sgDadtkYYzu3eIcsRdkqQJisVuAAJ9DowfdOWi
-	 qxECezioW9GBAJHvlYtCCPcNdTn9VTe9sUo/wwbXggLaPO1GJDlB3TP1vx6nmScJGr/9q
-	 fh56T7MNVoSicHnT7qYfux8oADBTrHS44CfFuajtitFyx43DEVlYUOvvtoiHycj9oy7Xb
-	 hR+0z/dwGXJi6NXhILWUTTFKonLdWFdPoH2PeWjEzIkpErOyc2JJ54AL3XReqm3Pjjz2v
-	 nl+C7i3uyfye3iD/sJ7evIafOSbzFjJ+erpTqmHOnDk0/7/bp7v0/tDvmkkXElJ9Kgg==
+	t=1795472619;
+	b=jPdy/XqCmbQ7I0aAqzv9/6T5jmb8JNuuMXc7G8oIpZ5HViJSYq5obpFA3SeKIZq4nuqZ
+	 L6W676iVoTVbiBxvHS5VmdqbX5mYneRGkJEC3T2H8sPYymVckJsC3OI3ihgtPFLeH/3g+
+	 7GiCHGk3ANSSkEyf0RFcvb34eRkxixkMmwkxnhjA3+LklBRBiYHWXsjdJ9actghux8pJf
+	 6zi/gtggWcfu+8Yu0GuX0MAUj6bByoK8yZyL1juDlLxnwjThUQTCemwG4k8UcjIPuqIrh
+	 5LQYSiOIMh/DCNJtB1OuNw7AA9YB8YmaSXtosJcou2iyTeFBvrUiT5pGKskbKuZ2byg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795472607;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795472619;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 User-Agent:MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=AoIUSTJnuBE6XbYhAWjqAfNab3wdAhpjjLDrUk4B2Cc=;
-	b=eEFeIkjc07/ff0uRF3j2N7UJSm2hvs5YXZRfbxaX0U/SiytD5nImNO2srsJVAuvj92hM
-	 V48GMEaBM9iEu2vrTL5uZBuNZ5z8z6xO0v9NVYGVC1liCABlH5JccQ2oOvARQXkTnw1U3
-	 OWO1fX+5dGKJiNpOoH7vTDoxjVk7BXCmzulOFT75xX89JO0dFlIvDfu12esxsChArR0Kn
-	 VNUBiuhA7Hdaj3J0uMd/w9lvF9URCLZuQiiEsuqttVxqYrSHC/2OtQVbDiJuj2Kao//EA
-	 dbn9uvgw4dcMMRnLjwjbWF0uycCc6yitSDCs2df+Vzj7M3AebUvEkCOipIEFFnVCu4Q==
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=JNjk/4HiJWkwvqdmrflK9/BOHpzuJMO4asKwUdIyFFE=;
+	b=0bdiU80EbRiWLyPY77cnoEmOy0a2ngQiVkw7F6z+1unmKseriGvKHVQ8k/7KcPKdiy9q
+	 0H92YAOso7gUl3ruBlY4c5oIF9BWWxk30cEGXUG5Z4+IPcKC5MB5QPufsWaYQmRLImUCc
+	 5VCyZMxf/GKputd4gwMqykcCLxu3lTAsbL/V5We4NHJmjEi6QkUAp7J8YR+7hfwsSBtFV
+	 QYEjaH0dajTDsYyAGHszwiu2cj5gXbCKNN9G7t8Lb7aNbnh/1jzGJ1S8JHQXL55dTCvLY
+	 q4slypTclEB+02Oy+h3dR6kfHsnzEj28ir5PcLYbCdgyZ0gGQy8nUhDPcHXjwXX9CUg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l+RyBvnn;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TmaQUJAM;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1C4606A31E;
-	Mon, 23 Nov 2026 22:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68AC606A33E;
+	Mon, 23 Nov 2026 22:23:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l+RyBvnn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9E71F000C6;
-	Mon, 23 Nov 2026 22:23:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TmaQUJAM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABE4E1F000CF;
+	Mon, 23 Nov 2026 22:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795472606;
-	bh=AoIUSTJnuBE6XbYhAWjqAfNab3wdAhpjjLDrUk4B2Cc=;
-	h=From:To:Cc:Subject:Date;
-	b=l+RyBvnndVGTg7nZW3qi688bGarWQdh3/S1uh2Q65MQI9H2zOFNQjAIOlMZ5LcQEd
-	 VkeM0ml3bdMoxMKd0FWk2bqqHP3YPmEhXj3vyjD5MclQRXiCLtfP/u1x3MRgfr7V0/
-	 vApURpLO8G2M05SlJhJ6ezs/jZLmo0Swv+oNELjPj7OTwPn3dQtjzOKPt3xDmxIQdI
-	 zEFsFvfVXgJGE6u2HsQXAUNviYb96jUkV/h5EefMMEqqHUWrkWeljL+7mZA0L9iCZz
-	 uaEbOXNG7v//1jsgHCSaxXF8rcDoeZJWUtNacNWVOY8oWEasAS5v5agefptZLWLSR+
-	 WXihxHtuBWKDQ==
+	s=k20260515; t=1795472618;
+	bh=JNjk/4HiJWkwvqdmrflK9/BOHpzuJMO4asKwUdIyFFE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=TmaQUJAMEZDatxBpBW/jOaIPXihlQF0aOHb4U8MeKzTEdhc/xkTPf+K3DIVfulvsn
+	 bcYes6A8z9ItHgelyrkSH/naIKqxt/C4r8OAAJkp/hmnQylddRa2HOLN3HkAqd0d+2
+	 /HhVTW/ayo0FHTRI9RlH8ZRol9Py2V4spfsulKocIF6KBFShoqONod2tH6AfBp2cjq
+	 ShMS2ax4CRwzkMHFXaZq3PPj8QhLuKOntqO8bSctdBe9ivtiXOqZDQoa0PejDq9R45
+	 MYzvnLELGJb/CmowuFqFEmMOdkfVvGGRrBruvUBJ0f/t5AqLvNKuEyumz4U6szWI3K
+	 ma2rB29GIrVTQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -54,10 +55,12 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	linux-trace-kernel@vger.kernel.org,
 	Pablo Fraile Alonso <pablo@pablofraile.net>,
 	Edgecombe Rick P <rick.p.edgecombe@intel.com>
-Subject: [RESEND PATCH 0/5] x86/insn, uprobes: Fix opcode map handling for multi-byte, REX2, and VEX/EVEX/XOP instructions
-Date: Tue, 24 Nov 2026 07:23:20 +0900
-Message-ID: <179547260053.326766.11540305553612301074.stgit@devnote2>
+Subject: [RESEND PATCH 1/5] x86/insn-eval: Do not mutate struct insn in insn_is_nop()
+Date: Tue, 24 Nov 2026 07:23:32 +0900
+Message-ID: <179547261206.326766.16873700808089736794.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <179547260053.326766.11540305553612301074.stgit@devnote2>
+References: <179547260053.326766.11540305553612301074.stgit@devnote2>
 User-Agent: StGit/0.19
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,95 +74,78 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-[Resend with correct From tag.]
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Hi,
+For REX2 M0=1 (map 1) instructions, insn_is_nop() shifts insn->opcode.value
+left by 8 bits and ORs in 0x0f in-place without updating
+insn->opcode.nbytes.
 
-Following up on Pablo Fraile Alonso's report and patch [1], as well as the
-additional review points from Sashiko and Rick Edgecombe, this series fixes
-the underlying x86 instruction decoder issues and the related opcode-map
-assumptions in x86 uprobes.
+This corrupts the decoded struct insn for subsequent callers. For example,
+in uprobes arch_uprobe_analyze_insn(), can_optimize() ->
+is_optimizable_nop10() calls insn_is_nop() on any 10-byte instruction
+before uprobe_init_insn(), leaving OPCODE1(insn) == 0x0f with
+opcode.nbytes == 1, and a second call from branch_setup_xol_ops() shifts
+it a second time.
 
-Originally, the x86 instruction decoder was designed primarily for
-instructions typically emitted in the kernel. Since uprobes uses it on
-arbitrary user-space instruction encodings, several issues around multi-byte,
-REX2, and VEX/EVEX/XOP encodings have surfaced:
+Use local variables for the opcode bytes instead of mutating insn->opcode.
 
-1. insn_is_nop() in arch/x86/lib/insn-eval.c mutates insn->opcode.value
-   in-place for REX2 M0=1 instructions without updating insn->opcode.nbytes,
-   corrupting struct insn for subsequent callers (e.g. uprobe_init_insn()
-   and branch_setup_xol_ops()).
-2. gen-insn-attr-x86.awk skips emitting INAT_REX2_VARIANT for 0xa1 (JMPABS)
-   because the check is placed after 'if (length(flags) == 0) continue'.
-3. insn_get_opcode() never checks INAT_NO_REX2 / INAT_REX2_VARIANT or
-   invalid REX2 encodings such as REX2 M0=0 + 0x0f or REX2 M0=1 + 0x38/0x3a.
-4. insn->opcode.nbytes represents the physical opcode byte count (needed for
-   field offset calculations such as insn_offset_modrm()), so REX2 M0=1 and
-   VEX/EVEX/XOP instructions all have insn->opcode.nbytes == 1. Callers
-   need a helper to determine the logical opcode map; insn_masking_exception()
-   also lacked this check and could misidentify non-map-0 0x1f/0x8e opcodes.
-5. In arch/x86/kernel/uprobes.c, bit 0x0f in good_insns_{32,64} bypassed
-   good_2byte_insns, and uprobe_init_insn(), branch_setup_xol_ops(),
-   arch_uprobe_analyze_insn(), and riprel_analyze() assumed map-0 or 1-byte
-   REX encodings, causing misidentification of AVX/VEX instructions such as
-   VZEROUPPER (c5 f8 77), VPSHUFD (c5 f9 70), VPOR (c5 f9 eb), and VCMPPS
-   (c5 f8 c2), as well as REX2 prefix corruption in riprel_analyze().
-
-Patch overview:
-- Patch 1: Fix insn_is_nop() not to mutate struct insn.
-- Patch 2: Fix gen-insn-attr-x86.awk to emit INAT_REX2_VARIANT.
-- Patch 3: Reject invalid REX2 encodings in insn_get_opcode().
-- Patch 4: Add insn_opcode_map() / insn_last_opcode() helpers and fix
-           insn_masking_exception().
-- Patch 5: Fix opcode validation, branch/fixup analysis, and REX2 RIP-rel
-           handling in arch/x86/kernel/uprobes.c.
-
-Notes:
-- checkpatch.pl reports warnings on patch 5 for using -ENOTSUPP and -ENOSYS
-  in arch/x86/kernel/uprobes.c. Those match the existing error code
-  conventions of uprobe_init_insn() and branch_setup_xol_ops() across
-  uprobes; cleaning up error codes across uprobes should be done separately
-  and is intentionally left out of scope for this fix series.
-- Auditing whether Group 15 (0f ae: lfence/mfence/sfence, fxsave/fxrstor,
-  CET instructions, etc.) should be enabled in good_2byte_insns (as raised
-  by Rick Edgecombe) is also left for a separate follow-up discussion/patch.
-- Uprobes should audit the three-byte opcodes and provide good_3bytes1_insns
-  and good_3byte2_insns bit table if needed.
-
-Testing:
-- insn_decoder_test on vmlinux .text (7,926,007 instructions): 0 errors
-- insn_sanity (64-bit and 32-bit, 1,000,000 random insns each): 0 errors
-- Host unit tests covering REX2 (valid/invalid), JMPABS, VEX2, POP/MOV SS
-- QEMU (KVM, -cpu host) uprobe runtime test verifying rejection of 8
-  disallowed/invalid encodings (0f 05, 0f 0b, REX2 M0=0+0f/e8/a1,
-  REX2 M0=1+05, 10-byte REX2 M0=1, EVEX map 4) and clean XOL/emulation
-  execution + trace hits for 7 allowed instructions (bswap, nop10,
-  vzeroupper, vcmpps, vpshufd, vpor, crc32).
-
-[1] https://lore.kernel.org/r/20261116-x86-uprobes-two-byte-opcode-v1-1-2b6dbabead52@pablofraile.net
-
-Thank you,
-
+Fixes: 8a5c6cbfe4a3 ("x86/insn,uprobes,alternative: Unify insn_is_nop()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Masami Hiramatsu (5):
-  x86/insn-eval: Do not mutate struct insn in insn_is_nop()
-  x86/insn: Fix gen-insn-attr-x86.awk to emit INAT_REX2_VARIANT
-  x86/insn: Reject invalid REX2 encodings in insn_get_opcode()
-  x86/insn: Add insn_opcode_map() helper and fix insn_masking_exception()
-  uprobes/x86: Fix opcode validation and analysis for multi-byte, REX2, and VEX/EVEX/XOP instructions
+ arch/x86/lib/insn-eval.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
- arch/x86/include/asm/inat.h                | 10 +++
- arch/x86/include/asm/insn.h                | 43 +++++++++++++
- arch/x86/kernel/uprobes.c                  | 97 +++++++++++++++++++++---------
- arch/x86/lib/insn-eval.c                   | 17 ++++--
- arch/x86/lib/insn.c                        | 16 +++++
- arch/x86/tools/gen-insn-attr-x86.awk       |  6 +-
- tools/arch/x86/include/asm/inat.h          | 10 +++
- tools/arch/x86/include/asm/insn.h          | 43 +++++++++++++
- tools/arch/x86/lib/insn.c                  | 16 +++++
- tools/arch/x86/tools/gen-insn-attr-x86.awk |  6 +-
- 10 files changed, 225 insertions(+), 39 deletions(-)
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index e03eeec55cfe..c67f8ac375c4 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -1700,6 +1700,7 @@ bool insn_is_nop(struct insn *insn)
+ 	u8 sib = 0, sib_scale, sib_index, sib_base;
+ 	u8 nrex, rex;
+ 	u8 p, rep = 0;
++	u8 op0, op1;
+ 
+ 	if ((nrex = insn->rex_prefix.nbytes)) {
+ 		rex = insn->rex_prefix.bytes[nrex-1];
+@@ -1745,21 +1746,25 @@ bool insn_is_nop(struct insn *insn)
+ 	}
+ 
+ 	/*
+-	 * Opcode map munging:
++	 * Opcode map handling:
+ 	 *
+ 	 * REX2: 0 - single byte opcode
+ 	 *       1 - 0f second byte opcode
+ 	 */
+ 	switch (m) {
+-	case 0: break;
+-	case 1: insn->opcode.value <<= 8;
+-		insn->opcode.value |= 0x0f;
++	case 0:
++		op0 = insn->opcode.bytes[0];
++		op1 = insn->opcode.nbytes == 2 ? insn->opcode.bytes[1] : 0;
++		break;
++	case 1:
++		op0 = 0x0f;
++		op1 = insn->opcode.bytes[0];
+ 		break;
+ 	default:
+ 		return false;
+ 	}
+ 
+-	switch (insn->opcode.bytes[0]) {
++	switch (op0) {
+ 	case 0x0f: /* 2nd byte */
+ 		break;
+ 
+@@ -1811,7 +1816,7 @@ bool insn_is_nop(struct insn *insn)
+ 		return false;
+ 	}
+ 
+-	switch (insn->opcode.bytes[1]) {
++	switch (op1) {
+ 	case 0x1f:
+ 		return modrm_reg == 0; /* 0f 1f /0 -- NOPL */
+ 
 
-base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
