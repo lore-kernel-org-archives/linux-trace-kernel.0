@@ -1,54 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795470489;
-	b=lgKAssJJ4HL88gbinE990pxiJL4MZyng9f2zoOQxCxFOL8JE+bJl6UJzpdvH+SpmX++i
-	 etm90K0EDxoc2hkUYntZX6qESFJ1dBdQstjN79eAv4lkUOYorGBF0FYNvgw1dfXRU56ar
-	 pJD/Vdgjf8f8hoSlzrMGFFOGbq9t18AUrBw1VsB7ip8abZAa4qf4H4UdOSp7hOOVJ7fKg
-	 1rWysOFCTClR2n8t2aknk3j1DEaPTeNmrR10sBy0S1aG9DHRhtz6d7htRYjRfxK92OX6K
-	 5yQW9XFlkinJkmGoy5AanD4mhhxvz/fXDBttDvCtY32hQhVh0bGIdCPTtztPmsY7qpw==
+	t=1795471003;
+	b=Y5MkeXoPDFt8g8rTF6QTIUqW1zA8Dx1ZEEjoOQk87pyQ1q7+b6dNmSZ9480JoAgEfUJH
+	 dNehxFBT83AXVBLklFwANMI4A519h7iFr4493vUWNVJbr+vMfDq0SjQfWkPmp1vhGdZPw
+	 rw3FiKMKOLN8oQuHUMirQfDJNYn906BbAqMSgJt9UWRFIuGlAloC/6kY6ITx5Ny/C58Z+
+	 u7DjhcgH6zQnpioyOXvecOh9ufUiPpifFQWN3CuMwKrXcy1ylZtbY60mH/OmoJJ12O35w
+	 0reBAcxcPZWX/Ov6cvfhykNjMRzd33MORXiXJKACXBgswApjjX2e7ugD+dFYswacRbg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795470489;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=AQnAVWw3jkOxbPJWEU/N5tEI0G2hSCTCKjqMFLucWeI=;
-	b=SFbYZ7Cje0Q8HCLzGUKrsAqSfxME89yqOUZOrbNQUZA7uU7QcWgGEEydYIb5a6tBFCBI
-	 UefYC/RIm3LytYn5bNmYqDHI9/OlmsvzmNt6Pa9OP9JwdDDrfEkpZrimswdkXNbf+T97Z
-	 hZUO4Qs9jn2jk4a0nkRdpC2+hHUOBlDLmf77VGyfQSExLYy9GIHgta8HhzqojosK0vjMZ
-	 kH4ComWjmzD48h5Cp/ZLJzp9vR7QjpZnSe9JAY1YOlPcBQtgQyuvwsIjZY+3Z63aGnNq0
-	 +kWbireAC7nLhi10KoItfhpDSK4YJk4Jsw6pF8XqLDN+V072AmnJR6nOpfnhOc/66OQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471003;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
+	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=se2Dv26Z/48b9YJDecdodAx/gKOEn8umjmUKLpeNdcE=;
+	b=Dro1AoBulFQxoWKCHTXbCe5QQ9ZXlLjBSSaz0K0ADKtfkPebH6nf+O1aTOxnhizW9pxr
+	 KULftUjXwZ5HV9NqRAU5qN/uwzY9b6suzwwETNawWTI+QOhkpCeunf94Ceeeo6zrFvExV
+	 VB8t4cULeFhkIXwESBejHiZIjqU/Vs+RnvBYWrhKlvYJRd0+7nUgmyEOE0fPg90MxUMQL
+	 UWJLkiKKbsCJ/64zvQRqZjdXTmbNNsukaBTHjZ6vUKfnEBH9hBgAAYXNJV0wiL9T4ZBnr
+	 1HLToG9dH+bqvJR0EJPWwWE5MuCxMbAzLcTEKmavyyAJKQv5Cay1hJvWSPWLgSGxm5Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FfIYtDj5;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=W+34totZ;
+	arc=none smtp.remote-ip=216.40.44.17
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F92606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 21:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BC2606A31E;
+	Mon, 23 Nov 2026 21:56:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81BC2606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FfIYtDj5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 890D41F000C0;
-	Mon, 23 Nov 2026 21:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795470488;
-	bh=AQnAVWw3jkOxbPJWEU/N5tEI0G2hSCTCKjqMFLucWeI=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=FfIYtDj5Q4oQLxpQ5wgfXNSDo1mmJPTPLP48tyoexqzz6L7PLeDpZvDhlHQVQ02q7
-	 F0tIBUf/m2BDTQbLG0opKnW3Kf6ru6AvNtrAKVN7QLTY2Yqh6rsNa535cBBBEgKdla
-	 UBL3dR1V2X0NR37KgMwpLPSolxURwJim6cuyU+LasXrAH0vjj+LyrI4xIx8ar6+jm0
-	 HWRUjaf7VYIJWaBOWVwm8XRUxLYVbhawBpy2Oit9fJbTuhLH0jaTL9NKsqOU8l7qlx
-	 oilF+b+t9wseO7qeLiCiw04z/AGOjGZo6qMS3PbApLw9EVU0sbaRIAbzEu+J2KcJce
-	 /5dOPeujjHc/A==
-Message-ID: <sashiko-outbox-230090@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6] tracing/probes: Zero out faulted dereferenced fields
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Steven Rostedt" <rostedt@goodmis.org>, "Linux Trace Kernel" <linux-trace-kernel@vger.kernel.org>
-In-Reply-To: <20261123163027.4d101385@gandalf.local.home>
-References: <20261123163027.4d101385@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 23 Nov 2026 21:48:08 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=W+34totZ
+Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id B0CC1A8676;
+	Mon, 23 Nov 2026 21:56:40 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 7C94520010;
+	Mon, 23 Nov 2026 21:56:38 +0000 (UTC)
+Date: Mon, 23 Nov 2026 16:56:32 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jeff Barnes <jeffbarnes@linux.microsoft.com>
+Cc: mhiramat@kernel.org, shuah@kernel.org, mathieu.desnoyers@efficios.com,
+ reddybalavignesh9979@gmail.com, richard.weiyang@gmail.com,
+ michael.bommarito@gmail.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] tracing/user_events: Share event state with
+ existing threads
+Message-ID: <20261123165632.2c8ee68c@gandalf.local.home>
+In-Reply-To: <20261006164720.3940272-3-jeffbarnes@linux.microsoft.com>
+References: <20261002153934.798176-1-jeffbarnes@linux.microsoft.com>
+	<20261006164720.3940272-1-jeffbarnes@linux.microsoft.com>
+	<20261006164720.3940272-3-jeffbarnes@linux.microsoft.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -57,194 +63,149 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 7C94520010
+X-Stat-Signature: 6sa3ug34qu5mdm8ksdka44npyc15x34t
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/uBX6/3tbn76JHR3U5aQYtJrpJS9Koy88=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=se2Dv26Z/48b9YJDecdodAx/gKOEn8umjmUKLpeNdcE=; b=W+34totZkPIIsNWWYcmmOVB17FzfxSGPV1pqe/pEVdZWKOWqsaOFSQ/dBRKzfmu972RTG01JhMYUHqaUiOfeoW+I61nooD5LmoynGjsx0cEIXOQq2B9MFOEyBqvvixWXabTav8lk2O8+ckxk/KUAuSCEit70OysErm5NvJwmD08=
+X-HE-Tag: 1795470998-466939
+X-HE-Meta: U2FsdGVkX1+RoU68q4rtQsUxPbFc20Cs6LH5N7dhfrhJtss/kxET501XK/uyQwS5wCFTShkk5qjJpPgY8n+Hvc0W6bilHo7m2c4lcYgzInhZ4P+rcRlrOXrZJJCMAAj74QXduUtAgJ3ieny6Rklvefr5Koqv8Xrm6b68XeW9GoJJE5UCaZzWdTkUSicbbBRihEjCmU6DhkPfmUWH+qBTs7n6gnEZQgs+aphWfE1a0y6KQ9+4Yd+J0X68NWldCEUXZ/42JSioTm8n7cqR/JmH1NM6/X7hR7nRW4MpDt94HzzWPO3qMkVYlDJ7xWfk7sk5msyBKTGzjQJudB065Xv2AEBiSash9WNa
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issues to consider:
-- [High] tracing/probes: undeclared __dest in do_fetch_store_string*()
-- [High] tracing/probes: FETCH_OP_ST_SYMSTR size mismatch when val is 0
-- [Medium] tracing/probes: NULL pointer read in do_probe_mem_read() at
-  stage 3
---
+On Tue,  6 Oct 2026 12:47:19 -0400
+Jeff Barnes <jeffbarnes@linux.microsoft.com> wrote:
 
-commit dcb397510a770194fc859548d8d68da35739732e
-Author: Steven Rostedt <rostedt@goodmis.org>
+>  static void user_event_mm_attach(struct user_event_mm *user_mm, struct task_struct *t)
+>  {
+>  	unsigned long flags;
+> @@ -817,14 +831,18 @@ void user_event_mm_remove(struct task_struct *t)
+>  	might_sleep();
+>  
+>  	mm = t->user_event_mm;
+> +
+> +	spin_lock_irqsave(&user_event_mms_lock, flags);
+> +
+>  	t->user_event_mm = NULL;
+>  
+> -	/* Clone will increment the tasks, only remove if last clone */
+> -	if (!refcount_dec_and_test(&mm->tasks))
+> +	/* Clones and attached tasks increment this count. */
+> +	if (!refcount_dec_and_test(&mm->tasks)) {
+> +		spin_unlock_irqrestore(&user_event_mms_lock, flags);
+>  		return;
+> +	}
+>  
+> -	/* Remove the mm from the list, so it can no longer be enabled */
+> -	spin_lock_irqsave(&user_event_mms_lock, flags);
+> +	/* Prevent new tasks from attaching after the last-task transition. */
+>  	list_del_rcu(&mm->mms_link);
+>  	spin_unlock_irqrestore(&user_event_mms_lock, flags);
 
-tracing/probes: Zero out faulted dereferenced fields
 
-This commit zeroes the destination buffer when probe memory reads fail and
-continues past NULL or faulted dereferences in process_fetch_insn_bottom()
-so that failed probe fields are zeroed in the ring buffer.
+Actually the above can be written better as:
 
-> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_t=
-mpl.h
-> index 8db12f758fdae..de43966e40e7d 100644
-> --- a/kernel/trace/trace_probe_tmpl.h
-> +++ b/kernel/trace/trace_probe_tmpl.h
-> @@ -121,13 +121,59 @@ process_common_fetch_insn(struct fetch_insn *code, =
-unsigned long *val)
->  	return 0;
+@@ -832,26 +832,22 @@ static void delayed_user_event_mm_put(struct work_struct *work)
+ void user_event_mm_remove(struct task_struct *t)
+ {
+ 	struct user_event_mm *mm;
+-	unsigned long flags;
+ 
+ 	might_sleep();
+ 
+ 	mm = t->user_event_mm;
+ 
+-	spin_lock_irqsave(&user_event_mms_lock, flags);
++	scoped_guard(spinlock_irqsave, &user_event_mms_lock) {
++		t->user_event_mm = NULL;
+ 
+-	t->user_event_mm = NULL;
++		/* Clones and attached tasks increment this count. */
++		if (!refcount_dec_and_test(&mm->tasks))
++			return;
+ 
+-	/* Clones and attached tasks increment this count. */
+-	if (!refcount_dec_and_test(&mm->tasks)) {
+-		spin_unlock_irqrestore(&user_event_mms_lock, flags);
+-		return;
++		/* Prevent new tasks from attaching after the last-task transition. */
++		list_del_rcu(&mm->mms_link);
+ 	}
+ 
+-	/* Prevent new tasks from attaching after the last-task transition. */
+-	list_del_rcu(&mm->mms_link);
+-	spin_unlock_irqrestore(&user_event_mms_lock, flags);
+-
+ 	/*
+ 	 * We need to wait for currently occurring writes to stop within
+ 	 * the mm. This is required since exit_mm() snaps the current rss
+>  
+> @@ -894,11 +912,25 @@ static bool
+>  current_user_event_enabler_exists(struct user_event_group *group,
+>  				  unsigned long uaddr, unsigned char bit)
+>  {
+> -	struct user_event_mm *user_mm = current_user_event_mm();
+> +	struct user_event_mm *user_mm = current->user_event_mm;
+> +	unsigned long flags;
+>  	bool exists;
+>  
+>  	lockdep_assert_held(&group->reg_mutex);
+>  
+> +	if (!user_mm) {
+> +		spin_lock_irqsave(&user_event_mms_lock, flags);
+> +
+> +		user_mm = user_event_mm_find_locked(current->mm);
+> +
+> +		if (user_mm) {
+> +			refcount_inc(&user_mm->tasks);
+> +			current->user_event_mm = user_mm;
+> +		}
+> +
+> +		spin_unlock_irqrestore(&user_event_mms_lock, flags);
+> +	}
+
+and this with:
+
+@@ -919,22 +915,17 @@ current_user_event_enabler_exists(struct user_event_group *group,
+ 				  unsigned long uaddr, unsigned char bit)
+ {
+ 	struct user_event_mm *user_mm = current->user_event_mm;
+-	unsigned long flags;
+ 	bool exists;
+ 
+ 	lockdep_assert_held(&group->reg_mutex);
+ 
+ 	if (!user_mm) {
+-		spin_lock_irqsave(&user_event_mms_lock, flags);
+-
++		guard(spinlock_irqsave)(&user_event_mms_lock);
+ 		user_mm = user_event_mm_find_locked(current->mm);
+-
+ 		if (user_mm) {
+ 			refcount_inc(&user_mm->tasks);
+ 			current->user_event_mm = user_mm;
+ 		}
+-
+-		spin_unlock_irqrestore(&user_event_mms_lock, flags);
+ 	}
+ 
+ 	if (!user_mm)
+
+-- Steve
+
+> +
+>  	if (!user_mm)
+>  		return false;
+>  
+> @@ -906,8 +938,6 @@ current_user_event_enabler_exists(struct user_event_group *group,
+>  	exists = user_event_enabler_exists(user_mm, uaddr, bit);
+>  	mutex_unlock(&event_mutex);
+>  
+> -	user_event_mm_put(user_mm);
+> -
+>  	return exists;
 >  }
-> =20
-> +/* On failure, zero out the destination */
-> +static nokprobe_inline int
-> +do_probe_mem_read_user(void *dest, void *src, size_t size)
-> +{
-> +	int ret;
-> +
-> +	ret =3D probe_mem_read_user(dest, src, size);
-> +	if (ret < 0)
-> +		memset(dest, 0, size);
-> +	return ret;
-> +}
-> +
-> +/* On failure, zero out the destination */
-> +static nokprobe_inline int
-> +do_probe_mem_read(void *dest, void *src, size_t size)
-> +{
-> +	int ret;
-> +
-> +	ret =3D probe_mem_read(dest, src, size);
-> +	if (ret < 0)
-> +		memset(dest, 0, size);
-> +	return ret;
-> +}
-> +
-> +static nokprobe_inline int
-> +do_fetch_store_string(unsigned long addr, void *dest, void *base)
-> +{
-> +	/* NULL addr gets zero size string */
-> +	if (!addr) {
-> +		*(u32 *)dest =3D make_data_loc(0, __dest - base);
-> +		return 0;
-> +	}
-> +	return fetch_store_string(addr, dest, base);
-> +}
-> +
-> +static nokprobe_inline int
-> +do_fetch_store_string_user(unsigned long addr, void *dest, void *base)
-> +{
-> +	/* NULL addr gets zero size string */
-> +	if (!addr) {
-> +		*(u32 *)dest =3D make_data_loc(0, __dest - base);
-> +		return 0;
-> +	}
-> +	return fetch_store_string_user(addr, dest, base);
-> +}
+>  
 
-[Severity: High]
-Does this fail to build because __dest is undeclared in both
-do_fetch_store_string() and do_fetch_store_string_user()?
-
-[ ... ]
-
-> @@ -161,19 +212,25 @@ process_fetch_insn_bottom(struct fetch_insn *code, =
-unsigned long val,
-> =20
->  	s3 =3D code;
->  stage3:
-> +	/*
-> +	 * Once val is zero, it is pointing to NULL. Any new dereference is
-> +	 * also treated as a NULL pointer.
-> +	 */
-> +	offset =3D val ? code->offset : 0;
-> +
->  	/* 3rd stage: store value to buffer */
->  	if (unlikely(!dest)) {
->  		switch (code->op) {
->  		case FETCH_OP_ST_STRING:
-> -			ret =3D fetch_store_strlen(val + code->offset);
-> +			ret =3D val ? fetch_store_strlen(val + offset) : 0;
->  			code++;
->  			goto array;
->  		case FETCH_OP_ST_USTRING:
-> -			ret =3D fetch_store_strlen_user(val + code->offset);
-> +			ret =3D val ? fetch_store_strlen_user(val + offset) : 0;
->  			code++;
->  			goto array;
->  		case FETCH_OP_ST_SYMSTR:
-> -			ret =3D fetch_store_symstrlen(val + code->offset);
-> +			ret =3D val ? fetch_store_symstrlen(val + offset) : 0;
->  			code++;
->  			goto array;
->  		default:
-> @@ -181,27 +238,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, =
-unsigned long val,
->  		}
->  	}
-> =20
-> +	/* When val is NULL, so should the val + offset */
-> +	offset =3D val ? code->offset : 0;
-> +
->  	switch (code->op) {
->  	case FETCH_OP_ST_RAW:
->  		fetch_store_raw(val, code, dest);
->  		break;
->  	case FETCH_OP_ST_MEM:
-> -		probe_mem_read(dest, (void *)val + code->offset, code->size);
-> +		do_probe_mem_read(dest, (void *)val + offset, code->size);
->  		break;
->  	case FETCH_OP_ST_UMEM:
-> -		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
-> +		do_probe_mem_read_user(dest, (void *)val + offset, code->size);
->  		break;
-
-[Severity: Medium]
-When val is 0 in stage 3, offset is forced to 0, so FETCH_OP_ST_MEM and
-FETCH_OP_ST_UMEM pass src =3D=3D NULL to do_probe_mem_read() and
-do_probe_mem_read_user().  Should those helpers (or these call sites)
-check for a NULL address and memset(dest, 0, size) directly instead of
-reading from virtual address 0x0?
-
-On s390, virtual address 0x0 is mapped to struct lowcore, so
-copy_from_kernel_nofault() succeeds and copies lowcore bytes into the
-ring buffer instead of zeroing the field.  On architectures with
-CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE, probe_mem_read() redirects
-src =3D=3D NULL (< TASK_SIZE) to probe_mem_read_user(), reading user address
-0x0 if mapped or taking a page fault on every NULL dereference.
-
->  	case FETCH_OP_ST_STRING:
->  		loc =3D *(u32 *)dest;
-> -		ret =3D fetch_store_string(val + code->offset, dest, base);
-> +		ret =3D do_fetch_store_string(val + offset, dest, base);
->  		break;
->  	case FETCH_OP_ST_USTRING:
->  		loc =3D *(u32 *)dest;
-> -		ret =3D fetch_store_string_user(val + code->offset, dest, base);
-> +		ret =3D do_fetch_store_string_user(val + offset, dest, base);
->  		break;
->  	case FETCH_OP_ST_SYMSTR:
->  		loc =3D *(u32 *)dest;
-> -		ret =3D fetch_store_symstring(val + code->offset, dest, base);
-> +		ret =3D fetch_store_symstring(val + offset, dest, base);
->  		break;
-
-[Severity: High]
-Can FETCH_OP_ST_SYMSTR write past the end of the ring buffer entry when
-val is 0?
-
-During the sizing pass (!dest), FETCH_OP_ST_SYMSTR now returns 0 when val
-is 0, reserving 0 bytes for this argument.  During the store pass,
-store_trace_args() sets *dl =3D make_data_loc(maxlen, dyndata - base) with
-the total remaining maxlen across all dynamic arguments, and
-FETCH_OP_ST_SYMSTR still calls fetch_store_symstring(0, dest, base):
-
-kernel/trace/trace_probe_tmpl.h:fetch_store_symstring() {
-	int maxlen =3D get_loc_len(*(u32 *)dest);
-	void *__dest;
-
-	if (unlikely(!maxlen))
-		return -ENOMEM;
-
-	__dest =3D get_loc_data(dest, base);
-
-	return sprint_symbol(__dest, addr);
-}
-
-If a later dynamic argument in the same probe reserved 1 to 3 bytes,
-maxlen is non-zero and sprint_symbol(__dest, 0) writes 4 bytes ("0x0\0")
-into __dest and returns 3, overflowing the reserved ring buffer space and
-underflowing maxlen in store_trace_args() for the next dynamic argument.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123163027.4d10=
-1385@gandalf.local.home?part=3D1
