@@ -1,55 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795463976;
-	b=GRGhUe19GV1CwB5vzO8BraPGoeOT7bN+bBivzoGXATpg7SsKUkn84nT9R7xLpChliuQi
-	 VKZh4Kj9lbgUZbXwo4Vfn4t8OEHPjhtxuxYFS/gDNM8cFYLFCoV6igsyvGvoPuCknJBuA
-	 0Fw3PUVaeP/YWGvDXQ0COH97gnIja3Ab/h5Zncd3BFqhao0ZNFBdMYiEAnkDyySEfzSjL
-	 8vsqiZ5gn24u2FyNeeTPuCQodvt1uyLf1xCbOyNUkkJEFGqVntjAY3u817Uu3mUwDAOqq
-	 IQK7pWwa5jZ6aQgkls5UePCHau8ADA6rzs54iXNwM9HczTujtWmQM8VOEWMNv44qu7A==
+	t=1795465383;
+	b=4AyBciMpG04clbGlfDik3V3uIag+XxoOB0uqC4qaOFWWprlctzWqLB54rtpSktG/zT6V
+	 Jop4Oqr5GyX1UJOtnU8RSUntuXvwIg3gKR66c3Kmfz2Rt7NePsauf4obRWpUUrtk6WDUO
+	 kpG3AOUPBuoGKbN+omp/+Pubn8yqz6z2PaD/0M/b1RAtbNALDDIM3i/kOrkIXTaiCh9qA
+	 GGPiw7YYmk+Z84N5m6kM9nFIAkLY5i3w2Fe0C77Vx58vDVNRtXOpBKFxsObIu8VOkb2s5
+	 A6AcdPTnP8EabFnNb/cYzZlHbUzdOPb1sCRWEFEic9laDCOVW7TCjz3G+XmGOxgDOSQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795463976;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:X-Rspamd-Server:
-	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=ZNbXBfNTO0fkyqJpgqenKi8rMrZeuWlZGWMB2B9tSTE=;
-	b=KoUVH0NaXhNqEVgZA1dp+xkZ51gSS6faYppl2e2pTPKQkUVbA3vhMAIaey03elzSGh0i
-	 5a5DApjHfnKOaXT+iqdHq9kdJ/YYeqQKe/UG/TJivqevFGes3HsJcpUMWjMjbHzpiXKAF
-	 QQr6ra5BL1IBJNus7NcPglJ72F0z3HVUC/Z7ccU66Og38uH2CbeZ8nyBasiTndgMKb3Kz
-	 oBQpjD06eeqMLRJEbljBAwX/ccgm7WBJoAsiyVBclF0+wjLwsu25zv1cQSzAdB8kynqjy
-	 Ah5m9hNingbEx8MJEjFAxbbTpo8mzjpS+qMYY7KtT07gY5naYpkcAtRh2+pq9aKBC4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795465383;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:From:Date:
+	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-ORIG-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=1aWvYhbVjtxz9V9hbZtcF6tXHCVImD3NnoQvdxhoXCE=;
+	b=YrWiitht69XCUzG6pkxIC0wzSTChzlsdOE3xeBOWZsYnQ/YtEh4bhZnyUfl+stT2HF7+
+	 rDEbtd7SPuulZTd/SrYsXpJdfjRXpRSHMvxwfNWEW28zg/q2enU2srAMtiSmY5VV9RXQL
+	 qdc26DVsuQBK2yxL43bWyHAkAc+tf+YEnXh6eT+1NoScxzYfmHYxtKj2PAEXiDCxqIwP7
+	 EFJ72xKQRbLH9OmBr6cXreCVcgsUlZ6+sQ0tRrVTBV2z1Q28YuYAbRR+MrqTe6uEvFAQv
+	 KLTBMkRU/yHFsKLNQakGloVwt/Kg+dPec+3PG+XIiUq0wjRVu26gykPyTPiN7UQcZDw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=tmEBZJIm;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=ORlQV9Eo;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=kU5VWLoP;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209A4606A31E;
-	Mon, 23 Nov 2026 19:59:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 209A4606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999CB606A32D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 20:23:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 999CB606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=tmEBZJIm
-Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id DFFC680971;
-	Mon, 23 Nov 2026 19:59:27 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 28CA13D;
-	Mon, 23 Nov 2026 19:59:26 +0000 (UTC)
-Date: Mon, 23 Nov 2026 14:59:18 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-kselftest
- <linux-kselftest@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH] tracing/selftests: Make sure trace_printk is set to top
- instance
-Message-ID: <20261123145918.0d7f3728@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=ORlQV9Eo;
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=kU5VWLoP
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6ANJu7xc3513817
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 20:23:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=1aWvYhbVjtxz9V9hbZtcF6
+	tXHCVImD3NnoQvdxhoXCE=; b=ORlQV9EoCip86aWWPElorYuikIXlnMXhJ6htJ7
+	94Cg0piRh9hTx02TMUUtN0mbTic50oUTjEvBUeG0TUDsMiWcrdvAFbaJNtzOS6/3
+	7N911AtFT75D2t9h4ZGkEaPMO6wYPsQJbRiSkqBfA6kgz8cVeyXvjdk0qj4NC2X+
+	m9tmFOgQCJVZwSR6SQhGnPpHL/kRZFWwstjUVkGOavKNhALM2RDkXrGJNLf03sNG
+	B5D6PwXGbl57hj/rEpbK+MbhGkxd7QGINqBxYkHwZE114Co2q/PLLyVpzK3Y3ipf
+	bwVs//gOWH2qUo9S5MvIKhd3G9LgetT0BScx3VUmja+FevXQ==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j4ukr87ms-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 20:23:01 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-9495c71055bso719051285a.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 12:23:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1795465381; x=1796070181; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=1aWvYhbVjtxz9V9hbZtcF6tXHCVImD3NnoQvdxhoXCE=;
+        b=kU5VWLoP2sar20qVQjC2RLy4zRfRmIGaWbD6QQHSOxQL4FoIRnnZFuXUawLAiK7EsZ
+         /zUwbqh6iaaSD8VAAqYepYZC5RxwmTelGRH+p/CTMIaYnEp9hdRcfy3CIxLM8QfG5s8s
+         tPgJLuWMC47/sc4GLUAxvJ1O91l2IsOq1pLe0A5bxXyxzy6xrQmltxB7CJLDg6xtIn2F
+         Sf5eESpXwM3XS2k9bOEcYrGMUu+fhZ41AjjMfsxuSjnLPy+Ap4f/sRhnQnzpXwNQBFte
+         X71HiVZ7mT/B6S/fLVPF7e4qIHY4QV4drogc2wkmBKKtQmPeG7WwQ5NcuQh/DXIsvFck
+         tLhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795465381; x=1796070181;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=1aWvYhbVjtxz9V9hbZtcF6tXHCVImD3NnoQvdxhoXCE=;
+        b=F5FW20YhWh3Sq9OzqyxLsfTAuW4QEKx3I2zVbcWhOIbcje4JKkosKtAJa29V/78gL6
+         JdAkzd0vPWhHIusPDl4Ju9d9l7u9ZeAN0F2W1DCyiDSGr+RfLBQnmZ5VZ+PtdcJuswbv
+         DheDi89ePbtJF0mrdMpUz6nBMeHkOyCYbqcy/BrWyNVqxW/Q9iqhYwhpKFFrvUXDU+7l
+         MDHFVf9otEjW6mKvQwm+KpmbdTLdJ0krrGctWqJttYuHpoIZzNJ4BFlH6cAWSk01ohqH
+         vKaExCQyXosSCDlj1b77RK/cPfm0t3h/HKWqHtT5mfRVHlm8XmIDjTPZw1BXNwnMZJ4f
+         myVA==
+X-Forwarded-Encrypted: i=1; AL+hErEyYau3WNRKiTmHoFootAvvd4BXaSVhc/iTiNKU+zRIoqdIVZthNowxTYIGT0PhpqkOZQ+58DdHSTlsi9a4j1BkTc0=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/FzPGRZ8VMnKBTklos/O5qzqqfeG5jid1CAn2vH8oYHVFxe2XZ
+	LMOKBGa0PxRQrQ7W3kR6ZB8RTW+qPAc0fPDBn2LVJIQx6GPzFozPyJpVm/Lzgg7AKooneisjy52
+	nXvindU5KE6DPmevEqeEPUbW7bvmq2NMJf85Z97dTTY58bch2powYmpWrGqN8UI7SUmUJwctkW/
+	k=
+X-Gm-Gg: AZFdTZegYWupJoOWUnxKcY5KnBbqfd/4nVuiF7qipqSzkMX5Kf/Hfo1UCtjl0d4n/hD
+	NwqftZ8xB9O4ZkuRGTD1wPUCM/xqnQf8w4iKID/Z6pR47E/mjlb1+IS1tadn+/T1BUAnR2koI1b
+	OFRrI/ZTuhZzejct4ViyZgi1zjJ22063IAyMH1QETC5v+kqniV5v+a3DZc34heWoSNYMbPwqLmD
+	zVj+zILytfoGpH+sjGYedZ4d3tg3wQxOAl9f3P8nao5k3wVph6AU5BSNwR8pDOO+VUBR4RYzQpi
+	ydxVxsDdOj7R5fix8xWN3Cd0ftxojPYmxaw66nHq/GZhcNKxfklu9+vgz2yRcpJXPlj1/SlkpB+
+	n23lZv4gliT2vBYpdIjT4Zgm44kCmcGatRonayddovT3TomSegn1TMdITeQ==
+X-Received: by 2002:a05:620a:6609:b0:93c:664e:e212 with SMTP id af79cd13be357-949ba9e83d2mr1897547885a.32.1795465380572;
+        Mon, 23 Nov 2026 12:23:00 -0800 (PST)
+X-Received: by 2002:a05:620a:6609:b0:93c:664e:e212 with SMTP id af79cd13be357-949ba9e83d2mr1897540485a.32.1795465379913;
+        Mon, 23 Nov 2026 12:22:59 -0800 (PST)
+Received: from [127.0.1.1] ([188.27.161.77])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853ca452sm371057095e9.15.2026.11.23.12.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2026 12:22:59 -0800 (PST)
+From: Abel Vesa <abel.vesa@oss.qualcomm.com>
+Date: Mon, 23 Nov 2026 22:22:51 +0200
+Subject: [PATCH v3] pmdomain: core: Add tracepoints for domain state
+ changes
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,74 +115,319 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 28CA13D
-X-Stat-Signature: hgrz3uyr311sg5h7isysrg7czimairt3
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+sdHlsPREMg0Mr5WaqVHQMrbDKAwQwaTE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=ZNbXBfNTO0fkyqJpgqenKi8rMrZeuWlZGWMB2B9tSTE=; b=tmEBZJImdXo0GlRBLGG9UucuYerRP7qQXPM/VqlM3JI5h/BKGl0HacyXXbB6Cp5fNvwy4QizO6syEULY5+Hn0aDM9Kwmr/o5HrQDt7CNGMFsFmXbjEJjXn6dFOTQ9ONCQoYIEsm0pEPwRGfEsmeV16zOpz6Dq8XiGv6AdZR/p5E=
-X-HE-Tag: 1795463966-961497
-X-HE-Meta: U2FsdGVkX19diIAY0Lc1gKibLW6OutddK+lv8YadxSDrdEKf8H01kTg48u7G3f4YYSJCufAKYGelbTq3s8C1IebOzb3GOXFzcZo8HANhbomsTAQ7Sh+4MNoVpkdE47AjhhfzGNXFVfMG7g1I3/+1Td6FoDDCw+sU9lg3AJNHjZe/g2vFWKta8eXjuWTUB8wB0E87klMORXprRaoDYPyJ2iGTCFO3Y/yIZpz2X0gHzyrQ7f2MsRUhK46pldMDyrb1KcA3bQ3XQIjZbW1IzpWbRqbDQB0WdcLsuyO4YWeNhXbsq/p+EYiaNxFNFu8gB/xLG086SEwckL44CZrG/XX5eWIbw/iJJkRFEkvonr4KfH+ny0Aey6V+lZnvTMuhD8mg8wXNDZ08b4g43lc5sl3ZZpVJyuScBQ84
+Message-Id: <20261123-add-pmdomain-tracepoints-v3-1-1b41d412b455@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAJqgBGsC/42NTQ7CIBQGr2JYSwO01OLKexgXyI/FWKhAiabp3
+ YWauDLGzUsm+d7MDILyRgWw38zAq2SCcTZDvd0A0XN7UdDIzIAg0iJGGsilhOMg3cCNhdFzoUZ
+ nbAwQU0IbTYRskAb5ffRKm8eqPp7eHKbzVYlYfGXRmxCdf67thMvuj0zCEEPZMV1rxFvGuoMLo
+ bpP/CbcMFT5gFJL5OPDGNEfPpJ9GLU7whhVmNIvvmVZXs/eWFUpAQAA
+X-Change-ID: 20260924-add-pmdomain-tracepoints-15254f2cd40f
+To: Ulf Hansson <ulfh@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Abel Vesa <abel.vesa@oss.qualcomm.com>
+X-Mailer: b4 0.15.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7694;
+ i=abel.vesa@oss.qualcomm.com; h=from:subject:message-id;
+ bh=5IpYGtc6Z2Ef59L/WU0TjMp9lBqUVNrcPzzYI+VOL2c=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBrBKCdJoLi8IveMV4pWSAAZId1qpfdLPDdvNMMA
+ px4W7PhkkCJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCawSgnQAKCRAbX0TJAJUV
+ VrZpD/wPO5PB7eboGgmJezrDT+kH4nQXRBqpR10BhCECsNllOWkm4o1AX35h9r0CE3KaInPHx1/
+ 8tQFLyxcOJJfLbcoiG+AEuMXzNMloqmJlKNmv6yOHDkmDMfTZQo+tDbrlCoUmMmlGf6gjTojS03
+ R4oXXMEwL17DRO6lzJmh5MolKj775wGkig6A/Xvnw4jmPORPWQFNoVHNbYjddHRBckGtMYoculK
+ eAhflCge41rThUYKXZOjPE+8H/8hPAShcaAGJ6Y+0+pQlzzJBN5vgfrYCcAD1s551XI6LmT3kiu
+ ZG4Takd8KPU/rMNzJP49tGW/5roH4rHitqrB6qNKWfIi03SkQyBahdYsHFaFrtBxqVeeKBH1W2y
+ gQdfuqqqYA0Xm59J91Tmi+56+9f4Ay0k2dLkM4xqFdNDMdoSjBIbEAMscMEGYQEFOIK/o1Qy5nw
+ DbUJbVukl22nRwAvexs7tZULXKnTfAF2B2l5zbgusvDgro0KBYmR/nWAUjDeL9vM60F5CZG2DEy
+ qhCDD5pHplzj0ACSWMNV9RcT3mHXs7CGA2Oi1wFbv0NnNkxpYsGFrn6LLBrUHfnMpuRm0YAnD3+
+ IhQ5mj+fmk9XZC81J4rP4V4hHr/vGi+oGOqD0M3URm5lxDWtCKeKnTy19NS19xIDyBPd8vmcBJs
+ f6hKPj7xH78qk2A==
+X-Developer-Key: i=abel.vesa@oss.qualcomm.com; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIzMDA4MSBTYWx0ZWRfX8H3Gq8ntqd56
+ jHJXWBE97l2izMKGEuGahJgu+WnYZp50rjYwZq6X/HOuVKhNtX24Ovfn16Xk9Nr+kaJrL7r4HQg
+ hiBi4ab6QbRzVK807vqn65pKGuoKRgw=
+X-Proofpoint-ORIG-GUID: 5w0CvBGsXlYTl9qgAFIYk1ZThmRUmFVn
+X-Authority-Analysis: v=2.4 cv=M+rYuCws c=1 sm=1 tr=0 ts=6b04a0a5 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=asF+/XNaGoxFafzDDLC1GQ==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
+ a=bC-a23v3AAAA:8 a=EUspDBNiAAAA:8 a=_etmsl0bOIUhBZk5MHUA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=FO4_E8m0qiDe52t0p3_H:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIzMDA4MSBTYWx0ZWRfXxIDCicECoFMg
+ MKOcZOo94ROFLxmqpcI4gl/TlozrCT0kFcQLQTJpwscYWnamNQW6100mIbD2B/EaTcOL+QtFXLs
+ 8r5RDlgx6SJOgNtPU4sA9jn1eONn9YKeHXXtHpYyDo4mLipdZZOo8A5JiurOyz8IM3SE2bU3ktm
+ 28GSrKuIhE5u9hKHVJqBroal1GvrcRXuyvN0vMSbrzATDkjs18I/NFkOdf5wQEmvdvNdK+uPkzh
+ l+5+fcCFZ5zmxYWwawAe7B3E1OnumgGbU4/RZCTbv7QJYJaJj9qscEEk4yeWdeu/T/2xW/CLfpU
+ 1HguFD9FBSFIJSsU96kvL9o5yGnEIu5yMzpjusdqYIekAEtxfArdHLhcTMSqzZy7YMjz7tKnKLO
+ aI+pHFdQmACd/KRbi2DgP9ZVg8HHWYdKbFvKBB/iieTJJTNw6i8jKUmYrstN/nQPcWTaWuihszq
+ ow9fDXX4UANoBMTnYew==
+X-Proofpoint-GUID: 5w0CvBGsXlYTl9qgAFIYk1ZThmRUmFVn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-23_05,2026-11-23_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0 adultscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611230081
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Power domain state changes are difficult to correlate with device activity
+using snapshots of the genpd debugfs state alone.
 
-In order to debug a kernel crash, the boot command line added
-the traceprintk flag to have trace_printk() go to the persistent ring
-buffer. When the fix was found, the command line wasn't updated.
+Add tracepoints for domain initialization, power-on and power-off
+operations, and performance-state changes. Record the domain name and
+initial power and performance states at initialization. For power
+operations, record the idle-state index and return value, and for
+performance-state changes, record the requested state and return value.
 
-Later, when running the ftrace selftests, the direct function tests were
-failing. The reason for this was because these tests would load the
-ftrace-direct.ko module which would add a trampoline that did a
-trace_printk. The test would then search the top level instance buffer for
-the trace_printk output. The issue is that the kernel command line had
-moved the destination to the persistent ring buffer causing the writes of
-trace_printk to go there and not the top level instance and because the
-tests did not find the output it was looking for, they failed.
+Emit the operation tracepoints on both success and failure paths,
+including power notifier failures and performance-state rollback paths,
+to make failed transitions visible alongside successful ones.
 
-Update the tests to set the trace_printk destination to the top level
-instance at the start of the tests to force the output to go there so that
-the tests will not fail in such a case again.
-
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Abel Vesa <abel.vesa@oss.qualcomm.com>
 ---
- .../testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 5 +++++
- .../testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 5 +++++
- 2 files changed, 10 insertions(+)
+Changes in v3:
+- Reuse the genpd_power event class for genpd_set_performance_state
+  through DEFINE_EVENT_PRINT, to save memory (Steven)
+- Link to v2: https://patch.msgid.link/20261105-add-pmdomain-tracepoints-v2-1-10672995e155@oss.qualcomm.com
 
-diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-index d75a8695bc21..359257123e6d 100644
---- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-+++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-@@ -2,6 +2,11 @@
- # SPDX-License-Identifier: GPL-2.0
- # description: Test ftrace direct functions against tracers
+Prepared with help from an LLM-based assistant.
+
+Changes in v2:
+- Initialize ret to 0 at declaration instead of assigning it before the
+  trace labels in _genpd_set_performance_state(), _genpd_power_on() and
+  _genpd_power_off() (Ulf)
+- Link to v1: https://patch.msgid.link/20260924-add-pmdomain-tracepoints-v1-1-d89f3f0a6998@oss.qualcomm.com
+---
+ drivers/pmdomain/core.c      | 30 ++++++++++------
+ include/trace/events/genpd.h | 85 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 105 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index e0bf30c59cce..c8bc57407634 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -29,6 +29,9 @@
+ #include <trace/events/ipi.h>
+ #include "core.h"
  
-+# Make sure trace_printk goes to the main buffer
-+if [ -f options/trace_printk_dest ]; then
-+	echo 1 > options/trace_printk_dest
-+fi
++#define CREATE_TRACE_POINTS
++#include <trace/events/genpd.h>
 +
- rmmod ftrace-direct ||:
- if ! modprobe ftrace-direct ; then
-   echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
-diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-index e52e470a1f8f..b22e3fb1c468 100644
---- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-+++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-@@ -3,6 +3,11 @@
- # description: Test ftrace direct functions against kprobes
- # requires: kprobe_events
+ /* Provides a unique ID for each genpd device */
+ static DEFINE_IDA(genpd_ida);
  
-+# Make sure trace_printk goes to the main buffer
-+if [ -f options/trace_printk_dest ]; then
-+	echo 1 > options/trace_printk_dest
-+fi
+@@ -510,7 +513,7 @@ static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
+ 					unsigned int state, int depth)
+ {
+ 	struct gpd_link *link = NULL;
+-	int ret;
++	int ret = 0;
+ 
+ 	if (state == genpd->performance_state)
+ 		return 0;
+@@ -529,7 +532,7 @@ static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
+ 		if (ret) {
+ 			if (link)
+ 				goto rollback_parents_up;
+-			return ret;
++			goto out;
+ 		}
+ 	}
+ 
+@@ -543,15 +546,17 @@ static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
+ 	}
+ 
+ 	genpd->performance_state = state;
+-	return 0;
++	goto out;
+ 
+ rollback_parents_up:
+ 	list_for_each_entry_continue_reverse(link, &genpd->child_links, child_node)
+ 		_genpd_rollback_parent_state(link, depth);
+-	return ret;
++	goto out;
+ rollback_parents_down:
+ 	list_for_each_entry_continue(link, &genpd->child_links, child_node)
+ 		_genpd_rollback_parent_state(link, depth);
++out:
++	trace_genpd_set_performance_state(dev_name(&genpd->dev), state, ret);
+ 	return ret;
+ }
+ 
+@@ -878,7 +883,7 @@ static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
+ 	unsigned int state_idx = genpd->state_idx;
+ 	ktime_t time_start;
+ 	s64 elapsed_ns;
+-	int ret;
++	int ret = 0;
+ 
+ 	/* Notify consumers that we are about to power on. */
+ 	ret = raw_notifier_call_chain_robust(&genpd->power_notifiers,
+@@ -886,7 +891,7 @@ static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
+ 					     GENPD_NOTIFY_OFF, NULL);
+ 	ret = notifier_to_errno(ret);
+ 	if (ret)
+-		return ret;
++		goto trace;
+ 
+ 	if (!genpd->power_on)
+ 		goto out;
+@@ -917,10 +922,12 @@ static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
+ out:
+ 	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_NOTIFY_ON, NULL);
+ 	genpd->synced_poweroff = false;
+-	return 0;
++	goto trace;
+ err:
+ 	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_NOTIFY_OFF,
+ 				NULL);
++trace:
++	trace_genpd_power_on(dev_name(&genpd->dev), state_idx, ret);
+ 	return ret;
+ }
+ 
+@@ -929,7 +936,7 @@ static int _genpd_power_off(struct generic_pm_domain *genpd, bool timed)
+ 	unsigned int state_idx = genpd->state_idx;
+ 	ktime_t time_start;
+ 	s64 elapsed_ns;
+-	int ret;
++	int ret = 0;
+ 
+ 	/* Notify consumers that we are about to power off. */
+ 	ret = raw_notifier_call_chain_robust(&genpd->power_notifiers,
+@@ -937,7 +944,7 @@ static int _genpd_power_off(struct generic_pm_domain *genpd, bool timed)
+ 					     GENPD_NOTIFY_ON, NULL);
+ 	ret = notifier_to_errno(ret);
+ 	if (ret)
+-		return ret;
++		goto trace;
+ 
+ 	if (!genpd->power_off)
+ 		goto out;
+@@ -968,9 +975,11 @@ static int _genpd_power_off(struct generic_pm_domain *genpd, bool timed)
+ out:
+ 	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_NOTIFY_OFF,
+ 				NULL);
+-	return 0;
++	goto trace;
+ busy:
+ 	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_NOTIFY_ON, NULL);
++trace:
++	trace_genpd_power_off(dev_name(&genpd->dev), state_idx, ret);
+ 	return ret;
+ }
+ 
+@@ -2576,6 +2585,7 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 		return ret;
+ 
+ 	mutex_lock(&gpd_list_lock);
++	trace_genpd_init(dev_name(&genpd->dev), !is_off, genpd->performance_state);
+ 	list_add(&genpd->gpd_list_node, &gpd_list);
+ 	mutex_unlock(&gpd_list_lock);
+ 	genpd_debug_add(genpd);
+diff --git a/include/trace/events/genpd.h b/include/trace/events/genpd.h
+new file mode 100644
+index 000000000000..2113bec56e09
+--- /dev/null
++++ b/include/trace/events/genpd.h
+@@ -0,0 +1,85 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM genpd
 +
- rmmod ftrace-direct ||:
- if ! modprobe ftrace-direct ; then
-   echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
--- 
-2.53.0
++#if !defined(_TRACE_GENPD_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_GENPD_H
++
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(genpd_init,
++
++	TP_PROTO(const char *name, bool on, unsigned int performance_state),
++
++	TP_ARGS(name, on, performance_state),
++
++	TP_STRUCT__entry(
++		__string(name, name)
++		__field(bool, on)
++		__field(unsigned int, performance_state)
++	),
++
++	TP_fast_assign(
++		__assign_str(name);
++		__entry->on = on;
++		__entry->performance_state = performance_state;
++	),
++
++	TP_printk("%s on=%d performance_state=%u", __get_str(name),
++		  __entry->on, __entry->performance_state)
++);
++
++/*
++ * state_idx identifies the idle state entered or exited for the power
++ * events and the requested performance state for the performance event.
++ */
++DECLARE_EVENT_CLASS(genpd_power,
++
++	TP_PROTO(const char *name, unsigned int state_idx, int ret),
++
++	TP_ARGS(name, state_idx, ret),
++
++	TP_STRUCT__entry(
++		__string(name, name)
++		__field(unsigned int, state_idx)
++		__field(int, ret)
++	),
++
++	TP_fast_assign(
++		__assign_str(name);
++		__entry->state_idx = state_idx;
++		__entry->ret = ret;
++	),
++
++	TP_printk("%s state_idx=%u ret=%d", __get_str(name),
++		  __entry->state_idx, __entry->ret)
++);
++
++DEFINE_EVENT(genpd_power, genpd_power_on,
++
++	TP_PROTO(const char *name, unsigned int state_idx, int ret),
++
++	TP_ARGS(name, state_idx, ret)
++);
++
++DEFINE_EVENT(genpd_power, genpd_power_off,
++
++	TP_PROTO(const char *name, unsigned int state_idx, int ret),
++
++	TP_ARGS(name, state_idx, ret)
++);
++
++DEFINE_EVENT_PRINT(genpd_power, genpd_set_performance_state,
++
++	TP_PROTO(const char *name, unsigned int state_idx, int ret),
++
++	TP_ARGS(name, state_idx, ret),
++
++	TP_printk("%s state=%u ret=%d", __get_str(name),
++		  __entry->state_idx, __entry->ret)
++);
++
++#endif /* _TRACE_GENPD_H */
++
++/* This part must be outside protection. */
++#include <trace/define_trace.h>
+
+---
+base-commit: 3191063649dbf7c0d0b768e1f3655e4c5fc6edb5
+change-id: 20260924-add-pmdomain-tracepoints-15254f2cd40f
+
+Best regards,
+--  
+
+Abel
 
