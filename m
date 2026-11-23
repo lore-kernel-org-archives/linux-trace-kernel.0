@@ -1,105 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795425044;
-	b=qUnVYf+bd88RANJdA5w88woS/dkBOz7DUyLfp0y23CVMUiayr9uEDpVz30cZiOFtycad
-	 SO/eGQXIMYhw2VzHm3EfgUT93+JXTn+EswOZkoJ2AQWazouHiBQJqCDgMNUEb3/siM6WZ
-	 FjVHoOi+MtFsK4Jt3ZEYZyVdPDH6fXPgVumv6kX+aqwJkbcsgdUg2b3l3Yzn3IZFDmPgk
-	 /XSIhyc84tLlfkMz/sRgUFcI2taxO+/eNC5yuaW9EdS2onre/ebj4DcZTJq2OqWNuEJah
-	 Uery1O5Vhwx5L2lXjx350jfmPHfpb2b3mdkCZ6p1uWGnvcy/r8J/PClurQ55/gvmTmg==
+	t=1795425561;
+	b=4QpYcEqk887/h7a0x4diS0SsLcyweaSTfyXcyORlvFoS/E3ztdVMdge4+MhQNoZ/Spsg
+	 XogxIJKAjHLeLdkiy0Lg/lpkdOgIKtpBHGgSoBbu6rNfxkbybnTr9edOqrU7/zEmUrm+T
+	 ztxyiQLpPuds3XeuvfxrNVisTfRSfCHmhWhqtl8ifgDfRkJz9gWVd8fqaC3EG0ovVfkYw
+	 eIhlml7DEDqHxp6+EBHAc+mtzYkcflmNXoOYVyJzWlZTFVrlO+33P6nXLyJI03OjA/Cfn
+	 Ge82kjT9SLDTWjl/3ty7XqEWeUFIS2d5xOsqSZOsfwQwDgYscQJXd1JIrQD65TQbBng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795425044;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795425561;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
 	 Subject:From:To:Cc:Date:In-Reply-To:References:Autocrypt:User-Agent:
 	 MIME-Version:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:
 	 X-Mimecast-Originator:Content-Type:Content-Transfer-Encoding;
-	bh=ecm2PV2gI1P0bnbXEOX8qjFIo1KpUBcbqXWnncfBn1c=;
-	b=irYqcLruIGtK5Mxsguz51+HMWbgPiXZXTgfY2xxNpQjlT49fdrgJhB8Ql0m5KBcgi3nN
-	 e4yQmnzIQGQNIEBw8dMp0zs3hWyeu81IYNhQwY3WYKh6LxSA04zvaHP3ykIorIkDqJucq
-	 KVNXC1atqrvzl/yRuvtctkSh1iSr+hawTTZvoogecf580t0QNwqebhwoLNBvvSj8dUy7h
-	 EsOBTvu2IMpUPgq7FmSjzE30sX5aGhkrNYrd46WZqqHtNd37NDjTuuChMif1h5Ou7YeE5
-	 Kpvhp8xOQdB+pRDA93CyJv3iHPY9vfoQ99rDzTAr15PQE7pY8u6dqMNBsTtWiyHi+BA==
+	bh=LYIir9UbeEi2CT2gDPhDzZBEiArUOUKkyz2EAXQH95Q=;
+	b=u9lHqQlE77CNX4ewStN/ANmILq02+95HqN9ddk0vRh9AfsluBNsAVffkcs9+qmkoOJUR
+	 JgY2WcwMJ3v57F6KDHT/CrjBDOGWKx3cevfRjkzQUWFO2JEYiWL1Sns2VoADTK7RcaOyz
+	 iFFeVVGQvB3dK2WxVrlR01QfwWbrZ8TS3bB0z/z/VnLrIWWUhJt909aOCqHQqBIuycgB5
+	 FRrYm6Q/mWP0vk5aEfBSmM03Z1IrRxCqZ13vA2KB+Lc3dojCUVwvZKpCUZqFjhGqAjiW6
+	 o/Lv5RK4uFls4ijdqRsEs9oxf4+hD37neOEyvU5IjAYQ2YC657Dkr+cNBguZ33PpVHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PZq1TMse;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b="MT6Kc3/K";
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC5B606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 09:10:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2CC5B606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E62606A321
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 09:19:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61E62606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PZq1TMse
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MT6Kc3/K
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795425043;
+	s=mimecast20190719; t=1795425559;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ecm2PV2gI1P0bnbXEOX8qjFIo1KpUBcbqXWnncfBn1c=;
-	b=PZq1TMse/ERr17WHnFn6Fwa6tzq1FOrQ1gOmwo4GD1YHbn8sHV+8R5nM0jmfBwH7PWzosv
-	hXupiLkut1Du425A4UAmqV7eTWQefct0xhb8e428fxkMu46WX0u2lWA6gSBS4GeFT4qQxI
-	VlpfHMB1xEm+Pur9rJ27tNbjLdkbquU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=LYIir9UbeEi2CT2gDPhDzZBEiArUOUKkyz2EAXQH95Q=;
+	b=MT6Kc3/K4+jZUKko057P+AVb+j8CAn/NIYowTP01ipWKBedAWKSZIvWJMvmV5FO1nDG00T
+	S5nhgypU8RSeTH2T9ERFVevP0J98iZsfNrk/Q9Lt8oCM9LjP2xoWcLDWHCGeP+WI3zwPOu
+	qI+nbBYoekR6AnX7dNkRgebRVSYhTgw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-zMYlng-kMfK4R_8zLnA06g-1; Mon, 23 Nov 2026 09:10:41 +0000
-X-MC-Unique: zMYlng-kMfK4R_8zLnA06g-1
-X-Mimecast-MFC-AGG-ID: zMYlng-kMfK4R_8zLnA06g_1795425040
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4bb6bbc025aso23176355e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 01:10:41 -0800 (PST)
+ us-mta-518-_tQodSPBPROQ7BI4lPRDzQ-1; Mon, 23 Nov 2026 09:19:17 +0000
+X-MC-Unique: _tQodSPBPROQ7BI4lPRDzQ-1
+X-Mimecast-MFC-AGG-ID: _tQodSPBPROQ7BI4lPRDzQ_1795425556
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4a70b42bab0so29576315e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 01:19:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795425040; x=1796029840;
+        d=1e100.net; s=20260707; t=1795425556; x=1796030356;
         h=mime-version:user-agent:content-transfer-encoding:content-type
          :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=ecm2PV2gI1P0bnbXEOX8qjFIo1KpUBcbqXWnncfBn1c=;
-        b=WPkVjHSQHJTElXNXAnksvUZmItjjWT3Ek+f9+YEsFPK2b20VFs1qJOH1KyexYL/Uqz
-         zmK+Jj575Kd9aG7yGJldkIpdt4LnWuRaHzSD3JN2glos+jbwkXsgrIfZsEOFF+n6Km6P
-         ZXi2K21fq6VNbqFYRfIjX9XPUPwvT77uGYV4lTnRAVMxrNwRlW7muyNHlQtsJKsnzh/v
-         HnUfNLfsdGnJMBdhD0PpveuJFPpjl50ychJGILBPGC9oOc86dncmHu/cQ9X3X/fn6ra7
-         kwn1y4qdl8l+nuYhsIwe1bjRdqpBVd15X4gtb6P+z1o0Dzq9XKXzASi4HNsHOu0/k2//
-         FLIQ==
-X-Gm-Message-State: APuU4Z+88oztVatW6lR3ePUHWQMQ3wCrsri1D9r/HbFMSn+5s0bfyZOh
-	VONI3jYkmIHgObdpMIKndRECfN0RlQsKszX+vlSKM86QIS8Cbkbl9ZTIfn82MKFIOpPPFsAx+Nj
-	ADbTeN/5htlQoFFmHD/begUXESjCaOZ+rZ3B2br4XZpZ3dYDLRE1y0qa1gWsa9/OUSQDuw4YmDg
+        bh=LYIir9UbeEi2CT2gDPhDzZBEiArUOUKkyz2EAXQH95Q=;
+        b=mTcKJZaGGzFYMStXIHuP82J/CPzBJhLe8Iyd4bBVVDsA37pISDCdthieTfJl/7t1dP
+         UCMQuzK9PI3PJ7YUSWJ29yCBjbDljVuVVNci7YarnqyrvC0pBBFVI0Gfdl/DBvEhkXEZ
+         W8eCPqEtpFiw4KXJZTY1DeNbDyfkdF34HGxtZpPQ1AINPExAmja0BsItMA5IyvRjQIN7
+         ZGir1rYR31d1N2zTIHYswjO/Amej12N5Cc8S9bCtc0FVHbtTy196MUXIEKCVeS2jd3+D
+         qd04+0tU9WKjCkwwAob6zBwA0RXwWURIhhOjpTN1ZfuX6HFA+2o4weBfD8/XPk90WsXx
+         7o9g==
+X-Gm-Message-State: APuU4Z/GCuGBhjdKhGgz/W0K7rO7fUL26brZWbRbFcDsf4YGavTHtfqB
+	4VfW4hLwZYF/36qDRfbzjrIfb3C6+zYPaR60ZUj5HKbDrzgOzPBs1W0Bvuit1VxDxuDjQYDQXxe
+	bK9gNvacUwkawoPVHlQQlg+yI1TIZkw6h7J4GCBtfNsZtcBgViynCVsRm4JB1zjSSi7zayDsJoA
 	==
-X-Gm-Gg: AZFdTZfW7LhzNGeq4IuSt2Yor5S0RiVyHQ+T8zmh+ckWG2+u5RxVtYTJ3PjakihuQ5k
-	i3bDNtipmp3uwV9Rzi2kzaaTTSER4p4n/waxjxLWzjOgdpFXO6gYCTOY+WCikT3h29fr5/+SkYB
-	B0UdLdWzaKTw0TO72UD4yQM+8hkPG1lYjszygJu19ezTZlK25cpdG22MBrltQ3uNXOaQHPI/Th8
-	/tQ0QhY/2sg1Fb8ztDwHk6CXxY7hwdY9//NotKs4kH4NqAUZwG1sf6lENwUcPayQxj1PutQheBK
-	QtnhGRd4jyrSuiV/EFEjMpmYdnJWNI9XqlaannOPH8+BZvqO2Ult0072qCr4HTcaJ9WHCMiWIYJ
-	AgUgOqDfYBbXGi8mY2cfo0TLOvhkE3jK/xkq3licqhhmlY6JG8U1g6K5jD3sIwl+g9/nHXwMKy1
-	tt
-X-Received: by 2002:a05:600c:5246:b0:4bb:60ba:49e0 with SMTP id 5b1f17b1804b1-4bb88930707mr236628875e9.26.1795425040212;
-        Mon, 23 Nov 2026 01:10:40 -0800 (PST)
-X-Received: by 2002:a05:600c:5246:b0:4bb:60ba:49e0 with SMTP id 5b1f17b1804b1-4bb88930707mr236628515e9.26.1795425039893;
-        Mon, 23 Nov 2026 01:10:39 -0800 (PST)
+X-Gm-Gg: AZFdTZdvOLqBSVUrIxaTNgL7qBSobChvciLKQGtBImhSg6aRMZaITsWEYJCipcxoi7A
+	P7tLwY5DixVGdpqCZgpC3gdufHb8DYXe5hbCfIItWbqQzTilok5izbNFbWQNCklx0xXeQX2r5Dp
+	5uu1zayIgqUTfp76ks4TXABy3YsVwmP4gN3tjIzI+Oi1NT6t+F+ejovm5VKP8YTvj7T8DFDu8wR
+	jPlU5udQ1Bn862nvmFqYIQi2ZGlxpP/65FLs+6/pQPkd6v4+sGG9nSVAjTcKxbbgeX/9abuBMPt
+	Ey5NLsnG33DXeSNw8PLJY4zHU0UDWrd9SX/uLRfP7V7NOxoNomZ17jKJOtAsfDQEE4ySWMVgoOc
+	XH/PKgXM7MH42cRnA/BI2ZBguJDQJriiuQSavvVidSSx4K2J4cuprUNKUVFHe5nMvzyeEZp63BF
+	M3
+X-Received: by 2002:a05:600c:828e:b0:4a2:526b:d40f with SMTP id 5b1f17b1804b1-4bb88785898mr234333165e9.0.1795425556197;
+        Mon, 23 Nov 2026 01:19:16 -0800 (PST)
+X-Received: by 2002:a05:600c:828e:b0:4a2:526b:d40f with SMTP id 5b1f17b1804b1-4bb88785898mr234332685e9.0.1795425555832;
+        Mon, 23 Nov 2026 01:19:15 -0800 (PST)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb884a3a3dsm317775305e9.10.2026.11.23.01.10.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb906635c7sm166276135e9.2.2026.11.23.01.19.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Nov 2026 01:10:39 -0800 (PST)
-Message-ID: <96080be96fbb96ec77e3e015779da807fa4ce64e.camel@redhat.com>
-Subject: Re: [PATCH 6/6] rv: Do not send the trailing NUL to userspace
+        Mon, 23 Nov 2026 01:19:15 -0800 (PST)
+Message-ID: <58930dc60d410ae8dac5a5bbe5e9048501b5b1db.camel@redhat.com>
+Subject: Re: [PATCH v2 1/2] verification/rvgen: Validate the monitor type
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: Wei Li <liwei1412@hotmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Jonathan Corbet
-	 <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap
-	 <rdunlap@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Nam Cao <namcao@linutronix.de>
-Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	liwei391@huawei.com
-Date: Mon, 23 Nov 2026 10:10:36 +0100
-In-Reply-To: <CY8PR19MB7009D39FB627A9576A9868AFB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-References: <CY8PR19MB70098BF493A3B67418C7B9ABB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
-	 <CY8PR19MB7009D39FB627A9576A9868AFB7682@CY8PR19MB7009.namprd19.prod.outlook.com>
+To: Chaosheng Qu <chaosheng.qu.linux@gmail.com>, Steven Rostedt
+	 <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 23 Nov 2026 10:19:14 +0100
+In-Reply-To: <cf05914335850f6835ae79b34d6b4ad891128948.1795252297.git.chaosheng.qu.linux@gmail.com>
+References: <cover.1795252297.git.chaosheng.qu.linux@gmail.com>
+	 <cf05914335850f6835ae79b34d6b4ad891128948.1795252297.git.chaosheng.qu.linux@gmail.com>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -120,76 +116,63 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: TejPI8bzX1_lhexLpclxHBz911fRtTpS7z2A-kldps0_1795425040
+X-Mimecast-MFC-PROC-ID: P_P6dWBemqvABxZgvCpdOYwzqvdW1t1ABFjKFVbny_8_1795425556
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2026-11-04 at 17:21 +0800, Wei Li wrote:
-> From: Wei Li <liwei391@huawei.com>
+On Sat, 2026-11-21 at 19:31 +0800, Chaosheng Qu wrote:
+> The monitor type is pasted into the generated monitor as RV_MON_<TYPE>.
+> Nothing checks it, so a typo yields a monitor that cannot build and the
+> tool still exits 0:
 >=20
-> In the rv module, there are three read handlers that pass
-> 'strlen(buff) + 1' to simple_read_from_buffer(). The terminator byte is
-> not data, so the read returns one extra byte. Pass strlen(buff)
-> instead.
+> =C2=A0=C2=A0=C2=A0 $ rvgen monitor -c da -s test_da.dot -t bogus_type -n =
+bm
+> =C2=A0=C2=A0=C2=A0 $ grep RV_MON_TYPE bm/bm.c
+> =C2=A0=C2=A0=C2=A0 #define RV_MON_TYPE RV_MON_BOGUS_TYPE
 >=20
-> Signed-off-by: Wei Li <liwei391@huawei.com>
+> include/linux/rv.h defines only RV_MON_GLOBAL, RV_MON_PER_CPU,
+> RV_MON_PER_TASK and RV_MON_PER_OBJ, so that macro never resolves.
+>=20
+> The accepted set is already in Monitor.monitor_types, which the help text
+> prints.=C2=A0 Pass it to argparse as choices.
+>=20
+> Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
 > ---
 
-Good catch, thanks!
+Looks good now, thanks. I'm taking both.
 
-Acked-by: Gabriele Monaco <gmonaco@redhat.com>
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
-> =C2=A0kernel/trace/rv/rv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 4 ++--
-> =C2=A0kernel/trace/rv/rv_reactors.c | 2 +-
-> =C2=A02 files changed, 3 insertions(+), 3 deletions(-)
+> =C2=A0tools/verification/rvgen/__main__.py | 1 +
+> =C2=A01 file changed, 1 insertion(+)
 >=20
-> diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-> index 7846e4092b9c..835d53978961 100644
-> --- a/kernel/trace/rv/rv.c
-> +++ b/kernel/trace/rv/rv.c
-> @@ -483,7 +483,7 @@ static ssize_t monitor_desc_read_data(struct file *fi=
-lp,
-> char __user *user_buf,
+> diff --git a/tools/verification/rvgen/__main__.py
+> b/tools/verification/rvgen/__main__.py
+> index 246b43fa2..6053db5e5 100644
+> --- a/tools/verification/rvgen/__main__.py
+> +++ b/tools/verification/rvgen/__main__.py
+> @@ -38,6 +38,7 @@ if __name__ =3D=3D '__main__':
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-s', "--spec", dest=
+=3D"spec", required=3DTrue,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3D"Monitor specification=
+ file")
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-t', "--monitor_typ=
+e", dest=3D"monitor_type",
+> required=3DTrue,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 choices=3Dlist(Monitor.monitor_type=
+s.keys()),
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3Df"Available options: {=
+',
+> '.join(Monitor.monitor_types.keys())}")
 > =C2=A0
-> =C2=A0=09snprintf(buff, sizeof(buff), "%s\n", mon->description);
-> =C2=A0
-> -=09return simple_read_from_buffer(user_buf, count, ppos, buff,
-> strlen(buff) + 1);
-> +=09return simple_read_from_buffer(user_buf, count, ppos, buff,
-> strlen(buff));
-> =C2=A0}
-> =C2=A0
-> =C2=A0static const struct file_operations interface_desc_fops =3D {
-> @@ -752,7 +752,7 @@ static ssize_t monitoring_on_read_data(struct file *f=
-ilp,
-> char __user *user_buf,
-> =C2=A0
-> =C2=A0=09buff =3D rv_monitoring_on() ? "1\n" : "0\n";
-> =C2=A0
-> -=09return simple_read_from_buffer(user_buf, count, ppos, buff,
-> strlen(buff) + 1);
-> +=09return simple_read_from_buffer(user_buf, count, ppos, buff,
-> strlen(buff));
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void turn_monitoring_off(void)
-> diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.=
-c
-> index 06f21bcdd6cf..8a4f0740e3ab 100644
-> --- a/kernel/trace/rv/rv_reactors.c
-> +++ b/kernel/trace/rv/rv_reactors.c
-> @@ -353,7 +353,7 @@ static ssize_t reacting_on_read_data(struct file *fil=
-p,
-> =C2=A0
-> =C2=A0=09buff =3D rv_reacting_on() ? "1\n" : "0\n";
-> =C2=A0
-> -=09return simple_read_from_buffer(user_buf, count, ppos, buff,
-> strlen(buff)+1);
-> +=09return simple_read_from_buffer(user_buf, count, ppos, buff,
-> strlen(buff));
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void turn_reacting_off(void)
+> =C2=A0=C2=A0=C2=A0=C2=A0 container_parser =3D subparsers.add_parser("cont=
+ainer",
+> parents=3D[parent_parser])
 
