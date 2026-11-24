@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795534172;
-	b=rhEYlXhmx8nkwRqmsoWefvZXEr/WYk+97lMsv+MrsXJzjx0Ijoqw6aOodIi+ygcFDES4
-	 HEyITujTbDz2sZsIAlN/P4AothUWd5pOGLqEk+ZHm4RFOAgJu5wgNE6qU/OKnpqREzd2k
-	 dW5oLUU6sGmX9V68k40J0j0WLKoSd5pLBeazgXQg8LqVXMVBJoibrbvgYsXUavb2lD0XW
-	 y6EHBlVypPQaxvaI9zgGBs2R0RzCck78lgKs8BTc2IgHk751E2oKRSbji1tLUSYCfbXOa
-	 UlxA16O0VKcabVM/yHCqmyCfoa7fedFIqyPcGju/w+Yc9xXJC2Szo4LaCoYA1ftgKFQ==
+	t=1795534173;
+	b=TK0XzLwa3flqG9iMDJWcyf8kNHH82nYPrNosAguPYiO/FD3L4AgaOMNNOnMBt/hSEm9M
+	 NiF6897KDtLcv9cDwv96ot1Pv0JdidqIO7Uu1/hhMvM/GWzoLNTqbM/ibgwTaDnCaQ/Fi
+	 4mg94XmugTugO940St1ZlIJVLe398qdTWUFixDd8ome6cDzpyHeN52B0QFPGL9i0CabY8
+	 Mt6cIkj8XdVPo/SUzuZsl0AGGeJVNOz7b7grfKNRhZ4xfME1gL3WBFPEuggHX+eUQ3Hvt
+	 yDauoHfF7YvFzxz1WVIQ89ZIzYMMiaViYxHa7ZxKhSaKBpL8cVdxqytDeDnajnu/yyw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795534172;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795534173;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=pIZqHCS9uMGA/JN3ND+wWAQA7pc+psBTl5VMPUonuyw=;
-	b=McfJtxnThWhJIRh/+TevHIOyrLH249pfFnnlI5AyO4Zb53S6JIbbXVJAUTomRsgMxMWI
-	 veJ+Rimro0OBh1HQD4odIMKWG9fgWh18HxQeaDzv9i0qF/qi9gx0srx+7FF9mYzCevp9o
-	 xLU/uDfzj2Js3n1jqeSK9caJWCqYZ1ggIiIlDWVnknsVkszzLO/uijTCtOQ8cDaqEwO3b
-	 Q6oJavDnTFeVC+rxCsDvVd4ETX+Lt9+lMQ/oSS9xexi46x9ZgsrXufQeI4OpiVoH9v37P
-	 LxixR42nscrzWCYUDkwCoXJTu4IJQxaDO0DcLb4RHQZaIbg0vypE8vF7ucd8oDmFIMA==
+	bh=0G5x3xdS/WIa3w8/TkIKO+PMKsIvE2UD5dO8iiJFAnk=;
+	b=fZJ8Zd4Kv9kQ453z+kT2z+zGb1aU+zYiLvcF51t//L6Az3LwWPMhyG7kjPzv2n/tRKyb
+	 l4a6B5M6w4dq6DRWfZgbYua1Zr6pkIJA3U1LfApRFDqpK1wgVLfa/tw2U2pPp/lTHWAN7
+	 ZyKm+/v4PUYsjOU35KkHOFEC/5Swt5oJf3RjRBvxIF7vgVgu733jvrPo38eT7I/OYQcZd
+	 GoaM0OP0Xau/zxkvYWNtBgy7Hk9ZG02BI+QkzYzj6G8snUn2+efKzqEvvw+Q4kW1ChU3s
+	 AGnSYArqFhfONXyLXRdW9wgI8C+Iy+ngxa9JADYg5UciA69exNAeUW9QokUIGcg3iEQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=cTQKgVGh;
-	arc=none smtp.remote-ip=209.85.128.72
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fpijvnAl;
+	arc=none smtp.remote-ip=209.85.221.70
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0422606A6A7
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0422606A6A7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59EC606A339
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D59EC606A339
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=cTQKgVGh
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4bb66fc3aa6so41281895e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fpijvnAl
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-48fcb657f32so2775647f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795534170; x=1796138970; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795534171; x=1796138971; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=pIZqHCS9uMGA/JN3ND+wWAQA7pc+psBTl5VMPUonuyw=;
-        b=cTQKgVGhtoXxnPlZ/YExWGY0uWxQfuIvF9e/WL9/yFg8ZNF8rhxZf6dLD/oJs3e+fU
-         g7QTQbdht5LGFTT+MoMom498LzipJ2ZipT8Sb/ZltPcMORc7r2Ql5izvmiSnoy7UGiE6
-         mcY89wBKlsquROfRW6wTHaAxmgekN0gHZcrvqNHr05otd2LnIDPZxK5b822d+k+Au0pR
-         vSzhn9fGIGpvYVdDNQKXMmFUdFWfvKE0h/IkBDboKugpsQLnYrPLIYaqKVaz7wzJMv1l
-         ImkKik59G74c+ubuNXNcognhAdutupbuyL2OFBDXlTXShj7NxVuNfOAdzX/upwwGYvyW
-         YyGw==
+        bh=0G5x3xdS/WIa3w8/TkIKO+PMKsIvE2UD5dO8iiJFAnk=;
+        b=fpijvnAlEq3vscAxY3gBGNHNHxFRJbh5QnBhyQsjgMor2GZasei3mJ8ZbU2hZKDjQu
+         AOlyDMvV92mYJOflkgas5u8oG2FkbX1fUY1ryXHaEXRax18dN/aV51pixhKpJCo4pkOP
+         pPGs0Ldy7FV1RO9DkM6zxo2Pn78Pu5xYh3g7HY6F5e7vKEV3KwC7e6Odb63ZsFMI2KJ9
+         YG2SnlVljnHUAVjawVdIjpN74hoJRyq20Jb5i8EUuDGTPTn1RuUxgI68X6WGf3oO2+ZR
+         LMXH3BOS0XQc76GSYyB0Ho8P3QiRQKaIyPp48JV5glauWiyLy+Bp+61FGwSJctwp5X6V
+         NARA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795534170; x=1796138970;
+        d=1e100.net; s=20260707; t=1795534171; x=1796138971;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=pIZqHCS9uMGA/JN3ND+wWAQA7pc+psBTl5VMPUonuyw=;
-        b=1A06BpbdX0tcXnKGqbUv7YdHE83VZzfDb+ivQKbKC9M6MqoDBFyz3G9GTgHysucf3j
-         VEqZqNpQ6H21bc5NKn4iBgG0o5gPGNLE7lT0qlnhQE0JFWdujy5/wNIWqProLP5BX0ZU
-         4YFzCKH/aAlVvkI/LVqonyTP08IgP1jL4mlzTlBpZhhbTUpuXdf+GLIReyRi0w42j21L
-         44wr0kN2p05A3eaAlZsVzfTQZMYzPCH1jZ/t+xCYIBmJ/QMjzCi/9GknsIC+hsybHuMt
-         KMgM7F7Skj83ezNt75Kgu1ym6pr+a4kF27bWmvYTgFeOfhqlYQ6aZ7HiDY8CeZ6hPNHg
-         FZsg==
-X-Forwarded-Encrypted: i=1; AL+hErH+NstSbk23NZgmnAdCHI2JZWzF/jpu+T/O4AXiWnPnxkQK4pKMOPyEUp9MLyz85j7E5jvXeBnQf0iL4XdZSjzPFJE=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9z3oQOhKcOBGVctqHIty62mB9cQRHyikz96Xs7+3n9oyt8efxh
-	0vBVx0JhfolT7o/NP8IOP0ZifIlEBFkQ2hpSiV7H94/0wpjWwiTKeRfNUyCT1ap9t+CLn+Cg46v
-	4zMORHr3SlDEE1W6601wL5A==
-X-Received: from wmlc16.prod.google.com ([2002:a7b:c850:0:b0:4b6:b851:c655])
+        bh=0G5x3xdS/WIa3w8/TkIKO+PMKsIvE2UD5dO8iiJFAnk=;
+        b=cPfp+IhbnRvxrK8jKZkuCu6YyIf/FFMoMmxI5CweWSLONFjAVM8yb06lvlf7pDQ+O0
+         jk6VU+i/4ySQc1OZm4RwyBgdNK2Qi8LEy192ZmlCo3+Vs8jGvStrqWFqG4/JeMhxwe5O
+         rbra5xQiA4MlwmcLkxaZc/uEDBtMCGYc5dsQ0epcXwfJP1wTckXH2C04qbxB3ah21a8x
+         es0Q+8Sgree1S453OH2n/tYASyhzl8SOh/RlEdlbilyK7Rn6bo6Ea2cNI9R2WU1ttlU+
+         luKTVb0AwafogW0uwB6elzlTbbLjNxB6q9oO8PxvVZgfQC4tBQMIAhTy9SR/8945QL4r
+         U0MQ==
+X-Forwarded-Encrypted: i=1; AL+hErFstmuD6jzmoe7w9Qa9xuNtQXTEilxRdrC3MGCEG337uZAhIaz2dEAFG4H8+y0V+6j5i99pukJJGD7EvmTDkSF6J4I=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8VvL/tzz9pAdtz+NhJkctMSFSgJ+2EHQDQ5H1GUx4H2tVOXTnG
+	hYlAxah/+y6FaBrrU0F35kcpz2RXTVlmx/0repbzYtlcmVpnyNRpouSNRpJUWV1BK5KK5M9Ghvz
+	VePMBh+cif8dSYVHIpELGqw==
+X-Received: from wrsw10.prod.google.com ([2002:a5d:4b4a:0:b0:4ac:8319:4a6e])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8287:b0:4a1:6992:f861 with SMTP id 5b1f17b1804b1-4bb887e064dmr315561905e9.1.1795534169555;
- Tue, 24 Nov 2026 07:29:29 -0800 (PST)
-Date: Tue, 24 Nov 2026 15:28:36 +0000
+ 2002:a05:6000:4b1e:b0:493:2eb8:e7fb with SMTP id ffacd0b85a97d-4abb6930039mr25553556f8f.41.1795534170967;
+ Tue, 24 Nov 2026 07:29:30 -0800 (PST)
+Date: Tue, 24 Nov 2026 15:28:37 +0000
 In-Reply-To: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,50 +81,94 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261124152845.2233401-13-vdonnefort@google.com>
-Subject: [PATCH v9 12/21] ring-buffer: Avoid reader_lock deadlock during panic
+Message-ID: <20261124152845.2233401-14-vdonnefort@google.com>
+Subject: [PATCH v9 13/21] ring-buffer: Use panic-friendly locking in
+ ring_buffer_iter interface
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
 Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>, 
-	Sashiko <sashiko-bot@kernel.org>
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Although reader_lock is taken with IRQs disabled, panic shutdown can
-stop CPUs with NMIs (most likely if the first attempt with maskable
-interrupts failed). Those NMIs may stop a CPU while it holds the
-reader_lock. Use trylock when panic_on_this_cpu() just like in_nmi().
+In preparation for allowing trace_remote to dump the buffer on panic,
+make the non-consuming iterator functions panic-friendly.
 
-Fixes: 289a5a25c5d0 ("ring-buffer: Give NMIs a chance to lock the reader_lock")
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/linux-trace-kernel/20260924151509.23AEE1F000FF@smtp.kernel.org/
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/ring_buffer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/ring_buffer.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 928fdd4718ea..42507e97291f 100644
+index 42507e97291f..f517bc651e84 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -22,6 +22,7 @@
- #include <linux/kthread.h>	/* for self test */
- #include <linux/module.h>
- #include <linux/percpu.h>
-+#include <linux/panic.h>
- #include <linux/mutex.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-@@ -6323,7 +6324,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_iter_peek);
- 
- static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
- {
--	if (likely(!in_nmi())) {
-+	if (likely(!in_nmi() && !panic_on_this_cpu())) {
- 		raw_spin_lock(&cpu_buffer->reader_lock);
- 		return true;
+@@ -5697,6 +5697,9 @@ static void rb_iter_reset(struct ring_buffer_iter *iter)
  	}
+ }
+ 
++static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer);
++static inline void rb_reader_unlock(struct ring_buffer_per_cpu *cpu_buffer, bool locked);
++
+ /**
+  * ring_buffer_iter_reset - reset an iterator
+  * @iter: The iterator to reset
+@@ -5708,15 +5711,18 @@ void ring_buffer_iter_reset(struct ring_buffer_iter *iter)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	unsigned long flags;
++	bool dolock;
+ 
+ 	if (!iter)
+ 		return;
+ 
+ 	cpu_buffer = iter->cpu_buffer;
+ 
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	local_irq_save(flags);
++	dolock = rb_reader_lock(cpu_buffer);
+ 	rb_iter_reset(iter);
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++	rb_reader_unlock(cpu_buffer, dolock);
++	local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_iter_reset);
+ 
+@@ -6415,11 +6421,14 @@ ring_buffer_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+ 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
+ 	struct ring_buffer_event *event;
+ 	unsigned long flags;
++	bool dolock;
+ 
+  again:
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	local_irq_save(flags);
++	dolock = rb_reader_lock(cpu_buffer);
+ 	event = rb_iter_peek(iter, ts);
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++	rb_reader_unlock(cpu_buffer, dolock);
++	local_irq_restore(flags);
+ 
+ 	if (event && event->type_len == RINGBUF_TYPE_PADDING)
+ 		goto again;
+@@ -6565,12 +6574,15 @@ void ring_buffer_iter_advance(struct ring_buffer_iter *iter)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
+ 	unsigned long flags;
++	bool dolock;
+ 
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	local_irq_save(flags);
++	dolock = rb_reader_lock(cpu_buffer);
+ 	iter->missed_events = 0;
+ 	rb_advance_iter(iter);
+ 
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++	rb_reader_unlock(cpu_buffer, dolock);
++	local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_iter_advance);
+ 
 -- 
 2.56.1.809.ga0b61035b5-goog
 
