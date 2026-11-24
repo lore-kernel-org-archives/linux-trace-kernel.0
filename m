@@ -1,55 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795535074;
-	b=fvwo34AT3g9aw6fCMiqiRUMPpFK3+OceGgqGoWfONhPrNOk6z7YD0YJWfc2oVITR64r/
-	 wy3MHG+dVffySAT+7Y5czdruxuL5XQZbyByAIB3GHYCf444XJvOtG325PgcZegcbD6ZF7
-	 hwXzANkm91ImbwFQumg3HegbxFm959zvj/IhnWw1bjrSyNLgA/GVd56HaUB8A1mESIRQ9
-	 96kmMAPH3VcHlqxyHOfLrFxDIHYF+SfGrq2MnmehjTQvqXc5ochqtvtvXXOzlxSCbNV5c
-	 NLWt2qWut96AlU5gWjY3IaABVnUXlNNeqUqwGaJq05/emMfatBN9ZwMjP/nkqrKpV2g==
+	t=1795535285;
+	b=pmLxG7MGmxd1O2dAsFMVF2dgyNSdq5nXUwEwbc4f/qO8wSShFxMJpZeexEOzB9C87XgI
+	 39J9V3azov3rX/uEydHMF1dGWpW65/8MbP+0QLE4fZaM0YrM3EXoKSxQTlDFFCsCMO63V
+	 Dbgi1WCHDn82NSnSYDFwjy6WmX0ztAup0fhiLeRMJkukpK+9eDFIz+tOOyLWD06dVlo8s
+	 pjRL0msadnV/oR5T8VxGkjgLBZmOQYiVyZLq6ApP7rhnXxR0Umy4yBNihWLjYJgNbcqiR
+	 ZHe+zCcVwxHjNxP+tl+y6Zx+1eaAOtIWYiRefO6zjEpR9Kjt3mijkBRipHWmRRCkZBA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795535074;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795535285;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hny2RJi6pz/X2FicFZcj8ZAr2KvxNK7LZ+IDLj3FHUk=;
-	b=D98Onuu9Qr+QVuiQmJS0KYJmyUNrLaK1X5J72Gb5ztYRL9PzilacP4YLh0T2lU4Gld/f
-	 HnMpzfjU9kwFhLK6LkKcrcb7GTKXxeQrD3vYRH+WbbbFpXxFV36N3D9xKNvxlZOQd3/0A
-	 NzHZJ+PoH8XGTokiIy/zzL+PMdbfpO95xmWR7xuDSFKH1pl85iaYHkhNsyzAfFSfeO0O8
-	 0cpr8I+SDgC8P/4X8y2BUFyHEjsBlJSnaj4rMR/92Sho4UohXvjLpbK7y5Qjff5332Jfz
-	 28Qov53t50r8u/79OE+ULF+h//xJc5WVUxGvj61SfJUDEGZfbQamZ6nIwQebwbzfixw==
+	bh=Fc3D6ehbW3wekVZhoEUU8kizD4nD5M+uXhSXwD5k4Hk=;
+	b=kPJtJnnK7TXpbeXTCD4EzNM0cZqMwiagOVUP0bpkRxv/NtSEIq1FXJ+SsF1SOnXJ6AAr
+	 VNUyOVDTU1v+5BZtZQNoD3I4FhcZEK7uOajIOFok1HDbxEidQI7DdhZXb1rCMg53kqXCT
+	 akM1o6I3xRVC/bIjaZsEkdivdiZp9A6jbT/pgzBTcs2pDz1kbv8SEYkhVDcZb+CFhUXXB
+	 UV7bbs83Nfn46WyoNSuk+mLPi07y6hbJb8AOe/fthKfvBtV/2I3O2INyORjogSGPDvAD+
+	 huk1HcDkdhrhTBSMrGPBGDgI4rSTaLP65QPqqnNG1hGXSS1TyjgilKOyPqE5vZK3KTA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KBv9mc5X;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P7Xj1rNT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BFE606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF216606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KBv9mc5X
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E40F1F000C4;
-	Tue, 24 Nov 2026 15:44:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P7Xj1rNT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77FA21F000C0;
+	Tue, 24 Nov 2026 15:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795535074;
-	bh=hny2RJi6pz/X2FicFZcj8ZAr2KvxNK7LZ+IDLj3FHUk=;
+	s=k20260515; t=1795535285;
+	bh=Fc3D6ehbW3wekVZhoEUU8kizD4nD5M+uXhSXwD5k4Hk=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=KBv9mc5XgGyjhaSIOhDZzXzXJmpwo3XUby9HFC4a2hizRgZoo2xibji8OJ2+JmxDl
-	 gJ7mG8gY+nUQaSKqGUh+1jaXBU2wK+xlf4pOzGag7PxBlViAGy4vy24DRddtCJSGmQ
-	 aO5A0v2GMMa6wnhr/pEnNvVC89f3asw1IXcXa8lw/KcdEldPygWuznLD+F0lwdIYDM
-	 /Cn/IYAYjyzPW0Cj/L2wrXAmCO5TN/4J7SLPxbvksHs82R8TYM8tizU5JkOC8Gx6sx
-	 dMIlV89z0jCS5EYtqOCLkDj1DXVTDafjZdHmwXDV913A45Bj3VhMD1BJAFsrM08tZx
-	 G2e/MeuCzV2CA==
-Message-ID: <sashiko-outbox-231467@kernel.org>
+	b=P7Xj1rNTrIgJohcwRlw20kVToChuUGFe2qMLDJ6S8fVXr1TWtq6m/h3XOsfyJ6r7Z
+	 J2oP/tQPsuHW3jX9DjmzF5z7ZsIZyhdWEHLRucLIYipIDvHpDnrZeP5mggZ8hyMLHQ
+	 5e4+DP+fyNZU5N7QYto8igOVnpaAxlla+7x2eBwMoSUerLbWXo41oZWNAKl5U5QVvO
+	 h6bo4GOOO59zNk99a754B9xUYJmfWGukQgsRCCM9Dd5dGzYawO6s7vkmQDunEfQkEL
+	 6XwybeBG1s8J8w+2av2J4nlsbL7T5mV8M8fFwlJUDypxjPvafKU1horJYoy1YETX+u
+	 TIL9qtZKXxd1g==
+Message-ID: <sashiko-outbox-231478@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 08/21] tracing/remotes: Add dmesg tracefs file
+Subject: Re: [PATCH v9 12/21] ring-buffer: Avoid reader_lock deadlock during
+ panic
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261124152845.2233401-9-vdonnefort@google.com>
+In-Reply-To: <20261124152845.2233401-13-vdonnefort@google.com>
 References: <20261124152845.2233401-1-vdonnefort@google.com>
- <20261124152845.2233401-9-vdonnefort@google.com>
+ <20261124152845.2233401-13-vdonnefort@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 15:44:34 +0000
+Date: Tue, 24 Nov 2026 15:48:05 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,91 +60,80 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] tracing: trace_remote_iter_free() clears dmesg before
-  flushing poll_work
-- [Low] tracing: trace_remote_do_dmesg() stalls iterator when
-  !CONFIG_PRINTK
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] ring-buffer: deadlock on cpu_buffer->lock in
+  __rb_get_reader_page() on panic
 --
 
-commit 1f0a563309e4b76090103510dd16d6576ccfc2b9
+commit 97ff3a6b2797df28b794089f6117de52df195059
 Author: Vincent Donnefort <vdonnefort@google.com>
 
-tracing/remotes: Add dmesg tracefs file
+ring-buffer: Avoid reader_lock deadlock during panic
 
-This commit adds a dmesg tracefs file to trace remotes that redirects
-remote trace events to dmesg via a consuming iterator polled by
-remote->poll_work.
+This commit updates rb_reader_lock() to use raw_spin_trylock() when
+panic_on_this_cpu() is true, avoiding a deadlock if another CPU was
+stopped by an NMI during panic while holding reader_lock.
 
-> diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-> index 91c6ab9d5672d..f23d3386da29a 100644
-> --- a/kernel/trace/trace_remote.c
-> +++ b/kernel/trace/trace_remote.c
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 928fdd4718eac..42507e97291f7 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
 
 [ ... ]
 
-> @@ -487,6 +502,11 @@ static void trace_remote_iter_free(struct trace_remo=
-te_iterator *iter)
->  	lockdep_assert_held(&remote->lock);
+> @@ -6323,7 +6324,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_iter_peek);
 > =20
->  	switch (iter->type) {
-> +	case TRI_DMESG:
-> +		WARN_ON_ONCE(remote->dmesg !=3D iter);
-> +		smp_store_release(&remote->dmesg, NULL);
-> +		flush_delayed_work(&remote->poll_work);
-> +		fallthrough;
->  	case TRI_CONSUMING:
->  		trace_remote_dec_poll(remote);
->  		break;
+>  static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
+>  {
+> -	if (likely(!in_nmi() && !panic_on_this_cpu())) {
+> +	if (likely(!in_nmi() && !panic_on_this_cpu())) {
+>  		raw_spin_lock(&cpu_buffer->reader_lock);
+>  		return true;
+>  	}
 
 [Severity: Medium]
-Should flush_delayed_work(&remote->poll_work) run before clearing
-remote->dmesg (or should trace_remote_do_dmesg() be called after
-stopping poll_work)?
+Can the panicking CPU still deadlock on cpu_buffer->lock right after
+bypassing cpu_buffer->reader_lock?
 
-Because remote->dmesg is set to NULL first, the flushed
-trace_remote_do_poll() run calls ring_buffer_poll_remote() to pull
-pending remote events into remote->trace_buffer, bails out of
-trace_remote_do_dmesg() without printing or consuming them, and
-re-schedules remote->poll_work right before trace_remote_dec_poll()
-cancels it.  In addition to dropping those final events from dmesg,
-leaving them unconsumed in remote->trace_buffer causes
-!ring_buffer_empty(remote->trace_buffer) in trace_remote_try_unload() to
-prevent the remote trace buffer from unloading when trace_remote_put()
-is called at the end of trace_remote_iter_free().
+When raw_spin_trylock(&cpu_buffer->reader_lock) fails in
+rb_reader_lock(), it returns false and callers such as ring_buffer_peek()
+and ring_buffer_consume() continue without the lock into rb_buffer_peek()
+-> rb_get_reader_page() -> __rb_get_reader_page(), which unconditionally
+takes cpu_buffer->lock:
 
-[ ... ]
+kernel/trace/ring_buffer.c:__rb_get_reader_page() {
+	...
+	local_irq_save(flags);
+	arch_spin_lock(&cpu_buffer->lock);
+	...
+}
 
-> @@ -883,6 +909,87 @@ static const struct file_operations trace_fops =3D {
->  	.release	=3D trace_release,
->  };
-> =20
-> +static bool trace_remote_do_dmesg(struct trace_remote *remote)
-> +{
-> +	struct trace_remote_iterator *iter =3D smp_load_acquire(&remote->dmesg);
-> +	unsigned int max_events =3D 1000;
-> +
-> +	if (!iter)
-> +		return false;
-> +
-> +	trace_remote_iter_read_start(iter);
-> +
-> +	while (trace_remote_iter_read_event(iter)) {
-> +		trace_seq_init(&iter->seq);
-> +
-> +		trace_remote_iter_print_event(iter);
-> +		trace_seq_putc(&iter->seq, 0);
-> +		if (!pr_info("%s", seq_buf_str(&iter->seq.seq)))
-> +			break;
-> +
-> +		trace_remote_iter_move(iter);
+Since cpu_buffer->lock is acquired inside cpu_buffer->reader_lock (for
+example in __rb_get_reader_page() itself), a remote CPU stopped by a
+panic NMI while holding reader_lock can also hold cpu_buffer->lock:
 
-[Severity: Low]
-When CONFIG_PRINTK is disabled, _printk() is a stub that returns 0, so
-does this loop break before trace_remote_iter_move(iter) on every poll
-cycle and leave the dmesg iterator stuck on the first event?
+CPU0                              CPU1
+ring_buffer_peek()
+  rb_reader_lock()
+    raw_spin_lock(&reader_lock)
+  rb_buffer_peek()
+    ...
+      __rb_get_reader_page()
+        arch_spin_lock(&lock)
+  <NMI panic stop>
+                                  panic()
+                                    ftrace_dump()
+                                      ...
+                                        ring_buffer_consume()
+                                          rb_reader_lock()
+                                            raw_spin_trylock() -> fails
+                                          rb_buffer_peek()
+                                            ...
+                                              __rb_get_reader_page()
+                                                arch_spin_lock(&lock)
+                                                  <-- spins forever
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124152845.2233=
-401-1-vdonnefort@google.com?part=3D8
+401-1-vdonnefort@google.com?part=3D12
