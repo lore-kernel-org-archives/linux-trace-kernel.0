@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795534177;
-	b=u1zLAEkCWnDDLdKPYnts9CRVap/IBemPg74tpm3IDDxOUPQDv07TGxRBpVmaSvB5xM3K
-	 BPL701aQmgDvrS9rLo1MZD1gAuv7XEKt8qnXBdV3maxxqSfkicJPOt3aUHp6QEp+lQm0a
-	 kJttMK1Sq3L3lA9rMWxdenV4NQiqOj5t1FI7ej+bS3BTy93aafk5h+126X/8+Me6FDyRu
-	 5YjqlCEIaCXvWKs9u9HHnOQ814W8gr6zTHq6FYejzIlYxcHay3JYrNT2PnxAkpuTQyZCb
-	 zwrVqHANTZloyNqnQQOehDldrmAETFNGML/1H2RsNOpBfu0AQczoz7X1uBqiyjxe8qQ==
+	t=1795534179;
+	b=and/CMasqTE98v4L4f78e8Pzw+qAqVM0A2YTdMdX9d83nOs/b7Am8S8Lq8jlw2xkJyVR
+	 YcTHw55TEzynmtFvo7mXSDq1INjpJyb5/d2GShUtgB4mSy2yhLjJudaIah4iLRzNzkyCT
+	 P3OZRGDcB2MuBQNBC5ctRalMLtbd1n36BdxMS7lqV0Hh65Iuuhxg4syTxunMrED5PFDFQ
+	 s90W3zuXDXpEJDKbXo1FTjTbY3C9WKml8mY4LyRzgzk8sc/O32LYfOx1rNEMpg8Uux7Sp
+	 zoP4rRfDSuvuUcBrIAAK7nQ+225dQL/V3+Dv15RBBAtI20s0ymLhE1BUC/TGRdMqTgg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795534177;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795534179;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=96oumjC/jkMss3EPeYKU5AeAWESEy4tQj1abmw7mJRI=;
-	b=Q2hSCPIEd58OPCFxtKWTr6K0t+XEg3zTjAM713yxMxBmyE0L1fVRiKv/flhAsZFZu6w1
-	 nubxurb1tLtqA5Ny82IXddtHnjmruRA0X4vqaoq7VLSWtuDrXaM26jRAuF3fxbB/6OA8W
-	 iYkMB4YRYFBnxsTYjIsSr8nuNXgZi6XcCFsVSNNy9/4XGobQ9L30CV19wg8YCIb4C5/Pi
-	 ZmvBYEa7qoas9vsBYtaA/WSVK2nJ3nkWsPNTYNSlxBb7edWCMXjm97IfFxk28YKogoSNb
-	 k6t3/AsxvxZBEtHww6v1DMJkWiPL19IJ73H3ucsyb0+89J6c/K9knc84RLOtLm5e0Kg==
+	bh=T5hheb2oNnEOH3DX/CJK6Dfr7i5urP5k3HJbUopSOI0=;
+	b=Vgyjq9slyuRIl6MspdDFqv1/yW9cYeqXxu/d/clMY8ux9u2tGKjrZYq+rk+v9fM+PtuI
+	 r0ZfNxc8EmQszuV6y9vpshEJbzRbCWIZ2BtQgpRyThfb0hBEwN02/a7VhVOPCEX+f/aha
+	 Ax5+zUxpPYzdXF1C9VtAp8vUMlAF0siBL6spLEZO9MnS8Kxojps2YUJsnHqC64a79pt4B
+	 AFd6gikws6kGQAaRY16tRlQyAAlDah/a0nbgbyv3pr6RQBxaQQyWTNaSFkNuC1BI0mgXl
+	 /+Jn2eCSeZku/fBIM0y+was2ZaK+6tmZFj+HVp/22WxAhhZfoXZafb/VxcoynSoy5gQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i5kl28xq;
-	arc=none smtp.remote-ip=209.85.128.72
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="isZ5FZ/8";
+	arc=none smtp.remote-ip=209.85.128.70
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96255606A68F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96255606A68F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A2D60A5BCC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38A2D60A5BCC
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i5kl28xq
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a35db2d6b3so31706165e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=isZ5FZ/8
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4bb8ae35aeaso39047225e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795534175; x=1796138975; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795534176; x=1796138976; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=96oumjC/jkMss3EPeYKU5AeAWESEy4tQj1abmw7mJRI=;
-        b=i5kl28xqEw6zwQ1J/meV5htbD/MMiPZrQynAwdxj0lK5uUppoSvXns+qZf/s7+1tI9
-         Iq9xwh2ZuFaR16WY9RRPL7DnCP30+x9FTgITcbtcCzJgTjD7t9L48QnDWhsrnjbIlyHs
-         /uncs55BAvuEm8vziLuYkfjyskfAwa71Qfl3D39mepmWfYVH/p/DjSWItp42WT3v6wui
-         dPdnWiRlV0eec0lJPX5Zy97iqmdHKTilk+lhCcfH7SU7K+XwzfjYRKu12JIYS2wCOmUx
-         m3J6aa3iMDQXn8SMHUbmdCZs50xEjOVEI5A2g6eyaCKBX9Oqe1os7fp+ioIYmUB7zKwx
-         wnTA==
+        bh=T5hheb2oNnEOH3DX/CJK6Dfr7i5urP5k3HJbUopSOI0=;
+        b=isZ5FZ/8GuSa7ZeBkNcvH5h9mrgjoht8REkJmQRa7rlwozc9AYBm3EcmJNVcV5z0De
+         T4Kp3xLuXT+VDwYfHHYwFX069bVa3nr8cD9BhA92qos6EauLVrKE9L1Oq/YFmGXDnb4K
+         rz+ha89xgBjaazgQKmsdNtb7Rw0hl6aqfOJSlJdd+DyrKguJhlhb4QrpmUfsi2qdZiR2
+         JhTIeCBNbpbcLh4KXepdlfzLwAJKC7GiA8wFi1nzohbuw5RsI4zbS6zPSQBjoLz8vHD8
+         sdVescINrjgDgWFZuHH62pCWW+eRPiAD3o5DdFjFwkpYuU/C5bOWur9N/biX0+LZluzu
+         GD0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795534175; x=1796138975;
+        d=1e100.net; s=20260707; t=1795534176; x=1796138976;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=96oumjC/jkMss3EPeYKU5AeAWESEy4tQj1abmw7mJRI=;
-        b=1EFjlxTQrN25MQLZCoLlZgMgdipGHG4jj6M244ybiLL+n4DJ4SpJ3NNiWJgyxkDbo/
-         v1XsflnTxGB2ngJLQNanE/t1+nXN4klat7qUD3k+k6bu9kH8vSbyX3n1bksRAazkYVWz
-         kp13XVAtAevHLeE3byG9RmJ7bFVKUUzQKCAhmNYUoUbOJXWWTp+tpXHAd6/ExEDvjLxY
-         81J2xSJ494LiZflJK9ug0LKypO1okSh6OiPDd8Gn98obIuR7/5VZM4HJu1eZ2I/FIorw
-         vfLy2xRk5QazjENxogKWnLkgr9UkWAXb7E6PzBBIdlrEGZqX/DIBgJMt4AxUa82eQFDK
-         bipQ==
-X-Forwarded-Encrypted: i=1; AL+hErGgQM72FCCeeh96S0K4H7f0O4k0goyCkutoSpIdHi+XBfmAZEVR3bCK2Lmc0y6oL37Xf/xQdLU9OqFgAapGY76Upvc=@vger.kernel.org
-X-Gm-Message-State: APuU4Z80+MWD+D91PG9jyHbZxpUv1TYZ1hpM3YxQfGN5d96mM9zRLMl0
-	6knFVc5cfhtEwfaKYlgfHk8+G8NJtSvQRhOq6lM10L53Wc6uFzqVH/3L2L3A7Y7ti/8EcfhAum1
-	p7bcjqfPmvdiwnvDV81eOwQ==
-X-Received: from wmcn6.prod.google.com ([2002:a05:600c:c0c6:b0:4a5:9877:cd58])
+        bh=T5hheb2oNnEOH3DX/CJK6Dfr7i5urP5k3HJbUopSOI0=;
+        b=2si1l1cYfdApHwOuBmThi57jkJuuW+FP9seMgOF3BLNcJDRPViaUVEnCl2Q1i81IUJ
+         VZ0Oz13mlJmkG7C6xwEMYEQJeOkTiiKRjuxWFwp0ClyzOXHK3UqAdo9bf4tC5Xmy/fUM
+         UeQKVjUHayW7zJG2gQlUVmpoftJFbIIkzQLXbvI0h2JsdEhvbJ3GkxvI/XO4U8ywSPmW
+         6IpnsqXvq00/BJnA3uc4LLnMi9zjvMVJ9lUbrE1BlXYh0Pj7aSlKyig/YyW/TOl54Ek2
+         /J+Q365J1A9lblxSlJNLnCJ8OYRaLC3jbeutH+kUlssIOhq5YF84UNhNignA78pe9hs7
+         s8tA==
+X-Forwarded-Encrypted: i=1; AL+hErEYvruSdjn3sjiNhad+KhS7C7IEb5gkhFQ9dKUQK+CXDFeiWOMzJTjQpLaE26bATkIlicz8r84d7oYNrXZgIgwH7Tw=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+FMxIBHbY+GCSrNlmSawcbTZ05UoFK7drDh87idfmtGWgjqtUX
+	f7jEzzY21AAaqE/hdSxw9nZkeR8eydNY1wPddzIXOYsKMmlt0bz6l35seh8UtyLvWgXcT0l+84Y
+	CX62p5VYJA/BkD1pQM1kqUw==
+X-Received: from wmbz10.prod.google.com ([2002:a05:600c:c08a:b0:4a1:8bbb:59bd])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a086:b0:4a7:6425:c274 with SMTP id 5b1f17b1804b1-4bb887c34bcmr312840635e9.2.1795534174966;
- Tue, 24 Nov 2026 07:29:34 -0800 (PST)
-Date: Tue, 24 Nov 2026 15:28:41 +0000
+ 2002:a05:600c:8184:b0:4a3:5a7b:6002 with SMTP id 5b1f17b1804b1-4bb8881e969mr287363775e9.28.1795534175885;
+ Tue, 24 Nov 2026 07:29:35 -0800 (PST)
+Date: Tue, 24 Nov 2026 15:28:42 +0000
 In-Reply-To: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261124152845.2233401-18-vdonnefort@google.com>
-Subject: [PATCH v9 17/21] tracing/remotes: selftests: Add a test for the
- dump_on_panic tracefs file
+Message-ID: <20261124152845.2233401-19-vdonnefort@google.com>
+Subject: [PATCH v9 18/21] tracing/remotes: Add poll_ms tracefs file
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -91,103 +90,76 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Exercise the newly introduced dump_on_panic tracefs file that turns on
-or off the trace remote buffer dump on system panic.
+Add a tracefs file to configure the trace remote polling period. Keep
+the default value to 100ms.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- .../remotes/00hypervisor/dump_on_panic.tc     | 11 ++++
- .../ftrace/test.d/remotes/dump_on_panic.tc    | 50 +++++++++++++++++++
- .../selftests/ftrace/test.d/remotes/functions |  1 +
- 3 files changed, 62 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
+ kernel/trace/trace_remote.c | 44 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
-new file mode 100644
-index 000000000000..1b6bf21c5d9c
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/00hypervisor/dump_on_panic.tc
-@@ -0,0 +1,11 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test hypervisor trace dump_on_panic
-+# requires: remotes/hypervisor/write_event remotes/hypervisor/dump_on_panic
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/dump_on_panic.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_dump_on_panic
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
-new file mode 100644
-index 000000000000..ff5ca29fb1b5
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/dump_on_panic.tc
-@@ -0,0 +1,50 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test trace remote dump_on_panic
-+# requires: remotes/test remotes/test/dump_on_panic
-+
-+. $TEST_DIR/remotes/functions
-+
-+test_dump_on_panic()
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index c7d33cb3d37f..0a899ed5b34b 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -1137,6 +1137,46 @@ static int dump_on_panic_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_TRACE_REMOTE_ATTRIBUTE(dump_on_panic);
+ 
++static ssize_t poll_ms_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
 +{
-+    #
-+    # Toggle when the buffer is loaded
-+    #
-+    assert_loaded
-+    echo 1 > dump_on_panic
-+    echo 0 > dump_on_panic
++	struct seq_file *seq = filp->private_data;
++	struct trace_remote *remote = seq->private;
++	unsigned int val;
++	int ret;
 +
-+    #
-+    # Toggle when the buffer is unloaded
-+    #
-+    echo 0 > tracing_on
-+    assert_unloaded
-+    echo 1 > dump_on_panic
-+    echo 0 > dump_on_panic
++	ret = kstrtouint_from_user(ubuf, cnt, 10, &val);
++	if (ret)
++		return ret;
 +
-+    #
-+    # Load and unload buffer while dump_on_panic is enabled
-+    #
-+    echo 0 > tracing_on
-+    assert_unloaded
++	if (!val)
++		return -EINVAL;
 +
-+    echo 1 > dump_on_panic
-+    echo 1 > tracing_on
-+    echo 0 > tracing_on
++	guard(mutex)(&remote->lock);
 +
-+    [ -z "$TRIGGER_PANIC" ] && return
++	if (val == remote->poll_ms)
++		return cnt;
 +
-+    echo 1 > tracing_on
++	if (remote->poll_cnt)
++		cancel_delayed_work_sync(&remote->poll_work);
 +
-+    for i in $(seq 1 32); do
-+        echo $i > write_event
-+    done
++	WRITE_ONCE(remote->poll_ms, val);
 +
-+    echo c > /proc/sysrq-trigger
++	if (remote->poll_cnt)
++		schedule_delayed_work(&remote->poll_work, msecs_to_jiffies(val));
++
++	return cnt;
 +}
 +
-+if [ -z "$SOURCE_REMOTE_TEST" ]; then
-+    set -e
-+    setup_remote_test
-+    test_dump_on_panic
-+fi
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/functions b/tools/testing/selftests/ftrace/test.d/remotes/functions
-index c368dea2ac4e..f0225af23714 100644
---- a/tools/testing/selftests/ftrace/test.d/remotes/functions
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/functions
-@@ -9,6 +9,7 @@ setup_remote()
- 	cd remotes/$name/
- 	echo 0 > tracing_on
- 	[ -f dmesg ] && echo 0 > dmesg
-+	[ -f dump_on_panic ] && echo 0 > dump_on_panic
- 	clear_trace
- 	echo 7 > buffer_size_kb
- 	echo 0 > events/enable
++static int poll_ms_show(struct seq_file *s, void *unused)
++{
++	struct trace_remote *remote = s->private;
++
++	seq_printf(s, "%u\n", READ_ONCE(remote->poll_ms));
++
++	return 0;
++}
++DEFINE_TRACE_REMOTE_ATTRIBUTE(poll_ms);
++
+ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remote)
+ {
+ 	struct dentry *remote_d, *percpu_d, *d;
+@@ -1169,6 +1209,10 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
+ 	if (!d)
+ 		goto err;
+ 
++	d = trace_create_file("poll_ms", TRACEFS_MODE_WRITE, remote_d, remote, &poll_ms_fops);
++	if (!d)
++		goto err;
++
+ 	d = trace_create_file("buffer_size_kb", TRACEFS_MODE_WRITE, remote_d, remote,
+ 			      &buffer_size_kb_fops);
+ 	if (!d)
 -- 
 2.56.1.809.ga0b61035b5-goog
 
