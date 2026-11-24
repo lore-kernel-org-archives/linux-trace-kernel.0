@@ -1,145 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795540835;
-	b=vKc4rtl9znFj6j+beCcEyAkCdIjOb0mJCWD4y2tP1JZ2p5x3zz4eu4u0h0rZSruMN6em
-	 kUgs1rp/x7BlciJx8b2Crq5k3PBSseYqCwjEyPKnLA2V6jTap1vULXA+foQ/JWDXo+8X3
-	 M+8BMvnMUgMN7paDVkI6UUrGhHxCeapXO6HIxfYSiO8EGtUiQT5kdUCdrbmiGRJ+5BaCd
-	 NOnA/66cmOgGaL4MBvdA16h71Y35j7i/3SPiZPTnuWJz6msxZ/emDlq0pZm/eKdXSr421
-	 FH/THvSUX1sW7ta3HaxcUxVnL4ievHC4cNC+PI0KbsKqis8vV51AyNU8AhQ4v++VXzQ==
+	t=1795541815;
+	b=az6fdvsN3lZxJG8EDujuIyMSLdsQ9fH0Ouk2giDYtSZpMjv8OJMw0tR4kvR1F4hXS/De
+	 PjoDU7H6pcxM7uQBM9Yo5RXvmOgyYshFHZLv9/+f2d82VWpk4XyRoLR+e82IrfFtA1csE
+	 WX214gaqwwR9ArHg3fRUiu8mueqblAUM0ztjNpIm4F8Haq0FelbKsXLc8FF7JFHz1RflN
+	 1E3edsXwfnSqF6WhprcLaURfjwQTJlzf+x7k60rbj6tcj9N/GMocJ1QnYYnzndMOekWSz
+	 RCCGP299zqS+aatzssCKMfsjs3CdygttqI0gV+Mo3OgNhn4B3Om48rgAkNa7aYVOGbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795540835;
-	h=DMARC-Filter:Received:DKIM-Signature:DKIM-Signature:DKIM-Signature:
-	 DKIM-Signature:Received:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Spam-Flag:X-Spam-Level:X-Spamd-Result:X-Spam-Score;
-	bh=tN3vYaMnV9NupJt9uj0DyVm98fT46NJCnU18bNrr4wY=;
-	b=TJk+dVTYzEizvF1oO7Yg9lc3n5tdchogR/UVfRa3atBsQyQP3HQ8BSB7YCRq/LOYG53X
-	 jlwF9tCbaGjVmg66izPCwFMJPHSbbYCc99ZCMK8Q3NbMmdkshpVa0fL8QQwMDGf0Ufhlk
-	 DBmsYx8+4zKjE6mxKCf0ylnJnrcYyzrHFIm5gJB9ElX/+XV8kybnX+fCR6Fqp3zBTCRXq
-	 i70vU2/ZBRNBBTofNFvtslIgx+2j5IvBnokIOD8dx52Bl+3P8Jrr93qnK/8Jxd5yXkmOB
-	 ozOsu479aw5rMsNbWenSyxjM7xoAjXwB57MLUfchnYomQjTgjmtnOFwwxgiQojoYI4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795541815;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Spam-Status:
+	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=cgbskdNiwv1foCu8NskiI0D1syGORGzYIPtRO06UAuE=;
+	b=SDlNltqE4KlXUTHhCmJfaXaTSI8rmH5Lc39ZDKaxtT19DwfyhvjsMAj0uHP+9gh2yn4L
+	 mBYTWfyJFOWGhEWo+PlzIEmb53ICAGB5gGgPUB3r9yFOyj3YBlj/MkPgTUu3Uwo+a0VHY
+	 9dCfJSmxM7eDzN7w1+psr6C86unH9FkV1H0RSMKgMspgtJ+kxsoQoUfokUsuTMciCSJ/h
+	 wqZVXnlndAm36VvVMJd8xAmMo7e+lQAlkIf1ScaQ2JCIl4rQNaY/DY5ofzx2S8CPK4mvN
+	 a6P85JRXuljJna1SqqUlbXlhivLE+G077vSULpYgpUiM+Sxfkf45vDC+dDHHrDjhltQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=suse.cz;
-	spf=pass smtp.mailfrom=suse.cz;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=icpbhZHb;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=lVvQ+wMH;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=icpbhZHb;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=lVvQ+wMH;
-	arc=none smtp.remote-ip=195.135.223.131
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=IKsjSGKG;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23338606A323;
-	Tue, 24 Nov 2026 17:20:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23338606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E01606A331;
+	Tue, 24 Nov 2026 17:36:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A0E01606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=icpbhZHb;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=lVvQ+wMH;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=icpbhZHb;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=lVvQ+wMH
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3DD351FD06;
-	Tue, 24 Nov 2026 17:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1795540832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN3vYaMnV9NupJt9uj0DyVm98fT46NJCnU18bNrr4wY=;
-	b=icpbhZHbueFRAPYDZt+Q/evQ4tuuoi4w57XzhnK/NytlNQ2MHfpKxEDK7WpMjGpOp4BK37
-	nVqhdhblSE4ztaaMD6fIuZoFaoxqk1o/paUr2O+/AkiiSActBLumd2fOdMx5QMABuPFWUe
-	ZSU6FvWbS6M2opLwxF/2fpfxN+GYH7Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1795540832;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN3vYaMnV9NupJt9uj0DyVm98fT46NJCnU18bNrr4wY=;
-	b=lVvQ+wMHtVJ08B6+CsIe0qG2lVsd3epqQRwVhNWoxRlwPkzsE2YdosLdljWTIjE6B0MNs3
-	Ef00k5xo5Kn50tBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1795540832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN3vYaMnV9NupJt9uj0DyVm98fT46NJCnU18bNrr4wY=;
-	b=icpbhZHbueFRAPYDZt+Q/evQ4tuuoi4w57XzhnK/NytlNQ2MHfpKxEDK7WpMjGpOp4BK37
-	nVqhdhblSE4ztaaMD6fIuZoFaoxqk1o/paUr2O+/AkiiSActBLumd2fOdMx5QMABuPFWUe
-	ZSU6FvWbS6M2opLwxF/2fpfxN+GYH7Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1795540832;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tN3vYaMnV9NupJt9uj0DyVm98fT46NJCnU18bNrr4wY=;
-	b=lVvQ+wMHtVJ08B6+CsIe0qG2lVsd3epqQRwVhNWoxRlwPkzsE2YdosLdljWTIjE6B0MNs3
-	Ef00k5xo5Kn50tBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0C17A13505;
-	Tue, 24 Nov 2026 17:20:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +eKVNl/HBWspYAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 24 Nov 2026 17:20:32 +0000
-Received: by quack.suse.cz (Postfix, from userid 1000)
-	id 7719D27A3D; Tue, 24 Nov 2026 18:20:31 +0100 (CET)
-Date: Tue, 24 Nov 2026 18:20:31 +0100
-From: Jan Kara <jack@suse.cz>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park <sj@kernel.org>, 
-	Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	John Johansen <john.johansen@canonical.com>, Georgia Garcia <georgia.garcia@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v2 01/11] mm/filemap: convert fault and readahead logic
- to use vma_flags_t
-Message-ID: <zgg3ktbk2spkmpa6u2nwqktnee26yvf3gglg33sgxq2ctkvh6o@7sj5tf2eutf4>
-References: <20261124-late-2026-vma-flags-v2-0-bf3fade93064@kernel.org>
- <20261124-late-2026-vma-flags-v2-1-bf3fade93064@kernel.org>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=IKsjSGKG
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 98CE81A0C2A;
+	Tue, 24 Nov 2026 17:36:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 5C8E520025;
+	Tue, 24 Nov 2026 17:36:40 +0000 (UTC)
+Date: Tue, 24 Nov 2026 12:36:38 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Karl Mehltretter <kmehltretter@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>, Andy
+ Lutomirski <luto@kernel.org>, Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun@kernel.org>,
+ Waiman Long <longman@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, K Prateek
+ Nayak <kprateek.nayak@amd.com>, Hongyan Xia <hongyan.xia@transsion.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>,
+ linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-doc@vger.kernel.org,
+ llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 03/13] sched: Split preempt-count bookkeeping
+ from raw updates
+Message-ID: <20261124123638.0a4e795f@gandalf.local.home>
+In-Reply-To: <20261028033127.82193-4-kmehltretter@gmail.com>
+References: <20261028033127.82193-1-kmehltretter@gmail.com>
+	<20261028033127.82193-4-kmehltretter@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -149,176 +78,134 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261124-late-2026-vma-flags-v2-1-bf3fade93064@kernel.org>
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spamd-Result: default: False [-11.30 / 50.00];
-	SUSE_INTERNAL_BYPASS(-9.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLyyn5iujqg1knb55iprn1jsbw)];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,ziepe.ca,nvidia.com,redhat.com,infradead.org,suse.cz,surriel.com,google.com,linux.dev,intel.com,gmail.com,sk.com,gourry.net,linux.alibaba.com,arm.com,linux.ibm.com,ellerman.id.au,suse.de,tencent.com,suse.com,zeniv.linux.org.uk,linux.intel.com,linaro.org,canonical.com,paul-moore.com,namei.org,hallyn.com,huawei.com,oracle.com,kvack.org,vger.kernel.org,lists.ozlabs.org,lists.linux.dev,lists.ubuntu.com];
-	RCPT_COUNT_GT_50(0.00)[89];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:email]
-X-Spam-Score: -11.30
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: o7t4gho3twp1pjm483fepzra6sqea1zo
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 5C8E520025
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19jjJfeX0Pq5rKkc5XDNag2YF12GXEJJ0c=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=cgbskdNiwv1foCu8NskiI0D1syGORGzYIPtRO06UAuE=; b=IKsjSGKGP88SZhny+HOXUAncmF19+0BUUDc0u5l131xdPNIc+2cg03+qSMi4x6VuvPafyYRbcZOODK7TaUD++oAq/LMHs2D0SKg5emJipMmethrJ58TkI4h8EoUxZ0NZ8yxGtlukmRBcEXebp911C1pjPZXIb3/Pn1vcULBVoBE=
+X-HE-Tag: 1795541800-76208
+X-HE-Meta: U2FsdGVkX1//0KdiMOWlABzDJ67uxFLp67YDmtynpCt6dGXlAXSOGXfWHH0NQNs4J18yoejLLirzKE6G+vDscomrddt0UbSWq2IScO0sdUJn1oCI575V2BTFdRhwUotSimZAihEXlFEgu3xlutyREHxNwcNEBrwolkeD0shXWG2W2MBsl/ucTPI5lO1Iea1l0g38kDuJ8CQrWgVl5qMnbwe4rUtj4gpUSI2wgRhN2vevOwdKbe4O6wS7u77F+Iug+Lna94xG+7dS6JKnxC5hF52AwE7bilNEZN4y7ubYvJ6DOkX3WMV2o5HCvaD6l7VtjteZjoPT6dth7kBCDU7R1W5RCOmwKVa0
 
-On Tue 24-11-26 17:07:53, Lorenzo Stoakes (ARM) wrote:
-> Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
-> file fault and mmap readahead logic.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Barry Song <baohua@kernel.org>
+On Wed, 28 Oct 2026 04:31:17 +0100
+Karl Mehltretter <kmehltretter@gmail.com> wrote:
 
-Looks good. Feel free to add:
+> diff --git a/include/linux/irqentry_hardirq.h b/include/linux/irqentry_hardirq.h
+> new file mode 100644
+> index 0000000000000..1937fc972e846
+> --- /dev/null
+> +++ b/include/linux/irqentry_hardirq.h
+> @@ -0,0 +1,81 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __LINUX_IRQENTRY_HARDIRQ_H
+> +#define __LINUX_IRQENTRY_HARDIRQ_H
+> +
+> +#include <linux/preempt.h>
+> +
+> +struct irqentry_hardirq_cookie {
+> +#if defined(CONFIG_DEBUG_PREEMPT) && \
+> +	!defined(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS)
+> +	bool applied;
+> +#endif
+> +};
+> +
+> +static __always_inline bool
+> +irqentry_hardirq_count_applied(struct irqentry_hardirq_cookie cookie)
+> +{
+> +#if defined(CONFIG_DEBUG_PREEMPT) && \
+> +	!defined(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS)
+> +	return cookie.applied;
+> +#else
+> +	return true;
+> +#endif
+> +}
+> +
+> +static __always_inline bool irqentry_hardirq_count_valid(void)
+> +{
+> +#ifdef CONFIG_DEBUG_PREEMPT
+> +	/*
+> +	 * Without separate reschedule bits, preempt_count() excludes any
+> +	 * shared reschedule bit. A negative result therefore denotes an
+> +	 * existing underflow.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS) &&
+> +	    preempt_count() < 0)
+> +		return false;
+> +#endif
+> +	return true;
+> +}
+> +
+> +#if defined(CONFIG_DEBUG_PREEMPT) && \
+> +	!defined(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS)
+> +struct irqentry_hardirq_cookie noinstr
+> +__irqentry_hardirq_count_start_slow(void);
+> +#endif
+> +
+> +/*
+> + * Attempt the non-instrumentable part of a staged hardirq-count addition and
+> + * record whether it was applied. The returned cookie must be passed to the
+> + * matching irqentry_hardirq_count_finish() and subtraction preparation. A
+> + * rejected cookie attempts deferred reporting and suppresses post-add
+> + * bookkeeping and the matching subtraction regardless of warning
+> + * suppression.
+> + */
+> +static __always_inline struct irqentry_hardirq_cookie
+> +irqentry_hardirq_count_start(void)
+> +{
+> +	struct irqentry_hardirq_cookie cookie = { };
+> +
+> +#if defined(CONFIG_DEBUG_PREEMPT) && \
+> +	!defined(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS)
+> +	cookie.applied = true;
+> +	/* DEBUG_LOCKS_WARN_ON() permits the addition during an oops. */
+> +	if (unlikely(!irqentry_hardirq_count_valid()))
+> +		return __irqentry_hardirq_count_start_slow();
+> +#endif
+> +	__preempt_count_add(HARDIRQ_OFFSET);
+> +
+> +	return cookie;
+> +}
+> +
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+BTW, the above would look so much better and be much easier to maintain if
+you just made stubs when not needed:
 
-								Honza
+#if defined(CONFIG_DEBUG_PREEMPT) && !defined(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS)
 
-> ---
->  mm/filemap.c | 26 ++++++++++++++------------
->  1 file changed, 14 insertions(+), 12 deletions(-)
-> 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index acf5e562b732..ce720c4c55f0 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3359,13 +3359,14 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  	struct address_space *mapping = file->f_mapping;
->  	DEFINE_READAHEAD(ractl, file, ra, mapping, vmf->pgoff);
->  	struct file *fpin = NULL;
-> -	vm_flags_t vm_flags = vmf->vma->vm_flags;
-> +	struct vm_area_struct *vma = vmf->vma;
->  	bool force_thp_readahead = false;
->  	unsigned int thp_order = 0;
->  	unsigned short mmap_miss;
->  
->  	/* Use the readahead code, even if readahead is disabled */
-> -	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && (vm_flags & VM_HUGEPAGE)) {
-> +	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
-> +	    vma_test(vma, VMA_HUGEPAGE_BIT)) {
->  		/*
->  		 * Cap max THP order at 2MB: this is the common PMD-sized
->  		 * hugepage size, and it avoids memory pressure from very
-> @@ -3385,20 +3386,21 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  		 * If we don't want any read-ahead, don't bother.
->  		 * VM_EXEC case below is already intended for random access.
->  		 */
-> -		if ((vm_flags & (VM_RAND_READ | VM_EXEC)) == VM_RAND_READ)
-> +		if (vma_test(vma, VMA_RAND_READ_BIT) &&
-> +		    !vma_test(vma, VMA_EXEC_BIT))
->  			return fpin;
->  
->  		if (!ra->ra_pages)
->  			return fpin;
->  
-> -		if (vm_flags & VM_SEQ_READ) {
-> +		if (vma_test(vma, VMA_SEQ_READ_BIT)) {
->  			fpin = maybe_unlock_mmap_for_io(vmf, fpin);
->  			page_cache_sync_ra(&ractl, ra->ra_pages);
->  			return fpin;
->  		}
->  	}
->  
-> -	if (!(vm_flags & (VM_SEQ_READ | VM_EXEC))) {
-> +	if (!vma_test_any(vma, VMA_SEQ_READ_BIT, VMA_EXEC_BIT)) {
->  		/* Avoid banging the cache line if not needed */
->  		mmap_miss = READ_ONCE(ra->mmap_miss);
->  		if (mmap_miss < MMAP_LOTSAMISS * 10)
-> @@ -3414,6 +3416,7 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  
->  	if (force_thp_readahead) {
->  		unsigned long folio_nr_pages = 1UL << thp_order;
-> +		const bool random_read = vma_test(vma, VMA_RAND_READ_BIT);
->  
->  		fpin = maybe_unlock_mmap_for_io(vmf, fpin);
->  		ractl._index &= ~(folio_nr_pages - 1);
-> @@ -3422,7 +3425,7 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  		 * Fetch two folios so we get the chance to actually
->  		 * readahead, unless we've been told not to.
->  		 */
-> -		if (!(vm_flags & VM_RAND_READ))
-> +		if (!random_read)
->  			ra->size *= 2;
->  		ra->async_size = folio_nr_pages;
->  		ra->order = thp_order;
-> @@ -3430,7 +3433,7 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  		return fpin;
->  	}
->  
-> -	if (vm_flags & VM_EXEC) {
-> +	if (vma_test(vma, VMA_EXEC_BIT)) {
->  		/*
->  		 * Allow arch to request a preferred minimum folio order for
->  		 * executable memory. This can often be beneficial to
-> @@ -3442,7 +3445,6 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  		 * pad that might exist between sections, which would be a waste
->  		 * of memory.
->  		 */
-> -		struct vm_area_struct *vma = vmf->vma;
->  		const unsigned long start = vma_start_pgoff(vma);
->  		const unsigned long end = vma_end_pgoff(vma);
->  		unsigned long ra_end;
-> @@ -3485,7 +3487,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
->  	unsigned short mmap_miss;
->  
->  	/* If we don't want any read-ahead, don't bother */
-> -	if (vmf->vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
-> +	if (vma_test(vmf->vma, VMA_RAND_READ_BIT) || !ra->ra_pages)
->  		return fpin;
->  
->  	/*
-> @@ -3499,7 +3501,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
->  	 * keep the counter symmetric.
->  	 */
->  	if (likely(!folio_test_locked(folio)) &&
-> -	    !(vmf->vma->vm_flags & (VM_SEQ_READ | VM_EXEC))) {
-> +	    !vma_test_any(vmf->vma, VMA_SEQ_READ_BIT, VMA_EXEC_BIT)) {
->  		mmap_miss = READ_ONCE(ra->mmap_miss);
->  		if (mmap_miss)
->  			WRITE_ONCE(ra->mmap_miss, --mmap_miss);
-> @@ -3532,7 +3534,7 @@ static vm_fault_t filemap_fault_recheck_pte_none(struct vm_fault *vmf)
->  	 * scenarios. Recheck the PTE without PT lock firstly, thereby reducing
->  	 * the number of times we hold PT lock.
->  	 */
-> -	if (!(vma->vm_flags & VM_LOCKED))
-> +	if (!vma_test(vma, VMA_LOCKED_BIT))
->  		return 0;
->  
->  	if (!(vmf->flags & FAULT_FLAG_ORIG_PTE_VALID))
-> @@ -4018,7 +4020,7 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
->  		if ((map_ret & VM_FAULT_NOPAGE) &&
->  		    !(vmf->flags & FAULT_FLAG_TRIED) &&
->  		    !folio_test_workingset(folio) &&
-> -		    !(vma->vm_flags & (VM_SEQ_READ | VM_EXEC))) {
-> +		    !vma_test_any(vma, VMA_SEQ_READ_BIT, VMA_EXEC_BIT)) {
->  			unsigned short mmap_miss;
->  
->  			mmap_miss = READ_ONCE(file->f_ra.mmap_miss);
-> 
-> -- 
-> 2.56.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+struct irqentry_hardirq_cookie {
+	bool applied;
+};
+
+static __always_inline bool
+irqentry_hardirq_count_applied(struct irqentry_hardirq_cookie cookie)
+{
+	return cookie.applied;
+}
+
+static __always_inline bool irqentry_hardirq_count_valid(void)
+{
+	/*
+	 * Without separate reschedule bits, preempt_count() excludes any
+	 * shared reschedule bit. A negative result therefore denotes an
+	 * existing underflow.
+	 */
+	return preempt_count >= 0;
+}
+
+#else /* !CONFIG_DEBUG_PREEMPT || CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS
+struct irqentry_hardirq_cookie {
+};
+static __always_inline bool
+irqentry_hardirq_count_applied(struct irqentry_hardirq_cookie cookie)
+{
+	return true;
+}
+static __always_inline bool irqentry_hardirq_count_valid(void)
+{
+	return true;
+}
+#endif /* defined(CONFIG_DEBUG_PREEMPT) && !defined(CONFIG_HAS_SEPARATE_PREEMPT_RESCHED_BITS) */
+
+-- Steve
