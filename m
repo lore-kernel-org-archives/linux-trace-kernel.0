@@ -1,100 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795530001;
-	b=27/ScNK94UyYW4RVXEZ9IEyC92p+9ruBWSdPI8JtIAjtHH6SOxQ4lMny8E6TpP/5YCOU
-	 1T8+Yc039m8QnTBrFeV9y5JBEqfWDkmTbYsFaIWIyCgc5VczZqGrfCAjGuV+Kx7XGtjG6
-	 fLJaqU7C4ASZjo/k3prG7QG6UrvpXEJ/jlosxZnh+fd1iUyMFfN5ShS0iAaH3GR0s0Y2Q
-	 ApMH/4oOMPAEK1DHdm3dXDMkvgfC0EjzKu/JY+x0xsq9ZYHWwGdtb+jGJ1vEgEPa6w8n0
-	 8S4fU5Ru1Dy6WYBkj/5wQMCZPHGJIA0suUPbDoMS05iKDVrQNCCy93ymK+A6xYz5Nlw==
+	t=1795530292;
+	b=GnJWAYoSTi/RAqk2iahjJNmD6+ASr2l/d9EMcAUvOfca2oTRzZWVMOlmW2JXo9IG3MPY
+	 8VPqDsLmcAEiim81v6p0yp7Qmpw5sqHoq4pVklVbHBnu4ZYqSwCodE5d+JD+WW+VQwLfL
+	 Tkfac66OXNS623EK7aJqvNglqaewB1Lj0pmfUf8QVs7Qr+PNADqMUhZYjWlwc2TUYog5n
+	 Tf5eFHdV3WhLx+mZ7ca/QqsC0mFNG+c/GkE5KDMATke78+3paRO+wQ05UWtD5EEtl3gbI
+	 lClqYzcma45kFo13EtTmTnVxmT5B8Zijz3yM4Uj9niqwjeSSSlbaOjBrTwFSVKIk6AQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795530001;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=7+zJ9wEzRWTT/HcA8h9WG5wBBTJExWPk/UTv1pPJ3a0=;
-	b=0FEowqMTfecLjb9sOACU2vetV2LXKKXn6mg/TJeVM6j6cIi1Exsmbpv5JQsjBA91JTJ/
-	 FbDJSsqW6W2GnFGl7dJrcKQ8SPUFMJTQoQjztjdqx2I2JlXg6DCSXAChgEsExnDLn2vpx
-	 BLx6YdZ+YhrGDldwuLJaJYH5Ayj4ONPxOOllZPRcs5/39XUi65lLVgbOR5xC3AfWJM1Ue
-	 a8EtG3jONGX9crZOwozt2VJLcwTJcBrYOrSB8GGHwK8KffdJeoT32Jyg7T2wF3/WTjWQw
-	 kwXJv/2/fG6i2vKcZhIHNijm2MFMID5KaquK9bKEoaIg6K7vq+V7OLIeCXA9tqYj6KA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795530292;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Stat-Signature:X-Spam-Status:
+	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=1LOcVQNYAG/m8FwGOgpeskXItoFPNok4dIXg82mENYE=;
+	b=zA3pEtrdS0xwHxPt0bp9pDZ3t+KX7Dn/Nclp+oYF3Yg2som9BSqBbS8sYnJxqHhS0vzz
+	 U0WeVH7SPzS48FYIS9DYlniiYZCXsxxyrfWP2BU9m0ikF+oIOlnuH7ZDf6G+vO++27usY
+	 mo4DGDhJUq+HWYFTW7qTbhMNxTNvKa+AiIEElgFG/T8q2ToD3gfxnX1fLmw0SKDiRuuxO
+	 8/vxNpiCG5aOrbXlMcS0/5ZZS8asiXbf8aU2ew3r53GZhQZ4ysfPFQOI+J+hi+f8Sq8z3
+	 3euzqdv8h1tQ/5l2DYSc7UhDM8xPwI+8IXkblI/0CNxujAspM7gi1aXIUxGo3ha4vHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IZ7y3J9H;
-	arc=none smtp.remote-ip=209.85.221.52
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=JuH+hMlD;
+	arc=none smtp.remote-ip=216.40.44.16
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F23C606A321
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 14:20:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8F23C606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AE7606A331;
+	Tue, 24 Nov 2026 14:24:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98AE7606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=IZ7y3J9H
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-4aa5833c263so4408132f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 06:20:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795530000; x=1796134800; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7+zJ9wEzRWTT/HcA8h9WG5wBBTJExWPk/UTv1pPJ3a0=;
-        b=IZ7y3J9H93IKqopZTq2ipF3e9s9TFYfJrLsd7BOXZRROtROjngdzYrcxanU8HCuZOA
-         Vkl+OUtO4ikHhIxZiqvGiJuxspFZSu7uIjYM7Uwxn735WIPF7w6DBUcRdP7uv4m+46jH
-         yPCcyA3HM3mtJK9sfDrUQIxu6UiLj1lsOLAXwwzhk+pWXKwu+hCJPD+FHpB9ThwehL7t
-         UBOgA0lc29OCJQId/wjvBVjRDqN/7wq7ipxDR0B+2Ve/5AJG2jiyF1Ykym9MmS2qrGH7
-         ORNuwljXAdyQAqLZLGDq/EVqjwumbG5fIoGYC2nRkT4MgKByvfsH/s6/P+921XwToQbx
-         5mkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795530000; x=1796134800;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7+zJ9wEzRWTT/HcA8h9WG5wBBTJExWPk/UTv1pPJ3a0=;
-        b=qvuR2XWIX6zD7MvqG3N/c/xwt0KoQBpd4FhpbnbvKLKK0Nzd7eyZy4oyb4x0n0Yjvn
-         c5QT0E5ejNsBT46c3No5FpbudizpJ6wewJGjHK6+L4kaDD4J0EiE9QEDTGJmtGTrmZQ2
-         1MSSFvUXs7IbF8biPbGiLeJx01lVDdpeLPsUTtdwFw8YJkd8rhVBqqymNBF3zOfiGKmP
-         FsQfHtJLzkBy9Pip14/tsIKPO0daVpEJdgHxI7P5AqLPjk+/hWG0Z0Z6BQZKBueLcogW
-         ZPzKMc0g0SpjGpaH+Z4C0RYB4cHHpJw9RqWwAIt+oZItel4uq1nahvHx7bFbklN/c4AR
-         ebiQ==
-X-Forwarded-Encrypted: i=1; AL+hErEdpqUDaC3MPmfDVOWTdUYOPZwWPwA3X2FF9F11erh4Q1hFig8sK66ysRB9+vOkZz1di3GaEcvd6UBagceI7+8XJDk=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8EaZ3xggfT6GeDFNiydIzT/yahYumiJi/m0j0EApx2h4sWLn87
-	3qixpKLhGqeczVCIvji2JpmGBWzkLa8OkHnQPqLiwDA9N3LqZudVEN9b
-X-Gm-Gg: AZFdTZdMM+50UekqQygOa/mw6kDhgL2AUY8ni5HPLBysVbWErrT38TpRO60joq27V+G
-	NAz7/jU/VvyLnIF8BEL9N3u+GHSy045sIdKvBeyYPUSgHLeLSbdVpmqzC/a8PbWjVYf1CySlHfo
-	84bOjjgN78hX8tlhvTwQgNg+hvYhKosLbvD9CRppVjz5LWv9a3HfaXesIKXHxAWdrSILgtQxn/A
-	Nmd44kUpy8ux5pJ3OGrlZIF2G/h02DqFTcRs9v+AJDHtgHH30Wlmf1nE7iSyOGW8Yf7t6XOfbMD
-	kxiUGySRhgg/Mxa1uCp3Y5S5TmptjRK4C8zqezkKUO17pCkA24AKptGZeKPybb582YccsUmY414
-	0cIrsPd/p9AfUgyimWdLVtnG40vRlrRwZCRenOodl+W1YeE/43otCUfDmODhGQXCT/T8WfaerC0
-	TjegYxkJRXVZWx+ULy6ymXHL3LZYZhAZUc6DbOXjpC4aIquGzfbRJIk3wuoJ9QLsAPnGVUiRC9L
-	PTTXsN+1NELqDJif5JYOWg3KMHmZUB4xyjzRbn6PemsgK+Jh6WIngywHiHeaK5WLm1uiBkmj7aL
-	EGFCv92xOlm2G6Kd
-X-Received: by 2002:a05:6000:299c:10b0:4a7:9630:7b5a with SMTP id ffacd0b85a97d-4abb47b2043mr20944271f8f.47.1795529999684;
-        Tue, 24 Nov 2026 06:19:59 -0800 (PST)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6bb989e3sm28314153f8f.52.2026.11.24.06.19.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 06:19:59 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 24 Nov 2026 15:19:57 +0100
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCHv2 1/2] kprobes: Increase the kprobe hash table size
-Message-ID: <awWdDfj1fknA8fuF@krava>
-References: <20261122200239.1481088-1-jolsa@kernel.org>
- <20261122200239.1481088-2-jolsa@kernel.org>
- <undine-1795477745290490698-99e2fcc5c9b45beb@undined.local>
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=JuH+hMlD
+Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 260B7C0BD5;
+	Tue, 24 Nov 2026 14:24:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 83E1A2002E;
+	Tue, 24 Nov 2026 14:24:48 +0000 (UTC)
+Date: Tue, 24 Nov 2026 09:24:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v8] tracing/probes: Zero out faulted dereferenced fields
+Message-ID: <20261124092447.4dbf5233@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -104,158 +57,264 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <undine-1795477745290490698-99e2fcc5c9b45beb@undined.local>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 83E1A2002E
+X-Stat-Signature: pekdud8xugcwkn6j476t7m3t1o8aq51z
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX185e3D9loKvSDyp9pRDXXeEiP4mCEPXlfg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=1LOcVQNYAG/m8FwGOgpeskXItoFPNok4dIXg82mENYE=; b=JuH+hMlD48lb3di18Hee9FXnyxim0ufEryo542nNnl2hutQvH4Cu3Bgx45EjmG46/mgG4sPhNeVCpjDCzDKSchTpGxukFWiGuCQ4zs3Ypt/uByEt9OQtEwoZVSvJqVMGhM312ctX663WXFD5eRn7B+VjabHWC5TAA4voo8pyMR4=
+X-HE-Tag: 1795530288-998317
+X-HE-Meta: U2FsdGVkX19O0OkT3IIMhA09qI0FrhCqvdbj5ORcoWyhWR9tOYISBb8xtGrJe79TQe0dMMMbITvsP6EWfX3hoztoF8txQJBN4qRRbDaRxn9Y6IN5TwOeEEDr0b8B3KcHS50lYjr/RbhY1tGUcSAhfU9LgHvtJtdahMC09c6eq+Hnad/utgdTO/J91Eirom9utVLguzhG1AYqIwMYuRjmkYf3s4nSrQqI7NuIU5YsDYzhC0aX/My2hKT/HMPH2+J19FkvgYbBTPJp98fOXr9ecqMTBRiMbwKvMpBr7ryuNK0gn2upsqu5MmNV2tVAwlbolQH+aY7gR0ToPzN6ck4dzAksdJbv5U2Ysq7p0PihBRyKhvtF/sMB2X9zqgxZT8aBJvQbktxp3jSAWCAAHoXOT2liqMPDs+heyOZbBb82Rd1gknFv45bitDLEACGdsFDz9iu6yFet/iOuEKYy58xcKhrIp1iswVwTwLkwF0QjuEU=
 
-On Tue, Nov 24, 2026 at 08:49:05AM +0900, Masami Hiramatsu (Google) wrote:
-> On Sun, 22 Nov 2026 21:02:38 +0100, Jiri Olsa <jolsa@kernel.org> wrote:
-> > The kprobe hash table has 64 buckets, so with many probes registered
-> > each get_kprobe() call walks a long chain. With 20000 probes that is
-> > more than 300 entries per bucket on average, and every entry is a
-> > separate struct kprobe, so the walk is mostly cache misses.
-> > 
-> > get_kprobe() is not called just once per registered probe. On x86 the
-> > registration path calls it for each address it has to check around
-> > the new probe: get_optimized_kprobe(), __recover_probed_insn(),
-> > __recover_optprobed_insn() and arch_check_optimized_kprobe() all do
-> > one lookup per byte or per decoded instruction, and most of these
-> > lookups miss, which means walking the whole chain. It is also called
-> > from the breakpoint and ftrace handlers on every probe hit.
-> > 
-> > Increase KPROBE_HASH_BITS from 6 to 12, which gives 4096 buckets and
-> > cuts the chains to about 5 entries for 20000 probes and about 12
-> > entries for 50000 probes.
-> > 
-> > Time to register the probes with the kprobe_many_example sample
-> > module [1] (insmod with nr_functions=20000 and nr_functions=50000)
-> > in a KVM guest, mean of 5 runs, for different KPROBE_HASH_BITS
-> > values. The table memory is the size of the static kprobe_table on
-> > 64-bit:
-> > 
-> >   bits   buckets   table memory   20000 probes   50000 probes
-> >      6        64          512 B         4.71 s        29.99 s
-> >      8       256           2 KB         2.05 s         9.90 s
-> >     10      1024           8 KB         1.39 s         4.63 s
-> >     12      4096          32 KB         1.30 s         3.64 s
-> >     14     16384         128 KB         1.28 s         3.41 s
-> >     16     65536         512 KB         1.28 s         3.38 s
-> > 
-> 
-> Thank you for conducting the testing and evaluation. The results show
-> a trend similar to that of a study I previously carried out[1].
-> 
-> [1] https://qiita.com/mhiramat/items/1bbeb309ee5dfbc979ce (Japanese
-> article)
-> 
-> > With 12 bits the registration of 20000 probes is 3.6 times faster
-> > and the registration of 50000 probes is 8.2 times faster than with
-> > the current 6 bits. 12 bits is where the curve flattens: compared
-> > to 10 bits it is still 21% faster for 50000 probes (6% for 20000),
-> > while going further to 16 bits gains only 1.5% for 20000 probes and
-> > 7% for 50000 probes, for a table 16 times bigger (512KB vs 32KB).
-> > 
-> 
-> I personally think 6 bits is too small, maybe up until 9 bits (4KB)
-> will be OK.
-> 
-> > The cost is the size of the static table, which grows from 64 to
-> > 4096 hlist heads, that is from 512 bytes to 32KB on 64-bit. The
-> > functions that walk the whole table (module notifier, arming or
-> > optimizing all probes, the debugfs list) are slow paths that take
-> > kprobe_mutex and now scan 4096 buckets.
-> 
-> What I still fail to understand is the use case for employing such a large
-> number of Kprobes simultaneously. If the goal is to trace individual
-> functions, Fprobes are already available and offer better scalability.
-> Personally, while I might occasionally deploy around 100 probes, I cannot
-> conceive of a scenario requiring 1,000 or more. Would you have actual
-> usecase maybe from eBPF?
+From: Steven Rostedt <rostedt@goodmis.org>
 
-the use case is the kprobe multi link support for inlined functions,
-which I have in this branch:
+While looking at tasks global descriptor tables, I discovered the
+following anomaly:
 
-  https://github.com/olsajiri/bpf/commits/inlined/
+~# echo 't:sched sched_switch prev=prev mm=(task_struct)prev->mm ppgd=(task_struct)prev->mm->pgd' > /sys/kernel/tracing/dynamic_events
 
-inlined instances are not function entries, so they can't be attached
-through fprobe/ftrace and each instance needs a standard kprobe
+The above creates a tprobe on the sched_switch tracepoint and records the
+previous task_struct pointer, it's mm_struct and the pgd the mm_struct
+points to.
 
-number of instances gets big quickly, even for a single function, some
-examples of functions that have both an out-of-line copy and inlined
-instances in my x86_64 build:
+~# trace-cmd start -e tracepoints:sched
 
-  function                inlined instances
-  __list_del_entry                     4144
-  list_add_tail                        1196
-  folio_put                             629
-  put_task_struct                       373
-  percpu_ref_put_many                   273
-  kmemdup_noprof                        207
-  fdput                                 189
-  sock_put                              161
-  migrate_enable                        131
-  migrate_disable                       123
+            bash-1050    [000] d..3.    90.829478: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d30b623600 mm=0xffff88d30108c600 ppgd=0xffff88d33352b000
+          <idle>-0       [002] d..3.    90.836024: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d301870000 mm=0x0 ppgd=0x0
+     rcu_preempt-15      [002] d..3.    90.836031: sched: (__probestub_sched_switch+0x0/0x10) prev=0xffff88d3013ad100 mm=0x0 ppgd=0xffff88d33352b000
 
-attaching to the list functions is not necessarily a good idea,
-but other functions have a high number of inlined instances too
+The first event has is a user task that has both a valid mm_struct and a pgd.
+The second event is a kernel task where the mm_struct is NULL and so is the
+dereferenced pgd pointer.
 
-the goal is not to attach 20k functions, but to make the inline
-attachment fast.. user specifies just a few functions by name and
-has no control over the number of their inlined instances, so even
-a small set of functions can end up with thousands of kprobes,
-and the attach time should stay reasonable for that
+The third event is where things looked strange. The mm_struct is NULL but
+the dereferenced pgd has a value! That is: NULL->pgd produced something
+other than zero.
 
-> 
-> If this change is intended solely to improve performance for an extremely
-> unlikely use case, I would, at the very least, make the size configurable
-> via Kconfig.
-> 
-> Since this change affects all architectures, those working with small,
-> embedded-system chips might be reluctant to "pay" 32 KB for a use case
-> that is highly unlikely to ever occur.
+The reason for this is that the probe_mem_read() and probe_mem_read_user()
+do not write to the destination on failure. The process_fetch_insn_bottom()
+loop does not check the return value of the dereference (as it is the last
+one), and does not update the event. That leaves the value for that failed
+field to be whatever was in the ring buffer at that time.
 
-I can add CONFIG_KPROBE_HASH_BITS with range 6-16. I'd keep 6 for
-CONFIG_BASE_SMALL, so small systems don't pay anything, and use
-10 (8KB on 64-bit) as the default otherwise, which gets most of the
-speedup from the table in the changelog
+Have both probe_mem_read() and probe_mem_read_user() set the destination to
+zero on failure to read the address.
 
-thanks,
-jirka
+Now all pgd are zero when mm is zero.
 
+Also update the stage 2 of process_fetch_insn_bottom() to not return on
+fault but to just set the value to zero and also do not even bother
+dereferencing the address if the value is already zero. This allows the
+code to continue and fill in the zero into the memory location on the
+ring buffer.
 
-> 
-> Thank you,
-> 
-> > 
-> > The sample module was posted as the last patch of the kprobes
-> > lookup cost series [1] only to demonstrate the testing, it is not
-> > merged and is not going to be.
-> > 
-> > [1] https://lore.kernel.org/bpf/20261109195827.1091410-1-jolsa@kernel.org/
-> > 
-> > Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  kernel/kprobes.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index f14f7ff45961..47ce0bfb7298 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -50,7 +50,7 @@
-> >  #include <asm/errno.h>
-> >  #include <linux/uaccess.h>
-> >  
-> > -#define KPROBE_HASH_BITS 6
-> > +#define KPROBE_HASH_BITS 12
-> >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> >  
-> >  #if !defined(CONFIG_OPTPROBES) || !defined(CONFIG_SYSCTL)
-> > -- 
-> > 2.56.1
-> > 
-> >
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 533059281ee59 ("tracing: probeevent: Introduce new argument fetching code")
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+Changes since v7: https://patch.msgid.link/20261123213246.00440bfc@gandalf.local.home
+
+- Have all the helper functions test for null pointer before
+  dereferencing (Sashiko).
+
+ kernel/trace/trace_probe_tmpl.h | 103 +++++++++++++++++++++++++-------
+ 1 file changed, 83 insertions(+), 20 deletions(-)
+
+diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+index 8acc0f0ebd7a..b9fd2f61a0ca 100644
+--- a/kernel/trace/trace_probe_tmpl.h
++++ b/kernel/trace/trace_probe_tmpl.h
+@@ -96,7 +96,8 @@ fetch_store_symstring(unsigned long addr, void *dest, void *base)
+ 		return -ENOMEM;
+ 
+ 	__dest = get_loc_data(dest, base);
+-	len = sprint_symbol(namebuf, addr);
++	/* Do not dereference NULL pointers */
++	len = addr ? sprint_symbol(namebuf, addr) : -1;
+ 	if (len < 0) {
+ 		*(u32 *)dest = make_data_loc(0, __dest - base);
+ 		return 0;
+@@ -133,13 +134,65 @@ process_common_fetch_insn(struct fetch_insn *code, unsigned long *val)
+ 	return 0;
+ }
+ 
++/* On failure, zero out the destination */
++static nokprobe_inline int
++do_probe_mem_read_user(void *dest, void *src, size_t size)
++{
++	int ret;
++
++	/* Do not dereference NULL pointers */
++	ret = src ? probe_mem_read_user(dest, src, size) : -1;
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
++}
++
++/* On failure, zero out the destination */
++static nokprobe_inline int
++do_probe_mem_read(void *dest, void *src, size_t size)
++{
++	int ret;
++
++	/* Do not dereference NULL pointers */
++	ret = src ? probe_mem_read(dest, src, size) : -1;
++	if (ret < 0)
++		memset(dest, 0, size);
++	return ret;
++}
++
++static nokprobe_inline int
++do_fetch_store_string(unsigned long addr, void *dest, void *base)
++{
++	/* NULL addr gets zero size string */
++	if (!addr) {
++		void *__dest = get_loc_data(dest, base);
++
++		*(u32 *)dest = make_data_loc(0, __dest - base);
++		return 0;
++	}
++	return fetch_store_string(addr, dest, base);
++}
++
++static nokprobe_inline int
++do_fetch_store_string_user(unsigned long addr, void *dest, void *base)
++{
++	/* NULL addr gets zero size string */
++	if (!addr) {
++		void *__dest = get_loc_data(dest, base);
++
++		*(u32 *)dest = make_data_loc(0, __dest - base);
++		return 0;
++	}
++	return fetch_store_string_user(addr, dest, base);
++}
++
+ /* From the 2nd stage, routine is same */
+ static nokprobe_inline int
+ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 			   void *dest, void *base)
+ {
+ 	struct fetch_insn *s3 = NULL;
+-	int total = 0, ret = 0, i = 0;
++	int total = 0, ret = 0, i = 0, offset;
+ 	u32 loc = 0;
+ 	unsigned long lval, llval = val;
+ 
+@@ -147,25 +200,26 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 	/* 2nd stage: dereference memory if needed */
+ 	do {
+ 		lval = val;
++		/* Prevent dereferencing NULL val pointer */
++		offset = val ? code->offset : 0;
+ 		switch (code->op) {
+ 		case FETCH_OP_DEREF:
+-			ret = probe_mem_read(&val, (void *)val + code->offset,
+-					     sizeof(val));
++			do_probe_mem_read(&val, (void *)val + offset,
++					  sizeof(val));
+ 			break;
+ 		case FETCH_OP_UDEREF:
+-			ret = probe_mem_read_user(&val,
+-				 (void *)val + code->offset, sizeof(val));
++			do_probe_mem_read_user(&val, (void *)val + offset,
++					       sizeof(val));
+ 			break;
+ 		case FETCH_OP_CPU_PTR:
+-			val = (unsigned long)this_cpu_ptr((void __percpu *)val);
+-			ret = 0;
++			/* Do not dereference NULL pointers */
++			if (val)
++				val = (unsigned long)this_cpu_ptr((void __percpu *)val);
+ 			break;
+ 		default:
+ 			lval = llval;
+ 			goto out;
+ 		}
+-		if (ret)
+-			return ret;
+ 		llval = lval;
+ 		code++;
+ 	} while (1);
+@@ -175,17 +229,18 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ stage3:
+ 	/* 3rd stage: store value to buffer */
+ 	if (unlikely(!dest)) {
++		offset = code->offset;
+ 		switch (code->op) {
+ 		case FETCH_OP_ST_STRING:
+-			ret = fetch_store_strlen(val + code->offset);
++			ret = val ? fetch_store_strlen(val + offset) : 0;
+ 			code++;
+ 			goto array;
+ 		case FETCH_OP_ST_USTRING:
+-			ret = fetch_store_strlen_user(val + code->offset);
++			ret = val ? fetch_store_strlen_user(val + offset) : 0;
+ 			code++;
+ 			goto array;
+ 		case FETCH_OP_ST_SYMSTR:
+-			ret = fetch_store_symstrlen(val + code->offset);
++			ret = val ? fetch_store_symstrlen(val + offset) : 0;
+ 			code++;
+ 			goto array;
+ 		default:
+@@ -193,27 +248,33 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 		}
+ 	}
+ 
++	/*
++	 * Once val is zero, it is pointing to NULL. Any new dereference is
++	 * also treated as a NULL pointer.
++	 */
++	offset = val ? code->offset : 0;
++
+ 	switch (code->op) {
+ 	case FETCH_OP_ST_RAW:
+ 		fetch_store_raw(val, code, dest);
+ 		break;
+ 	case FETCH_OP_ST_MEM:
+-		probe_mem_read(dest, (void *)val + code->offset, code->size);
++		do_probe_mem_read(dest, (void *)val + offset, code->size);
+ 		break;
+ 	case FETCH_OP_ST_UMEM:
+-		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
++		do_probe_mem_read_user(dest, (void *)val + offset, code->size);
+ 		break;
+ 	case FETCH_OP_ST_STRING:
+ 		loc = *(u32 *)dest;
+-		ret = fetch_store_string(val + code->offset, dest, base);
++		ret = do_fetch_store_string(val + offset, dest, base);
+ 		break;
+ 	case FETCH_OP_ST_USTRING:
+ 		loc = *(u32 *)dest;
+-		ret = fetch_store_string_user(val + code->offset, dest, base);
++		ret = do_fetch_store_string_user(val + offset, dest, base);
+ 		break;
+ 	case FETCH_OP_ST_SYMSTR:
+ 		loc = *(u32 *)dest;
+-		ret = fetch_store_symstring(val + code->offset, dest, base);
++		ret = fetch_store_symstring(val + offset, dest, base);
+ 		break;
+ 	default:
+ 		return -EILSEQ;
+@@ -237,11 +298,13 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 			if (s3->op != FETCH_OP_ST_STRING &&
+ 			    s3->op != FETCH_OP_ST_USTRING) {
+ 				dest += s3->size;
+-				val += s3->size;
++				/* Only update a non NULL val */
++				if (val)
++					val += s3->size;
+ 				goto stage3;
+ 			}
+ 			code--;
+-			val = lval + sizeof(char *);
++			val = lval ? lval + sizeof(char *) : 0;
+ 			if (dest) {
+ 				dest += sizeof(u32);
+ 				*(u32 *)dest = update_data_loc(loc, ret);
+-- 
+2.53.0
+
