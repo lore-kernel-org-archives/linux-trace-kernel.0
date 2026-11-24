@@ -1,99 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795511593;
-	b=Sr4vUaCMqUQc1EodBbE1R559HF2zLuOdRz4chJSU4hO2d9PI50QAKvBlIT8gM01uKWXv
-	 GFsgpyufEJwb5fO07vYEqQ2JWdSY5yBVwXzduKtoOwQxtmf+Hnn6Ajnu6pBO6TxG9y1Vz
-	 bK4E4rlOKyQbEDCZmQcwNOPMOgLTD+4G9/T7ny+Oc6EdgeR7UPkwDe+Wa0On/ZL0VZIHp
-	 6JtKluFPttm2j7PdpeV7iObT8jj5vqcx/cFNaLjj0+VjqXW3x6JR7D7ZIUZFBPFy0VHeU
-	 hoZ2xw/0BunALQB82sYYxs70ly9oLXFwy74s/jKxn4J6nbqz4rTYJOBGrLmW/fBMGzw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795511593;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.48
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795518489;
+	b=vPhZd93GLh4eQeqMUu/szDy7cbPH9IJW3aMyYNIsf0oReYVnWrKrZM1p1KXedaOnpvpE
+	 OqnVGZnEsOZta4hccz2v95DSSDqWxNpH2apvKp+Hz1lM1/E2hEDO6p4iGhz9tXwxWyBPc
+	 GanjNwFmesC25JXNaUbVwIqur2byvxlm7f/ojwqWCmLUTx1HU0YBaK0JwSYUdqbs94tnp
+	 c+juW0P2sVkR+oOXxJLfg9eDu/ivFW3ALHYKj7raCZiI0uarodaLL/rQplgcQlgXBQLrJ
+	 zb16nFWytwpDUwOh2S2qSes2I49i+mPvBzhL9ohy3jurdXN79VZqUR9d/Wq8snaK2fA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795518489;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=285F8rEC74nMX2FnbEwp9EQ7OPlK3L+w9+JpHnSwueo=;
-	b=rx+OYWwBRRpz+dF+kiQ8YIDM4ALxH1Rkb7wCBM8ed/IILmHBp9jIQY43/AG3kUrUyQZI
-	 KHmBGIxcYvnPOzNFXHPQr8i/T1Y51qtNOrYtZiZhKDJ8awgc9AiRP4rd7olgGX/CzbWda
-	 q9dyLhZp6KFfbcg0+yJJ1fbZGNnB+4Dq+QvMlZHjN+UJT/l9EZmjydbllF+CRSxJ5JJqO
-	 968upu1NJ3w1TnV1uT0q4/YiqWz1aLc2K3u2x6y1DlZDp2afRTp7O+Nyit7O8j1jWysiW
-	 4e3iTzD0EAZM0/AewefBjrACU0/T4rBs8VCiqAGNqd/Y9UYTkxXG7DAzr8PiNc8E2fw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=CSG8ulEk4ASRkphCd8GtzCLacYX5T3eijsggHwB+VQw=;
+	b=PTFlnpZPhgM4dbA1q/BAA83W4OeX9jzlJl+p3je+UkqlYjiNsGizcTFDnCXGHU49oK+5
+	 5vkVfR9Qzmj8YMGxXjaNDO1/lD3l3zg5SsmfMa9k96qOq6NyrvGixE6qapuEKgL1Gwl76
+	 qF5ujy4u2qk/iz9hTjUIPnIrhb/wU4D+q2q1R0fXyX7KblGdbOni6XpAoN3gpYpOrFGRe
+	 +kDvnCEx0BaOb2ifTXE7R8i8zpRHM1Xi1+rNiSNfwZeRPu14Hss1FGxYE32Jy1dhXHL+K
+	 NOsKe+K9R1T854rFgZVStJB0Y1zJd/wDDfQGWoqckq8P3nbQdfFIe8OeVDyc2vw+nJA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="friSTd/w";
-	arc=none smtp.remote-ip=209.85.221.49
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Gh8+vZKK;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.48
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A84606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 09:13:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 44A84606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C40606A321
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 11:08:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B5C40606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=friSTd/w
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48e20ed3b9dso3786108f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 01:13:13 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Gh8+vZKK
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1b3beeaf6f9so5466041c88.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 03:08:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795518488; cv=none;
+        d=google.com; s=arc-20260327;
+        b=mebxkwpb//nCwsv9xl8EZRAWbQP/ra6OWzxd1GS6vDnx2DTcTSxZY9aZbF1rimYu7f
+         b8O3/Civen8XFW3Z+lfub7Npdkl9b5ChwvsFzDoyVZEXbv4rcX0pkmHtf1Ck/BMay27p
+         iInzT/JNUmMh3ebi6HdbP2ipSs4AqtoymmgZFCmw4bwDNrpmeN0rxWP0ZdtXfwaOIepO
+         iZIJt4LOvIMgfHQGF4IWFGhdt5lY31YTgNki1vxF8okRJWXhULszliOlqmduqkRage/U
+         Y+7CB+3KjKj8U/0/Ou7lFDMFw2/WGsZHxWyx2LDA8FmY7zveDk19jWy9mABkppFlH6d8
+         qLxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=CSG8ulEk4ASRkphCd8GtzCLacYX5T3eijsggHwB+VQw=;
+        fh=C2dWxT9UrHQnwef95Ew9gCtrPDz+3aJ9ImLx2sMXKSQ=;
+        b=FAV0aGMBs1wgE4Z9c5Js3dP2CdWU9LovoXPY6Jqo5zJONc5YX92dLEHzyIeC3fs/N8
+         X+qvS3gr4gqmKiCpFs0jP+GZq56g+XnyxDTXoV8UvhmuProf2G2x5kqSZwNvLF/wvHOX
+         sVbQmZtI5mjyBltyTjCQ0kDrfIfI7ofK/SQyB0y0FZjujpzdgLEaN5ZUGNyCimvjygLY
+         EmaHWsKxK/iOJ8RAohWAdan4t0iPFLJltnyAmBf3Eg0LXW5yLw8zW94KTJdJ1RG/RSrJ
+         GCysZtiRRzs79H8zg901KgtinSlN9d+ko0rESf/4jm/pJObtWv1z3V8M/a47x/9vEIfJ
+         PdHA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795511591; x=1796116391; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=285F8rEC74nMX2FnbEwp9EQ7OPlK3L+w9+JpHnSwueo=;
-        b=friSTd/wC23LUdCRxN5gUfhpqzosug7ADsYKJjMIPbKooCwIRZVm3kva3/zbPUTh7A
-         1vBrfDeM1ioBbu1C+f/GKfZOG9NMhQVs3f0EE5MhdV0oONW9HGizBK6Wjwbuuiz9jOOy
-         EaPxQGSudCOUBwHxbikdjbLW8zIlRqH6qwDGzatQC+PNfdQcpCB9ItK04QbgSjA+5kk8
-         WnM7EhnhsfP60oSm6w57Cn1KGTVRq47US6ktQ7zXx+1uBMavgPYsl2JKJaJ7ClzrtHL5
-         bnu+NSPUMGb0w2AuYYEIPWc730iCPLbGdNTHQuMtmT6MiKGjffMLtpWNK9HBH53mNAIR
-         6iaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795511592; x=1796116392;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+        d=gmail.com; s=20260707; t=1795518488; x=1796123288; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=285F8rEC74nMX2FnbEwp9EQ7OPlK3L+w9+JpHnSwueo=;
-        b=FC7bNcyDfETn9Y5TbzWfnWgZqCWedmLfgkboo2XLpwr0cy0q6IkZQfZvhgD6nbmGIA
-         uFrD+Q7ZVFQq/CBliBdxs9ZGHwjGm5LnP1MvIyHuwj+VjKMri4I+TlVEmHbaieVhXnBm
-         JbtDeNbK1Rti6jakNBDlQHx3kwmBSVYGLQJZiPiqALPSRiTzizzEIblhH5yUNgi9XKjI
-         Uh5OGDZYSm4lp/FFF2c2v9XnBD+TdUk3psAdaDPgXBn9U/m8HYJh7fH8cn8UOMV7IQN2
-         /UIqj27HEgfle2pI1TjQdZTfW3zh5jLqHnNgoTcWPEX4nmLQK8TVCoe2rFc6S6dH3PEV
-         9DVA==
-X-Forwarded-Encrypted: i=1; AL+hErENQtHXSsqo1p889BjwLp7aNm6uYnYtasv7r/t3i4vDN93+wRwMwl9cRm1QYmiNGhml5tskJgAXba4IFYqVDiywJbs=@vger.kernel.org
-X-Gm-Message-State: APuU4Z+BCk7dXu0KuwnxAvSeTdZdOa19/06wQj0KrZnj9u7jcGqrTYhL
-	JnlgL+8ndL3I1lgqO2EZq1D+P6sIjHXJY5O1PIOReMiIB/ll7KogXRX4
-X-Gm-Gg: AZFdTZcvaF8QQ6RkeylunOpptDwzYepWlyvY//SgdUbNAdwqlGW1lSra+sbsxF28UJ3
-	voriSM2b0MtT14JDWDmaaHRm/p3xw3Fy2vP8kvpEhc+/asvYXr37afG1u0eZs2z8nis2Iecusds
-	CNNBEifAt9WEzyHDiMBsT92Org9OUA5SxYGf5fk6aSo5mAnGujMrX10uD8P6qkzqYli0aoD5zlz
-	CEGjBGYcDarekRLNOj3zLT0qJK6iHyUDDsTw0xvDz2YbRQQC8NIOOLepYrj87jAcNi9O3GMzDqZ
-	k8SN5Y4BbS4mQMvUJnTmCYWoFKz7NXoRxRuL5dA8Y5ePPh8CNsR5lfD/01feQjdVyFRrzdCz+Bh
-	el8s9m2MBNXDBg3c99HtEcOwho3V/pa04fSAz2ufrY30eF6cU23OYztCuphTHOxNNYpxFaKJPqO
-	2LFIB1gdEVhpdlpEedQjoWgumlYW9jOwaKtqLmVRvArGtmAWE74wV8NiGMvfsd9WN1NWYbYkyD1
-	gNcgjvY+lJUFWloL0lPLRPr8FrLxg/YL1nMFlGnYnRt/9PJeXbRso2Vo2OESFfv9xCMEzi4UpJM
-	VO01WGXVH0ph90dY6e6Maycu0N/MGZ8=
-X-Received: by 2002:a05:6000:4705:b0:4a9:3fba:5eef with SMTP id ffacd0b85a97d-4abb5db6cd8mr25609288f8f.24.1795511591322;
-        Tue, 24 Nov 2026 01:13:11 -0800 (PST)
-Received: from thinkpad.lan ([2a06:c701:4770:2100:9c14:8a7c:ec54:34])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6baa397asm27559136f8f.48.2026.11.24.01.13.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 01:13:10 -0800 (PST)
-From: Avi Weiss <thnkslprpt@gmail.com>
-To: mhiramat@kernel.org,
-	oleg@redhat.com,
-	peterz@infradead.org
-Cc: andrii@kernel.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avi Weiss <thnkslprpt@gmail.com>
-Subject: [PATCH v2] uprobes: avoid postponing return-probe SRCU lease expiration
-Date: Tue, 24 Nov 2026 11:12:52 +0200
-Message-ID: <20261124091252.567037-1-thnkslprpt@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        bh=CSG8ulEk4ASRkphCd8GtzCLacYX5T3eijsggHwB+VQw=;
+        b=Gh8+vZKK209fK9gkJYckunVrXdTd5nYLvA1Lpo9qvL2NFIfM/JAQyXYQIxxhBEoUfz
+         sCXcBNx86VAxPYkC2lgFy5i1+6ol7da0DaW9cIMfQeBILMJWAUOnH4mDdgGGGzUtruB2
+         8Z1g7U3SEJC/AAnHfiiR1Z5sOhfp5iUgX4Ij/AEfbsNONHQip2OtdU/VmCfp/9R82bRz
+         JQ278CC6aaGVVlPD5csL4ngHb8MUUfXEC3v9jwFxop0QhXyR9V+BRAtjc9l6em1qB4aa
+         7jF5ElSyq9fPTx6acputZUbgay/zMuiFaZolWCQpbtIBZfnBvVRhHUPmV29fyGZUIedA
+         A3lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795518488; x=1796123288;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CSG8ulEk4ASRkphCd8GtzCLacYX5T3eijsggHwB+VQw=;
+        b=Y4C06xp5Egch4kCN09fxwCbnzLMBSEMNBFl7eQAG/JunGQGEuwIGxjF2g+do2qOwrf
+         HqMNDtKXulAvTdUQpa7qQIM5gVu8+HdEw3yYDsMj0JERNFsF74iG2y3ehvYMlRBAYh88
+         nOYCqfEhdHv+F3aK3T7lENrUcvEs3PD6UzyT0/U95H8YyZtYFg4qQMLT/gYuJLdXEqVo
+         a7GhHSL9aqfIrmOY1bQxtmBgXRcACuEXAHsw1UGeLiA+IXfvr9AqIehnDiUMgvA6Vp03
+         PS9fTqHvEUY8au3h+G0mS+PnksqsKPePg6gLd2qeuw2PmUWsx7BOetIcxTqxWGtGsQzf
+         7A9g==
+X-Forwarded-Encrypted: i=1; AL+hErE8TZRoCNcGemN6T2bEqbHOjv3ZQGjzl7gANL1yJzEvZquAFFR7ReGaDySq6GZDdfuC73/CApPjgt+/354z1cbnhbM=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/Q+Hhzi+gQumHFkHGX90Bl17CP8ZASbgxIt6s2Qd38c70d9xoI
+	b2ppXQ1Hh2MFHEYbXt2qaDgbV290M1gTW0l4v3pkxtxgXnX0Z1GFrfu6gnp8WGn68ugeWt0ymp9
+	PxN7Z1lPD8sx6mhhIVmuHj7EJQt7oYwiS1lf5IxQ=
+X-Gm-Gg: AZFdTZcpWD2jIbh93FQmdLb+RRB8qyQkAj5q0xWmJRNSINf87e2d6TGNquDLixKBWbi
+	V4z4cOkZYYL91Q0qprI7kTZY98Kjx6h+0XIEvyxYKmnuKsGoEYRrGx+Cek87UDLTEeqBKDQpkEa
+	yVAn1PReMAPKqFkQkS0GgCmpj4uqs+02j5QLCzboG0PLczNQhADdtWJI9ttPLefYzQW5lOlOL/9
+	Q5ODGv5VNWQYwwmQKOimpyGOguVjslWWenihKzf4slkZV35rizcz/ikxaPuTak5DaHeG0k5PDTw
+	kY9EgWYM4/sb+Oas8ouruL5Jhul5oX0JByVPAAYsyLOYiBkypGcJ0p1LZhBp283sMhYApHxPyoA
+	3PEN1qIxJxhcjOg+d4e96kiUTy3GJIY+KgbqHN6s=
+X-Received: by 2002:a05:7022:c8d:b0:1b3:b3de:9228 with SMTP id
+ a92af1059eb24-1b5568a4f37mr13449809c88.8.1795518487615; Tue, 24 Nov 2026
+ 03:08:07 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -103,68 +104,78 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20261020104710.2366146-1-dolinux.peng@gmail.com>
+In-Reply-To: <20261020104710.2366146-1-dolinux.peng@gmail.com>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Tue, 24 Nov 2026 19:07:55 +0800
+X-Gm-Features: Aa3M54rJSbFkT150mcAAsBUPDfD2FajCh9qRRPl3qz22VxpNwn4ZoQyq4YKUwi0
+Message-ID: <CAErzpmtcDUu6dtQAvV4fJTuDyr6YqtyrLi6XBjWHLjxS55RTYQ@mail.gmail.com>
+Subject: Re: [PATCH] fgraph: Format error pointers as signed errno values
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, pengdonglin <pengdonglin@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-prepare_uretprobe() reprograms the per-task return-instance timer on every
-successfully installed return probe. If a traced outer function remains
-active while nested traced calls arrive more frequently than the timeout,
-the shared timer keeps moving forward and the outer instance can hold its
-SRCU read-side lease indefinitely. This delays unrelated synchronous uprobe
-unregister operations that wait for the same SRCU grace period.
+Just a quick ping on this patch.
 
-Keep the first pending expiry by arming the per-task timer only when it is
-not pending. prepare_uretprobe() is the only rearming producer for the
-current task's timer. Order return-instance publication before the pending
-check, and order the timer core's detach before the callback reads the
-return-instance list. These full barriers prevent both sides from missing
-an instance at the expiry boundary.
+Thanks,
+Donglin
 
-Fixes: dd1a7567784e ("uprobes: SRCU-protect uretprobe lifetime (with timeout)")
-Signed-off-by: Avi Weiss <thnkslprpt@gmail.com>
----
-v2:
- - use timer_pending() and add_timer() for the per-task single producer
- - explain the actual store/load ordering for the full barriers
-
- kernel/events/uprobes.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index caf444762a27..838e0080ae1b 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2052,6 +2052,13 @@ static void ri_timer(struct timer_list *timer)
- 	 */
- 	raw_write_seqcount_begin(&utask->ri_seqcount);
- 
-+	/*
-+	 * expire_timers() calls detach_timer() before invoking us.
-+	 * Order its pending-state store before loading return_instances.
-+	 * A publisher that saw the timer pending must be visible here.
-+	 */
-+	smp_mb();
-+
- 	for_each_ret_instance_rcu(ri, utask->return_instances)
- 		hprobe_expire(&ri->hprobe, false);
- 
-@@ -2304,7 +2311,16 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
- 	ri->next = utask->return_instances;
- 	rcu_assign_pointer(utask->return_instances, ri);
- 
--	mod_timer(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
-+	/*
-+	 * Order the return-instance store before timer_pending() loads
-+	 * the pending state. Either the callback sees this instance or
-+	 * we rearm the timer.
-+	 */
-+	smp_mb();
-+	if (!timer_pending(&utask->ri_timer)) {
-+		utask->ri_timer.expires = jiffies + RI_TIMER_PERIOD;
-+		add_timer(&utask->ri_timer);
-+	}
- 
- 	return;
- free:
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+On Tue, Oct 20, 2026 at 6:47=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.co=
+m> wrote:
+>
+> From: pengdonglin <pengdonglin@xiaomi.com>
+>
+> The BTF-aware funcgraph-retval formatter currently treats all pointer
+> returns as hexadecimal values. Error pointers returned with ERR_PTR()
+> therefore appear as high unsigned addresses in smart mode, obscuring the
+> underlying errno.
+>
+> Recognize error-pointer values for pointer return types in
+> btf_trim_retval() and select signed decimal formatting.
+>
+> Before:
+>   trim_retval_ptr_error(); /* ret=3D0xffffffffffffffea */
+>
+> After:
+>   trim_retval_ptr_error(); /* ret=3D-22 */
+>
+> Users who need to inspect the raw encoded value can enable
+> funcgraph-retval-hex, which produces:
+>
+>   trim_retval_ptr_error(); /* ret=3D0xffffffffffffffea */
+>
+> Signed-off-by: pengdonglin <pengdonglin@xiaomi.com>
+> ---
+>  kernel/trace/trace_btf.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+> index bcf65fec7bb1..1201105aa48b 100644
+> --- a/kernel/trace/trace_btf.c
+> +++ b/kernel/trace/trace_btf.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/btf.h>
+> +#include <linux/err.h>
+>  #include <linux/kernel.h>
+>  #include <linux/slab.h>
+>  #include <linux/kallsyms.h>
+> @@ -197,6 +198,12 @@ void btf_trim_retval(unsigned long func, unsigned lo=
+ng *retval, bool *print_retv
+>                 if (signed_type && !hex)
+>                         *retval =3D sign_extend64(*retval, msb);
+>                 break;
+> +       case BTF_KIND_PTR:
+> +               if (!hex && IS_ERR_VALUE(*retval))
+> +                       *fmt =3D RETVAL_FMT_DEC;
+> +               else
+> +                       *fmt =3D RETVAL_FMT_HEX;
+> +               break;
+>         default:
+>                 *fmt =3D RETVAL_FMT_HEX;
+>                 break;
+> --
+> 2.34.1
+>
