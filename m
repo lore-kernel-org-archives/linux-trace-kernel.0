@@ -1,56 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795535285;
-	b=pmLxG7MGmxd1O2dAsFMVF2dgyNSdq5nXUwEwbc4f/qO8wSShFxMJpZeexEOzB9C87XgI
-	 39J9V3azov3rX/uEydHMF1dGWpW65/8MbP+0QLE4fZaM0YrM3EXoKSxQTlDFFCsCMO63V
-	 Dbgi1WCHDn82NSnSYDFwjy6WmX0ztAup0fhiLeRMJkukpK+9eDFIz+tOOyLWD06dVlo8s
-	 pjRL0msadnV/oR5T8VxGkjgLBZmOQYiVyZLq6ApP7rhnXxR0Umy4yBNihWLjYJgNbcqiR
-	 ZHe+zCcVwxHjNxP+tl+y6Zx+1eaAOtIWYiRefO6zjEpR9Kjt3mijkBRipHWmRRCkZBA==
+	t=1795535458;
+	b=Tl5RaekS3BOrHQhTFdVUl1oWS63HcV1k2LS1nNSK0gLCYqRigYO6fFilh3E0b7liuiHK
+	 lMKBA9gBna/D5D24HHPO2Ztc5IhY7BWcBDVRNxB0HeJCrdAR+YKdjBconMViAw1o3cDnT
+	 k9iBie2DOhiIBGLCJpM+oGIvwZHM87sd7rYyB3cT1NXP4tYnS2RZm6hn0DOx5+HrCuOUV
+	 GE/cg9dnf9AZ263ZZ/paNuyyFKwLvPl/AwvaQ//DUf5Z5fAM/Fr5E5GYXr5YZFe4tMAU5
+	 cFM8Acf4v5ghv+8RT1c5KmyaLyHfaqjnjqZL8m94B5fYKe0zQLWVogdDQIgSy9NZVyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795535285;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Fc3D6ehbW3wekVZhoEUU8kizD4nD5M+uXhSXwD5k4Hk=;
-	b=kPJtJnnK7TXpbeXTCD4EzNM0cZqMwiagOVUP0bpkRxv/NtSEIq1FXJ+SsF1SOnXJ6AAr
-	 VNUyOVDTU1v+5BZtZQNoD3I4FhcZEK7uOajIOFok1HDbxEidQI7DdhZXb1rCMg53kqXCT
-	 akM1o6I3xRVC/bIjaZsEkdivdiZp9A6jbT/pgzBTcs2pDz1kbv8SEYkhVDcZb+CFhUXXB
-	 UV7bbs83Nfn46WyoNSuk+mLPi07y6hbJb8AOe/fthKfvBtV/2I3O2INyORjogSGPDvAD+
-	 huk1HcDkdhrhTBSMrGPBGDgI4rSTaLP65QPqqnNG1hGXSS1TyjgilKOyPqE5vZK3KTA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795535458;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=8CqJm7M0yv4/2wYmOKC/zfDe65AOuxRbGrFH0p4VsnE=;
+	b=13wscOtAnWV1Z11cHaUjc9yAgkaVkCAkkbfiZmeyNupuYpx/jyxdYbcKdr1Wu5OkbWz+
+	 ILbubrJw06ykA4UP+hRSzfXwQ4IUTpzAMc9JhU4aWBUvQ1f6QGBhfeKhHc5A+3gXQgr47
+	 QBdCVRmmxAO51uyNq1lEGOONOdfK1S0CtIX0mGzwZki/sZ0BHuqgZHth7R4WlcDZ6feIk
+	 O267lF5AtUJXa6m4LfxmJ7kyLPwnYD6CqOHjSrVECTbU6Y9kOWVr5DE7PX7iXhpTEIT9j
+	 jL8XKiIr6rSEAZRPXsy9NEDjMemqnA+d/2Rz9xJ08rzt9HFgk3aXw11U1sdTIxhpxPg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P7Xj1rNT;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=ciedm+7r;
+	arc=none smtp.remote-ip=216.40.44.11
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF216606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BF7606A31E;
+	Tue, 24 Nov 2026 15:50:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E5BF7606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P7Xj1rNT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77FA21F000C0;
-	Tue, 24 Nov 2026 15:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795535285;
-	bh=Fc3D6ehbW3wekVZhoEUU8kizD4nD5M+uXhSXwD5k4Hk=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=P7Xj1rNTrIgJohcwRlw20kVToChuUGFe2qMLDJ6S8fVXr1TWtq6m/h3XOsfyJ6r7Z
-	 J2oP/tQPsuHW3jX9DjmzF5z7ZsIZyhdWEHLRucLIYipIDvHpDnrZeP5mggZ8hyMLHQ
-	 5e4+DP+fyNZU5N7QYto8igOVnpaAxlla+7x2eBwMoSUerLbWXo41oZWNAKl5U5QVvO
-	 h6bo4GOOO59zNk99a754B9xUYJmfWGukQgsRCCM9Dd5dGzYawO6s7vkmQDunEfQkEL
-	 6XwybeBG1s8J8w+2av2J4nlsbL7T5mV8M8fFwlJUDypxjPvafKU1horJYoy1YETX+u
-	 TIL9qtZKXxd1g==
-Message-ID: <sashiko-outbox-231478@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 12/21] ring-buffer: Avoid reader_lock deadlock during
- panic
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vincent Donnefort" <vdonnefort@google.com>, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20261124152845.2233401-13-vdonnefort@google.com>
-References: <20261124152845.2233401-1-vdonnefort@google.com>
- <20261124152845.2233401-13-vdonnefort@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 15:48:05 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=ciedm+7r
+Received: from omf08.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 8A3DB120A81;
+	Tue, 24 Nov 2026 15:50:55 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 0DECA20029;
+	Tue, 24 Nov 2026 15:50:52 +0000 (UTC)
+Date: Tue, 24 Nov 2026 10:50:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sarah Emery <sarah.emery@canonical.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, Paul
+ Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, Hui Wang
+ <hui.wang@canonical.com>
+Subject: Re: [PATCH v2] selftests/ftrace: Account for 8-byte aligned
+ trace_marker_raw events
+Message-ID: <20261124105047.23c39b69@gandalf.local.home>
+In-Reply-To: <20261010234645.173550-1-sarah.emery@canonical.com>
+References: <20261010234645.173550-1-sarah.emery@canonical.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,81 +64,89 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 0DECA20029
+X-Stat-Signature: 6pjgmfyk6na7sr1sycakuaamwqz1gft4
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+5ChBTssD8JBhJ43i6DVvb8POD/Y8N1Yg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=8CqJm7M0yv4/2wYmOKC/zfDe65AOuxRbGrFH0p4VsnE=; b=ciedm+7rPzFY39V1r/cvvdx6q6owk4Jag/6O4PoItZZzFzqanHP688mg9Gb5Oh8DAIl5ElX9hAGtd4xvwVtuDV9KZjYwhlR7kx27PvdvmP+Hn1s0UF0bD6uKGSJDi7KdS/Byl5VkKUQjCCaIb7h9lirr4Xi7kjsIDto1Dd0T7k8=
+X-HE-Tag: 1795535452-708807
+X-HE-Meta: U2FsdGVkX18/ONp8OX8bgHDSKuPF05HxfDxMiVtEkw4nm9gPOmmhU+1iKHvaS7MctvvnPU3uz/UK5nWJqwcJ3J9XTxe4VJFueYHSl+dGf6OYjM0uGJcHMzMXz2fLevfyVLDzY3eUWc/c+tkBDKP7vbOCuuXDk2mPXb+UxfTUtFczlcipjLDwDyGWBDrv24U7KBE1+8VP7N9QqokLOns0rBqh01jYqa4AGlTX94+pdZA1S8G99unk9MdLJ2VNBeCs4CvZ7Jkf4E82ucy/WsGULzSJSVvrhoGycWVMWVOIa1xzklSxdH8U3SUz2pseyNEqiP4FborzvJO0mgIkcbU2kxPZwVTqgGHAXFDTaam9QYsZoEBiBFj96GhscrO30peOKpq/guBOaGT4XFlSjfn4Zg==
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] ring-buffer: deadlock on cpu_buffer->lock in
-  __rb_get_reader_page() on panic
---
+On Sun, 11 Oct 2026 01:46:45 +0200
+Sarah Emery <sarah.emery@canonical.com> wrote:
 
-commit 97ff3a6b2797df28b794089f6117de52df195059
-Author: Vincent Donnefort <vdonnefort@google.com>
+> trace_marker_raw.tc expects the length of each raw event to be rounded
+> up to a multiple of 4 bytes. That is not the case when the ring buffer
+> forces 8-byte alignment of events (CONFIG_HAVE_64BIT_ALIGNED_ACCESS):
+> the id plus the data is rounded up to a multiple of 8 bytes instead, so
+> trace_pipe shows 8 * N + 4 items. This was seen on riscv64.
+> 
+> Make the test accept either rounding.
+> 
+> Fixes: 37f46601383a ("selftests/tracing: Add basic test for trace_marker_raw file")
+> Reported-by: Hui Wang <hui.wang@canonical.com>
+> Closes: https://lore.kernel.org/all/20260607072431.125633-3-hui.wang@canonical.com/
 
-ring-buffer: Avoid reader_lock deadlock during panic
+The Closes tag is for bug reports not previous version of patches.
 
-This commit updates rb_reader_lock() to use raw_spin_trylock() when
-panic_on_this_cpu() is true, avoiding a deadlock if another CPU was
-stopped by an NMI during panic while holding reader_lock.
+Do you have the link to the email that shows riscv64 fails? That would be
+what you would add to the closes line.
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 928fdd4718eac..42507e97291f7 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
+> Signed-off-by: Sarah Emery <sarah.emery@canonical.com>
+> ---
+> Original v1 patch from Hui Wang was posted in June and only patch 1/2
+> was merged (commit c37e0a4b79a6).
+> This is a v2 for commit 2/2, addressing reviews.
+> 
+> Changes since v1:
+>  - Drop kconfig_enabled() and the CONFIG_HAVE_64BIT_ALIGNED_ACCESS
+>    lookup. The review of v1 objected that it depends on the kernel config
+>    being readable from the test environment. The test now accepts the
+>    4 and 8 byte roundings based on what trace_pipe prints.
+>  - The expected length for the 8 byte case is unchanged (8 * N + 4).
+>  - Rebase on 65f26d15f7db ("selftests/ftrace: Fix trace_marker_raw test
+>    on 64K page kernels"), which changed how the test writes its events.
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> index f985ff391463..dd2b94be0947 100644
+> --- a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker_raw.tc
+> @@ -67,7 +67,8 @@ test_multiple_writes() {
+>  	# add a little buffer
+>  	echo stop > trace_marker
+>  
+> -	# Check to make sure the number of entries is the id (rounded up by 4)
+> +	# Check to make sure the number of entries is the id (rounded up by 4,
+> +	# or by 8 on architectures forcing 8 byte alignment of ring buffer events)
+>  	awk '/.*: # [0-9a-f]* / {
+>  			print;
+>  			cnt = -1;
+> @@ -77,9 +78,12 @@ test_multiple_writes() {
+>  					i++;
+>  					cnt = strtonum("0x" $i);
+>  					num = NF - (i + 1);
+> -					# The number of items is always rounded up by 4
+> +					# The number of items is rounded up by 4
+> -					cnt2 = int((cnt + 3) / 4) * 4;
+> +					cnt4 = int((cnt + 3) / 4) * 4;
+> -					if (cnt2 != num) {
+> +					# With forced 8 byte alignment, the id (4 bytes) plus the data
+> +					# is rounded up to a multiple of 8, and the id is not counted
+> +					cnt8 = int((cnt + 3) / 8) * 8 + 4;
 
-[ ... ]
+Instead of doing both checks, it should check 4bytes first and then 8 if
+that fails. Although, it would be better if it knew it was running on an
+architecture that doesn't support 4 byte alignment.
 
-> @@ -6323,7 +6324,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_iter_peek);
-> =20
->  static inline bool rb_reader_lock(struct ring_buffer_per_cpu *cpu_buffer)
->  {
-> -	if (likely(!in_nmi() && !panic_on_this_cpu())) {
-> +	if (likely(!in_nmi() && !panic_on_this_cpu())) {
->  		raw_spin_lock(&cpu_buffer->reader_lock);
->  		return true;
->  	}
+-- Steve
 
-[Severity: Medium]
-Can the panicking CPU still deadlock on cpu_buffer->lock right after
-bypassing cpu_buffer->reader_lock?
 
-When raw_spin_trylock(&cpu_buffer->reader_lock) fails in
-rb_reader_lock(), it returns false and callers such as ring_buffer_peek()
-and ring_buffer_consume() continue without the lock into rb_buffer_peek()
--> rb_get_reader_page() -> __rb_get_reader_page(), which unconditionally
-takes cpu_buffer->lock:
+> +					if (num != cnt4 && num != cnt8) {
+>  						exit 1;
+>  					}
+>  					break;
 
-kernel/trace/ring_buffer.c:__rb_get_reader_page() {
-	...
-	local_irq_save(flags);
-	arch_spin_lock(&cpu_buffer->lock);
-	...
-}
-
-Since cpu_buffer->lock is acquired inside cpu_buffer->reader_lock (for
-example in __rb_get_reader_page() itself), a remote CPU stopped by a
-panic NMI while holding reader_lock can also hold cpu_buffer->lock:
-
-CPU0                              CPU1
-ring_buffer_peek()
-  rb_reader_lock()
-    raw_spin_lock(&reader_lock)
-  rb_buffer_peek()
-    ...
-      __rb_get_reader_page()
-        arch_spin_lock(&lock)
-  <NMI panic stop>
-                                  panic()
-                                    ftrace_dump()
-                                      ...
-                                        ring_buffer_consume()
-                                          rb_reader_lock()
-                                            raw_spin_trylock() -> fails
-                                          rb_buffer_peek()
-                                            ...
-                                              __rb_get_reader_page()
-                                                arch_spin_lock(&lock)
-                                                  <-- spins forever
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124152845.2233=
-401-1-vdonnefort@google.com?part=3D12
