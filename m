@@ -1,54 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795529713;
-	b=kuB+pgyxGP+Re0Js0LjtLLDpm6fjb+dKeGw523rrFMaG216Nc39etmtfHT+mVn6EO9wQ
-	 vWWBD6JY/khAd170s6TcmVluh5xqqukpEsznySBb/Gjep9CqUjj/FVGaNOTeYtO4fJrnR
-	 2RwChrqTevxjMMZrwZgqH/jnqP9ZvEqRhyI0WLGpifv83rxLaJ3Z7KMFS99IrxudxKq/p
-	 PxGuqpMHqIjwusPHa2NgYu9OjJxQJceIN7nQ0ydwv7QbYp43dkQGDJgq+bEljmsl2uImx
-	 yzfwefI+aXfi00I3N3PYfdsX4JmuP+xGuvVbsSj/3yTKjE3ODKQJzoh5rE+9vRFBErg==
+	t=1795529918;
+	b=UQgDE9dFOllyrmbXvVlADPVS/KOqnmkWLw/LW5KDMdBJWwdJ5Gjdlc3bn0ralmCGUkds
+	 QT3XbXwkVrISSG/9VuKeNb2prXhKMME1oQ8IDI7mjkfDzJD/gS37EiAJmlVW6qxLujrEx
+	 +2I+t78WUSeqnJNyeHqugO85w0S1WIu7LAsdniLTYlAV8NkVGoyBkkR+/hjSw907A4iZ1
+	 YB5QT+gJElm9XSHKe1CdTr1tcwKwllqxuBuXckhE7MbCEwjWqNm32A16qAyICaDbGlGKn
+	 Ohk5PZ6Q4RYAoE06175M7HLU9pbD9vhS2FNFqH5BmiNQC8Ej9/SeF5wdgVziWNG4osg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795529713;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=pafrI7EWUMbzwRHzUxm0rlPjN0PkFRkoUHe/ZBWtmUY=;
-	b=T8J3Wga5jW775kHuxX/c0WV/JDNmEA/W5+0dT8lqZywCAyY52SCnbLA0QzYzRy5HcWgI
-	 JQCqbOrlFTAXql6psCqNpWjhEEwJ4Z147npbzO01XGsPevvjsgU2boXZhqSkii8H8H398
-	 rJVq3YhXG0RvMkzrnMeOJhvY+WX5Urt/4y1ffHYNW+1Z2XxNB+vULBXAQ17KdZ/0hESJ/
-	 FyS+Ceut/SWu6ykFPoLxg0OR7BufqMMPtC9zJBWARiqNfdWxm6yVKNeb1kP7e3OY60zUI
-	 dL89UF/2Ux6ZJW3Ei90kRDKwILJcow9MFHVXYRSfLPczBycn9Oc+QpNMdg0sSku/QLw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795529918;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=j4MD4Ah8YVfNeDDVCjOQWnQCh8tQKZ8jPvBbtYFrC2A=;
+	b=zSXppkKxxAtHjavqRJbFjsBlCm6iTsrhdjE7a4jEo2dE2PFovVQccahjDD+9Tm2NhUAN
+	 qJpgmowWuYKMzN8ccDP2azpH+fVs96Wy4ISXLQRBWFZGAKGf1y1lwWOhUHl62HU1jGkoZ
+	 gIpsEVmAnQqlgLVcGttd6LnP5TeYkrwcvOMMKPrrWP1/4C66aAFDMMgUcMATdFCyQ6cOD
+	 cGKRM3d1GReoLmPTkB2G2I7Bz+amn6CUc+xGz2h3di6gmXv8wnM/TlLH3xH/rFA3MurA8
+	 tqidEJHw5ZAK3gXnAbRz1JOkZLHKX51aZwdApZPjblSFGNWFVZeozGB/p8+Yad/9cuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ki36KBgN;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=TiIRqxq2;
+	arc=none smtp.remote-ip=216.40.44.17
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E82606A327;
-	Tue, 24 Nov 2026 14:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE349606A31E;
+	Tue, 24 Nov 2026 14:18:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AE349606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ki36KBgN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527ED1F000C4;
-	Tue, 24 Nov 2026 14:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795529713;
-	bh=pafrI7EWUMbzwRHzUxm0rlPjN0PkFRkoUHe/ZBWtmUY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Ki36KBgNt354Jd8iC91MH11OITEzhVajYjxJkr4I0kqqhq8nyaEB/DFDt232QYYcH
-	 yJrbkxywNxzMpiShTuH14SPxGufca8ye18oXR1H0+ljK52vtavlFENTaWzG7Vs/jOB
-	 n+BPQjbDciMzH4/u9Az5l7cU87zLKfklG8tElu8dJxBzovjXfCfajMd/xWOA9wS/9w
-	 yuJugYLplsZ7afMzdhyyVH6XTkd+lC2KWiJL+U5ISSpD1SvayQJx8BjWDnK5yVjiZT
-	 qUVw/3qv93jFpzDeDOqHGoGKibxYXBUuvOPGTNV4Ggz2U8J8siX4Wt5Q4fdQ0iA2AH
-	 SvzU44bn7FbFw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev, "Linux Trace Kernel" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7] tracing/probes: Zero out faulted dereferenced fields
-Date: Tue, 24 Nov 2026 23:15:10 +0900
-Message-ID: <undine-1795529710371793698-f2bd67810f91497f@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261124090849.7fe8d45f@gandalf.local.home>
-References: <20261123213246.00440bfc@gandalf.local.home> <sashiko-outbox-230424@kernel.org> <20261124090849.7fe8d45f@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=TiIRqxq2
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 56E88A89FB;
+	Tue, 24 Nov 2026 14:18:36 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 6898317;
+	Tue, 24 Nov 2026 14:18:34 +0000 (UTC)
+Date: Tue, 24 Nov 2026 09:18:33 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Remove non-existent
+ CONFIG_RESERVE_MEM from config
+Message-ID: <20261124091833.3c3d705d@gandalf.local.home>
+In-Reply-To: <179547315291.329986.16935545207857031949.stgit@devnote2>
+References: <179547315291.329986.16935545207857031949.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,49 +61,33 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 57yfqmaectf9nthzreb4bwrxzbkhcdgs
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 6898317
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19tPeY4sSVYsy4SHWH1zIl8k4NGYvLi1ew=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=j4MD4Ah8YVfNeDDVCjOQWnQCh8tQKZ8jPvBbtYFrC2A=; b=TiIRqxq2bngPzHkOg1Ol1s5L5NpnWs9XkcIp+QefHs862Xi3cVe2Qk1bMC9uRDxR86tP7PCzyIUnV3/UhORtC0PWlaCtoAnPUXkGxwUAZG+eDn6JTVb7Xqx9/C8/9ujqGr5hLxfJuZ4fFf8GsmK11wo07yiqEBjGZJIddWTCoT0=
+X-HE-Tag: 1795529914-377196
+X-HE-Meta: U2FsdGVkX18DQdcH3lpsWSDC/pyEUlJBHSstbYMpk5TCkIlzLRuTD43FJK8OJraILqs2Bo6LjvRrQ1PY3G9SBLCfQGKmZqCLGYHnO/Gmos8BoXtGce2mnqhlJDkc+/jVDfzCSiFk/zvjh5nhJb7kx9VAsmakBc0V6vL0nr6N6P5113FvSSUy4T0QrCqwAhNlThEfA75ZATnNVWl0QTwO+kQ9FD8mW1ujwuWx8Pb/zGdW80tyjz8+1NIeU/pwuJ62oCx74UH/Scs3ucCgB330pWx+Ty1rdJt6zb9qKFIbJAubkcv9zf+mK4ElDKDGWzfEDd2MaIpD0yPg65jLepMOEKVwVJnc+A70ZlDA9QwVx0AZPiw887sVZXvPDBnIgOVZBYwp71vb40nlq2B6S96xBQ==
 
-On Tue, 24 Nov 2026 09:08:49 -0500, Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Tue, 24 Nov 2026 02:51:12 +0000
-> sashiko-bot@kernel.org wrote:
+On Tue, 24 Nov 2026 07:32:32 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu <mhiramat@kernel.org>
 > 
-> > > @@ -193,27 +256,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
-> > >  		}
-> > >  	}
-> > >  
-> > > +	/* When val is NULL, so should the val + offset */
-> > > +	offset = val ? code->offset : 0;
-> > > +
-> > >  	switch (code->op) {
-> > >  	case FETCH_OP_ST_RAW:
-> > >  		fetch_store_raw(val, code, dest);
-> > >  		break;
-> > >  	case FETCH_OP_ST_MEM:
-> > > -		probe_mem_read(dest, (void *)val + code->offset, code->size);
-> > > +		do_probe_mem_read(dest, (void *)val + offset, code->size);
-> > >  		break;
-> > >  	case FETCH_OP_ST_UMEM:
-> > > -		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
-> > > +		do_probe_mem_read_user(dest, (void *)val + offset, code->size);
-> > >  		break;  
-> > 
-> > [Severity: Medium]
-> > Should do_probe_mem_read() and do_probe_mem_read_user() check for a NULL
-> > src before calling probe_mem_read() and probe_mem_read_user()?
+> CONFIG_RESERVE_MEM does NEVER exist in Kconfig. The reserve_mem= boot
+> parameter and reserve_mem_find_by_name() are built unconditionally in
+> mm/memblock.c, and persistent ring buffer instances via trace_instance=
+> do not require a separate Kconfig option either.
 > 
-> No, but I guess I should add that as we probably shouldn't be dereferencing
-> zero when something fails.
-
-Maybe we should make it rejecting dereference if IS_ERR_OR_NULL(ptr).
-
-Thanks,
-
+> Remove the non-existent CONFIG_RESERVE_MEM=y entry from the ftrace
+> selftest config fragment and the boottime test README.
 > 
-> -- Steve
-> 
->
+> Fixes: e666e6528359 ("selftests/ftrace: Add generic boot tracing test framework")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 
+-- Steve
