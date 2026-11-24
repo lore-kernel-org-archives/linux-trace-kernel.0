@@ -1,111 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.137
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557763;
-	b=HgqTCp66BwfyGh1yVdCMfvjkHhJVjQeWSC3HhhkwIkw2CfQ2BNrlj4ZFFDy15op0+yO6
-	 uvATUniE+f94TTucLCVHmQTpmCUVUAx+3KbrSEdDucwSa7WJHRcpygi0jicrKCJJyJZi0
-	 faRwpVAoO4eocG7XlidHpBDatOtHXQYtHldn8F8VCqaLcUsqMTyyFg8EgENjGuHGvI6/M
-	 glDVtLFO3b3wze4t+PssCnI94nzpqrYsSAG7Z8bkaSTwIMLqcIUtzyZKgzh1j+Jgdjiw6
-	 B5IfH2AYvBsiqpyIqNwvrccS1UCvsaJA+M/DCofbNeEgCW0GCCnJnGSQjZjtXHAfyzg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557763;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=;
-	b=Jxu/AHaSgIWI7IE9qxT+gI0aF4EHYcVdcMU9nnhTMicSuf0TZ6wicvnKfJSM1AZi0KMu
-	 b7ajVC8nxF8RbReFsrPs0JruTqlWrPJsvNDK7NrZvIGmKjiCaln6RsMjBZvACQwjt5y4r
-	 GVhQ/F7MdiTG3N5Mk4OxwAAqPH7Xf6HAsfQbkOy2fzgPbBezCzCFOBn91VDEJoK2bL8G+
-	 /CnbAD0Mt+bY1glAcNeoaShEKjlrOV8vEUqKbNd54kiohl7FFVlw6azO38z+52JxpMdHC
-	 1NCw2eEefzXfh3j2ZxsK9RSrq/2Ojr2RbsoOxcwxtuA+BKRii+8HcoF+PR9uTI3OzSQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arndb.de;
-	spf=pass smtp.mailfrom=arndb.de;
-	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=mfnJGR8Z;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=wbnBnHyI;
-	arc=none smtp.remote-ip=103.168.172.137
-Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.51
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795557905;
+	b=PbFr7jmCwY1CbHaf/G3fYOwvEX2ULmC5yrQCGIAOBhQtXEHGvKdiof7WyQ53umqdzQDK
+	 zeB76FXQyr6YbbXBCJoUChpeu0StZlKYJL3iDI5DqhP0fXqsDpYNX3QD3C78/7Dr0zDop
+	 SL7sftH0HEWcjGpvwh8iXuWlglDV0ZIGC10k/k5D7OxsAB6BNsimGPL/MJPN/gn8CCo6R
+	 ugi7qk8fX0gj6263JyCoJmSA7CYZ7oKuu9jStMPd8q+wHNIYbWaqbejEtADSZJlOxN/fl
+	 O/r728q2O0C4xBmWjf5TUr4oTmSmAPjfslicYcUBAn0pRT0KTWXkzVoFXDXrRqKODDg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557905;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=X7EgV7M1nlTNeVW/LvjD4DDHSsWIZ29WUt41R4QNBZE=;
+	b=qALrDO/c/vEb5cmebzUJZdoGCNPJLks3J+MIj8Lo1EoSRBH/OrPdl4wEYslCpfRObJhd
+	 F/mBGtgWnombTu8AJwWlPua1Qx9QIOjS0VUcUv90/izwLhe6Tyn8SW8MQM1gnQIVBJDcd
+	 3NFT7rSKvvPBs8PkqktVnijvsuA34NJRN+8l2ZKILh04UVn8+aY4bSUaXtwF0ogBmXxDY
+	 S89cYhi7MrmcNY45Fd87HRQpipXEFM1HtAJAHhZF/4XHdFMy8cXnSwr9mmHjo/m7/cgTc
+	 HEml9Uz4rn71cSkhy/VD9XZXAhKXYXjZNLVsQS8Jz0FoFAME19w0jjok4CX+4h4DEtA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ElIVNTJ3;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F391606A331
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:02:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3F391606A331
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABBB606A321
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:05:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AABBB606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=mfnJGR8Z;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=wbnBnHyI
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailflow.phl.internal (Postfix) with ESMTP id 387041380339
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 17:02:42 -0500 (EST)
-Received: from ams-imap-03 ([10.64.2.23])
-  by ams-compute-02.internal (MEProxy); Tue, 24 Nov 2026 17:02:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1795557742;
-	 x=1795564942; bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=; b=
-	mfnJGR8ZvkU0LMsvLhbkB2aWWyYvVftk34Igv9f+VSyWFZL75F98YRJInsubsg5N
-	ErWkbpwwYR8PYwwytDXrBO4Zv5tmqL7Kcd99KBzFrH3plirHNa3BF91ghYHg1G2X
-	OmIzUeu9alCUMqYdLPe3t6xGqQDeBJFNzjBkCZdXLIRdfSfdGAENAvBoCa2Hd/va
-	6GViewBlkNAzICD3R2R+FvuW+BnNIr3jT+Fl9ot6DTCUyPwgXgiOAE7gr65RUlWF
-	zTV1eaMMqoKhfcdTawq7FOwHVOJ7hDxNDHC9/0HIOAI9uDObbhkabN2JM4I0uCwd
-	iklYqFK06JlPTifavsWnwQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795557742; x=
-	1795564942; bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=; b=w
-	bnBnHyIX27rhdSGfAc5H4g5+m7drm11Zac2njlCmzN4mbo2YQ6EhH6D3pD/8PeWY
-	8GHoNQCNetXraVudoAhL0qYFTYu9qtXjJhzOx0LKjAdkofjkzwVdOhVC1J2hwfwt
-	VGDOiyN7FwH93as5zO5o+8QJnGBEUiUslUd724GRZXy/EKfZPjLZu/8oWwovMRB0
-	gqyKbJtAxmz5Ye7KI5rrGabmlFjzzdpLjwI7iCre5OXCavuM7GUe/YusH3YuhrsM
-	tEnsRe06oXURbQM9aMsO08wVojk5ODAx8uWqDju1VwkBgXeAY+UL/ydC1j0YZtCu
-	KfHp2BvZEv/a3sOge7mDw==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=arndb.de a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795557742; d=arndb.de;
-	mf=PGFybmRAYXJuZGIuZGU+;
-	rt=PGxpbnV4LXRyYWNlLWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+;
-	s=fm2:rsa-sha256:RbDik862dpjbdqUyJctfrqW0qlKBGHKy7Qcdkr0Z0yeOHle
-	BGWmFM6ogfFmg43R7eq51gM7mUrdwUsJzjVA+xEon8DpPdFA/BBEE8KPmnJhOWZL
-	IyF7+dpxRqB9CRSjAkq3yMqLv5083pMsbbPIhl4n0K6B7+vgyQyIBDw2yMeLodnb
-	hgZIo1RveXOrjxJtIo2D8UzkSi/0vbTHHXNQSdSL7GKsXQKZNGM/q6ALT1jd5+Bt
-	Td57NcuNDXZ5niP2bmYLG936CjA8vMnNgBUZFMZRxt9wwsNv4pgxDYNXb1ISWnju
-	DQ5+3C97SsadeWTHQaFu6pJQ0X3dSRIp7vZRfFQ==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:Y1L9ZRjDVf0ae1O5OLJmIEMJoJINj3g0qWcfqpumaM8=:uV7HNzlAfzr4LTvQgcdWBWGhD8P70PVpTMD/LBLagBw=;
-X-ME-Sender: <xms:ZAkGa2S1qU5q8Tt4P59rLUZLMDcdcz9MhGSLBcV29aA_t5jwHSVpFQ>
-    <xme:ZAkGa2nn-MLHHH5bsIrtUn53Bm6dbM7HMZKuIRmjk9pvX9DAb9jnrJeBrNTX2ODRl
-    wAAtRHYTqQ6S0lkRVQTlORopD_RQ-qt5BuiOtcQDZFWBrRtGC248laJ>
-X-ME-Proxy-Cause: dmFkZTFRHh3IY7AQpE2sOB2PLJi3AuimKZDL9H1tXPiO9loafbcw/DGlO/Xoejw+8P82CU
-    LZtGPx5Dw2fehVmppW39nh7aiKQqHD4K4dz4hhwMbfJ/rvud1uNRBqKqwpOM3ItmC7aGg2
-    A+GKbJZ0q/HAUhCKq8KTriq2kSTLiR4BY395K6QXzmGZqOgGBQCeI+/qZ5DjTPzrKb+KCk
-    fWxNoXXTvO6/Q9umpMuH+R2tl9qmfexdyWMyjNVwhUtZI0siPxAVzMuaiN62cXkT1LxPsl
-    ivdDM2jUMgnHoUAdJkJTv2Cd0wNryoNWCgNqfkM9sF+PCCJ+n2SVasPPSYcFY35/BtjUi/
-    TlJok52x6K/qFFOH5y2f4B3BhSmPbdoGhxzStq5W26pndjLaCuALLGrZUSxDowPZL8Uxm9
-    tq8OcCqqLGoNK4Gz1S9oU6o18yltNNQA8ylIOP1GM8y9zFzH4ACeaKMpbIKk59CrU6mG5p
-    r7Vqugsc+zPL78L05eqJ+Dv566UPYEBjuKKkv+Kuz7Ek+Vcjrk5P3BBEWeI5xh7lI87c+k
-    EGduRPaTIxc7VwNPWY7uJsLAvKDYRTBcjLlbz5kr2cdl14XqqH/o219lKVdPi2m4ANFlMt
-    HKT2MGXWfnbkl4Zcq1AAqLM5PN7cFVRnArfJggG7bcTT8iycB6wsrFxURFsA
-X-ME-Proxy: <xmx:aQkGa5ADK0kQBKydW-jsYQL2owm6ypApuRcgesYyb9gfGqwkudPKNw>
-    <xmx:aQkGawu6ACeRQkfy1MUQnkSHymWoFOBsVAuxGxAvsiDY-MRkdjhslw>
-    <xmx:aQkGa41LhutcH3hl071xdqmfJ1-SyaJRtJWCEsdFZTLgpNQKlsyu9g>
-    <xmx:aQkGa5jbcusQENaD1VV6mJUEOIOUF73AiAns-Bfib3Jpb0Xg437OxQ>
-    <xmx:bgkGa4awIhQYBbKzBAjp50sAI32cG5KibTRETI3OZH4oHKFRGLB2KqwC>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id EEB3B32A009C; Tue, 24 Nov 2026 17:02:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ElIVNTJ3
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4bba5e17728so301355e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 14:05:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795557903; cv=none;
+        d=google.com; s=arc-20260327;
+        b=VIL1fnDF2xr6Mx+w45dhuTMLyxS7bdd4xKbfKbjc5bZZ9vY1l7Xrh7DpCr5Jxmx3BB
+         vy5S3gnlP1QFAXQMt/HQkvJmdppqxZ1uVhjuECtLw55P4TdNkQfzBS+iA/OGFTXWtpT8
+         Cdvn8kbF2EOf8kiokVIbYnZbwqovbYcSlTM5nPoaRDhZ4NU4td0SD9W2oU7gvU2IkETd
+         qLhdvPUoTdWZAcf5PyQxVOjxNteT1iENDFxqHbl1WvWypC42MJ/jEAFi58mWIhyCzLr1
+         gY9Wl+DIdc+N1bRAU461cBgGud7n6U4I4ToZd+d0R/OIJyZZKq4XHUBbep34XhuhVDDg
+         EjZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=X7EgV7M1nlTNeVW/LvjD4DDHSsWIZ29WUt41R4QNBZE=;
+        fh=g6swe5bnMGjwVPnzsrMBA7sRf7FfMr2R568SjjghneQ=;
+        b=fE8Rrs9MeaMo7EdySanUKcgexhe2n1ozb17U4vWIjVlJ7kBctiNPDl2c6631euOacI
+         e9MVgoZFkrzjYn9q29wIFG3KMfzD8bnucq2RYF2UaMvmc1Ua49VEL/uLE7PQkHGgvzwC
+         JEGKTjwKbhmSsH49OqrHeVSMCOT0z7GLk4Zv6i1z2wjnYDc0rbAsAvDOeHyp0TbpgGdA
+         NZH/Md3NNVNjulQNx5hpFOeN1J9GIYHpZKSgWFz8Y3uv/n1tIMPxOv4SnzUPivBQjBMk
+         jRfI6sGIQPxaKF7STuBctdoGlbMNbR0Up3iZUPoitu4MPKpfovvIRjSWTZvjncxxiYOe
+         lFmw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795557903; x=1796162703; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=X7EgV7M1nlTNeVW/LvjD4DDHSsWIZ29WUt41R4QNBZE=;
+        b=ElIVNTJ3Z0lJHLzxGGNRGUDG3fMREP3weOXpxP7riSQbYRymGdX8MF4U0ZyTwsJ78X
+         voW4RsziPy/qG5ChssYqqdUvUIFjMuTt2/mbRQCKF2pkvn6ccVZqvJmJPEPkxqy7LznS
+         wVPawdroBX3v5Vyg+VxN7H63rX5JTYo7PAFyBYfq7J0CPQeU4R4wgmDrsLFjdbbUGipL
+         ORuvjyxKulExAZxWywOfRgkehc5Lnm4sJc16WpGnw71G68xAIORr20LKlAL4P2RciqxI
+         Frnd0lnV8ayLYyuzQlKDbclqv5BWyvrwkCV8AaQbYmSM2k7ILQzqR4k5pguT93ZQONTd
+         dYfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795557903; x=1796162703;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=X7EgV7M1nlTNeVW/LvjD4DDHSsWIZ29WUt41R4QNBZE=;
+        b=K/dm9xvhWJLGFsMHDrV7l1H+1pp/jgLTRKhtXb8jeo+IFBIG3IlrwIScRxrUFgU5qZ
+         u+YpWejDdunsWRduOiWdw9o2WgtMPYr01GKT06OO8NXiUZOJcQpDSxdfZCCKe0W3uFSe
+         ZT0pTScTp5cJVfsx7nMSqf6I2cM7ueGerqVS3MCblL3HdVcEYd222rlvfbg7tihpWgWC
+         qeWbwRJNJN6foveAopfMuFky3m7AnA6PExQe6QOWJe6QwU7MSPPudSdaqzXUYCH0n/eC
+         FQvoU2NiGYcvD7DB+yKysCk0B6c/aZqBRG3gU95/0SGDHBdbR6cAxf+DchqLlyRJ2fRX
+         qBdg==
+X-Forwarded-Encrypted: i=1; AL+hErE3DRIcDFE6uMFY+ksmOGvcNh7blf+qF3HQGhMFjGgWwbOs6CrtNCsX3gTRovpOAhLTA5cwKc2WmkNHR4sv3YurJaE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/8az8eQqyiY04V5aySZLGuDNEd1vWd7l1huthB+8leiNhcpBX1
+	ftP3UyR7F8dAcirwsIoykSEfc0UiGkdcLl9vuNTvTLsAFOfSE9/0euTXiWxmNu7Ifz7VsTCrge0
+	4JgC+yVlFwuX0lNsG7AXCGA8IvtqI0Po=
+X-Gm-Gg: AZFdTZcnmg6OV/8pUL5So9HqCokgZbw/logctlIKaQZQnpyDXaQG63HnMCTL4YCYYiT
+	eG8acRzM8CjaGTTtH1sPX6PBEYvBYIC00huSemYmTqiGrC8wKUXcjx9qdinvTZdyuhJeTB6/ISn
+	Jjzz615x9c18OiapmNRaNQsgMIX5hylkxOJ6ZMhGnMvcCkSG5K8enFDj2F6lRJexhosrSafqOvL
+	FDMhDYBH4tDVkoSN3OvgWraqLcnlWekFEpKhHinuqCcJWJID7Z2Q4YggVZ02BoP4u5nP4Sf+6vh
+	Kf3ORw/0rz+nrtCPIpiUic/8uK035a6QFUVbGP8/PkfgGQK5syDdBjisTn0xtJyH6M+vj5WiWGC
+	Ltbgf4UoyGENDv1t0/iUt4rzC/uXwuCUIjI2dKN0qRAYRYrPGZYO5itst1/4E4u0EyXyZ157imf
+	XA1lZUMu3p3ilIDj4P7Q==
+X-Received: by 2002:a05:600c:4ec9:b0:4bb:6a5a:782d with SMTP id
+ 5b1f17b1804b1-4bb88925fcdmr332120265e9.17.1795557902961; Tue, 24 Nov 2026
+ 14:05:02 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -115,109 +105,215 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AUJ1OXWu3nCJ
-Date: Tue, 24 Nov 2026 23:01:51 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "James Houghton" <jthoughton@google.com>
-Cc: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Pavel Begunkov" <asml.silence@gmail.com>,
- "Alexei Starovoitov" <ast@kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
- bpf@vger.kernel.org, "Daniel Borkmann" <daniel@iogearbox.net>,
- "David Hildenbrand (Red Hat)" <david@kernel.org>,
- "David Sterba" <dsterba@suse.com>, io-uring@vger.kernel.org,
- "Jim Mattson" <jmattson@google.com>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>, "Kees Cook" <kees@kernel.org>,
- kvm@vger.kernel.org, "Liam R. Howlett" <liam@infradead.org>,
- linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, "Lorenzo Stoakes" <ljs@kernel.org>,
- "Chris Mason" <mason@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Michal Hocko" <mhocko@suse.com>,
- "Ingo Molnar" <mingo@redhat.com>, "Martin K. Petersen" <mkp@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>, "Paolo Bonzini" <pbonzini@redhat.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Mike Rapoport" <rppt@kernel.org>,
- "Sean Christopherson" <seanjc@google.com>,
- "Suren Baghdasaryan" <surenb@google.com>,
- "Thomas Gleixner" <tglx@kernel.org>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>
-Message-Id: <1a99e5fc-129e-41e3-8420-101bcf04b366@app.fastmail.com>
-In-Reply-To: 
- <CADrL8HX5vb1PGDpWzp-eR0rNfsMCVUhFa9vp_WZZx2eJZ+dfXQ@mail.gmail.com>
-References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
- <20261027231728.1466446-1-jthoughton@google.com>
- <32fad21b-5bad-4640-97df-ef0f638cd9e9@app.fastmail.com>
- <CADrL8HX5vb1PGDpWzp-eR0rNfsMCVUhFa9vp_WZZx2eJZ+dfXQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
- current->mm is NULL
-Content-Type: text/plain; charset=utf-8
+References: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com> <20261117-bpf-preempt-v2-r2-v3-3-586376ec3672@sentinelone.com>
+In-Reply-To: <20261117-bpf-preempt-v2-r2-v3-3-586376ec3672@sentinelone.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 24 Nov 2026 14:04:50 -0800
+X-Gm-Features: Aa3M54rWyEOiWn9N3xPgi9IskIYemCYvuFKzmc7MjXfVq_1zxdSl20HVcikpyTo
+Message-ID: <CAEf4Bzb6sq6g7jq715fqAAaL=PNSvuVWn6u3o+76w52gsT+bJQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 3/4] bpf: Check program recursion per task via bpf_ctx
+To: mikeba@sentinelone.com
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Emil Tsalapatis <emil@etsalapatis.com>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	JP Kobryn <jp.kobryn@linux.dev>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 24, 2026, at 22:10, James Houghton wrote:
-> On Wed, Oct 28, 2026 at 7:14=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->> On Wed, Oct 28, 2026, at 00:17, James Houghton wrote:
-
-> So now in v2, the _nofault() helpers themselves do not check current->=
-mm.
+On Tue, Nov 17, 2026 at 3:29=E2=80=AFAM Mike Bazov via B4 Relay
+<devnull+mikeba.sentinelone.com@kernel.org> wrote:
 >
-> I've uploaded a draft version of v2 here, in case you want to take a l=
-ook:
->   https://github.com/48ca/linux uaccess-v2-wip
-
-I read through this now and it all looks good to me so far.
-
->> Since in principle every user access should go through both
->> access_ok/mask_user_address and current->mm check at some point,
->> so combining the two as much as possible should help long-term
->> maintainability.
+> From: Mike Bazov <mikeba@sentinelone.com>
 >
-> You're right, and v2 has been restructured like this.
+> Trampoline programs (fentry, fexit, fsession, fmod_ret and their
+> sleepable variants), raw tracepoint programs (raw_tp, raw_tp.s, tp_btf)
+> and tracepoint programs on syscall tracepoints run preemptibly, but
+> their recursion check is a per-CPU, per-program counter. When a task is
+> preempted inside a program, the counter stays raised, and every other
+> task that enters the program on that CPU is dropped and counted as a
+> recursion miss, although nothing recursed. A program can't avoid that:
+> the counter is checked before its first insn.
 >
-> - The check is in access_ok() itself: the generic version, plus the
-> arm64 and riscv versions. __access_ok() remains a plain range check.
-> - The callers of mask_user_address()/masked_user_*_access_begin()
-> check current->mm explicitly. There are about a dozen such callers.
-> - The unchecked accessors, __copy_{from,to}_user()
-> and__copy_{from,to}_user_inatomic() (and arm64's
-> copy_from_user_flushcache(), which also relies on an earlier
-> access_ok()), keep an explicit check for now. Once their users are
-> converted to the checked versions, those checks can be dropped.
-
-Ok, sounds all good. If we get more than handful of mask_user_address()
-and masked_user_*_access_begin(), we can always revisit that interface
-to make sure the check can't be skipped, but for now this seems
-like a good tradeoff.
-
-> Compared to v1, this also covers get_user()/put_user()/clear_user() on
-> arm64, powerpc, riscv and the asm-generic architectures, and arch code
-> like signal frame setup that uses access_ok() followed by __put_user()
-> or unsafe_*(). user_access_begin() no longer needs its own check.
+> Since commit 7dadeaa6e851 ("sched: Further restrict the preemption
+> modes") x86 and arm64 have only lazy and full preemption, so this
+> happens in normal operation. A security agent that pairs fentry and
+> fexit programs on inet_sendmsg() and inet_recvmsg() loses one half of a
+> pair with every drop. With 200,000 HTTP requests and four CPU-bound
+> tasks on a 4-CPU VM, 9,254 of 7,966,760 runs of these programs were
+> dropped on bpf-next, and none of 7,975,426 with this series.
 >
-> What's still not covered: x86's get_user()/put_user(), which do their
-> own range check in asm, a few architecture-specific paths that call
-> __access_ok() directly (e.g. on alpha and sparc32), and arch code that
-> calls __get_user()/__put_user() without access_ok(), mostly trap
-> handlers for user-mode faults. Probably best tackled later.
-
-ok
-
->> There are probably few enough of these that we could address them
->> by either adding current->mm checks or converting them to use
->> the full versions instead where that is an obvious change like
->> that usb gadget driver.
+> Check recursion per task instead. The runners already link a
+> stack-allocated bpf_run_ctx into current->bpf_ctx. Move saved_run_ctx
+> into struct bpf_run_ctx, so every frame links to the outer one, and
+> record in each frame the program it runs. A program is recursing if a
+> frame in the current task's chain already runs it. Interrupts and NMIs
+> run on top of the interrupted task's chain, so recursion through them
+> is still caught.
 >
-> Sounds good. I'll send a separate series converting the obvious ones,
-> starting with the usb gadget driver. I think that will be useful.
-> Let's see how far I can get; hopefully I can drop
-> __copy_{from,to}_user() completely.
+> bpf_prog_enter_run_ctx() and bpf_prog_exit_run_ctx() do the check for
+> all runners. The syscall tracepoint runner linked one frame around its
+> program array and now links one per program. bpf_set_run_ctx() accepts
+> a NULL ctx, which io_uring passes to hide the BPF context; the frames
+> below are not walked while it is hidden.
+>
+> Programs marked by the previous patch keep the per-CPU counter and
+> behave exactly as before, so no counted drop is traded for corrupted
+> per-CPU data or a renewed may_goto budget. An extension (freplace) runs
+> under the check of its target, so a marked one can't be attached to a
+> target that is checked per task.
+>
+> Trade-offs:
+>
+> - An unmarked program that keeps per-CPU slots of its own, see the
+>   previous patch, can have two runs use one slot, and nothing counts
+>   that.
+> - Marked programs lose runs to preemption as before.
+> - bench trig-rawtp is about 2% slower: 42.6 and 42.1 M/s on bpf-next,
+>   41.3 and 41.5 M/s with the series. trig-fentry and trig-fexit are
+>   not slower.
+> - Attaching a marked extension to an unmarked raw_tp, tp_btf or
+>   tracepoint program now fails with -EINVAL.
+>
+> Signed-off-by: Mike Bazov <mikeba@sentinelone.com>
+> ---
+>  include/linux/bpf.h          | 95 ++++++++++++++++++++++++++++++++++++++=
+------
+>  include/linux/bpf_verifier.h | 19 +++++++++
+>  kernel/bpf/syscall.c         | 10 +++++
+>  kernel/bpf/trampoline.c      | 26 +++++-------
+>  kernel/trace/bpf_trace.c     | 11 ++---
+>  net/bpf/test_run.c           |  9 +----
+>  net/ipv4/bpf_tcp_ops.c       |  6 +--
+>  7 files changed, 129 insertions(+), 47 deletions(-)
+>
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 7873f0ef2817..97cbcd4b0d67 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -2783,7 +2783,16 @@ int bpf_prog_array_copy(struct bpf_prog_array *old=
+_array,
+>                         struct bpf_prog_array **new_array);
+>  struct bpf_prog *bpf_prog_dummy(void);
+>
+> -struct bpf_run_ctx {};
+> +/*
+> + * A frame in the chain of the programs that a task is running, from
+> + * current->bpf_ctx to the outermost one.
+> + */
+> +struct bpf_run_ctx {
+> +       /* The next outer frame, NULL in the outermost one */
+> +       struct bpf_run_ctx *saved_run_ctx;
+> +       /* Set while a program whose recursion is checked per task runs i=
+n the frame */
+> +       const struct bpf_prog *prog;
+> +};
+>
+>  struct bpf_cg_run_ctx {
+>         struct bpf_run_ctx run_ctx;
+> @@ -2801,7 +2810,6 @@ struct bpf_tramp_run_ctx {
+>         struct bpf_run_ctx run_ctx;
+>         u64 bpf_cookie;
+>         int retval;
+> -       struct bpf_run_ctx *saved_run_ctx;
+>  };
+>
+>  static inline struct bpf_run_ctx *bpf_set_run_ctx(struct bpf_run_ctx *ne=
+w_ctx)
+> @@ -2809,8 +2817,17 @@ static inline struct bpf_run_ctx *bpf_set_run_ctx(=
+struct bpf_run_ctx *new_ctx)
+>         struct bpf_run_ctx *old_ctx =3D NULL;
+>
+>  #ifdef CONFIG_BPF_SYSCALL
+> -       old_ctx =3D current->bpf_ctx;
+> -       current->bpf_ctx =3D new_ctx;
+> +       old_ctx =3D READ_ONCE(current->bpf_ctx);
+> +       if (new_ctx) {
+> +               new_ctx->saved_run_ctx =3D old_ctx;
+> +               new_ctx->prog =3D NULL;
+> +       }
 
-Ok, perfect!
+[...]
 
-      Arnd
+>  /* BPF program asks to bypass CAP_NET_BIND_SERVICE in bind. */
+> @@ -3492,7 +3565,6 @@ bpf_prog_run_array_sleepable(const struct bpf_prog_=
+array *array,
+>  {
+>         const struct bpf_prog_array_item *item;
+>         struct bpf_prog *prog;
+> -       struct bpf_run_ctx *old_run_ctx;
+>         struct bpf_trace_run_ctx run_ctx;
+>         u32 ret =3D 1;
+>
+> @@ -3503,7 +3575,6 @@ bpf_prog_run_array_sleepable(const struct bpf_prog_=
+array *array,
+>
+>         run_ctx.is_uprobe =3D false;
+>
+> -       old_run_ctx =3D bpf_set_run_ctx(&run_ctx.run_ctx);
+>         item =3D &array->items[0];
+>         while ((prog =3D READ_ONCE(item->prog))) {
+>                 /* Skip dummy_bpf_prog placeholder (len =3D=3D 0) */
+> @@ -3512,15 +3583,14 @@ bpf_prog_run_array_sleepable(const struct bpf_pro=
+g_array *array,
+>                         continue;
+>                 }
+>
+> -               if (unlikely(!bpf_prog_get_recursion_context(prog))) {
+> +               run_ctx.bpf_cookie =3D item->bpf_cookie;
+> +               if (unlikely(!bpf_prog_enter_run_ctx(prog, &run_ctx.run_c=
+tx))) {
+
+it feels like bpf_prog_enter_run_ctx() is doing too much and the logic
+becomes convoluted... we had old_run_ctx above after setting current
+run_ctx, why can't we pass that *old* run_ctx and our prog pointer
+into bpf_prog_enter_run_ctx() to check that our prog is not already
+running (and do that recursion context accounting). And before that
+you already optimistically set run_ctx.bpf_cookie, you can just as
+much set program pointer.
+
+So in short, bpf_set_run_ctx() sets up chain of run_ctx, and then in
+the inner loop we set up bpf_cookie + current prog (sort of
+speculatively), and then bpf_prog_enter_run_cxt() checks if we can run
+prog or not.
+
+Am I missing some complications that would prevent that separation of conce=
+rns?
+
+>                         bpf_prog_inc_misses_counter(prog);
+> -                       bpf_prog_put_recursion_context(prog);
+> +                       bpf_prog_exit_run_ctx(prog, &run_ctx.run_ctx);
+>                         item++;
+>                         continue;
+>                 }
+>
+> -               run_ctx.bpf_cookie =3D item->bpf_cookie;
+> -
+>                 if (!prog->sleepable) {
+>                         guard(rcu)();
+>                         ret &=3D run_prog(prog, ctx);
+> @@ -3528,10 +3598,9 @@ bpf_prog_run_array_sleepable(const struct bpf_prog=
+_array *array,
+>                         ret &=3D run_prog(prog, ctx);
+>                 }
+>
+> -               bpf_prog_put_recursion_context(prog);
+> +               bpf_prog_exit_run_ctx(prog, &run_ctx.run_ctx);
+>                 item++;
+>         }
+> -       bpf_reset_run_ctx(old_run_ctx);
+
+same here, what's wrong with doing reset just once, all we really need
+is to update bpf_cookie and prog pointer inside that while() loop over
+bpf_prog_array items, right? the chaining itself doesn't really change
+and shouldn't be done for each item separately.
+
+>         migrate_enable();
+>         return ret;
+
+[...]
