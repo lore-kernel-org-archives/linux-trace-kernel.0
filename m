@@ -1,56 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795529345;
-	b=zj+9qwyYOvPsHNzejK6zwIwfGqHFwR8Ek5IslIeH6ZXJ7ArysVR+PcJdW+kJHEVVdjcT
-	 g0j0f4z7TtMEnm1SwD8OkXjahJ8Yw3HYDvvJxh3zm4vLWCKHn2JHR6PA5RUlL0JWUP5a/
-	 rvNcSVc0pRkWvocMK0L1wbguJqoRML8reaHCEOEh2JtTB7je9a8BxCrK4koEYlv1U79X7
-	 SD1gN+pwxvciNB5yGd4UtvMEv/ugTDWh2AgkWjcs5gmw3ErEaODZplAaatICSwBIymg4Q
-	 EolBQEyJvD1RsGfN2pmIwckHuaXJ8XEsgZyyG5oAwvdlCnsrTt4hu48V7gFucGuxpTQ==
+	t=1795529713;
+	b=kuB+pgyxGP+Re0Js0LjtLLDpm6fjb+dKeGw523rrFMaG216Nc39etmtfHT+mVn6EO9wQ
+	 vWWBD6JY/khAd170s6TcmVluh5xqqukpEsznySBb/Gjep9CqUjj/FVGaNOTeYtO4fJrnR
+	 2RwChrqTevxjMMZrwZgqH/jnqP9ZvEqRhyI0WLGpifv83rxLaJ3Z7KMFS99IrxudxKq/p
+	 PxGuqpMHqIjwusPHa2NgYu9OjJxQJceIN7nQ0ydwv7QbYp43dkQGDJgq+bEljmsl2uImx
+	 yzfwefI+aXfi00I3N3PYfdsX4JmuP+xGuvVbsSj/3yTKjE3ODKQJzoh5rE+9vRFBErg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795529345;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
-	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=aVPFdn6DuZS/F9pbwCoFPUfuEo0LzApE6aMqeQkxu3Y=;
-	b=XngaYXwzGgX4pVGGS4+qt5uLOzekIqZunfgigg5tkxn4omyY3fy6OJdc9fbYRBlIGMS5
-	 DlVDq1r9dTZIkNsQ2aD59LkXee1Ywt9xXCWI9I46wrEG0mW7YF8DiMuFqlHzXcqZYSXst
-	 mFkbP+J0K1PHvbTukwBGIw+npAjRPBfa+Jcr99z4j6f1wZWzL0NaWOhtdXP4lDPMGWGKr
-	 kJarWr5R1xjtoS7D9+pgADHFvndkn1ernaP8O3/X7vJ14DSfjj1g12WurQQwyQ+oY0OTM
-	 5K/qXsArOnO/hFnUv+kuBXvwgPIF6ljTjL+3uPNRI6/ghzJh+g/+3AOLzNcQ2xfPr6g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795529713;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=pafrI7EWUMbzwRHzUxm0rlPjN0PkFRkoUHe/ZBWtmUY=;
+	b=T8J3Wga5jW775kHuxX/c0WV/JDNmEA/W5+0dT8lqZywCAyY52SCnbLA0QzYzRy5HcWgI
+	 JQCqbOrlFTAXql6psCqNpWjhEEwJ4Z147npbzO01XGsPevvjsgU2boXZhqSkii8H8H398
+	 rJVq3YhXG0RvMkzrnMeOJhvY+WX5Urt/4y1ffHYNW+1Z2XxNB+vULBXAQ17KdZ/0hESJ/
+	 FyS+Ceut/SWu6ykFPoLxg0OR7BufqMMPtC9zJBWARiqNfdWxm6yVKNeb1kP7e3OY60zUI
+	 dL89UF/2Ux6ZJW3Ei90kRDKwILJcow9MFHVXYRSfLPczBycn9Oc+QpNMdg0sSku/QLw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=kwOn3mgB;
-	arc=none smtp.remote-ip=216.40.44.16
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ki36KBgN;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ABF606A33B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 14:09:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 08ABF606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E82606A327;
+	Tue, 24 Nov 2026 14:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=kwOn3mgB
-Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 501C6C0BB3;
-	Tue, 24 Nov 2026 14:08:57 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id BE26830;
-	Tue, 24 Nov 2026 14:08:55 +0000 (UTC)
-Date: Tue, 24 Nov 2026 09:08:49 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, "Linux Trace Kernel"
- <linux-trace-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ki36KBgN
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527ED1F000C4;
+	Tue, 24 Nov 2026 14:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795529713;
+	bh=pafrI7EWUMbzwRHzUxm0rlPjN0PkFRkoUHe/ZBWtmUY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Ki36KBgNt354Jd8iC91MH11OITEzhVajYjxJkr4I0kqqhq8nyaEB/DFDt232QYYcH
+	 yJrbkxywNxzMpiShTuH14SPxGufca8ye18oXR1H0+ljK52vtavlFENTaWzG7Vs/jOB
+	 n+BPQjbDciMzH4/u9Az5l7cU87zLKfklG8tElu8dJxBzovjXfCfajMd/xWOA9wS/9w
+	 yuJugYLplsZ7afMzdhyyVH6XTkd+lC2KWiJL+U5ISSpD1SvayQJx8BjWDnK5yVjiZT
+	 qUVw/3qv93jFpzDeDOqHGoGKibxYXBUuvOPGTNV4Ggz2U8J8siX4Wt5Q4fdQ0iA2AH
+	 SvzU44bn7FbFw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev, "Linux Trace Kernel" <linux-trace-kernel@vger.kernel.org>
 Subject: Re: [PATCH v7] tracing/probes: Zero out faulted dereferenced fields
-Message-ID: <20261124090849.7fe8d45f@gandalf.local.home>
-In-Reply-To: <sashiko-outbox-230424@kernel.org>
-References: <20261123213246.00440bfc@gandalf.local.home>
-	<sashiko-outbox-230424@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Date: Tue, 24 Nov 2026 23:15:10 +0900
+Message-ID: <undine-1795529710371793698-f2bd67810f91497f@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <20261124090849.7fe8d45f@gandalf.local.home>
+References: <20261123213246.00440bfc@gandalf.local.home> <sashiko-outbox-230424@kernel.org> <20261124090849.7fe8d45f@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,45 +58,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: BE26830
-X-Stat-Signature: ot4naimnyoaang9d1njejwj7xax91k9x
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/72N1PpDHfrZwNSQrXUcGkx77OfDDA/Lo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=aVPFdn6DuZS/F9pbwCoFPUfuEo0LzApE6aMqeQkxu3Y=; b=kwOn3mgBxMbn+lgJhMS1+fqXYF0r4RdB754suOpFH3gK/FdnrgbTGnyYvAsbC7NLrXoKxlP1RNVnUfDqnukmlQWWOfDxgp2FQQqRnWI23yzkN/z5G+NzVFKNrOhHN68wBKOHGKF+WVL7vdOgzodR39yITgHAR6ulQOMVgOas5tk=
-X-HE-Tag: 1795529335-314881
-X-HE-Meta: U2FsdGVkX1/a+rzs03GS0zd11Xm7B+10FL4s8z9+H4q1/Wh7HYXat7UtVrx7DKUZgunvtcG+LTlrVFftoB2Va9fpoJJk3GYpMCKANYP6WEosd28+3cfDEncH/i7jMIXyre3+NZ3j0oWMvJGpQ3uDMc3eJORLCZJ6WAEnpHWL8mpPwm1P/j0ALlZ5zZqlr+XW5uATdkmynYSKbcAYhj4NG6sHjLe44ZY5SlebQZ7AZNWT4vTpEgSAXdTI6S2go2SrjvCkPGWUesH0gcBcdWQR0l0BqE5UbCKhDcWbDkD3Z9Q43VsuP9j4WtZvTevzQPOHSILXckE3i4+0oj9wJ3qEhGcKnyRzWjY8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 24 Nov 2026 02:51:12 +0000
-sashiko-bot@kernel.org wrote:
-
-> > @@ -193,27 +256,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
-> >  		}
-> >  	}
-> >  
-> > +	/* When val is NULL, so should the val + offset */
-> > +	offset = val ? code->offset : 0;
-> > +
-> >  	switch (code->op) {
-> >  	case FETCH_OP_ST_RAW:
-> >  		fetch_store_raw(val, code, dest);
-> >  		break;
-> >  	case FETCH_OP_ST_MEM:
-> > -		probe_mem_read(dest, (void *)val + code->offset, code->size);
-> > +		do_probe_mem_read(dest, (void *)val + offset, code->size);
-> >  		break;
-> >  	case FETCH_OP_ST_UMEM:
-> > -		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
-> > +		do_probe_mem_read_user(dest, (void *)val + offset, code->size);
-> >  		break;  
+On Tue, 24 Nov 2026 09:08:49 -0500, Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Tue, 24 Nov 2026 02:51:12 +0000
+> sashiko-bot@kernel.org wrote:
 > 
-> [Severity: Medium]
-> Should do_probe_mem_read() and do_probe_mem_read_user() check for a NULL
-> src before calling probe_mem_read() and probe_mem_read_user()?
+> > > @@ -193,27 +256,30 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+> > >  		}
+> > >  	}
+> > >  
+> > > +	/* When val is NULL, so should the val + offset */
+> > > +	offset = val ? code->offset : 0;
+> > > +
+> > >  	switch (code->op) {
+> > >  	case FETCH_OP_ST_RAW:
+> > >  		fetch_store_raw(val, code, dest);
+> > >  		break;
+> > >  	case FETCH_OP_ST_MEM:
+> > > -		probe_mem_read(dest, (void *)val + code->offset, code->size);
+> > > +		do_probe_mem_read(dest, (void *)val + offset, code->size);
+> > >  		break;
+> > >  	case FETCH_OP_ST_UMEM:
+> > > -		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
+> > > +		do_probe_mem_read_user(dest, (void *)val + offset, code->size);
+> > >  		break;  
+> > 
+> > [Severity: Medium]
+> > Should do_probe_mem_read() and do_probe_mem_read_user() check for a NULL
+> > src before calling probe_mem_read() and probe_mem_read_user()?
+> 
+> No, but I guess I should add that as we probably shouldn't be dereferencing
+> zero when something fails.
 
-No, but I guess I should add that as we probably shouldn't be dereferencing
-zero when something fails.
+Maybe we should make it rejecting dereference if IS_ERR_OR_NULL(ptr).
 
--- Steve
+Thanks,
+
+> 
+> -- Steve
+> 
+>
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
