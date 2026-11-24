@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.69
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795534161;
-	b=DepJ0eOde9aqDzLAAI4fu483ZSxPMWmgAgpHdeZOpY79jlS/vmxXiLV4WroGs5rD5iTu
-	 u6vGNW9nx+VTWnywei4A7Kmz5PZe85U5JqgtniSUqu+GITfrrj7PrVVQ3DuaEiNsrKOMX
-	 EYiUh3MGij0diKnpTveTcnvXv9W0uz7gAP6aNHh97Wy8tz/8yNhZSjOZRFOpF3QDkWPgg
-	 fR4N5CZxHTkMwhs+fjwtuXQ/AllODiaLqecn4XKUzhqzvoAFldLhCPGW7leTO2WkLMJKx
-	 niTuT5be7pGW/53aOGvv325niuk7deUr3oRQBNUAVWWIBHoujmA8LZKg4gQLUK4owVw==
+	t=1795534162;
+	b=zLi7X+v5mRIq8d7j0BepWWuSPHkPfqHhAp9FwrSf+ph3yK0UJoRvdx/iJp2A4+YeFndb
+	 dO47ziIRKlbBbo5rKAjrhxQms2WNLBngGResoy5oGnQsNhb9OuFmvx1/fU3HjvKTh6XjA
+	 LfF/lHP6435/Md2y0j0531tCK/bVgckOL4a2WVfIQWnBTATbDVeaJ9nbWqqJiioHkDMlZ
+	 IxmT4myQLIOOZNOyCDoujk31dSLg7C44SiNChsL1nb6/uilUo7kpkulwVQSDQioXPa8BQ
+	 1J0my4vzea+14NIqY/FXgvJ4tSHKvziBbGC2/ZViZWZwpDlNio0VTaiOrhBWlQ19S2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795534161;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795534162;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=mQt8eIxPOUGv0YkmUsKHVGbPLTXxWDgibqzukp2v6tM=;
-	b=tm70zbppnXveuY7GCwh3oFwk+7IJCyjAjBupKggccj/I0jNNoC2qzBKaZnikjc2Rxs+t
-	 she6pJv9xgqx3BQGkZzKpztu+lFQ17PdEPkkvQ3Vt8u+uL6vqx1QtF88y/lFZPYJq0sM5
-	 U8q1ipaJIiBNVTjl4xsHXuE+9DuAOMTo58m5lm4eotKv/STYMnnv5hmkrlJM1O90N39eq
-	 sFHDigWutEmk8Ezaqg6mlOMnWaKGhRTJ6RDyuw3gMaCtFxf4OJAYxuQ9u7j0m2Mz3xnT7
-	 qJ7RBlTMXY8g4KI94LzbXz06S2qbEzHx6XnFRngbohu0+iUDaUTvSagQ+WiP1eIUUVQ==
+	bh=EN5PyVV3ehJxWtE39x1XJbDDj8oLnBoapk60Rvm55Z4=;
+	b=0eMYyeEUOBBxhv3j/ULSK0h/RGZHMOgPv/TPlbXMYKIxijLBHiOdy5AYnue9M3EKjx1E
+	 vOVmdi2ibAH0o+j1no0f6Oc/Vw8dnqs6eUvXjoz859nt5MUyl+kC5622kkHFlRIbjc4Vs
+	 oSR3Ms3Q1mCg4Ofhycsb0mce5cbqtrY0le20KcoYVFU3TuA/uFIukeTqdi7Sc0BXliBro
+	 MO/p99HWgQUu7oC5UcsA9STjWs9QubmANQ9RT2v3tTcIi5QRp66qcsmp2w5plCcbo1wjw
+	 bDDYgERkmOagY7Rs/TJgyLFrzfjFMePcBO9lKa+8Z9AK65GxE1AtnXXLq3fpOQ9gnbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jFjMtkib;
-	arc=none smtp.remote-ip=209.85.128.72
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=efp2P1Rs;
+	arc=none smtp.remote-ip=209.85.221.69
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1542606A687
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1542606A687
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BF2606A680
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02BF2606A680
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jFjMtkib
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a359b714f8so28359485e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=efp2P1Rs
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-49d70f45b22so2707947f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795534159; x=1796138959; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795534160; x=1796138960; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=mQt8eIxPOUGv0YkmUsKHVGbPLTXxWDgibqzukp2v6tM=;
-        b=jFjMtkibiB4ai7juQDrqRK/oAr9NZZfhrTHrqpULqJtsAgrwO/kgvuXTqqPKhHsKIb
-         t85uiSpWs5wBRshY9oT9whWAKM47XgJzwKsuzPTBCa8IzXTmhS9KOLyYVz53uQKre6x/
-         0Pm9VAj0ia2LIgtkLhH5gNAnS+BL0uPYO3C4sAalmGBhlnO+ymkJKpYeKVoyndExK8Dy
-         bgLgOvd0VMAR0urjL2k0dOCihq1IZREUciZz/a4TUm7D8Bly2/YKTeauFkJNP0qDVwyd
-         wCP6O1QcfxS95sbpk/n9Xljt3weALIa6784CdD+J+kcpb+eUhKB06zWwDgtfdD4cYU35
-         Bqiw==
+        bh=EN5PyVV3ehJxWtE39x1XJbDDj8oLnBoapk60Rvm55Z4=;
+        b=efp2P1RseTJXbIkPAe5p75XdnvjWOOAEnyjt9kGQcVi1q0JSOkCGH5+tLS5i6l0m0S
+         KllQqcJQVOouCoNdK/cxLK9GqACHce9vNg/pQKNFzlAmEajOBX+cLQmxdO4NFkn3/i0J
+         VKLZog0G7eo+EA/XTiPmW2PgxsjelJCNWRHCfNKPhJCCKGHpNW/ETnRdJxoPyL3MfsxN
+         Psh9x2vTVAO5uxF6DT8yFVdaQ0j8ZRHxlhQlhwatPoFOED5gQkAyyTkXfC9GNvB/+Ldj
+         ffBv9VIrwCxcb89n6Pkh7MKwnCPuAmZbiXYCg7abSMHcjcjebWmfLsWcGJucSkUEhPUS
+         9HZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795534159; x=1796138959;
+        d=1e100.net; s=20260707; t=1795534160; x=1796138960;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=mQt8eIxPOUGv0YkmUsKHVGbPLTXxWDgibqzukp2v6tM=;
-        b=TCDIK4MVgHmoep2JOdj/BFvJqbIOMez7ev3TDb/VLSNXZzLklWdg5TcHZ+IWLmh3pk
-         wFWRqhTv5/69mOvkbvicHtgi6QBos7sJTN/bq6pELKZru4S50qodSp8ePSPgPi863YaD
-         JIrFMBwg41BpVo0A1MCa/M7wxDtULZqtWSNo1XcHkwn71WOm5Ra0liUaVxnTs4cC5xNF
-         EPlq/jBa10BfawjydJDELlbBKjpV8/AwpGIWUX6WMVN7gNbxP4VTJHJE2gdm/ZsnJnh5
-         TUTINQD08lG3hfbHo2qPIl5Dabes4GEcL9iLZC2Ub9eA5+JpIGZJ/3usSKd/FtLqi/15
-         Zq9w==
-X-Forwarded-Encrypted: i=1; AL+hErGjTONHmIYwPSlQ6fANC3gJVHRFVAW3wNiCdzQm7gi86T2syorKjJSBCcYOAuCTnWrRI/SqNavOrTJkT6MfVvkgaRc=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9qwr9DeM6cg5rxc00FwuuuA+xDZZq+cAaRu+U8GrjD9DXuWRjM
-	+UOEik4r/RGDUXsegUmU2g093yhVeQVfyeVLMt54nZc1Kh5PA1spUzgbyryuadUHSfqk4Rm2mnl
-	Y+Y0kgv5UT4N2RYdT59W2rw==
-X-Received: from wmot5.prod.google.com ([2002:a05:600c:4505:b0:4a1:fd4d:ad4e])
+        bh=EN5PyVV3ehJxWtE39x1XJbDDj8oLnBoapk60Rvm55Z4=;
+        b=0sshrekk+Q3q/qlSYnXq7Ae4xAdIr3ZEG8a1qnZhC/Q2xR/3nvD7zk4hhvONLny6cB
+         sVjFtIjUvL+u8hSOYMNaLPxhyqF7h8Yj0AZR7yrvcqyhKRq+ajXyTI+rpK3GhcmY+mL9
+         JLRLbaAMiXCn8MiaeqPv1gy8tj0yv2rdNP7xNc3EaJrPhg0pvm7+X/ntd4cTZkjMfoxB
+         3wfO0Xg/kSfS5plZ0T2IVLwm7Vj7T9lGxPOTYVd3+yU+ulgi4P/HMTH7B+ydlNNTKjOd
+         wF7+g7OcDZGBRzbcdNi+O1V1KNnYQCllbRPmzMzYjn1Jn+IgkTLyHnJOoeuZs8UTkTeP
+         Cydg==
+X-Forwarded-Encrypted: i=1; AL+hErENT1XBlWt6gXFQfQodTSzgIYRvRiFBErTls4rUH/AvGIlpoItjF6bQFAABb/m0LYW5Ug1SZ94z1z+Ra9BGYsY0Ujk=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+GD+5ibJ+RvK7JC61d1kuWSFy60gKJhvQEW0c9KPxiCuW5ey3o
+	tWxdB+SO0nkfSOXQgVn92BBR5GrWcg+RBppmnwSM1Xc0POIZD1Xh6xlzct/L4fSQMGGglijG7/o
+	4F90cUmJ4iriUzuaUl9X+ww==
+X-Received: from wrnw9.prod.google.com ([2002:adf:ec49:0:b0:4b7:fd6a:1010])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3547:b0:4a2:a6e:80f5 with SMTP id 5b1f17b1804b1-4bb888098bfmr307202465e9.11.1795534159139;
- Tue, 24 Nov 2026 07:29:19 -0800 (PST)
-Date: Tue, 24 Nov 2026 15:28:27 +0000
+ 2002:a05:6000:4617:b0:48d:f464:6989 with SMTP id ffacd0b85a97d-4abb18cbe2cmr29323905f8f.27.1795534160072;
+ Tue, 24 Nov 2026 07:29:20 -0800 (PST)
+Date: Tue, 24 Nov 2026 15:28:28 +0000
 In-Reply-To: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261124152845.2233401-4-vdonnefort@google.com>
-Subject: [PATCH v9 03/21] tracing/remotes: Use kstrtobool for boolean tracefs files
+Message-ID: <20261124152845.2233401-5-vdonnefort@google.com>
+Subject: [PATCH v9 04/21] tracing/remotes: Initialise pos in trace_start()
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -90,57 +90,36 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Use kstrtobool in trace_remote.c where possible. This is more user-friendly
-as it allows a better variety of input strings.
+When *pos is 0, trace_start() passes a dummy local variable i to
+trace_next() to fetch the first entry without modifying *pos. In that
+branch, i was left uninitialized.
+
+While i is discarded and causes no functional issues, initialise i and
+keep static analysers happy.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/trace_remote.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/trace/trace_remote.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index 8a1a0c4ea626..bd1b26cd981a 100644
+index bd1b26cd981a..6e514e78392f 100644
 --- a/kernel/trace/trace_remote.c
 +++ b/kernel/trace/trace_remote.c
-@@ -235,10 +235,10 @@ tracing_on_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t
- {
- 	struct seq_file *seq = filp->private_data;
- 	struct trace_remote *remote = seq->private;
--	unsigned long val;
-+	bool val;
- 	int ret;
+@@ -748,12 +748,12 @@ static void *trace_start(struct seq_file *m, loff_t *pos)
  
--	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
-+	ret = kstrtobool_from_user(ubuf, cnt, &val);
- 	if (ret)
- 		return ret;
+ 	trace_remote_iter_read_start(iter);
  
-@@ -1151,10 +1151,10 @@ static ssize_t remote_event_enable_write(struct file *filp, const char __user *u
- 	struct seq_file *seq = filp->private_data;
- 	struct remote_event *evt = seq->private;
- 	struct trace_remote *remote = evt->remote;
--	u8 enable;
-+	bool enable;
- 	int ret;
++	i = iter->pos;
+ 	if (!*pos) {
+ 		iter->pos = -1;
+ 		return trace_next(m, NULL, &i);
+ 	}
  
--	ret = kstrtou8_from_user(ubuf, count, 10, &enable);
-+	ret = kstrtobool_from_user(ubuf, count, &enable);
- 	if (ret)
- 		return ret;
- 
-@@ -1235,10 +1235,10 @@ static ssize_t remote_events_dir_enable_write(struct file *filp, const char __us
- 					      size_t count, loff_t *ppos)
- {
- 	struct trace_remote *remote = file_inode(filp)->i_private;
-+	bool enable;
- 	int i, ret;
--	u8 enable;
- 
--	ret = kstrtou8_from_user(ubuf, count, 10, &enable);
-+	ret = kstrtobool_from_user(ubuf, count, &enable);
- 	if (ret)
- 		return ret;
- 
+-	i = iter->pos;
+ 	while (i < *pos) {
+ 		iter = trace_next(m, NULL, &i);
+ 		if (!iter)
 -- 
 2.56.1.809.ga0b61035b5-goog
 
