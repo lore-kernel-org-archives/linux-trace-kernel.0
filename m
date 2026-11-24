@@ -1,54 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795477749;
-	b=C5jQsx3vr7mQ3nxy9u3clmgqVfb66Mc2N2USIC6tqPyw750MriVLzYbwBG0ogWc2QrZA
-	 WNI/prEDV/mnK+4D3ythzfzxcYywW+49SbpVxzy9ntHxVElqrbIRoh1IbhOCYpM/ef8Ac
-	 98Pn9LQG6cG4GxCHG8o3Ep5WyoRkOacYKiTr/z5i4nNiEIOutu4Xyjtd6ADb3IP2ozqkq
-	 pjv/wN87aHHqruoXHnr2n7IzVO9VfhPJJJjGn7vJGVTIMhtJYAP/PQsEvO5T17K8J0ItC
-	 eZeVIQq2VGRcObCjU7G/BUNCAevQpjP0yFwrQVumoRAX0zQ2LrY3avW9voS7XgUXMeA==
+	t=1795479172;
+	b=mcDOzwLndKMBsxe5ygDbXtc8PkPHMPWbHVFLPkgwlQ4cWpcveqc5KILKepFZSYj+2wMR
+	 HdLUEJmh6olAPTEVmgdLv2gNXOESmE8sd33/ngqZ2FuTcEGTRTikBocG3Fi9OwjxzA6pG
+	 TfERO9C09alNYbnd30koY9ndkr+7s+LJycHhcUpg0Jr6KdrGhXFmsYyCGJQncl3di7FqV
+	 uYfmNSNu4LsUsH5uayOoQ1UGARAg0oCD6k6OamKH1udTHVgZwjzsn4G+I1pq7B12kOPdq
+	 Asrl/h7lUk1e29iam2j7hamQUZ+6yBLgGERlA+gEKLMQERc2Y6uE73sBiS9aQQWfc0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795477749;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=XvAgZF6CkwRKo3VMFZxbR36QgXiqw9zi2A6dGkoweNA=;
-	b=k7Ryw1+mRBXUMnZXqSOkpAGiMPaOY1DP7aIAi7DNeAJli8P6JTKHxDiRKVchlpWzmGsL
-	 wIH93BGblEUXGMEYibdXdsZJOIWj+0Vy4wzQJMARRiAmUEdrBKU91gDRwF2Crv9duCpaC
-	 h3SU86gYmVqOJ9PPuL3/GUNZiPwmcBWj/veXv4GYca6pfBbkuRVQn4PTSZ1iSbHE1bGMf
-	 o2PoXqgs2UlP31VuDPqtAWo+CuPd57i2Md/AqH9LIlKD5udzSnz8b9I+nssWtJXDIObMc
-	 a/3WExj6oDuRCDbU1V0uq/v2a+wEqy+ZWLHIjuhsuP7t7AOs/Hq2l9mU1SY9vheJC4w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795479172;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Date:Message-Id:From:To:Cc:Subject:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=7bDIHXXIM4LNEtaYASA3zw1NmzIi1pMS/QPwvnMhMAg=;
+	b=EcS/PveQkOx3B99PXm+uIYcU1g1hPfMBPIQK7jprXMRanXFjnIesGTA4yO1J3UIV+574
+	 Gj5/XyB3GUJSswR+CfSgerdAqVb/aiRCVXAO0sAuX+fxpYXGmaEl4BW4sIjTC2FfeVu55
+	 jOmd94ngSRxrh9mLkASxkfp7jTd3kYMMv1EHzkccOVqB5oBq7DSk6aRtj1qwswBIhq2GD
+	 W/IoKtnY0qYS1bPw1o/d7UkGPNl1qHQ0xEWxHGTIZCAAWA9j0W6he795Pqsh1RWjcf4MQ
+	 4Ynq4frvXAdArLReZpzxDsPa+2srGTCcGf8EJ/H3aFOf7PecDsxew3wWr+vkJyFHGGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=foft4ovj;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EvzGf6z3;
+	arc=none smtp.remote-ip=209.85.210.177
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9C7606A31E;
-	Mon, 23 Nov 2026 23:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DD4606A327
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 00:12:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72DD4606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=foft4ovj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F301F000C6;
-	Mon, 23 Nov 2026 23:49:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795477749;
-	bh=XvAgZF6CkwRKo3VMFZxbR36QgXiqw9zi2A6dGkoweNA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=foft4ovjFmNERzm+RAv+xWpfSO5wFzXeA0DrrAVZ6tOR7ovm78/E5KWERujlMYq/X
-	 Y8arbrbGoK90ZC3t4uMkSgIy7+xxwHOsgRctIsGR9k45sa+s9uOFBk46OaPeiFvtF8
-	 v/Z/qWFAZCm6slfIfs7Z1PfCyTNJoYUxXHj1Radbk6nsWF9pgI4iRNtRtYXpH2sAkv
-	 6q9U8MYJfG1fy01Ux6Jna7v5iOoK/xKb7DjC88fvr7VKgY4kIbft8UwvEgUzRaf9KV
-	 7G9tkA+3hZOb2WsHOT0qrjdjIZwZOutEUsGIwXGncft595bJUDJbVyXa4kTwgX6qSu
-	 Ohe9HrrUdGX8w==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCHv2 1/2] kprobes: Increase the kprobe hash table size
-Date: Tue, 24 Nov 2026 08:49:05 +0900
-Message-ID: <undine-1795477745290490698-99e2fcc5c9b45beb@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261122200239.1481088-2-jolsa@kernel.org>
-References: <20261122200239.1481088-1-jolsa@kernel.org> <20261122200239.1481088-2-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EvzGf6z3
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-8b67f25e6e1so1866531b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Nov 2026 16:12:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795479171; x=1796083971; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :subject:cc:to:from:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7bDIHXXIM4LNEtaYASA3zw1NmzIi1pMS/QPwvnMhMAg=;
+        b=EvzGf6z3rhg+QVwRCNjiqtCEZQCgcOG6ShYMP0kcI8BIeTc+i+i1MBX1jcLv86gWPK
+         nyHsqBHq/6w7+m9DsSBPB+vW2wMewdPpAMBY2hX/Uls7uEq7FEl0qbsUwWhAxBAwrC+W
+         +S5cCZa8peiG/UWSsGfsCamGsA2WW+N0Ng8wgEG/f8tHfVjaETAJGRpi4zoOJVmSk2Fk
+         yMKdj6HtQbbkDpc8+pkb4cP7A8uDYL+GEkEZIYMBDAuTLKWDOZC5Yh+kvlrf0QrZ3MgU
+         xHDFWEv+uQAg/q+KqS+6yXIIvnoFUGR0Y1VT7IFBmxqe7g1OrYn/zB5z2DbJlOn0IIOF
+         B+dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795479171; x=1796083971;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :subject:cc:to:from:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7bDIHXXIM4LNEtaYASA3zw1NmzIi1pMS/QPwvnMhMAg=;
+        b=D+enjGn0GBIeLB6JA3VHv9xqOm0qjqYLuSdlM/hoKI1PLkVQFmtOoAu5LKt/iPhWIX
+         LRYGh0bx60rFCu893MjspMZjX3NF2ilRYCVi3WauOQVyyKOnqUGSz8rlyp29H9mUH1gU
+         WSKHnNE4R5aBqq0uibZETSC+40TfmLqkAsXFKKfTF1ZUdh9TGY7blrP3JJyH83HXkOK6
+         K6WQybDS6hFPYBsaCKBgLKkuk9z2SpXMwNaZs0VJ6p2qur3Fianluw/KFP0Tr1KGUuDT
+         DFDKGBbzGSrcMGqoMZyyLVWAoNnHz5skgDd1wolbFIHMW2HtESNZIJFpRldYDI720hXa
+         w/fQ==
+X-Forwarded-Encrypted: i=1; AL+hErFzdSX+bIf84U7PQPVoIyQcJC/sGdxjI7dDMkKZJ5MwftOlWmtYnf9VzlwXEdhh7h8omV/eKGtPx6C3IpJq3+RA17Q=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/UbuKcY1EcioXHfXYGwz7TRU9ecYN7oAGgksqAS3+IrDey8PCs
+	bpclL+vvqD57PHePjxYy/GbWivdy9Vq6kt2uEuaVAVtzhqGpRa6pAsQ+
+X-Gm-Gg: AZFdTZd/NKJUhDPlxQBBB5QOj9F33A5C/wpHrG3tXRt9l3vc17Ee/aJ5yBMpjUk2F1c
+	zojzXfPDhOPooRXZLVFJ4TOh9XbEjuflpp7RET8oAIEpp+wODahgbzTEpi50pfgcGIMC14kDdat
+	8XdquumqfOf1dUCQChTssoEMxZFDKIsVVjeI0KD8eoOEQlHs2qR9q+5rK8vCx2co5VUxWlTilcq
+	tFCo6ZIZV+zuiCirKaxvhh+Ywpkza4hXqVf2NzjEGSgvqE+dqUMUB/6r8EmFMvZrkgBMAWJ/GJJ
+	xXiyG5nGLZTIpawo3u2Ifb26E8l2ll84MYGkGO9y+8o2j6L6IKFRTs02qtdoUhtL0bqTJiOkKFJ
+	uEtK5RmWdkSAFz2Lz3cBsSwQObcZg4uO0o2els6vFTK9i+fTOE2TJB52+tNdut9lUmUYpJ8W4V1
+	uGAPA3PHCkqfxZMh4nHn94wyRnlPufQcIvIcfq89g6fxpqiH3Vppv+VMFnzBTprTfXYPUY0Gf9H
+	NrIS6boeQczydHNBESdKjzxIDEuyfBaeg+FYXfwfZTdzoQlX48xj+3Z/bGYIBWei40lIC0bYA8a
+	rsyqx7W85nVkKVEnS+d7EmE8xSajPDYc/DPRvl3hC2FamvO2ggYn8pSrWNqON9aa9XObya1I+om
+	ZdkGFAWmw5s6BogcjWMcd5GRPShkeNLajwQ==
+X-Received: by 2002:a05:6a00:368b:b0:89e:b12e:7eda with SMTP id d2e1a72fcca58-8c8792c36afmr11522943b3a.7.1795479170548;
+        Mon, 23 Nov 2026 16:12:50 -0800 (PST)
+Received: from localhost ([153.61.198.243])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8c873b278f0sm6298093b3a.51.2026.11.23.16.12.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Nov 2026 16:12:50 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 24 Nov 2026 00:12:47 +0000
+Message-Id: <DN308UHY5QHQ.8CJOFGAHVVTR@gmail.com>
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "Leon Hwang" <leon.hwang@linux.dev>, <bpf@vger.kernel.org>
+Cc: "Daniel Borkmann" <daniel@iogearbox.net>, "John Fastabend"
+ <john.fastabend@gmail.com>, "Andrii Nakryiko" <andrii@kernel.org>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Kumar Kartikeya Dwivedi"
+ <memxor@gmail.com>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Song Liu"
+ <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "Jiri Olsa"
+ <jolsa@kernel.org>, "Emil Tsalapatis" <emil@etsalapatis.com>, "Ihor
+ Solodrai" <ihor.solodrai@linux.dev>, "Steven Rostedt"
+ <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu
+ Desnoyers" <mathieu.desnoyers@efficios.com>, "KP Singh"
+ <kpsingh@kernel.org>, "Matt Bobrowski" <matt@bobrowski.net>, "Shuah Khan"
+ <shuah@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <netdev@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v3 0/9] bpf: Add log support for tracing
+ link_create
+In-Reply-To: <20261123152743.19629-1-leon.hwang@linux.dev>
+References: <20261123152743.19629-1-leon.hwang@linux.dev>
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,112 +112,99 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-On Sun, 22 Nov 2026 21:02:38 +0100, Jiri Olsa <jolsa@kernel.org> wrote:
-> The kprobe hash table has 64 buckets, so with many probes registered
-> each get_kprobe() call walks a long chain. With 20000 probes that is
-> more than 300 entries per bucket on average, and every entry is a
-> separate struct kprobe, so the walk is mostly cache misses.
-> 
-> get_kprobe() is not called just once per registered probe. On x86 the
-> registration path calls it for each address it has to check around
-> the new probe: get_optimized_kprobe(), __recover_probed_insn(),
-> __recover_optprobed_insn() and arch_check_optimized_kprobe() all do
-> one lookup per byte or per decoded instruction, and most of these
-> lookups miss, which means walking the whole chain. It is also called
-> from the breakpoint and ftrace handlers on every probe hit.
-> 
-> Increase KPROBE_HASH_BITS from 6 to 12, which gives 4096 buckets and
-> cuts the chains to about 5 entries for 20000 probes and about 12
-> entries for 50000 probes.
-> 
-> Time to register the probes with the kprobe_many_example sample
-> module [1] (insmod with nr_functions=20000 and nr_functions=50000)
-> in a KVM guest, mean of 5 runs, for different KPROBE_HASH_BITS
-> values. The table memory is the size of the static kprobe_table on
-> 64-bit:
-> 
->   bits   buckets   table memory   20000 probes   50000 probes
->      6        64          512 B         4.71 s        29.99 s
->      8       256           2 KB         2.05 s         9.90 s
->     10      1024           8 KB         1.39 s         4.63 s
->     12      4096          32 KB         1.30 s         3.64 s
->     14     16384         128 KB         1.28 s         3.41 s
->     16     65536         512 KB         1.28 s         3.38 s
-> 
+On Mon, Nov 23, 2026 at 07:27 AM Leon Hwang <leon.hwang@linux.dev> wrote:
+>  .../selftests/bpf/prog_tests/cgroup_link.c    | 324 ++++++++
+>  .../selftests/bpf/prog_tests/iter_link.c      | 156 ++++
+>  .../selftests/bpf/prog_tests/tracing_link.c   | 741 ++++++++++++++++++
+>  .../selftests/bpf/progs/tracing_link_ctx.c    |  17 +
+>  .../selftests/bpf/progs/tracing_link_multi.c  |  36 +
+>  .../selftests/bpf/test_kmods/bpf_testmod.c    |   5 +
 
-Thank you for conducting the testing and evaluation. The results show
-a trend similar to that of a study I previously carried out[1].
+1279 lines of selftests for log messages ?
+This is way too much.
 
-[1] https://qiita.com/mhiramat/items/1bbeb309ee5dfbc979ce (Japanese
-article)
+pw-bot: cr
 
-> With 12 bits the registration of 20000 probes is 3.6 times faster
-> and the registration of 50000 probes is 8.2 times faster than with
-> the current 6 bits. 12 bits is where the curve flattens: compared
-> to 10 bits it is still 21% faster for 50000 probes (6% for 20000),
-> while going further to 16 bits gains only 1.5% for 20000 probes and
-> 7% for 50000 probes, for a table 16 times bigger (512KB vs 32KB).
-> 
+One row per attach path is enough. It checks that the log gets there.
+The base kernel leaves the log empty, so all four rows fail on it.
+Something like this:
 
-I personally think 6 bits is too small, maybe up until 9 bits (4KB)
-will be OK.
-
-> The cost is the size of the static table, which grows from 64 to
-> 4096 hlist heads, that is from 512 bytes to 32KB on 64-bit. The
-> functions that walk the whole table (module notifier, arming or
-> optimizing all probes, the debugfs list) are slow paths that take
-> kprobe_mutex and now scan 4096 buckets.
-
-What I still fail to understand is the use case for employing such a large
-number of Kprobes simultaneously. If the goal is to trace individual
-functions, Fprobes are already available and offer better scalability.
-Personally, while I might occasionally deploy around 100 probes, I cannot
-conceive of a scenario requiring 1,000 or more. Would you have actual
-usecase maybe from eBPF?
-
-If this change is intended solely to improve performance for an extremely
-unlikely use case, I would, at the very least, make the size configurable
-via Kconfig.
-
-Since this change affects all architectures, those working with small,
-embedded-system chips might be reluctant to "pay" 32 KB for a use case
-that is highly unlikely to ever occur.
-
-Thank you,
-
-> 
-> The sample module was posted as the last patch of the kprobes
-> lookup cost series [1] only to demonstrate the testing, it is not
-> merged and is not going to be.
-> 
-> [1] https://lore.kernel.org/bpf/20261109195827.1091410-1-jolsa@kernel.org/
-> 
-> Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  kernel/kprobes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index f14f7ff45961..47ce0bfb7298 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -50,7 +50,7 @@
->  #include <asm/errno.h>
->  #include <linux/uaccess.h>
->  
-> -#define KPROBE_HASH_BITS 6
-> +#define KPROBE_HASH_BITS 12
->  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
->  
->  #if !defined(CONFIG_OPTPROBES) || !defined(CONFIG_SYSCTL)
-> -- 
-> 2.56.1
-> 
->
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/tools/testing/selftests/bpf/prog_tests/link_log.c b/tools/testing/selftests/bpf/prog_tests/link_log.c
+new file mode 100644
+index 0000000..4f7e71a
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/link_log.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <test_progs.h>
++
++/* One row per attach path. It checks that the log gets there. */
++static const struct {
++	const char *name;
++	enum bpf_prog_type type;
++	enum bpf_attach_type attach_type;
++	const char *func;
++	struct bpf_link_create_opts opts;
++	int err;
++	const char *msg;
++} tests[] = {
++	{ "tracing", BPF_PROG_TYPE_TRACING, BPF_TRACE_FENTRY, "bpf_fentry_test1",
++	  { .target_btf_id = 1 }, -EINVAL, "target_btf_id" },
++#ifdef __x86_64__
++	{ "tracing_multi", BPF_PROG_TYPE_TRACING, BPF_TRACE_FENTRY_MULTI, NULL,
++	  { .tracing_multi = { .ids = (const __u32[]){ ~0U }, .cnt = 1 } },
++	  -EINVAL, "4294967295" },
++#endif
++	{ "iter", BPF_PROG_TYPE_TRACING, BPF_TRACE_ITER, "bpf_map",
++	  { .iter.len = 4 }, -EINVAL, "iter_info_len" },
++	{ "cgroup", BPF_PROG_TYPE_CGROUP_SKB, BPF_CGROUP_INET_EGRESS, NULL,
++	  { .cgroup.expected_revision = 2 }, -ESTALE, "revision" },
++};
++
++static void run_test(int i, int cg)
++{
++	const struct bpf_insn insns[] = {
++		BPF_MOV64_IMM(BPF_REG_0, 0),
++		BPF_EXIT_INSN(),
++	};
++	struct bpf_link_create_opts opts = tests[i].opts;
++	char buf[128] = {};
++	LIBBPF_OPTS(bpf_log_opts, log_opts, .buf = buf, .size = sizeof(buf), .level = 1);
++	LIBBPF_OPTS(bpf_prog_load_opts, load_opts,
++		    .expected_attach_type = tests[i].attach_type);
++	int prog_fd, fd;
++
++	if (tests[i].func)
++		load_opts.attach_btf_id =
++			libbpf_find_vmlinux_btf_id(tests[i].func, tests[i].attach_type);
++	prog_fd = bpf_prog_load(tests[i].type, NULL, "GPL", insns, ARRAY_SIZE(insns),
++				&load_opts);
++	if (!ASSERT_OK_FD(prog_fd, "bpf_prog_load"))
++		return;
++
++	opts.sz = sizeof(opts);
++	opts.log_opts = &log_opts;
++	fd = bpf_link_create(prog_fd, tests[i].type == BPF_PROG_TYPE_CGROUP_SKB ? cg : 0,
++			     tests[i].attach_type, &opts);
++	if (fd >= 0)
++		close(fd);
++	ASSERT_EQ(fd, tests[i].err, "err");
++	ASSERT_HAS_SUBSTR(buf, tests[i].msg, "log");
++	ASSERT_EQ(log_opts.true_size, strlen(buf) + 1, "true_size");
++	close(prog_fd);
++}
++
++void test_link_log(void)
++{
++	int i, cg;
++
++	cg = test__join_cgroup("/link_log");
++	if (!ASSERT_OK_FD(cg, "join_cgroup"))
++		return;
++
++	for (i = 0; i < ARRAY_SIZE(tests); i++)
++		if (test__start_subtest(tests[i].name))
++			run_test(i, cg);
++	close(cg);
++}
