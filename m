@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795534163;
-	b=B8uTUnygfQjcNbcLc//RypCweENR/xMA7VHGdtKybwULCXXT3pREqrkSAxxYDOj9r1Nc
-	 MU2v5OOKYxjNlmLl9KXDANLjK+uOUqg5e0JkI1BsKzeKxo/uu6KCSQgtRWCf+538yWjzM
-	 SfXV3HRF1LbB3cFcMtgV6h6/653DzLAiWtRkeOlg8OZ35905sdd5BTz+6YZC8pSUiE4v4
-	 QkyVa/60y8vhPIEE2a5Gs3HdyD339eMupSn2Q9hu+AszuMX4mJs8EwZ6Cvwe0/DiXc5Mm
-	 f8fYltbkm3PESlEjO5eXbdriReZL7q8QxxhaY64PW7I/YPQ1TgKuul8el7/A1pyH1Sw==
+	t=1795534165;
+	b=OqbnK0hF2/w+fuDb28olRxev2dYN2iMpELE4ShLi075W1/0MLhqQKF1Oyqa1A35ekr4D
+	 HH22DJb953ay5oBk1YyBSRf0wdJ3R33l3Vzb6Ln/p4m2h1zXVqGy53mKFvFwx2cEuRMnK
+	 a7upayTvqVDNt0AnSqAwrGEEoREzsIWoFNzbWaMPDS0zFrfyxuZgt5yzqNouRSbO+qHNU
+	 YDOpcQuBUkBJUTXb4Su/HrSQCsH8xZutIe17by2npKjj6xw5ATr48ZB3roXHM3CtAdaG3
+	 a/7SC747n0MV/T0Tg4UPIlNfjrghMOm8e5DWA9sHUQOx/H/GjNAGNGTxwNPOohLEXYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795534163;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795534165;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=Dal2xlC6YbNI+m/e+H7cP1DHv0h5jSPjbzazqHofe5w=;
-	b=gBD2xhb2mM+aSIe3I2cfgnnac77WADZ2LxsTMdViMqehSNrBTDDvn3mMBD4bMuFgqLgN
-	 Mk0cPC4jo4rE06tP5Negs2Q3ud+YuLmt9w8e5+4NdEZqFqyc9aBRXWPkpdVNBh4+z7Hiu
-	 HsvvxmTng33jOvxqtXfxnd7Y11E4orNG72RlU+H27H1zrMVrblMnJ1asLKeR0dRBRez+1
-	 kHN/iphqCaAXRNbTt9hd72TLYpQjA/OGngCb+F/KewicumV62YszuWh97OA0FE7vOy82Q
-	 u7RBm+6H185B05YpuQcauKzlHADVTuMrGS7L3aQMU9vL6m8gu5PDnx1Wcf9D8D3fdtg==
+	bh=Y/Uj491OsdnUjOoSDyqgMNt+3fuzPwe2BtrlRMSYbx0=;
+	b=5dMePJnEmtNaLemso519a2ppoiSJANE7w5QK5W5/LHnWlicXQ/9KZfpTV5qPOtv3pOVJ
+	 JMUDBlCN7tz3AsHtLil5YjXQd5Tp9dXTIhONKysKyJsoghf6YjOF+Y6nL5WVhOAIFh/E2
+	 oEVMR0UtLOQdi0oM3AIrkxX4jAxkds6lG7JggpWhVcdQvZkkuziQ+DP1dLVD/CNJiZL/b
+	 kzD+Ijq3gIvTlOfjYEoQSGEg4IO6OLVomhFGt8n34soETZu37odwVm7l+qnOcSkpIba4K
+	 s6mYQO76g+xHf8iME7fDI3dmQLenoR9uYvKwcqGmKWcyhtF4E8ehcWwGQ7wkPc+pLBA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=GgNYu3sY;
-	arc=none smtp.remote-ip=209.85.128.69
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=gOr7W4Pk;
+	arc=none smtp.remote-ip=209.85.128.70
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC9A606A698
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EBC9A606A698
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46427606A6AA
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 15:29:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 46427606A6AA
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=GgNYu3sY
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a20e41008cso14325245e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=gOr7W4Pk
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4bb9379a835so18440195e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 07:29:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795534161; x=1796138961; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795534163; x=1796138963; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Dal2xlC6YbNI+m/e+H7cP1DHv0h5jSPjbzazqHofe5w=;
-        b=GgNYu3sY255DPhgAHWISOLSbzVznRizYctr9Du/n4duSax0H5E+vKaY83wWS2RNX4K
-         oFDgGRsnV1tVDwFS9iGIDnAggygplxA+MrZ3SnasGy0HJ0WzfjlGr2rZBfP7AhQqVs35
-         l5GXOAfIj4bnEH45wphkjELYP1yqykYkYl2scQ42y+hwxv0x1XH/FmN0zjSwXm7jJ7Us
-         tWswydGw3Zixuc07uxVS9cDXwUMrAccmeodLLGLts0PmnDLyDZab9oyNBulN1M9iRdAR
-         rj/etn21Z75wb0+6RaoGq9yiveZEyrhrmn8E1sP+UQuANatYjgsKivCSeDdgNxt9wRYS
-         Kkrg==
+        bh=Y/Uj491OsdnUjOoSDyqgMNt+3fuzPwe2BtrlRMSYbx0=;
+        b=gOr7W4Pk8JjVgnECAfkejKAP++bQhLJP+r1cPnlUJvXBUhxhDn91tCPs/vFbIOlzlg
+         RbsJClzIZtHT4JhsxwARTlSbWvOfrxAc8dDsHBKBRQQYVyIZkmOPJ17+HLTTQPd9luL3
+         lRZectuf6wuspMAnltmcuPlgEMhYC7CXbcXnLdfLkQ7xvO7WkdXdnVimTZxohHEqR/dh
+         hGCRbfRzEpw9ly5AR05f3+NmllT6wJHt/wn5fTpwBsAod2lXZB5mNACIVD9v/T0MsEbN
+         GBvToLHQV5AFnP6dNaFdRoHCiko00IOqzSmcw0FiMKv7q1js2ZND6iNfVHxAytnJ96Yi
+         410w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795534161; x=1796138961;
+        d=1e100.net; s=20260707; t=1795534163; x=1796138963;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Dal2xlC6YbNI+m/e+H7cP1DHv0h5jSPjbzazqHofe5w=;
-        b=YYXd2+dC/nEiTgvdInlIx/Pfhp9DcDECUkx0OX89e7fQRzBeSXExGwIcleHsIbViRr
-         jIyFIemSHgunU2UQmkGblGmexWEY6pN9svatp1r5Y+o9vgeWjN0ZS5fuHaNmt6KnZAla
-         QnUS6Ti9sI2uGBOL5FEeRrsZ6gn/d6CroLPquPkjfpsBvXwTkw5/rwOZDbv9cqe7VrGR
-         TyzjwOYfwBb7KUi8F+7W+s5TFm4+mU+K4G8w1GApYhTW6IN9ik7CpYwG0gMQ20MsFB7d
-         arT2Gm2/fb55tBnPksXHYZhsdHWfdkYbWELnEuD3JLbBMXorClITKVzwltWIItzI+bGp
-         T6bQ==
-X-Forwarded-Encrypted: i=1; AL+hErF0MpM01jEcJuGuyFuQoWdmhgcb7dx9rFidZ2hY9rVq0k1a9dvQM9c7lRJne02FCPoFhJTk9M+RW4a8l5ezEHkRid8=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9wMnU30puF6uOsEobfT9ZW99MLlZZ3S4ha3KtQFOUMeWyjcaf3
-	rl7T8feZr5aZmViTNUerdF02Vh2GM6n5EiOyYKOwX3TK19BXi3RolgH4LVcgj/yDcYHvTtD8let
-	9AdHRQsGmmCTlAABi0Qpcfw==
-X-Received: from wmqu9.prod.google.com ([2002:a05:600c:19c9:b0:4a3:5d5b:9ad9])
+        bh=Y/Uj491OsdnUjOoSDyqgMNt+3fuzPwe2BtrlRMSYbx0=;
+        b=H3kL++JQajEXoPQIGgUawpqBXeXIJF65OP2JDZq1c8jB8Nzv1bjYFwxkN35qiScqqK
+         YcFApG0R/Stpj6WNbKqOckLbhFTeh4UaGoKgNxwqoTZBBFVDNWMj4gMpbf6gRg2QUlny
+         59UV8CWCTrvaKKedRMKLN4FuIMq/v9ZGCCkgtsHytNxWo0Pajy+t+8msooAEJKAoTTeO
+         iSFFa9DL82Erm4wH4PzlRJgwy29uvwunTy77z7vRyto7nKE2oEOHtAGBUO0GxFnHLVnn
+         BaXXJZ7fMbchOwWRsdV7MJCg75kTRnvzufRsLV3Y/HcvJ5VB+vfXBS/+t4s6UpyFM8JQ
+         3OxQ==
+X-Forwarded-Encrypted: i=1; AL+hErGUw9nBiMChBmaiv7RHpjLs7/1uadDOyjn9+wOiwtf5qigeQzzI02uhj5yIIt3kayE/nJUvqBnc9lmNPle/ozf7HJw=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8Qglqv/Lt5zsNXc8HrCeJdfrsBgT+rErmPHidcMnF4ZPwD7q4H
+	NKVdwppMroaU8JzPCZs4dlqWdOuFILeCbdcDlbwcbuKmhN2083LmkMa4nC8ud27JcAI6OPUSZ0p
+	rueZCdBa+3DYcoo0WdHIq0A==
+X-Received: from wmga21.prod.google.com ([2002:a05:600c:2d55:b0:4a2:966:8982])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:5308:b0:4bb:76d6:1f5d with SMTP id 5b1f17b1804b1-4bb887ca192mr317588245e9.2.1795534161135;
- Tue, 24 Nov 2026 07:29:21 -0800 (PST)
-Date: Tue, 24 Nov 2026 15:28:29 +0000
+ 2002:a05:600c:674f:b0:4bb:56bb:1196 with SMTP id 5b1f17b1804b1-4bb8880fb9bmr299223215e9.23.1795534162357;
+ Tue, 24 Nov 2026 07:29:22 -0800 (PST)
+Date: Tue, 24 Nov 2026 15:28:30 +0000
 In-Reply-To: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261124152845.2233401-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261124152845.2233401-6-vdonnefort@google.com>
-Subject: [PATCH v9 05/21] tracing/remotes: Annotate remote shared fields with READ_ONCE/WRITE_ONCE
+Message-ID: <20261124152845.2233401-7-vdonnefort@google.com>
+Subject: [PATCH v9 06/21] tracing/remotes: Use a single per-remote polling work
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -90,91 +90,129 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-tracing_on_show(), remote_event_enable_show(), and buffer_size_kb_show()
-read remote->tracing_on, evt->enabled, and remote->trace_buffer_size
-without holding remote->lock, while the corresponding write and cmdline
-functions modify them under the lock.
+Having a per-iterator polling work is wasteful when logging several
+trace_remote per_cpu/trace_pipe files in parallel. This results in one
+work running per-CPU, where only one would suffice.
 
-While this is unlikely to cause issues in practice, annotate the accesses
-with READ_ONCE() and WRITE_ONCE() to keep KCSAN happy.
+Transition to a single per-remote polling work, scheduled on the first
+consumer creation and stopped when the last consuming iterator is freed.
+
+This blanket polls all CPUs, regardless of which ones are actually being
+read. This is acceptable because the poll consists of reading the
+meta-page, which is a fast operation. Also, it is more common to log all
+CPUs in the system than only one, so this use-case should be favoured.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 ---
- kernel/trace/trace_remote.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ kernel/trace/trace_remote.c | 51 +++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
 diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
-index 6e514e78392f..7faa589ddf42 100644
+index 7faa589ddf42..91c6ab9d5672 100644
 --- a/kernel/trace/trace_remote.c
 +++ b/kernel/trace/trace_remote.c
-@@ -136,7 +136,7 @@ static int trace_remote_enable_tracing(struct trace_remote *remote)
- 		return ret;
- 	}
+@@ -26,7 +26,6 @@ enum tri_type {
+ struct trace_remote_iterator {
+ 	struct trace_remote		*remote;
+ 	struct trace_seq		seq;
+-	struct delayed_work		poll_work;
+ 	unsigned long			lost_events;
+ 	u64				ts;
+ 	struct ring_buffer_iter		*rb_iter;
+@@ -55,8 +54,10 @@ struct trace_remote {
+ 	struct rw_semaphore		reader_lock;
+ 	struct rw_semaphore		*pcpu_reader_locks;
+ 	unsigned int			nr_readers;
++	unsigned int			poll_cnt;
+ 	unsigned int			poll_ms;
+ 	bool				tracing_on;
++	struct delayed_work		poll_work;
+ };
  
--	remote->tracing_on = true;
-+	WRITE_ONCE(remote->tracing_on, true);
+ static DEFINE_MUTEX(trace_remotes_lock);
+@@ -351,17 +352,6 @@ static bool trace_remote_has_cpu(struct trace_remote *remote, int cpu)
+ 	return ring_buffer_poll_remote(remote->trace_buffer, cpu) == 0;
+ }
  
+-static void __poll_remote(struct work_struct *work)
+-{
+-	struct delayed_work *dwork = to_delayed_work(work);
+-	struct trace_remote_iterator *iter;
+-
+-	iter = container_of(dwork, struct trace_remote_iterator, poll_work);
+-	ring_buffer_poll_remote(iter->remote->trace_buffer, iter->cpu);
+-	schedule_delayed_work((struct delayed_work *)work,
+-			      msecs_to_jiffies(iter->remote->poll_ms));
+-}
+-
+ static void __free_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
+ {
+ 	if (cpu != RING_BUFFER_ALL_CPUS) {
+@@ -405,6 +395,36 @@ static int __alloc_ring_buffer_iter(struct trace_remote_iterator *iter, int cpu)
  	return 0;
  }
-@@ -155,7 +155,7 @@ static int trace_remote_disable_tracing(struct trace_remote *remote)
- 		return ret;
  
- 	ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
--	remote->tracing_on = false;
-+	WRITE_ONCE(remote->tracing_on, false);
- 	trace_remote_try_unload(remote);
- 
- 	return 0;
-@@ -250,11 +250,12 @@ tracing_on_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t
- 
- 	return cnt;
- }
++static void trace_remote_do_poll(struct trace_remote *remote)
++{
++	ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
++	schedule_delayed_work(&remote->poll_work, msecs_to_jiffies(remote->poll_ms));
++}
 +
- static int tracing_on_show(struct seq_file *s, void *unused)
++static void __poll_remote(struct work_struct *work)
++{
++	struct delayed_work *dwork = to_delayed_work(work);
++
++	trace_remote_do_poll(container_of(dwork, struct trace_remote, poll_work));
++}
++
++static void trace_remote_inc_poll(struct trace_remote *remote)
++{
++	/* poll_cnt <= nr_readers, inherits its overflow protection */
++	if (!remote->poll_cnt++)
++		trace_remote_do_poll(remote);
++}
++
++static void trace_remote_dec_poll(struct trace_remote *remote)
++{
++	if (WARN_ON_ONCE(!remote->poll_cnt))
++		return;
++
++	remote->poll_cnt--;
++	if (!remote->poll_cnt)
++		cancel_delayed_work_sync(&remote->poll_work);
++}
++
+ static struct trace_remote_iterator
+ *trace_remote_iter(struct trace_remote *remote, int cpu, enum tri_type type)
  {
- 	struct trace_remote *remote = s->private;
+@@ -434,9 +454,7 @@ static struct trace_remote_iterator
  
--	seq_printf(s, "%d\n", remote->tracing_on);
-+	seq_printf(s, "%d\n", READ_ONCE(remote->tracing_on));
+ 		switch (type) {
+ 		case TRI_CONSUMING:
+-			ring_buffer_poll_remote(remote->trace_buffer, cpu);
+-			INIT_DELAYED_WORK(&iter->poll_work, __poll_remote);
+-			schedule_delayed_work(&iter->poll_work, msecs_to_jiffies(remote->poll_ms));
++			trace_remote_inc_poll(remote);
+ 			break;
+ 		case TRI_NONCONSUMING:
+ 			ret = __alloc_ring_buffer_iter(iter, cpu);
+@@ -470,7 +488,7 @@ static void trace_remote_iter_free(struct trace_remote_iterator *iter)
  
- 	return 0;
- }
-@@ -281,7 +282,7 @@ static ssize_t buffer_size_kb_write(struct file *filp, const char __user *ubuf,
- 	if (trace_remote_loaded(remote))
- 		return -EBUSY;
+ 	switch (iter->type) {
+ 	case TRI_CONSUMING:
+-		cancel_delayed_work_sync(&iter->poll_work);
++		trace_remote_dec_poll(remote);
+ 		break;
+ 	case TRI_NONCONSUMING:
+ 		__free_ring_buffer_iter(iter, iter->cpu);
+@@ -1003,6 +1021,7 @@ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs,
+ 	remote->poll_ms = 100;
+ 	mutex_init(&remote->lock);
+ 	init_rwsem(&remote->reader_lock);
++	INIT_DELAYED_WORK(&remote->poll_work, __poll_remote);
  
--	remote->trace_buffer_size = val;
-+	WRITE_ONCE(remote->trace_buffer_size, val);
+ 	guard(mutex)(&trace_remotes_lock);
  
- 	return cnt;
- }
-@@ -290,7 +291,7 @@ static int buffer_size_kb_show(struct seq_file *s, void *unused)
- {
- 	struct trace_remote *remote = s->private;
- 
--	seq_printf(s, "%lu (%s)\n", remote->trace_buffer_size >> 10,
-+	seq_printf(s, "%lu (%s)\n", READ_ONCE(remote->trace_buffer_size) >> 10,
- 		   trace_remote_loaded(remote) ? "loaded" : "unloaded");
- 
- 	return 0;
-@@ -1131,7 +1132,7 @@ trace_remote_enable_event(struct trace_remote *remote, struct remote_event *evt,
- 	if (ret)
- 		return ret;
- 
--	evt->enabled = enable;
-+	WRITE_ONCE(evt->enabled, enable);
- 
- 	return 0;
- }
-@@ -1140,7 +1141,7 @@ static int remote_event_enable_show(struct seq_file *s, void *unused)
- {
- 	struct remote_event *evt = s->private;
- 
--	seq_printf(s, "%d\n", evt->enabled);
-+	seq_printf(s, "%d\n", READ_ONCE(evt->enabled));
- 
- 	return 0;
- }
 -- 
 2.56.1.809.ga0b61035b5-goog
 
