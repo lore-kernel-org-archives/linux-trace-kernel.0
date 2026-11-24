@@ -1,55 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795530895;
-	b=F+hpf0Up7agMOxkPM/Y9kbPQUfXNLau6xOlvRSC9co9EsO0gfIJ8wKSUYWhXMBrqKwD9
-	 Q42+w1nme7bg5gyDzuNHkVSqdpzyt/Qw6Pe/qMfO9o5cD9FceXt97CPjQO0maJW7gPsdB
-	 mBk5rNWbf60oUwjac3wDVO8ZLe9KPPMbfVbIB9W8IrZOXE9w4UhjcZ2+QAKgj5mhrJXvy
-	 /ai/kuLbveGIGqURujhecPuqcrp4r72nrV3SMy7B65M0ibOk3nHy2jvR8Wg2/gONgqycI
-	 lZ74kjRzrEVfEP6y11huL9ql2VyJ1DxIZngz3Np62/JLJn6n+Q/W7+GwAcyqrlfUKag==
+	t=1795531224;
+	b=K1DI+hnIVRiVC02zl8FqKYtgqRIWGwzjcYC7B/Ya2GYqIFMWrVYHkK5FQDc6RcLOv20V
+	 uZRg9P0/gAz8Nqs6BnPO8gRywnLMmzXlN/gbIkHizgDsDBHqNvFp+d0poK5eWMBg7Qg0U
+	 /6OoHaJtOwk5BWsh0ayj/wsYw5U834qQbhkAkKw4DhPrWls5k3zzVXhFJNz3f/VNHorXm
+	 x/Ds87sfNGhf1dIn4O/Mez0bFpQeBo7tt3nQC6aB9hLfGnQevq8/pOkwAzVw9oCpsQGuA
+	 680UzLOjOH5Wsmw0VMxcGnBZ9BJKl+j9cQGETYtEDTs2SVQmiSDQJsYIuPXi4ULaO8A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795530895;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795531224;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Spam-Status:
+	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=/CT6/MyjBFCAt30ylmwkm5YqXIvvm+uNz1QIn+PjSwk=;
-	b=hZI68cN8ArNpXYZfXKdh70uBCGOVqDCNfXHvof6ghDEOz8JBVeY2gDZoHbjChXt+nCA7
-	 18/MzWSf6JXYSw76MjWEJH/9yw4LMQBlV1NF7JxUlcigGYPUr05tFtMvjJaQmJbdq8Rb/
-	 l7X8mX/NEbOy596nvs2wQyWf79L3ez7I46mGS+Av8Rjl8vt44prGxtA6uzHlsqlxVhMA4
-	 I5vxtYdSzh7WMGuCfrmItLx/kgLHbavE+VryqLmkv+nfX0Msy9k+hFgqKY91OFAOtkhRq
-	 y3h06Ugd6LuqjBmd7uOg+FSR5wgIuuHVDtKV0tjwcw79HtzyQfdKMaJs8PBRIR9SvLA==
+	bh=SL3PL1m8jHiSOf5zx037rsGIS1n82PCpE57ofB5Ribc=;
+	b=Gn5+tawTj+cH2i2xeJU5s6OkTzzCicJPEB5fe1WofoxkjvyOg5l14ApyPBRivawYIC7e
+	 oQRj+YsA10r3Ic6VAOf6cI61YQXLNPYJtmSuKPVZHDYNwyKCyCf2JF5DRYBdnZI5EdAAr
+	 MiPXAAwOYjlTElhO/NMT4inZygKOW1mWX1EJjfhCiWG/998LmsLkPl1CEI+FN8usvDjG9
+	 w7aN85wPkVacKltjQn/H7rzf2vtqNMM0CnSnBgqKG5Xu7VLq87r8v4pyGx2Q6s1xDsNHY
+	 twBZzWjiFqYtSHbkBGeDzUcPvRONWB1xkfIkYeyFrJ4+5xPc8evzonMIhdwNg8mOY2Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=joj9FSb7;
-	arc=none smtp.remote-ip=216.40.44.16
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=lcHe+SfT;
+	arc=none smtp.remote-ip=216.40.44.14
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD95C606A685;
-	Tue, 24 Nov 2026 14:34:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DD95C606A685
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1814F606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 14:40:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1814F606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=joj9FSb7
-Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 73CD8C0B9D;
-	Tue, 24 Nov 2026 14:34:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id A3D5F17;
-	Tue, 24 Nov 2026 14:34:51 +0000 (UTC)
-Date: Tue, 24 Nov 2026 09:34:50 -0500
+	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=lcHe+SfT
+Received: from omf02.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id BE27B1401F9;
+	Tue, 24 Nov 2026 14:40:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 16F3D8000E;
+	Tue, 24 Nov 2026 14:40:20 +0000 (UTC)
+Date: Tue, 24 Nov 2026 09:40:19 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Donglin Peng <dolinux.peng@gmail.com>
-Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, pengdonglin <pengdonglin@xiaomi.com>
-Subject: Re: [PATCH] fgraph: Format error pointers as signed errno values
-Message-ID: <20261124093450.555bafa5@gandalf.local.home>
-In-Reply-To: <CAErzpmtcDUu6dtQAvV4fJTuDyr6YqtyrLi6XBjWHLjxS55RTYQ@mail.gmail.com>
-References: <20261020104710.2366146-1-dolinux.peng@gmail.com>
-	<CAErzpmtcDUu6dtQAvV4fJTuDyr6YqtyrLi6XBjWHLjxS55RTYQ@mail.gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev, "Linux Trace
+ Kernel" <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7] tracing/probes: Zero out faulted dereferenced fields
+Message-ID: <20261124094019.75f52b60@gandalf.local.home>
+In-Reply-To: <undine-1795529710371793698-f2bd67810f91497f@undined.local>
+References: <20261123213246.00440bfc@gandalf.local.home>
+	<sashiko-outbox-230424@kernel.org>
+	<20261124090849.7fe8d45f@gandalf.local.home>
+	<undine-1795529710371793698-f2bd67810f91497f@undined.local>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,23 +64,39 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: A3D5F17
-X-Stat-Signature: 4aaqgt1kon5yofrsrk3m38c41yhdjsrf
+X-Stat-Signature: 13oqkotsj4gyqyy97c9bjaucspyrhoxo
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 16F3D8000E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+XPnsBSjISZXrW6/affoj0qDxQzPO1Cno=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=/CT6/MyjBFCAt30ylmwkm5YqXIvvm+uNz1QIn+PjSwk=; b=joj9FSb7fNf58VcbWIKo3NQFWC8XZdKBGEEUT5v6jQ86d6Pv29zqJmPHkb4E9JPIdC9d47R0OjrE64QdZ/5FOc4z+Tp3yjPvlPMDL0qplOaB/+lxNL6sGAbUxVFcrQONt7EE7GfrSLdxkKhBvvVSRcdMP9vChz3zeYMUWxZeOqQ=
-X-HE-Tag: 1795530891-558170
-X-HE-Meta: U2FsdGVkX1+91AO1C8lgBAF7jFZzqoKSsDJx768XTKRRNQg9ajXNB3MkTqyhrt6hMPuy0oaBBv3i7gQ/73RM2pjbgGokX5gjTNi9k8nnboO/9FUB7TRz2ZxFX+yNXQ11KYP62K8RDlUMkvXtFfnZVFc0M643ZVNGBvdDUdSGl5cjFJECVnR0aHaGMm2Udmu0g1RUZ8mFpLPUU/NLIDDXlrSX3ntG+2dW9uKJ58ZqYS7KuZ79AOAZ00CFGZR3UqI0azSl4dl3kJ2z7AQMZoCe7f1jlVBIj+grVYTAFWuOdhDOtCA4GDYWA0HHA2QfBPkhSweJr2u31Zj3nH+1MXKiamz/GEEtGnxP
+X-Session-ID: U2FsdGVkX19p4us7pEBmSioedkxxyrh0wu4Qkrky7W4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=SL3PL1m8jHiSOf5zx037rsGIS1n82PCpE57ofB5Ribc=; b=lcHe+SfT7xaQDB+kGlkAfMmmVDrNIxm/KljeIU9gAnUm2eA7ATIOY+Qwn0+YenE3/oLuOetlIGBnK+Jb2DLyWM7fnO5BMMqeskZboLF3rav9yY/sceLy8d7hEbm1Q7sM6Uy7HtihMu9khfBRhbbWv6b1V5B5/fIxMEQeRWlVd24=
+X-HE-Tag: 1795531220-365516
+X-HE-Meta: U2FsdGVkX1/ociYjPQuHesWAJ8W79GNT6vIP70TulAk43OTqp9EHZAuziuroqHRx09P0scwr0r1QKb4nX7KV+AG+069B3q4riRoIwiIUhyqCvswgssFvSsdKuefpsfaRU5XkNIevpiIgCuJk+PVpBD8pdDowhAEpAPQIlPybuzB6uKr6YEe7GtdVQOSqoS+Yrt2hI2XKZhnRuivIT1+4cBW2Fx/eF4WHKd/I4Tpew4UtUOHwr6zqxG/uX5IjRG/ynt1c6jfft0VqzZjfcp8H+qdM8tQFZ6SJ3bS3sGpLWnv+2lv0x6C8cNWgXQ939EUtASl63uTzd6JtKprFMDqFXMaexcFpUWsTMFEQqaDJE1CprJqgwjPFEg==
 
-On Tue, 24 Nov 2026 19:07:55 +0800
-Donglin Peng <dolinux.peng@gmail.com> wrote:
+On Tue, 24 Nov 2026 23:15:10 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> Just a quick ping on this patch.
+> > > [Severity: Medium]
+> > > Should do_probe_mem_read() and do_probe_mem_read_user() check for a NULL
+> > > src before calling probe_mem_read() and probe_mem_read_user()?  
+> > 
+> > No, but I guess I should add that as we probably shouldn't be dereferencing
+> > zero when something fails.  
 > 
+> Maybe we should make it rejecting dereference if IS_ERR_OR_NULL(ptr).
 
-It's in queue. I have 153 patches in my todo list and unfortunately, fixes
-always preempt enhancements. This patch is more of an enhancement than a
-fix. But I'll get to it.
+Do any of these things return ERR? When one of the functions return an
+error, the val (or current pointer) gets set to zero. Then that zero
+continues to propagate.
+
+The original problem was that if we had multiple dereferences, once one
+failed it would exit the loop. If it didn't fail on the final dereference,
+it didn't do anything which meant that it left whatever was in the ring
+buffer unmodified. This caused the output to show garbage.
+
+The goal here is to set the pointer to NULL as soon as an error is detected
+but then let the processing continue. All processing would see the NULL (or
+zero) as a fault and continue but would eventually zero out the destination
+on the ring buffer.
 
 -- Steve
