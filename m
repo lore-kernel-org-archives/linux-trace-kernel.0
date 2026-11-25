@@ -1,58 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795632311;
-	b=k/ybrFUvqO4JMm7ksgrcJEtdvUMfKPiBFhJ9ejuOuWBGQFJ6M36CCs+IqKSvHuepyjY3
-	 Sf0C8kFHdoo8KUfJVb7S+dplWtsA4Kxzot88QWTZEOBw01dbf19ZuXgXDriXgx4MsVQ+b
-	 cJXeasqGSLw82WAhFykM4U9VG1O+T0qCPqUB+8EPM3FzYl6dA5dRb1n5KJkHpvpqUiXWV
-	 9J0FyzvkEPHK/hEpeSupqMpRra8C1iouBoT/SXe7SW8iFPX5tlpZOYigvtefMaQ/T5yZE
-	 KrLrkbztqIGw+SnWyQNv9ZWFi8x3vhvHU0I/A6unNxrQOfvZjGfFlsp8QTiTGwGsklg==
+	t=1795632996;
+	b=ab9eQSPC1udlEqpI53y3Xr6LunAuZUFSq8ZvMR7OYGt3haceJjofK700NIme8G5CnuQO
+	 e8SW5dcIInG475YP8+gy8COF2nAwhRh03RNyAoijcW3QE7zPVbs0OBRJLiLbLSbDYCgta
+	 8i0OsFf+DKYUKjfyTAgQEpBTAu1Hcse/1TFx6LClydlD78Ma7wJqrFy2onwOchicIv02E
+	 UASJkT0poLvkbgHQ4NaTGJVKUjJlnsGFAR8oToVV56ik1wo8kurYMgRIMKtejwM6uq0+A
+	 3VvTe2zitiBuuN2//UFtiv1OhqWa9tdSuGPo8P764x/Jy6bN256OLHrsEHiqhCKLt3w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795632311;
-	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer;
-	bh=irgmmItnIcv+NCSLi3q2cVon1bQLXokEs1Jc5hW5B18=;
-	b=GfIlIqsxAsXUYZbAva8Mr7wKa9g3syX3ZF/JyIOoNx4r20F32zNq18SPCTRIwGbXeHBe
-	 KudHVHAlMJXmEWbxw8W/iQSOSXvQDjVBCxeQJarAJspAEuGYethX6X/DZ4vIlMxdVRVVU
-	 y9evYhl3gy4LGWXm4PPGN27cN1fHMsxOSY0zFD/hdj2LnEpsPQzmBwUm8XVQbWM4dBSqt
-	 p014+JpQo6zi/X3Tr3UVsoLQnlleIjLVV7iCbynUecYki7cfPZCcoNxRd7DCVplbSbRrA
-	 +w3mzXywMxoyelvI9z3BuUNE69Qms/B0Vo/OeQROdQUm3Dmxxamgr86hV3oe+VSo4XQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795632996;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=0I9H/l59LtVKJf59L6zzu1WxB8OwJYohu0AJc09MKF8=;
+	b=DapkMsWhVTQmyYSmYLRb1VZcbo1lRKubzfAB4qFMpzIbVTzBbefgW6dTqdjQioVr3PoG
+	 QnvusXq4C8r4cdRAmiuL5TQLJRNGeDDBC9sVmvqWiEJy9DrfbXs3lJgNGYzRn0TB83OCP
+	 DhuwkQciKbVawP41N3Q9W3Jan5ejVoZbWuVeMVEjSWd+zOJDM7S++NeWjnyt6SKQIq2Ji
+	 RY5kISvxeenNV0zcB3A/XXzKKcP9UNunc5scimuBQngwPzZc4nt81OdWqOPF4n05DSSor
+	 hjFI/cylP5NMFc2QycmvldsYkl+3NZy8DGxg/Iblvh2tioGiGF6NJvmV3cCjV6CU+Sw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=collabora.com;
-	spf=pass smtp.mailfrom=collabora.com;
-	dkim=pass header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b="H/wn2Dhh";
-	arc=none smtp.remote-ip=148.251.105.195
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TEvaV4lv;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD15A606A6B7;
-	Wed, 25 Nov 2026 18:45:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD15A606A6B7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976FB606A326
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 18:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=H/wn2Dhh
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1795632309;
-	bh=AJIfwVf8wdiuFci8fQLP2oVwA2zvoSeP1nF8x4T09X4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H/wn2Dhh7v7Zb17P2TTy/8mcQyEHOVK/FYK4NmRuM8awgHMaqD7nfML42vzHB5Bc/
-	 4pY98nQZy1cgrga6G4aq/uqYsQEOEtb4G/CdBWegNybN2lxR5jRu0XoVkMJ8C73AVd
-	 HFnN0on24crH2BuFPOxKjJ1+yjQ5cm4Vg4Vf7COQ1DjEh89Qm9Nz+NqhgpN2XC3Zil
-	 GmbrGY73QVb2DGd8I9rKV7oiPfblL6yyXjEaSGIQ7TMLJKr8cKxy+CQefQBKX6b6Yd
-	 mCTrIRA95U1eMxEFz8zhHP23cheJI06XgWTpQkShfvMSoRvDs+gbKpLuJNLj5DYlco
-	 KL+nwYGploW5g==
-Received: from [192.168.0.15] (unknown [100.64.0.170])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: detlev)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6090917E0311;
-	Wed, 25 Nov 2026 19:45:07 +0100 (CET)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-Date: Wed, 25 Nov 2026 13:33:31 -0500
-Subject: [PATCH v3 9/9] media: hantro: Add v4l2_hw run/done traces
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TEvaV4lv
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161771F000C4;
+	Wed, 25 Nov 2026 18:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795632996;
+	bh=0I9H/l59LtVKJf59L6zzu1WxB8OwJYohu0AJc09MKF8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=TEvaV4lvx0uTz/ySlh1yGDC8b/eKJiVh/9q+1cmHBazWzQXPgTLf1J6RzggUSxHOS
+	 xik18ws/uaohJzh5hgGknFwPmT4+M3IFvUtY1CWCVgAj1hbE5s2Cp8eicsmf2DI9Mt
+	 T/YQMvjni2HSUSC26Z52ubxTIVqA+q8RZdtvxTjYxbxUun9CkxWfFffAo6N1/d337x
+	 9bRMCoBQxcbRy9X3jK5eTKcjE8XxLRiScZTaxxcQFH6XqT6fpWNFPNz9ozPSMvBcGn
+	 WXGctCP7V7gQICI4RZO83hYlqteg5FqvomVY8x/IiewmbxEa11pkIyT+2HzKJlcgyC
+	 va2ULP+iErz0g==
+Message-ID: <sashiko-outbox-234022@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 4/9] media: Add tgid and fd to the v4l2-requests
+ trace fields
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Detlev Casanova" <detlev.casanova@collabora.com>
+Cc: linux-trace-kernel@vger.kernel.org, media-ci@linuxtv.org
+In-Reply-To: <20261125-v4l2-add-ftrace-v3-4-1d1db48372ed@collabora.com>
+References: <20261125-v4l2-add-ftrace-v3-0-1d1db48372ed@collabora.com>
+ <20261125-v4l2-add-ftrace-v3-4-1d1db48372ed@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 18:56:35 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,131 +60,96 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261125-v4l2-add-ftrace-v3-9-1d1db48372ed@collabora.com>
-References: <20261125-v4l2-add-ftrace-v3-0-1d1db48372ed@collabora.com>
-In-Reply-To: <20261125-v4l2-add-ftrace-v3-0-1d1db48372ed@collabora.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com, 
- Detlev Casanova <detlev.casanova@collabora.com>
-X-Mailer: b4 0.15.2
 
-Add the trace calls as well as retrieving the number of clock cycles for
-the rockchip_vpu core.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] media: v4l2_controls tracepoints declare signed fd as unsigned
+  u32
+--
 
-Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
----
- drivers/media/platform/verisilicon/hantro.h               |  1 +
- drivers/media/platform/verisilicon/hantro_drv.c           | 14 +++++++++++++-
- drivers/media/platform/verisilicon/rockchip_vpu981_regs.h |  1 +
- drivers/media/platform/verisilicon/rockchip_vpu_hw.c      |  4 ++++
- 4 files changed, 19 insertions(+), 1 deletion(-)
+commit 3152eaf4ee2021252442052cd8aab150bbaf3891
+Author: Detlev Casanova <detlev.casanova@collabora.com>
 
-diff --git a/drivers/media/platform/verisilicon/hantro.h b/drivers/media/platform/verisilicon/hantro.h
-index 0353de154a1e..d5cddc783688 100644
---- a/drivers/media/platform/verisilicon/hantro.h
-+++ b/drivers/media/platform/verisilicon/hantro.h
-@@ -253,6 +253,7 @@ struct hantro_ctx {
- 
- 	u32 sequence_cap;
- 	u32 sequence_out;
-+	u32 hw_cycles;
- 
- 	const struct hantro_fmt *vpu_src_fmt;
- 	struct v4l2_pix_format_mplane src_fmt;
-diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/drivers/media/platform/verisilicon/hantro_drv.c
-index 3734ea701145..54a078ac14e4 100644
---- a/drivers/media/platform/verisilicon/hantro_drv.c
-+++ b/drivers/media/platform/verisilicon/hantro_drv.c
-@@ -25,6 +25,8 @@
- #include <media/videobuf2-core.h>
- #include <media/videobuf2-vmalloc.h>
- 
-+#include <trace/events/v4l2.h>
-+
- #include "hantro_v4l2.h"
- #include "hantro.h"
- #include "hantro_hw.h"
-@@ -100,6 +102,9 @@ void hantro_irq_done(struct hantro_dev *vpu,
- 	struct hantro_ctx *ctx =
- 		v4l2_m2m_get_curr_priv(vpu->m2m_dev);
- 
-+	if (ctx)
-+		trace_v4l2_hw_done(ctx->fh.tgid, ctx->fh.fd, ctx->hw_cycles);
-+
- 	/*
- 	 * If cancel_delayed_work returns false
- 	 * the timeout expired. The watchdog is running,
-@@ -122,6 +127,9 @@ void hantro_watchdog(struct work_struct *work)
- 	ctx = v4l2_m2m_get_curr_priv(vpu->m2m_dev);
- 	if (ctx) {
- 		vpu_err("frame processing timed out!\n");
-+
-+		trace_v4l2_hw_done(ctx->fh.tgid, ctx->fh.fd, ctx->hw_cycles);
-+
- 		if (ctx->codec_ops->reset)
- 			ctx->codec_ops->reset(ctx);
- 		hantro_job_finish(ctx, VB2_BUF_STATE_ERROR);
-@@ -183,8 +191,12 @@ static void device_run(void *priv)
- 	v4l2_m2m_buf_copy_metadata(src, dst);
- 
- 	ret = ctx->codec_ops->run(ctx);
--	if (ret)
-+	if (ret) {
- 		hantro_job_finish(ctx, VB2_BUF_STATE_ERROR);
-+		return;
-+	}
-+
-+	trace_v4l2_hw_run(ctx->fh.tgid, ctx->fh.fd);
- }
- 
- static const struct v4l2_m2m_ops vpu_m2m_ops = {
-diff --git a/drivers/media/platform/verisilicon/rockchip_vpu981_regs.h b/drivers/media/platform/verisilicon/rockchip_vpu981_regs.h
-index e4008da64f19..96b85470208b 100644
---- a/drivers/media/platform/verisilicon/rockchip_vpu981_regs.h
-+++ b/drivers/media/platform/verisilicon/rockchip_vpu981_regs.h
-@@ -451,6 +451,7 @@
- #define av1_pp0_dup_ver			AV1_DEC_REG(394, 16, 0xff)
- #define av1_pp0_dup_hor			AV1_DEC_REG(394, 24, 0xff)
- 
-+#define AV1_CYCLE_COUNT			(AV1_SWREG(63))
- #define AV1_TILE_OUT_LU			(AV1_SWREG(65))
- #define AV1_REFERENCE_Y(i)		(AV1_SWREG(67) + ((i) * 0x8))
- #define AV1_SEGMENTATION		(AV1_SWREG(81))
-diff --git a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-index 02673be9878e..f959151b6645 100644
---- a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-+++ b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-@@ -424,6 +424,8 @@ static irqreturn_t rk3588_vpu981_irq(int irq, void *dev_id)
- {
- 	struct hantro_dev *vpu = dev_id;
- 	enum vb2_buffer_state state;
-+	struct hantro_ctx *ctx =
-+		v4l2_m2m_get_curr_priv(vpu->m2m_dev);
- 	u32 status;
- 
- 	status = vdpu_read(vpu, AV1_REG_INTERRUPT);
-@@ -433,6 +435,8 @@ static irqreturn_t rk3588_vpu981_irq(int irq, void *dev_id)
- 	vdpu_write(vpu, 0, AV1_REG_INTERRUPT);
- 	vdpu_write(vpu, AV1_REG_CONFIG_DEC_CLK_GATE_E, AV1_REG_CONFIG);
- 
-+	ctx->hw_cycles = vdpu_read(vpu, AV1_CYCLE_COUNT);
-+
- 	hantro_irq_done(vpu, state);
- 
- 	return IRQ_HANDLED;
+media: Add tgid and fd to the v4l2-requests trace fields
 
--- 
-2.56.1
+This commit adds the v4l2_fh tgid and fd fields to all v4l2_controls
+tracepoints and updates visl_trace_ctrls() to pass them.
 
+> diff --git a/include/trace/events/v4l2_controls.h b/include/trace/events/=
+v4l2_controls.h
+> index 722e10a5078e3..531aef185b85e 100644
+> --- a/include/trace/events/v4l2_controls.h
+> +++ b/include/trace/events/v4l2_controls.h
+> @@ -17,27 +17,39 @@
+>   * They can be identified by the name of the event. All control fields a=
+re copied in a TP_STRUCT
+>   * field so that they can be filtered separately in userspace.
+>   *
+> + * In addition to the controls fields, tgid and fd are also added in eac=
+h trace events.
+> + * This allows to identify controls set by a specific process and to mat=
+ch them with other events
+> + * from the same process.
+> + * tgid contains the process id that opened the video device.
+> + * fd is the file descriptor in the tgid, used in case a process opens m=
+ultiple video devices.
+> + *
+>   * Currently only the codec controls are supported.
+>   */
+> =20
+>  /* AV1 controls */
+>  DECLARE_EVENT_CLASS(v4l2_ctrl_av1_seq_tmpl,
+> -	TP_PROTO(const struct v4l2_ctrl_av1_sequence *s),
+> -	TP_ARGS(s),
+> -	TP_STRUCT__entry(__field(__u32, flags)
+> +	TP_PROTO(u32 tgid, u32 fd, const struct v4l2_ctrl_av1_sequence *s),
+> +	TP_ARGS(tgid, fd, s),
+> +	TP_STRUCT__entry(__field(u32, tgid)
+> +			 __field(u32, fd)
+> +			 __field(__u32, flags)
+>  			 __field(__u8, seq_profile)
+>  			 __field(__u8, order_hint_bits)
+>  			 __field(__u8, bit_depth)
+>  			 __field(__u16, max_frame_width_minus_1)
+>  			 __field(__u16, max_frame_height_minus_1)),
+> -	TP_fast_assign(__entry->flags =3D s->flags;
+> +	TP_fast_assign(__entry->tgid =3D tgid;
+> +		       __entry->fd =3D fd;
+> +		       __entry->flags =3D s->flags;
+>  		       __entry->seq_profile =3D s->seq_profile;
+>  		       __entry->order_hint_bits =3D s->order_hint_bits;
+>  		       __entry->bit_depth =3D s->bit_depth;
+>  		       __entry->max_frame_width_minus_1 =3D s->max_frame_width_minus_1;
+>  		       __entry->max_frame_height_minus_1 =3D s->max_frame_height_minus=
+_1;),
+> -	TP_printk("\nflags %s\nseq_profile: %u\norder_hint_bits: %u\nbit_depth:=
+ %u\n"
+> +	TP_printk("tgid =3D %u, fd =3D %u\n"
+> +		  "flags %s\nseq_profile: %u\norder_hint_bits: %u\nbit_depth: %u\n"
+>  		  "max_frame_width_minus_1: %u\nmax_frame_height_minus_1: %u\n",
+> +		  __entry->tgid, __entry->fd,
+
+[Severity: Low]
+Should fd be declared as a signed int (or s32) and printed with %d
+across all trace events in v4l2_controls.h?
+
+struct v4l2_fh defines fd as int, and __video_do_ioctl() sets
+vfh->fd =3D -1 when iterate_fd() returns 0 (for example, when the video
+device is opened on file descriptor 0):
+
+drivers/media/v4l2-core/v4l2-ioctl.c:__video_do_ioctl() {
+	...
+	if (unlikely(!vfh->fd)) {
+		vfh->fd =3D iterate_fd(current->files, 0, _file_iterate, file);
+		if (!vfh->fd)
+			vfh->fd =3D -1;
+	}
+	...
+}
+
+Declaring fd as u32 and formatting it with %u turns -1 into 4294967295
+in the trace output and exposes an unsigned field in tracefs.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125-v4l2-add-f=
+trace-v3-0-1d1db48372ed@collabora.com?part=3D4
