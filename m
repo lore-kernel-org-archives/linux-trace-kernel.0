@@ -1,81 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795593884;
-	b=TQ9UHvDQsVyRApdCpcOqxGrOKais05BjgFmhxpkHJgKt14FfXtqxnySy1PCADINdV95E
-	 K+DKWcUVmjfZU0nwR8D700WJHslMcuo5Bp/ekexYjYzk1Yd7blYtO66cUreZu/Rqvdllh
-	 m8k8IeUMl+ssEGl+e9vAFZZGNHpwThjhQK++7fep6dvOn92I3UoEPUY4yVGeAMrvrpJlt
-	 djkocCuOYLZrdbOsRNrH5tmU2Otv7SWGeGnrgMTYQzn/5y3ExW+tH5EibV+JSFmCNTJZw
-	 Z81h+klKsv+bEz/RmihX7JmMTKsASUqnMjJcPzLYB9AXttAACywpqLeoaHRN1msyu8w==
+	t=1795596417;
+	b=nlGVzcZYnKZviXwFd2CYoiCcNv2Nd8R8UNfGe2Wu/g1vvE88aduDbboirnLHkP8vcf7M
+	 YoaUESq2Z1hbK7PlJ+KXyzaM7SV5rYwvREWv92OxpWgGXn95UHiFD3ynSdc2o+e7vZu80
+	 p+p5/wCrXHGFiNezmDJ2NodMYGIrb1jAPzTZsUDzQLz7Dcdqy/ig6gQegBFHumN2WZdiv
+	 L5yzgkJ4GIx7379eVMn9iW+ADXumPTGCLEeHtd+qpglwajMlFONCQXd/0JwHwwZd2N2DJ
+	 yY/2Uc01B6pNk/pxYbr8e370QBssfOTobaAJAS83XWgMfz/BP0ZnxJSFHwGa06pa6nQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795593884;
-	h=DMARC-Filter:X-UUID:DKIM-Signature:X-CID-P-RULE:X-CID-O-INFO:
-	 X-CID-META:X-CID-BVR:X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:Received:
-	 Received:Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-MTK;
-	bh=RZiARSrN+96IvgyLqqkIF8nWXtL4K1TCt2GqvlBqfE0=;
-	b=NZ6/SbfPwlJML319UQS5nfzLQi9afLbFo5C1kU9dZFaVIadO1/U/jpqxF1Brh6X1nUVl
-	 g/on3wa+bSUCVetQEv6QqyevZMe3U2HVpx4q8XdThnVoBrBjBP98YlWKbrY/PkXs6CxkB
-	 4iX6bf9dZng+9iv/1AvOO9zUheDuI9HuhHZ7oG30fTHgf4AFbHeSU4hL2TmvTEZoLrSkY
-	 u5RQXhOopWpAxUrb3SgTHhnqXYfYmkimDXUVsmGpKsA1N3Dag8NLEXLqt3bhw/yT4ORWD
-	 hF2t2KUncsZbgL9Zbx7gCtYhIhIyZPJDyIaJGDmYOLtpHaJxTn81IQsnXVelV2Oi0pQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795596417;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=gKIID75y2cmNlMXRd1MhTd86fNY6fAdmhSMsDM5aV/Q=;
+	b=0P7aR+6hZ6j1dCl4giHis/rAmAtzmyVh2FTLepeSrnZQ6NhK/AObCUyqwulMSFBccHR9
+	 KMwjXdVYN4q4k3uLFzBiXZCejQ+VsTu7eaiFUl5G2ZqRHLnk1casOSlTNnImIUWXWEIsv
+	 SfP8gMv+SEun+GWyB62klcMllWNQH+7ROs0j3mwkU2IMZsdtLbNjYkiwxZGicGKnQuBi+
+	 WaWSEfum7YIiRC40SxJpVphdsCgyAvCbOgDEmwR9A+rwL8mJ4gsEMvs9QztIR+y2sRUFh
+	 BdTBc6wRCmUvoRm/Rmvjt0xqvt6foW/4iKZQdqWpJIdd8FGWIuR5TsIlumwfTjiPGDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mediatek.com;
-	spf=pass smtp.mailfrom=mediatek.com;
-	dkim=pass header.d=mediatek.com header.i=@mediatek.com header.a=rsa-sha256 header.s=dk header.b=ELcExiDL;
-	arc=none smtp.remote-ip=60.244.123.138
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fVJgIzVQ;
+	arc=none smtp.remote-ip=209.85.216.46
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C85E606A321;
-	Wed, 25 Nov 2026 08:04:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C85E606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A2F606A323
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 08:46:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59A2F606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=mediatek.com header.i=@mediatek.com header.a=rsa-sha256 header.s=dk header.b=ELcExiDL
-X-UUID: dd283236e8a611f1b1788b6acf885367-20261125
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=RZiARSrN+96IvgyLqqkIF8nWXtL4K1TCt2GqvlBqfE0=;
-	b=ELcExiDL0Ne3E53F2RevlQd77pggl5lTtOASPG18QJ450ZiO7xRlyhmowtdjVx8MUDvqMRUqa5eNnG4mNmolN5s8AlWO4z6u5+6Lj7qSwvJkg7PM3FfOR4USO9qlgfkuYpLAEM0792NvW+jqfpn1RHEHF8uB3B6lFmZPWiyak6w=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.21,REQID:d39729d0-b93d-429b-9696-540a267e39aa,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:b0318ac,CLOUDID:97bc091a-ae4c-4a2b-b1c4-72e411efd0c9,B
-	ulkID:nil,BulkQuantity:0,SF:102|836|865|888|898,TC:-5,Content:0|15|50|99,E
-	DM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0
-	,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: dd283236e8a611f1b1788b6acf885367-20261125
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <kuyo.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 893746225; Wed, 25 Nov 2026 16:04:39 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Wed, 25 Nov 2026 16:04:38 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.2562.56 via Frontend Transport; Wed, 25 Nov 2026 16:04:38 +0800
-From: Kuyo Chang <kuyo.chang@mediatek.com>
-To: Kuyo Chang <kuyo.chang@mediatek.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Martin Kaiser <martin@kaiser.cx>,
-	Vinod Koul <vkoul@kernel.org>
-CC: <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>
-Subject: [PATCH 1/1] tracing: Fix UBSAN shift-out-of-bounds in test_event_printk()
-Date: Wed, 25 Nov 2026 16:03:56 +0800
-Message-ID: <20261125080431.1612026-1-kuyo.chang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fVJgIzVQ
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3b43d6c3485so640207a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 00:46:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795596416; x=1796201216; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=gKIID75y2cmNlMXRd1MhTd86fNY6fAdmhSMsDM5aV/Q=;
+        b=fVJgIzVQUDo0SHmzV1oXinNoS3IEbtSaCl5C0hhFa6u4okslMXZuRPP1/sE1WiEaSt
+         uGkBZpyVkBMM8TG3tNupmqxvXUF8tBlvl7FmAAd4t7c4tLlgget2lEK+3MnDSNWXpjIM
+         LQiK+VY0JOprNjTxLMQ8HSLhKOACJPdkQOyvYu6tjxedmQgDeIB4szcK+Ks6OFgZILhd
+         tGCllSv8DXP/lEEhUKk6YeHJvvHdIP/y6wYbt5WlwmtGUev3ODHIqUkrFT4fdlSxOCxe
+         SOL0annlCqBUipJwv5paTKlpRq6+K65Z/PV6rXXu4pyBP5LDKlKHOk7YacECCkayebCZ
+         XYxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795596416; x=1796201216;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=gKIID75y2cmNlMXRd1MhTd86fNY6fAdmhSMsDM5aV/Q=;
+        b=x5SVhdXVCfjwsPsYzzkybKyK44/+6q1rREsDOey2w/oFBwOlytHwnLc7z1uezL0YeG
+         K7ZwFUmVvMrs+X1HwE0i1QmOlwLn9/1guTS8kZQs+0rhCbwejruIagng7X9MFOC+FjO1
+         9HLD0buHgKbhTBiUBrGFP0bWtm1aGXFfNIfRvlPIvXo/jYuwYm9r9ZamSxCAeFk8Jf/2
+         N7gUFQx8avvsqi0UBe0t3xqK6pfco5a6RxMKyxxop5nQg9M0gf/lKTUBl93FpZynLAWr
+         yVI8fzYqXsh5FHiucRpyAQRrBiGD1vPBhkJtBKrm5BCQWReVG0VLsMzzLxB8W3Mk++/p
+         cbqg==
+X-Forwarded-Encrypted: i=1; AL+hErEBNe5lT7yhDyy4HSKtW6ZiY78CQU8QqqcjfdYw3eHDvivLh04vb1GMyz22RC9VytRoTPHlhwBmncewmYZmdp3kahs=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+F7fGe6Gr0coIuqIkthQipKt02pRLixYTY0SbLmvD557QaIdfd
+	ToIoig1WQ8uQanDfn8cANzBppJW24GWV1zFVlflZzkDRa/pOfgkFBMKG
+X-Gm-Gg: AZFdTZf7nxAOY/krrYGVU9kgPyFYpvGUQ+daDSydchACWLWEGFIQl7lg3bL5ixsHGJM
+	moi41+9Zn0Gen6wpN/NCGSR3I/zK9pzKNu92mq2CvjG0k5VXvt8jdf47yDLmjYuDWYe4KHyoVLD
+	DauB7IDXziWz2V2YR3J4nU6u1tsnT3FjAdkHP0ICx0XI66pbJWRRKl9/c7DFglxwcBmF8HEH+Xy
+	ZG9X9gcKquKSbekMSO+XpcXZyKL8V16xAsv7IN3SID7lA2Ac8PSzLnY9sYhvnZxoOEbCgctfZhB
+	9+fiGsSGMOgMf+lZTxna7nfwpzR9qj4Vp3Nccnmtwo8SJzTJ6h7dBBqoeI/5DTDRwT0ZY2ZSVfe
+	uSm50LkWBv1Vzob6GeWdCB8XBnxhfcKCgjU/R5oqX3kjbOs0RnZwxPYhhVlO59eFZhDb2qyGvBB
+	wDBZpVgw38oV4/8uLUwSSSxOHy+ZCI+vZ4KNFBelwmd+cq/zG+JBC9+sAc6srwv/cxhxEMZaZL3
+	uYRFbIzuiWxR0V1E+j9CzAjQJz8FoiRx1DQATeDgRS4XbFSWwbpKgIP1ACs2RVxbrTPJkh1JqQX
+	uEKACK3g0S1AA2SeeNL/8GhknU2wmK+sDyAEJX29/0pMgl4ppGrQp+E=
+X-Received: by 2002:a17:90b:442d:b0:3b0:d0be:f02c with SMTP id 98e67ed59e1d1-3b41c98a095mr26665706a91.6.1795596415710;
+        Wed, 25 Nov 2026 00:46:55 -0800 (PST)
+Received: from mi-ThinkCentre-M760t.mioffice.cn ([43.224.245.234])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b405d97356sm28973549a91.13.2026.11.25.00.46.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 00:46:55 -0800 (PST)
+From: Wenwu Hou <hwenwur@gmail.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	frederic@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Wenwu Hou <hwenwur@gmail.com>
+Subject: [PATCH v2] tracing/hwlat: Bind the sampler kthread instead of setting its affinity
+Date: Wed, 25 Nov 2026 16:46:00 +0800
+Message-ID: <20261125084600.2306377-1-hwenwur@gmail.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -86,74 +100,117 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
-Commit b5cc230af5e5 ("tracing: Warn when an event dereferences a pointer
-in TP_printk()") removed the early return when dereference_flags is zero
-so that test_double_dereference() can check all event arguments.
+start_single_kthread() sets the affinity of the kthread it just created
+before waking it up, but kthread_affine_node() overrides that mask on the
+first wake-up. See commit 60ba9c38b931 ("kthread: Comment on the purpose
+and placement of kthread_affine_node() call").
 
-As a result, trace events with more than 64 arguments in TP_printk() now
-always reach the argument-parsing loop and evaluate (1ULL << arg) when
-arg >= 64, triggering a UBSAN shift-out-of-bounds trap.
+In round-robin mode, move_to_next_cpu() compares save_cpumask against
+current->cpus_ptr, sees the replaced mask, and switches the tracer to
+MODE_NONE on its very first iteration:
 
-Additionally, in the format string parsing loop, the bounds check only
-tested 'arg == 63'. If the first 64 specifiers are non-pointer and
-non-string formats (e.g., %d) and a subsequent specifier (arg >= 64) is
-%s or %p*, 'arg == 63' evaluates to false and '1ULL << arg' also shifts
-out of bounds.
+  hwlat_detector: cpumask changed while in round-robin mode,
+  switching to mode none
 
-Fix both issues by changing the upper bound check to 'arg >= 63' and
-guarding the '(1ULL << arg)' checks in the argument loop with
-'arg < 64'.
+So the tracer no longer migrates across tracing_cpumask. More importantly,
+tracing_cpumask is not honoured at all, and with isolcpus=/nohz_full= the
+thread cannot run on the isolated CPUs it is meant to sample.
 
-Fixes: b5cc230af5e5 ("tracing: Warn when an event dereferences a pointer in TP_printk()")
+Use kthread_bind_mask() to preserve the initial affinity, including
+isolated CPUs. Clear PF_NO_SETAFFINITY once the single sampler thread
+starts to allow userspace affinity changes and cgroup migration.
+
+The mask is now computed and validated before kthread_create(), which also
+avoids creating a thread when tracing_cpumask has no online CPU in common:
+cpumask_first() returned nr_cpu_ids there and cpumask_set_cpu() then wrote
+past the end of the mask.
+
+Tested on a 4-vCPU KVM guest, bit 0 of the mask is CPU 0:
+
+  mode        mask    before                    after
+  none        0b0101  Cpus_allowed_list: 0-3    0,2
+  round-robin 0b1111  mode -> none, no migrate  migrates 1 2 3 0
+  round-robin 0b0101  mask 0-3, no migrate      migrates 0 2
+  per-cpu     0b0110  2 threads, cpus 1,2      2 threads, cpus 1,2
+
+Fixes: d1a89197589c4 ("kthread: Default affine kthread to its preferred NUMA node")
 Cc: stable@vger.kernel.org
-Signed-off-by: Kuyo Chang <kuyo.chang@mediatek.com>
+Signed-off-by: Wenwu Hou <hwenwur@gmail.com>
 ---
- kernel/trace/trace_events.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Changes in v2:
+- Clear PF_NO_SETAFFINITY under current->pi_lock when the single sampler
+  thread starts, preserving userspace affinity changes and cgroup migration.
+  Keep PF_NO_SETAFFINITY set for per-CPU threads.
+- Update the commit message
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 7f89160aeff3..5933fc92f786 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -526,7 +526,7 @@ static void test_event_printk(struct trace_event_call *call)
- 				case 'a': case 'd': case 'D':
- 				case 'g': case 't': case 'C':
- 				case 'O': case 'f':
--					if (WARN_ONCE(arg == 63,
-+					if (WARN_ONCE(arg >= 63,
- 						      "Too many args for event: %s",
- 						      trace_event_name(call)))
- 						return;
-@@ -556,7 +556,7 @@ static void test_event_printk(struct trace_event_call *call)
- 					if ((fmt[i + j] == 's')) {
- 						if (star)
- 							arg++;
--						if (WARN_ONCE(arg == 63,
-+						if (WARN_ONCE(arg >= 63,
- 							      "Too many args for event: %s",
- 							      trace_event_name(call)))
- 							return;
-@@ -610,7 +610,7 @@ static void test_event_printk(struct trace_event_call *call)
+v1: https://lore.kernel.org/linux-trace-kernel/20261111020755.1422284-1-hwenwur@gmail.com/
+
+ kernel/trace/trace_hwlat.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index 3fe274b84f1c2..52478ad8030d0 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -353,8 +353,21 @@ static void move_to_next_cpu(void)
+  */
+ static int kthread_fn(void *data)
+ {
++	unsigned long flags;
+ 	u64 interval;
  
- 			test_double_dereference(fmt + start_arg, e - start_arg, call);
++	/*
++	 * kthread_bind_mask() sets PF_NO_SETAFFINITY to keep the initial
++	 * affinity from being overridden by kthread_affine_node(). Clear it
++	 * now to allow userspace affinity changes and cgroup migration, but
++	 * keep per-CPU threads bound to their CPUs.
++	 */
++	if (hwlat_data.thread_mode != MODE_PER_CPU) {
++		raw_spin_lock_irqsave(&current->pi_lock, flags);
++		current->flags &= ~PF_NO_SETAFFINITY;
++		raw_spin_unlock_irqrestore(&current->pi_lock, flags);
++	}
++
+ 	while (!kthread_should_stop()) {
  
--			if (dereference_flags & (1ULL << arg)) {
-+			if (arg < 64 && (dereference_flags & (1ULL << arg))) {
- 				handle_dereference_arg(fmt + start_arg, string_flags,
- 						       e - start_arg,
- 						       &dereference_flags, arg, call);
-@@ -625,7 +625,7 @@ static void test_event_printk(struct trace_event_call *call)
+ 		if (hwlat_data.thread_mode == MODE_ROUND_ROBIN)
+@@ -423,15 +436,12 @@ static int start_single_kthread(struct trace_array *tr)
+ 	if (kdata->kthread)
+ 		goto out_put_cpus;
  
- 	test_double_dereference(fmt + start_arg, i - start_arg, call);
+-	kthread = kthread_create(kthread_fn, NULL, "hwlatd");
+-	if (IS_ERR(kthread)) {
+-		pr_err(BANNER "could not start sampling thread\n");
+-		cpus_read_unlock();
+-		return -ENOMEM;
+-	}
+-
+ 	/* Just pick the first CPU on first iteration */
+ 	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
++	if (cpumask_empty(current_mask)) {
++		cpus_read_unlock();
++		return -EINVAL;
++	}
  
--	if (dereference_flags & (1ULL << arg)) {
-+	if (arg < 64 && (dereference_flags & (1ULL << arg))) {
- 		handle_dereference_arg(fmt + start_arg, string_flags,
- 				       i - start_arg,
- 				       &dereference_flags, arg, call);
+ 	if (hwlat_data.thread_mode == MODE_ROUND_ROBIN) {
+ 		next_cpu = cpumask_first(current_mask);
+@@ -440,7 +450,14 @@ static int start_single_kthread(struct trace_array *tr)
+ 
+ 	}
+ 
+-	set_cpus_allowed_ptr(kthread, current_mask);
++	kthread = kthread_create(kthread_fn, NULL, "hwlatd");
++	if (IS_ERR(kthread)) {
++		pr_err(BANNER "could not start sampling thread\n");
++		cpus_read_unlock();
++		return -ENOMEM;
++	}
++
++	kthread_bind_mask(kthread, current_mask);
+ 
+ 	kdata->kthread = kthread;
+ 	wake_up_process(kthread);
 -- 
-2.45.2
+2.43.0
 
