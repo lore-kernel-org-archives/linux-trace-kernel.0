@@ -1,102 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795644332;
-	b=rt25Ng5qCfbsPFqjtG8mWvS2PE2piYh44Q2rtt8CqQN0q+Xz+lZ0eVMIQWwxMlyt70cp
-	 wMFAU/f4fuB6quNUHGSWiBCQgvP6eQlQaHO1bAuOn0AHTeax9y2fvfc4Cdq/6pFveUhKx
-	 FszokC55Ccwlc2Rqz2nZBjk2qPkC23T7a1oxib9D73l/s5jfFNxQhbttuxYE5/j0R5n4/
-	 70qr4pjK1xoFAGTys2YJqBYOBPG8wUpp3Rs/wFDNOIcsWaPLSCjjTppeOz3+t8ZE3h9h+
-	 Yo8CGfD9PKJPpyDGxLl19gyEoqT78ztUOMQmA2pgUE1/f0fOFLKJGLRtJJpmJQRoM3Q==
+	t=1795650015;
+	b=V2qxGvwkFJ6lXLVEocLJOOZWGr3qVBjtieVdFyQ/WSa2r5REyI8CQNxsNShpZerqMp4o
+	 Z7cJpng3gD0VTTjKbREM/qYLVslbPuYYkpx4uzLSJcvzHyO7+bF1QSP37euBWLRZ/FwIr
+	 ta19bWsPDn9DJllmr7yBsOBtv2r/6yqrcZcfiCnqPAIDO/vu10h1c0E8Z1rZ+UvFX7hOR
+	 WwKEMq1YE6YIcM0aCQMR2o6jdpjNZoJ1NgUUGn/K2Ax1gdD4Q0bty0pdSHY4GOdqm2Ywb
+	 5z/BtDiPBtviDSCO7ZZi5oqiTjfq3qhtUe7lMWaH9I0anec4Et8NyDPQGO5cJ+XTSSw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795644332;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795650015;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=PFMx5gcHoGq+aybX24krgUmTqr/EIcl1w7rEetCl/eM=;
-	b=iYEmv3I7lKj9bk3mLQdg7/EjgRVb7ksCdolbmUBh5atnBPNGzQ71m5Uks85JC3hyb0c8
-	 lJuNQqhJ5m2md/AOFGXFhGBpUd/T3j4+kjh+D0WxZsrNh7SDqyglvUaLNlcD7UgYKV3d7
-	 yEvzWfcoee956Rak3KUDkeguY89iiVPXiiiue1nQv4mznetLkMsGaKf58SjcGgo5c9Vsd
-	 qNQfop4EDPim+sRrQPojOhN2qvx4m4htMiDgxuNSSIdY1LSeB2G41hfMPsBfTou5ybAbY
-	 EdZpxkanL1YpwCVB/4kWRS/LkIyngNbEqWn8MLUNGHsN00TifpfRD8h9Pwpz7QO8rtg==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=sy32AM7OWNp5QprjDSdpmB7KMgeEhH1/PrZNTOpYGSI=;
+	b=ZPzUGakFhNGvQET9ctE6EchEyqtj9nS0Of4Guet62MvUn+yTOHiEw1TuXS6+oG6hmc4K
+	 j1BMNYaC5IIs2OS2njHNkV/ckCQAWJLpiNVoGFTDYRNaWfzxV4LHVkG/100RbFkpIWbeP
+	 +DhFhOovhHqIs8s0+m4ggMjZmEM94x/jKsm7KhnTdgdUksactwJCxki3STWQe5NHI47Vv
+	 /wOsA9rKej44w50AygF706+3RIeYKE05bn1Eg58y8n7nlii8pwXNaAuTdFlUTl97nAK1I
+	 hIsl0flXgeIL7HCtJf/uNwYAHsyV2V4WUWnlageuigZUz4uM69M5ai3wXLpSuriX6Zg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hRsY6FcO;
-	arc=none smtp.remote-ip=209.85.128.48
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=eV7s7p48;
+	arc=none smtp.remote-ip=209.85.128.54
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1307606A32A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 22:05:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1307606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18505606A323
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 23:40:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 18505606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hRsY6FcO
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4bb70074ab2so67956355e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 14:05:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=eV7s7p48
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4bb69f5b161so41587225e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 15:40:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795644330; x=1796249130; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=PFMx5gcHoGq+aybX24krgUmTqr/EIcl1w7rEetCl/eM=;
-        b=hRsY6FcO9VKK/UOP2vT1k2XjTWekQ5+uV5pYD/ykGM2TvFCyGMhb3aYmmesN/XrDM7
-         /xa+R5z8TfXWB8q3iC3SJujbwY+KX79yguFoL2/rHEyUduY3s6a2Pv3F0n15bbHIg4V5
-         WR2l8gEtzHyz0zdHGDTbTcthKXhlzTX2niHKXed5ySIIvuMR6lYDsV9apaFFC1GKGY0B
-         yK6xEfP/kLAM90sSgP4FCwuj10gbhEo45nAoZhvn9+4Uwebuq3G/4Bvae1/F/7yEu/vh
-         2FVnxNb/1g8JkQLKE1FsLRvC8Y8DAaiw0iilY6hXNScPUtyZmYfE/0UxFKB10RD4OMv4
-         CLog==
+        d=gmail.com; s=20260707; t=1795650013; x=1796254813; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sy32AM7OWNp5QprjDSdpmB7KMgeEhH1/PrZNTOpYGSI=;
+        b=eV7s7p48l0yWT+W7zLISJg0zwgqnRnYXAqaouqk6QzCcqvsKi6IQ6gvBcuKe3y3jEI
+         U/gO/KkZKX7nPeIDHZhOmTYGTD8oQruIjejDeGJQDxIyARVwAQrCs/FnHVm/sGmmAtP0
+         eFX5dWz7uBGLNOCvmKgWyCM2ClO6v7WccN92uBSdDZcJB9ka0iSXLL7CtikujSwRHEp2
+         cIY/0zTCEpoqeUS5HCT4arF4+dbh4Cq4eUJep6GFwOXmg5ISC/0x7dIwRlH84RzMRLWv
+         23zuRHDaokVfMqMEM4A4RU+IRaSC+ZeWVJGT4/7ym+U1LtsT87BzsfTP+WdFov4UYMZY
+         8lbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795644330; x=1796249130;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=PFMx5gcHoGq+aybX24krgUmTqr/EIcl1w7rEetCl/eM=;
-        b=lU61iwznBQVfgrUU9K0GPYj4hlYocQRg3xddBTo/Y5IiMPLoBidXB8Q+W5T0ZfPtUX
-         uJU/D3AUrMp/nsNQ4RSUwnlztH47FgeDUKCN7x81rrXDZqiL1rHJ0+Lab5TXH+BjIFAu
-         mJHbspJ5c9r67v45XGpYT/k5As0oRl191OELQH/OQU7UZUqeTsaUkgvdGJC4BxhqjWvi
-         HTar3tKqK2HCjecsPyCB/NfREZxwNgGnJibQy57uelMwiCbtoKPY/TQhLsJu5nS2Bffh
-         kWwqdE6lQWiBYMSpsa08xqFT/HiFBKFYekDTqPx0+ledQvx4PhmoiDIAJ/LG6ZjXtBw1
-         Oe4g==
-X-Forwarded-Encrypted: i=1; AL+hErFqs1RBL5be/g7b9pKI2QGqaba69uFmOimpBP17LFXWyMJEmCnhLD2irZuVBvgpkrTK3R7z8kq6cvNE6sv7wQaThWM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8vFAkJrslbC0TKSDc77MJtzFxK5riidi9VHH01qWxdmfowwzK4
-	mseY+kz4arJEsRCTpbDmfUQ/1U0tg0YMPM6hIl/vnZ8/AOhL4yvjLuFC
-X-Gm-Gg: AZFdTZezX4bVW+x8WvvUusj0teER8RN78qet5/1wLbDrp31ld9ybWKNL/Ff/xeufb8b
-	iKch55skj2hE0DK9F/U9DDr9oodZdNzeLcD1ffejlO88S/H/8DeWXzIWwlvJ/qAEup2okA4TTSe
-	H2QhE+i1xpXbPCO4vJDSseakn4f5E8dVVXvYTxxJJVqgI6y27/xDrf1D5GGbZs6hg6iIT3V6b23
-	yUCbfsw6GH6/ttGnz8HWeOPTh1eOiejmQi8KKxHpzr812ax+VvvdmvJx3YO+lmxsh3S0Z5cHwSQ
-	bdegXIZ4FN8sVo+7y2lsxIGrt5MXMoW0uW3qJV2Q+fBnOo8Kyu8xWya5X9Jq33wm87iIJkzdwb4
-	7KjiHxtiiBdt8LW9tCmyZct37JtFdmvERPRX3bSAfJDCFnk9FR6f6o/oiGZYRCSlz32PLDP+CF0
-	ivAK+C0XdSk7rlmXcMgkvYYUJBPTwPeO+cAwsqwVL4IcQMgcJfABl9aDlEWJAgWvcFlrN+zsGuI
-	fWV5bi4Orh1iK4o0Rkv5H3MkOMqQvKrwpE12mZkfKsPjcBcWOzgg5iMVDjcEZTUdJtWkAlalzQ2
-	+ofqmeVzcpCPTJX2
-X-Received: by 2002:a05:600c:e549:10b0:4bb:a60a:fc8 with SMTP id 5b1f17b1804b1-4bba60a11d2mr42321925e9.35.1795644330050;
-        Wed, 25 Nov 2026 14:05:30 -0800 (PST)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b09bsm1016582145e9.4.2026.11.25.14.05.29
+        d=1e100.net; s=20260707; t=1795650013; x=1796254813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sy32AM7OWNp5QprjDSdpmB7KMgeEhH1/PrZNTOpYGSI=;
+        b=yD9+4WMeWRwmWu7chXcRKYqZerreTOlExwI6B85KN2RZJU4JUF67L7/LZ/b5KzRsRw
+         Oo6tLXDvC5PX703J0BbITyvpWgEPyaNzQuOSR5K+Yv3zE8QJX2wzpgKun5iL5MQ1iogO
+         mxE+PfhfCyTnvMETR2sgVBsoV5hcM//fWaVYPChLS3r4gZp37NCE9874Nw3T/IU7oxBN
+         VTt65r2/igf2pSSndfgLMnDTM8krcafSxUjWA8FP/FNQATnxoHvG+UsEUIbfp1S4IWz4
+         LxmY/cPgU8UVOIbKxtEO/V8ewRnMo0B6MO1mT1qGxM9Fn2J4iuDwxraZHkwXnR/bkXUk
+         9ieQ==
+X-Gm-Message-State: APuU4Z/SpmRrwSHcU6whSk+WWnzY9UGR/MvXUhENLMw770pSbZXKJY0d
+	jndG0DLMRQwp+fvTGQ6oxPLisRc1u4anuSe9MTU82oeL0aj9ae56pZ9COo8www==
+X-Gm-Gg: AZFdTZd+YoNmMdUm9WsXw6p+ED/37SGrw8qQbX2V3QpgxD7umMAlEXB0eBolJtg29aG
+	xVZpyXoUnE6cUDteuySA6VLb8Fyp6tBA1CugjCzXKpucSOjAr17Uc2U7iU6JhW2HO8ojUJJFs7q
+	34fGxYCpoQu647wgghPkpXEEqTpR0PIu3pKWUxVoe9fK51UP4VHeDzq4L+IO75NlG/REQfvtp4I
+	Ipfpl1o/4NIfKoekUYMOrgbar8+tWx7rmL2k4aMejyUwREZPhQ93Xd/1vEI6jBsFLNOcMYjyPyB
+	gnxdolLnXZ/MvPxqHD/c2yg+R6YKobBcUWau0WDvoV/keRSBdxKZeqhCjItE1bga3TjXEabT578
+	td3NNeAX4A2zjaFkHdseDbhRGyW04lxqR9g5uRzKwFNc2WufOHvbF1FhF4l4A97PYVVe3sUtJ3t
+	eOld24spU0icJFvsNV1fFlwD8GxIoFF8NgEXsxuXgpqACr0AqOtbZzr6B+iOceryjfB7kv+6CiM
+	EeUxGdiPoyWtZZnoCnivH+I2FgTwgDXLudDmBp/m0CrjfFPjGL6Xbt5BrrRfaXoLNaXgcOSSmlu
+	bC6OUlUlckExHFPvUSvruI7J0+/nMryqNOwv/GDwPzaBDNzXbM8GStH+7wVPul4d/cz+hnkiRsM
+	8BaFEHFFclQd3QNH6pjoMkLB45T8KgPqqD56KTQyLmHvfklExvuVcVg7kr+yJzQqEaI5fvJgBqr
+	J4/2GAer6RK1dAmF/Up9bM//6psnF8goh42CwovbIublwHkzoUgbasdyykdJRPv3MmQ9PCyOhA5
+	dwRYh+QOYDvHpXBFQNbHR4MunPapeY+CUIBmCg=
+X-Received: by 2002:a05:600c:1d09:b0:4bb:6fd3:5ac0 with SMTP id 5b1f17b1804b1-4bb88816c7emr423168995e9.28.1795650013339;
+        Wed, 25 Nov 2026 15:40:13 -0800 (PST)
+Received: from longitude (2a02-8434-fda5-4201-e77f-3dca-f235-969c.rev.sfr.net. [2a02:8434:fda5:4201:e77f:3dca:f235:969c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67fe75sm42466849f8f.24.2026.11.25.15.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 14:05:29 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 25 Nov 2026 23:05:27 +0100
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCHv2 1/2] kprobes: Increase the kprobe hash table size
-Message-ID: <awdbpwBAyzIdG9tL@krava>
-References: <20261122200239.1481088-1-jolsa@kernel.org>
- <20261122200239.1481088-2-jolsa@kernel.org>
- <undine-1795477745290490698-99e2fcc5c9b45beb@undined.local>
- <awWdDfj1fknA8fuF@krava>
- <undine-1795616480318619368-1be7e961905611b5@undined.local>
+        Wed, 25 Nov 2026 15:40:12 -0800 (PST)
+From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+To: mhiramat@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/bootconfig: Reject extra positional operands
+Date: Thu, 26 Nov 2026 00:40:04 +0100
+Message-ID: <6e1358cefd6ed85c1c264cfbe195b913a8a0aca1.1795650002.git.edumucelli@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -106,77 +95,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <undine-1795616480318619368-1be7e961905611b5@undined.local>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 25, 2026 at 11:21:20PM +0900, Masami Hiramatsu (Google) wrote:
+The bootconfig CLI accepts one input path but only checks whether a path
+is missing. Commands with several operands act on the first one and can
+report successful completion. For example, bootconfig -d first.img
+second.img removes bootconfig from only the first image and exits zero.
 
-SNIP
+Reject surplus operands before calling the command handler. Add tests
+for list, apply and delete with an extra path.
 
-> > > If this change is intended solely to improve performance for an extremely
-> > > unlikely use case, I would, at the very least, make the size configurable
-> > > via Kconfig.
-> > > 
-> > > Since this change affects all architectures, those working with small,
-> > > embedded-system chips might be reluctant to "pay" 32 KB for a use case
-> > > that is highly unlikely to ever occur.
-> > 
-> > I can add CONFIG_KPROBE_HASH_BITS with range 6-16. I'd keep 6 for
-> > CONFIG_BASE_SMALL, so small systems don't pay anything, and use
-> > 10 (8KB on 64-bit) as the default otherwise, which gets most of the
-> > speedup from the table in the changelog
-> 
-> That is good. If you introduce the inline function support which is
-> enabled by some kconfig, that kconfig can increase the hash bits. That
-> should be more reasonable.
-
-yes, good idea, something like below, I'll send that as part of the
-inline tracing changes
-
-thanks,
-jirka
-
-
+Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
+Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 ---
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 1163736de1f9..350144df6863 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -141,6 +141,23 @@ config KPROBES
- 	  for kernel debugging, non-intrusive instrumentation and testing.
- 	  If in doubt, say "N".
+Hi Masami,
+
+I ran into this while checking how the tool handles more than one input
+path. An extra argument was easy to miss because the command still
+succeeded. I added cases for list, apply and delete and ran the full
+bootconfig CLI suite on my Ubuntu machine.
+
+Thanks,
+Eduardo
+
+ tools/bootconfig/main.c             | 5 +++++
+ tools/bootconfig/test-bootconfig.sh | 5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index c85e58fcb6b0b7..3e56a618fe3a58 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -592,6 +592,11 @@ int main(int argc, char **argv)
+ 		return usage();
+ 	}
  
-+config KPROBE_HASH_BITS
-+	int "Kprobe hash table size in bits" if EXPERT
-+	depends on KPROBES
-+	range 6 16
-+	default 10 if DEBUG_INFO_BTF_INLINE
-+	default 6
-+	help
-+	  Size of the kprobe hash table as a power of two. The default
-+	  of 6 (64 buckets) is enough for a small number of probes.
++	if (argc - optind > 1) {
++		pr_err("Error: Specify only one input path.\n");
++		return usage();
++	}
 +
-+	  Attaching to inlined functions can register thousands of
-+	  kprobes at once, so the default is raised to 10 (1024 buckets,
-+	  8KB on 64-bit) when the inline site information is available
-+	  (DEBUG_INFO_BTF_INLINE).
-+
-+	  If in doubt, keep the default.
-+
- config JUMP_LABEL
- 	bool "Optimize very unlikely/likely branches"
- 	depends on HAVE_ARCH_JUMP_LABEL
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index f14f7ff45961..eba446e8ae37 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -50,7 +50,7 @@
- #include <asm/errno.h>
- #include <linux/uaccess.h>
+ 	path = argv[optind];
  
--#define KPROBE_HASH_BITS 6
-+#define KPROBE_HASH_BITS CONFIG_KPROBE_HASH_BITS
- #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
+ 	if (apply)
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index a93a40d11d278f..ac0ffeffe1f7ce 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -71,6 +71,11 @@ xpass $BOOTCONF -a $TEMPCONF $INITRD
+ echo "File size check"
+ xpass test $new_size -eq $(wc -c < $INITRD)
  
- #if !defined(CONFIG_OPTPROBES) || !defined(CONFIG_SYSCTL)
++echo "Reject an extra positional path"
++xfail $BOOTCONF -l $INITRD $OUTFILE
++xfail $BOOTCONF -a $TEMPCONF $INITRD $OUTFILE
++xfail $BOOTCONF -d $INITRD $OUTFILE
++
+ echo "Delete command check"
+ xpass $BOOTCONF -d $INITRD
+ 
+
+base-commit: 56bb11fe6aacc7666938e8e6765b44aa0cf1fcdd
+-- 
+2.53.0
+
