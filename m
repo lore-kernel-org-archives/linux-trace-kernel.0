@@ -1,95 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=60.244.123.138
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795592399;
-	b=Csulv4tiF3w0C0ZhCLmBxXGRAUcJ5hMjhe+b8ddEyGV4crGFSFgJAuqfVht9gP7AarSp
-	 7y+cl062D87xzzPRx/sk2pg3BBr4Wl9FYm8PhdQ7odDZyDG1npTOPh20jOAZdX3pE+fUe
-	 RdS+lvfKduE7Lk6TXCm0HsXCetsMdfGkveWo+v54bPIuwQPhd/dylFuWDVjbf9rr5+++r
-	 RRiwBRcTEQ3P51lWb9qTMelIMu5Ep85YtXSNRQZQ17NO7/C2Pk6LEomwzLxtdAl1BZpsA
-	 CLo8Z9+rAgm06z0LZGUAxvWcwWNEgwPv6O3ASD304cXLNGGY46x9yfzB0ydc0l0Dkng==
+	t=1795593884;
+	b=TQ9UHvDQsVyRApdCpcOqxGrOKais05BjgFmhxpkHJgKt14FfXtqxnySy1PCADINdV95E
+	 K+DKWcUVmjfZU0nwR8D700WJHslMcuo5Bp/ekexYjYzk1Yd7blYtO66cUreZu/Rqvdllh
+	 m8k8IeUMl+ssEGl+e9vAFZZGNHpwThjhQK++7fep6dvOn92I3UoEPUY4yVGeAMrvrpJlt
+	 djkocCuOYLZrdbOsRNrH5tmU2Otv7SWGeGnrgMTYQzn/5y3ExW+tH5EibV+JSFmCNTJZw
+	 Z81h+klKsv+bEz/RmihX7JmMTKsASUqnMjJcPzLYB9AXttAACywpqLeoaHRN1msyu8w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795592399;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=Fic+huB0IdoHR3E/p8bmW1S+ux+MyhR7gu/qGNu0uOA=;
-	b=i/OZOyF6Ypr5UcCnMPsCX3jUyg5gaHuZienpB6iOSUMK0n02HN/jvywDuBn6/G9eQrOf
-	 UdNWGjXZ9jYjE3x+95uyUPuWmzYvtqUn9oQLTJKWmiXNS2LWrY8t8hRDtdz34OQZ6dwbD
-	 jBqylHvqy5aenYYRYJWvGbMsiGAV8aswMuTKnD9JWRDUuA4808PrKdHZL48kPtt0XjAjq
-	 WTsZzMvT/scRP5yXB9cyCilw0NzLjG90Pi5Q/qCexjUnbT8uc16pJdQZUrf3fO2UrA2Vs
-	 nlkfrou+uVRV5W8681XxA7R8dVJib3Vpx5wqgdqIvlxx2PWkwe3jCDF8pzFOc0C/ydA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795593884;
+	h=DMARC-Filter:X-UUID:DKIM-Signature:X-CID-P-RULE:X-CID-O-INFO:
+	 X-CID-META:X-CID-BVR:X-CID-BAS:X-CID-FACTOR:X-CID-RHF:X-UUID:Received:
+	 Received:Received:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type:X-MTK;
+	bh=RZiARSrN+96IvgyLqqkIF8nWXtL4K1TCt2GqvlBqfE0=;
+	b=NZ6/SbfPwlJML319UQS5nfzLQi9afLbFo5C1kU9dZFaVIadO1/U/jpqxF1Brh6X1nUVl
+	 g/on3wa+bSUCVetQEv6QqyevZMe3U2HVpx4q8XdThnVoBrBjBP98YlWKbrY/PkXs6CxkB
+	 4iX6bf9dZng+9iv/1AvOO9zUheDuI9HuhHZ7oG30fTHgf4AFbHeSU4hL2TmvTEZoLrSkY
+	 u5RQXhOopWpAxUrb3SgTHhnqXYfYmkimDXUVsmGpKsA1N3Dag8NLEXLqt3bhw/yT4ORWD
+	 hF2t2KUncsZbgL9Zbx7gCtYhIhIyZPJDyIaJGDmYOLtpHaJxTn81IQsnXVelV2Oi0pQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cjjSHTcS;
-	arc=none smtp.remote-ip=209.85.221.50
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=mediatek.com;
+	spf=pass smtp.mailfrom=mediatek.com;
+	dkim=pass header.d=mediatek.com header.i=@mediatek.com header.a=rsa-sha256 header.s=dk header.b=ELcExiDL;
+	arc=none smtp.remote-ip=60.244.123.138
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A94606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 07:39:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C5A94606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C85E606A321;
+	Wed, 25 Nov 2026 08:04:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0C85E606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=cjjSHTcS
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-4a357b1c649so3116225f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 23:39:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795592397; x=1796197197; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Fic+huB0IdoHR3E/p8bmW1S+ux+MyhR7gu/qGNu0uOA=;
-        b=cjjSHTcSrHrh4Uxp8wVViuT4smzPfmMkjlhfaP9Ka1QzEjRMy9zDbQziVzv1TaBRYW
-         aF7+sjCV5MT4p0r3q7WYpiYe+k4+PwcPC5W4mR+cGDYkLrsQkmRmKPVTi0zkrzSv69d5
-         n9A/5nrEsV9exQCHsIhMgOlj4UrbORTRRk4QlZ8a1Th9Hl4b6Kos3hLAXjRCUHDh/FMo
-         TFSg1y6DPd+TlFQj9EzNCMjXYHzYJUJsSzhhrlIUjkw2Bt2n7UVUHmrd0e4UtLeyLZXm
-         CsNq69+hQCp/Zj13orM1N/2tzNO/LUjU3+7CEiDkxR9Vnmnd9zC/s4ysZbQyZkvz5u0S
-         JeFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795592397; x=1796197197;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Fic+huB0IdoHR3E/p8bmW1S+ux+MyhR7gu/qGNu0uOA=;
-        b=m9qMBusZ0ckg/HOpA03KIIb5WcKuKZvXesrHIQxC0iya5atlZ2D4hANhR+s94L8aP/
-         QVHZiy94+CKG0yqzOMK3e79YtNRX8AwbCgoyU2oHLTtgSvK68GhE/UAdm1/PZhw1yh62
-         oeXnWHpAS2pj7xSeuoTBBnPRoIxx33fE5oUNOitjYr64u7+nWoF7u7XvsEETLBx4RzBG
-         eWtaBgTTY7RnV8YZKggUFXvc6ZS9Sc+D3sf0ag/J2aWngCfKEj77+2Qz5Nz7W1H4ea2Q
-         BeQnNAj3EdYlTlo/yKUhFNm9w8KIsjlC2/p5Ons2r/0od3u7frcsDhDTJlMBDCrBC5Z9
-         dUBw==
-X-Forwarded-Encrypted: i=1; AL+hErENJSeCl69eGHfuhGnTA+1fiWt6+Br92XlEGquYEN82ha1mmFaREvMvxFCfgahtjIUnY8Sl+SskyH2xF0V29AKagbA=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8qgM9T6YuD+r4KjXhSaMBslc3lvklJL1SdgzJNSoXv7UkGLBZV
-	bEnIz0faKR8w1w7i7VRoif4S8JvV3YRRe3ZTNyQiRvq53WC1rb53gLyk
-X-Gm-Gg: AZFdTZeh7H1kEF87KoaYiDRLpSU2ZzrTbjVGZ7rQUW9j1B2VJS5jRyCo2PiYEdyc5AJ
-	CZMc6SLKPmnRszNcNm4vWkyT62I9rtV1jzN8GZBcCGyqIVxn+GAxcGXvzqfXjrVgP9/8kUhI4MZ
-	Mv0kv7pak2QDW57+tyX9mxfeshAHM0k9zcPmceoL3uN/Guh0vpzXmw7N+WeWLrEhaf0wDfJfQNv
-	sI8QqJK7zahK0y6cDGIS3J2TAzA5NaHodg4M3pwPggmfzxFVl3+K6DhtNgip4ki8QtSVLd9K2CH
-	CkV4nz5PFiiQh7hpzbej/8lX/hMQ/MFR2JGiMwXs7Pj9UB3Mxl3ifz39pOLPImRi5vJV2b45Vgr
-	Pt9eZsAolJjIweyD2RFd48RGaRwqi9tiac+RpN6GVLq5WrxudGawlyJEENDWtxV8FxtR5HGMgn4
-	6AB8Enk+oDlRXpnel4mcSGt64rdxsU11bFVzAVHvgGLe9ZJnt68J+7d3JAyxUgy0MsVfTM+j6A8
-	PwBWN3eDVDxXohkzRzfMdUnH8vgK4wVwXJg2Ayy7zWJO0Ih9H5mlhu9wHF3My5cbeDs2OeEJEN+
-	weSdFLOK1xWdqeeF5o9NA72qU1adcfwpXzlj71gh3tfOBB9lgDDMmiVwXmjfQbwppBIunyfUCWk
-	P4+EeEG9Ptphf6h1tNuVe4lxRr7iA6i5Ns/WTQGUF4fhzPrAMiwwGQi4MfFRthC4oT9zhrqhjjG
-	ZsYqf8KUNa0bI5eVSz1CidwkQKqCrRz6IlxcBuNXqypFVIfCDHfswCv3O+nXmk+KWnY0/Jqwvny
-	4eDUFoWBNzlLQ+rUw==
-X-Received: by 2002:a05:6000:2b8a:b0:4a7:b365:19dd with SMTP id ffacd0b85a97d-4abb4b85bcbmr21938249f8f.53.1795592396978;
-        Tue, 24 Nov 2026 23:39:56 -0800 (PST)
-Received: from longitude (2a02-8434-fda5-4201-fb56-7a23-de2e-e3d4.rev.sfr.net. [2a02:8434:fda5:4201:fb56:7a23:de2e:e3d4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6bc8ce06sm31725489f8f.47.2026.11.24.23.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 23:39:56 -0800 (PST)
-From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-To: mhiramat@kernel.org
-Cc: corbet@lwn.net,
-	linux-doc@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: bootconfig: Document the current config limits
-Date: Wed, 25 Nov 2026 08:39:41 +0100
-Message-ID: <8b11df1def359a2b28cd4bb6c42606e25ab9d6d7.1795592381.git.edumucelli@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key, unprotected) header.d=mediatek.com header.i=@mediatek.com header.a=rsa-sha256 header.s=dk header.b=ELcExiDL
+X-UUID: dd283236e8a611f1b1788b6acf885367-20261125
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=RZiARSrN+96IvgyLqqkIF8nWXtL4K1TCt2GqvlBqfE0=;
+	b=ELcExiDL0Ne3E53F2RevlQd77pggl5lTtOASPG18QJ450ZiO7xRlyhmowtdjVx8MUDvqMRUqa5eNnG4mNmolN5s8AlWO4z6u5+6Lj7qSwvJkg7PM3FfOR4USO9qlgfkuYpLAEM0792NvW+jqfpn1RHEHF8uB3B6lFmZPWiyak6w=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.21,REQID:d39729d0-b93d-429b-9696-540a267e39aa,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:b0318ac,CLOUDID:97bc091a-ae4c-4a2b-b1c4-72e411efd0c9,B
+	ulkID:nil,BulkQuantity:0,SF:102|836|865|888|898,TC:-5,Content:0|15|50|99,E
+	DM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0
+	,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: dd283236e8a611f1b1788b6acf885367-20261125
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 893746225; Wed, 25 Nov 2026 16:04:39 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56; Wed, 25 Nov 2026 16:04:38 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.2562.56 via Frontend Transport; Wed, 25 Nov 2026 16:04:38 +0800
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Kuyo Chang <kuyo.chang@mediatek.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Martin Kaiser <martin@kaiser.cx>,
+	Vinod Koul <vkoul@kernel.org>
+CC: <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>
+Subject: [PATCH 1/1] tracing: Fix UBSAN shift-out-of-bounds in test_event_printk()
+Date: Wed, 25 Nov 2026 16:03:56 +0800
+Message-ID: <20261125080431.1612026-1-kuyo.chang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -100,63 +86,74 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-Bootconfig has accepted 8192 nodes since the node limit was raised for
-DCC support. The admin guide still describes the old 1024-node limit and
-derives example entry counts from it.
+Commit b5cc230af5e5 ("tracing: Warn when an event dereferences a pointer
+in TP_printk()") removed the early return when dereference_flags is zero
+so that test_double_dereference() can check all event arguments.
 
-Describe the current node budget and how keys and values consume nodes.
-Document the 32767-byte limit for initrd attachments, including the
-terminating NUL byte and excluding alignment padding.
+As a result, trace events with more than 64 arguments in TP_printk() now
+always reach the argument-parsing loop and evaluate (1ULL << arg) when
+arg >= 64, triggering a UBSAN shift-out-of-bounds trap.
 
-Fixes: 6c40624930c5 ("bootconfig: Increase max nodes of bootconfig from 1024 to 8192 for DCC support")
-Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
+Additionally, in the format string parsing loop, the bounds check only
+tested 'arg == 63'. If the first 64 specifiers are non-pointer and
+non-string formats (e.g., %d) and a subsequent specifier (arg >= 64) is
+%s or %p*, 'arg == 63' evaluates to false and '1ULL << arg' also shifts
+out of bounds.
+
+Fix both issues by changing the upper bound check to 'arg >= 63' and
+guarding the '(1ULL << arg)' checks in the argument loop with
+'arg < 64'.
+
+Fixes: b5cc230af5e5 ("tracing: Warn when an event dereferences a pointer in TP_printk()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kuyo Chang <kuyo.chang@mediatek.com>
 ---
-Hi Masami,
+ kernel/trace/trace_events.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks again for the reviews. The guide still lists the old 1024-node
-limit. I checked the 8192-node limit on my Ubuntu machine and tested a
-maximum-size config with all four initrd alignment paddings on top of
-your padding fix.
-
-Thanks,
-Eduardo
-
- Documentation/admin-guide/bootconfig.rst | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index 3d6412458c8b6..30bf89cf0f67a 100644
---- a/Documentation/admin-guide/bootconfig.rst
-+++ b/Documentation/admin-guide/bootconfig.rst
-@@ -354,18 +354,13 @@ The final kernel cmdline will be the following::
- Config File Limitation
- ======================
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 7f89160aeff3..5933fc92f786 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -526,7 +526,7 @@ static void test_event_printk(struct trace_event_call *call)
+ 				case 'a': case 'd': case 'D':
+ 				case 'g': case 't': case 'C':
+ 				case 'O': case 'f':
+-					if (WARN_ONCE(arg == 63,
++					if (WARN_ONCE(arg >= 63,
+ 						      "Too many args for event: %s",
+ 						      trace_event_name(call)))
+ 						return;
+@@ -556,7 +556,7 @@ static void test_event_printk(struct trace_event_call *call)
+ 					if ((fmt[i + j] == 's')) {
+ 						if (star)
+ 							arg++;
+-						if (WARN_ONCE(arg == 63,
++						if (WARN_ONCE(arg >= 63,
+ 							      "Too many args for event: %s",
+ 							      trace_event_name(call)))
+ 							return;
+@@ -610,7 +610,7 @@ static void test_event_printk(struct trace_event_call *call)
  
--Currently the maximum config size is 32KB and the total key-words (not
--key-value entries) must be under 1024 nodes.
--Note: this is not the number of entries but nodes, an entry must consume
--more than 2 nodes (a key-word and a value). So theoretically, it will be
--up to 512 key-value pairs. If keys contains 3 words in average, it can
--contain 256 key-value pairs. In most cases, the number of config items
--will be under 100 entries and smaller than 8KB, so it would be enough.
--If the node number exceeds 1024, parser returns an error even if the file
--size is smaller than 32KB. (Note that this maximum size is not including
--the padding null characters.)
--Anyway, since bootconfig command verifies it when appending a boot config
--to initrd image, user can notice it before boot.
-+A bootconfig can contain up to 8192 nodes. Each component of a key and
-+each value, including each element of an array, consumes one node. Keys
-+with a common prefix share the nodes for that prefix.
-+
-+The data is limited to 32767 bytes, independently of the node count.
-+For a bootconfig attached to an initrd, the limit includes the
-+terminating NUL byte. Alignment padding is excluded.
+ 			test_double_dereference(fmt + start_arg, e - start_arg, call);
  
+-			if (dereference_flags & (1ULL << arg)) {
++			if (arg < 64 && (dereference_flags & (1ULL << arg))) {
+ 				handle_dereference_arg(fmt + start_arg, string_flags,
+ 						       e - start_arg,
+ 						       &dereference_flags, arg, call);
+@@ -625,7 +625,7 @@ static void test_event_printk(struct trace_event_call *call)
  
- Bootconfig APIs
-
-base-commit: 56bb11fe6aacc7666938e8e6765b44aa0cf1fcdd
+ 	test_double_dereference(fmt + start_arg, i - start_arg, call);
+ 
+-	if (dereference_flags & (1ULL << arg)) {
++	if (arg < 64 && (dereference_flags & (1ULL << arg))) {
+ 		handle_dereference_arg(fmt + start_arg, string_flags,
+ 				       i - start_arg,
+ 				       &dereference_flags, arg, call);
 -- 
-2.53.0
+2.45.2
 
