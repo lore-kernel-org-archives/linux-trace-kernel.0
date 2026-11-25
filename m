@@ -1,54 +1,102 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795642119;
-	b=VAMND6hS5YxWqP2+OiZVclPdoFwavG2qck+ADnigIzvcv6ZFUVsX4vxoSJBSvKlnmhXg
-	 qTQHTonWg1XE2FeTW4r+GXNCuhfdEg10cTWTHJXbWr0e5H2P+MbIKIRtk5ihbrF9vBar6
-	 DN3XXcsoi5KRmFKY0CPlflJDzwamN1h2l6PsH/zsULia5jezQ6PQKb7AjEsD5vIRhAmfG
-	 DtJFUlq4lwMVQzsL1Fu/zFcjBUmoXZ0X3kyPdxDMpeoTBch8ZtqXphLo8zbQs9CpELM/q
-	 4GXfA0Ala7UevYVVf9ffp/etwB9J+4pJIMKxZVCd/NyNTuldczqsu6lylgzzVxEDAxA==
+	t=1795644332;
+	b=rt25Ng5qCfbsPFqjtG8mWvS2PE2piYh44Q2rtt8CqQN0q+Xz+lZ0eVMIQWwxMlyt70cp
+	 wMFAU/f4fuB6quNUHGSWiBCQgvP6eQlQaHO1bAuOn0AHTeax9y2fvfc4Cdq/6pFveUhKx
+	 FszokC55Ccwlc2Rqz2nZBjk2qPkC23T7a1oxib9D73l/s5jfFNxQhbttuxYE5/j0R5n4/
+	 70qr4pjK1xoFAGTys2YJqBYOBPG8wUpp3Rs/wFDNOIcsWaPLSCjjTppeOz3+t8ZE3h9h+
+	 Yo8CGfD9PKJPpyDGxLl19gyEoqT78ztUOMQmA2pgUE1/f0fOFLKJGLRtJJpmJQRoM3Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795642119;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Stat-Signature:X-Spam-Status:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Session-Marker:X-Session-ID:DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=wdubbU4C4QfHvxGlPo5i758PKViG5JBAET2wpadLeHU=;
-	b=aE/7iScWsaTD8bTgX4+LQhNFPksjcGNDQoeNyMFKdSDUx0U7S9R0rV5CjbVvHhJ7p90y
-	 +LyI920xyzunVEnm7buKqEyyev0fP7W4Tqm7cuPsVYEWImmUY9gp0TPQ9OXnj+GGsf/z7
-	 3DW1r1Alr5KSKO+8u2WJGujAXDyhlKJscSnIQmitUKrZGsjuGxAePsDgZy9RWYSJla75b
-	 kJVmdZfbxQYfklIIs9awHZDAMdLLKhwE8/KMmRGVLJTIKB6d2PukZfLicORs2HJ68tOjl
-	 fM7xEDlgRT975LijTUoSmcc5AuLHhxo3fFr99C62qWdlXju3IIHeXl3jLx1ElrSBGkw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795644332;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:X-Google-Original-From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=PFMx5gcHoGq+aybX24krgUmTqr/EIcl1w7rEetCl/eM=;
+	b=iYEmv3I7lKj9bk3mLQdg7/EjgRVb7ksCdolbmUBh5atnBPNGzQ71m5Uks85JC3hyb0c8
+	 lJuNQqhJ5m2md/AOFGXFhGBpUd/T3j4+kjh+D0WxZsrNh7SDqyglvUaLNlcD7UgYKV3d7
+	 yEvzWfcoee956Rak3KUDkeguY89iiVPXiiiue1nQv4mznetLkMsGaKf58SjcGgo5c9Vsd
+	 qNQfop4EDPim+sRrQPojOhN2qvx4m4htMiDgxuNSSIdY1LSeB2G41hfMPsBfTou5ybAbY
+	 EdZpxkanL1YpwCVB/4kWRS/LkIyngNbEqWn8MLUNGHsN00TifpfRD8h9Pwpz7QO8rtg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=UucNguBT;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hRsY6FcO;
+	arc=none smtp.remote-ip=209.85.128.48
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F2B606A686;
-	Wed, 25 Nov 2026 21:28:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 53F2B606A686
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1307606A32A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 22:05:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1307606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=UucNguBT
-Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id DD2621A0127;
-	Wed, 25 Nov 2026 21:28:36 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 5929C2002B;
-	Wed, 25 Nov 2026 21:28:35 +0000 (UTC)
-Date: Wed, 25 Nov 2026 16:28:34 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Fix crash on lseek of recursed_functions file in
- WRONLY mode
-Message-ID: <20261125162834.2df4c684@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hRsY6FcO
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4bb70074ab2so67956355e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 14:05:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795644330; x=1796249130; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=PFMx5gcHoGq+aybX24krgUmTqr/EIcl1w7rEetCl/eM=;
+        b=hRsY6FcO9VKK/UOP2vT1k2XjTWekQ5+uV5pYD/ykGM2TvFCyGMhb3aYmmesN/XrDM7
+         /xa+R5z8TfXWB8q3iC3SJujbwY+KX79yguFoL2/rHEyUduY3s6a2Pv3F0n15bbHIg4V5
+         WR2l8gEtzHyz0zdHGDTbTcthKXhlzTX2niHKXed5ySIIvuMR6lYDsV9apaFFC1GKGY0B
+         yK6xEfP/kLAM90sSgP4FCwuj10gbhEo45nAoZhvn9+4Uwebuq3G/4Bvae1/F/7yEu/vh
+         2FVnxNb/1g8JkQLKE1FsLRvC8Y8DAaiw0iilY6hXNScPUtyZmYfE/0UxFKB10RD4OMv4
+         CLog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795644330; x=1796249130;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=PFMx5gcHoGq+aybX24krgUmTqr/EIcl1w7rEetCl/eM=;
+        b=lU61iwznBQVfgrUU9K0GPYj4hlYocQRg3xddBTo/Y5IiMPLoBidXB8Q+W5T0ZfPtUX
+         uJU/D3AUrMp/nsNQ4RSUwnlztH47FgeDUKCN7x81rrXDZqiL1rHJ0+Lab5TXH+BjIFAu
+         mJHbspJ5c9r67v45XGpYT/k5As0oRl191OELQH/OQU7UZUqeTsaUkgvdGJC4BxhqjWvi
+         HTar3tKqK2HCjecsPyCB/NfREZxwNgGnJibQy57uelMwiCbtoKPY/TQhLsJu5nS2Bffh
+         kWwqdE6lQWiBYMSpsa08xqFT/HiFBKFYekDTqPx0+ledQvx4PhmoiDIAJ/LG6ZjXtBw1
+         Oe4g==
+X-Forwarded-Encrypted: i=1; AL+hErFqs1RBL5be/g7b9pKI2QGqaba69uFmOimpBP17LFXWyMJEmCnhLD2irZuVBvgpkrTK3R7z8kq6cvNE6sv7wQaThWM=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8vFAkJrslbC0TKSDc77MJtzFxK5riidi9VHH01qWxdmfowwzK4
+	mseY+kz4arJEsRCTpbDmfUQ/1U0tg0YMPM6hIl/vnZ8/AOhL4yvjLuFC
+X-Gm-Gg: AZFdTZezX4bVW+x8WvvUusj0teER8RN78qet5/1wLbDrp31ld9ybWKNL/Ff/xeufb8b
+	iKch55skj2hE0DK9F/U9DDr9oodZdNzeLcD1ffejlO88S/H/8DeWXzIWwlvJ/qAEup2okA4TTSe
+	H2QhE+i1xpXbPCO4vJDSseakn4f5E8dVVXvYTxxJJVqgI6y27/xDrf1D5GGbZs6hg6iIT3V6b23
+	yUCbfsw6GH6/ttGnz8HWeOPTh1eOiejmQi8KKxHpzr812ax+VvvdmvJx3YO+lmxsh3S0Z5cHwSQ
+	bdegXIZ4FN8sVo+7y2lsxIGrt5MXMoW0uW3qJV2Q+fBnOo8Kyu8xWya5X9Jq33wm87iIJkzdwb4
+	7KjiHxtiiBdt8LW9tCmyZct37JtFdmvERPRX3bSAfJDCFnk9FR6f6o/oiGZYRCSlz32PLDP+CF0
+	ivAK+C0XdSk7rlmXcMgkvYYUJBPTwPeO+cAwsqwVL4IcQMgcJfABl9aDlEWJAgWvcFlrN+zsGuI
+	fWV5bi4Orh1iK4o0Rkv5H3MkOMqQvKrwpE12mZkfKsPjcBcWOzgg5iMVDjcEZTUdJtWkAlalzQ2
+	+ofqmeVzcpCPTJX2
+X-Received: by 2002:a05:600c:e549:10b0:4bb:a60a:fc8 with SMTP id 5b1f17b1804b1-4bba60a11d2mr42321925e9.35.1795644330050;
+        Wed, 25 Nov 2026 14:05:30 -0800 (PST)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b09bsm1016582145e9.4.2026.11.25.14.05.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 14:05:29 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 25 Nov 2026 23:05:27 +0100
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCHv2 1/2] kprobes: Increase the kprobe hash table size
+Message-ID: <awdbpwBAyzIdG9tL@krava>
+References: <20261122200239.1481088-1-jolsa@kernel.org>
+ <20261122200239.1481088-2-jolsa@kernel.org>
+ <undine-1795477745290490698-99e2fcc5c9b45beb@undined.local>
+ <awWdDfj1fknA8fuF@krava>
+ <undine-1795616480318619368-1be7e961905611b5@undined.local>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,87 +106,77 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 13sh7uftiah7bap37uf43166tou7rs5z
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 5929C2002B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX196g8AXPR6bH19cV/ubkt6iXbYx8UNBFl4=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=wdubbU4C4QfHvxGlPo5i758PKViG5JBAET2wpadLeHU=; b=UucNguBT12twrZlEpugFW5pJz2f7V0GWkoE8v1IaIcJyp+IkW/9c/n2yPqQNizn+Vzl1Tl8Ba114PvKQtc31IO22psvVw4GYDNU4OqdV4Bb2efuapEg3jqsvG9ZWUJPpedWv64lMi6d/boLDIHknPi3/M7MsTkBVzp+PI8Vil38=
-X-HE-Tag: 1795642115-248737
-X-HE-Meta: U2FsdGVkX1/XR1JtDt00ecgL6V0EUmK/f/Wn1BLFGABCzfOSF7AD8Kjpi/mFYbpAFQn7zXqB8GhD2qWa0WM38qFVinKhIjHN3f2T5Vtru7LMVXOVtSaMNjzsjChx48bdAIBMj81dNwOm4hJUC3ykWZMXy7Tyi9uDa4wexl7qXuZVLXgn9yvk0qAhvJx7s2/rx3NBhZ8ixYE3y3qj8Kk5bO4ki4g+y3LElofmqy7/y4w8t2GHjGAUVoNKfZ2LO9jFa4wkj5AA+OPRNkr4h1/Az1MGWteErvGHSjuX2BbZEJOLfIW7P4s00kRLnyxgUqOzETnwFik3vYTc574WYLPdalkvuultSahIrIO8NbOvkyuMT9EemkbgAHH9OkK2GyTe2ADdR0WiAl8/qefYyvhMjFQNDuZYC0sQSbjrEctCpmnNQP74g2IS68ToSg0ZEQsOKpjnEzaPfvxq0Wo88kW87SurKgC88yQDxYRFLNxL07c=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <undine-1795616480318619368-1be7e961905611b5@undined.local>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, Nov 25, 2026 at 11:21:20PM +0900, Masami Hiramatsu (Google) wrote:
 
-The lseek method for the "recursed_functions" file only handles
-seq_lseek() which is for when the file is opened for reading. If the file
-is opened for WRONLY, it will cause a NULL pointer dereferenced:
+SNIP
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000012: 0000 [#1] SMP KASAN PTI
- KASAN: null-ptr-deref in range [0x0000000000000090-0x0000000000000097]
- CPU: 5 UID: 0 PID: 1100 Comm: lseek Not tainted 7.4.0-rc4-test-00006-g4dca8a8ee893 #36 PREEMPT(lazy)
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-debian-1.17.0-1 04/01/2014
- RIP: 0010:__mutex_lock+0x162/0x2550
- Code: 08 84 d2 0f 85 a1 1c 00 00 44 8b 0d 38 cb df 03 45 85 c9 75 29 48 b8 00 00 00 00 00 fc ff df 48 8d 7b 58 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 a6 1c 00 00 48 3b 5b 58 0f 85 3f 0e 00 00 bf 01
- RSP: 0018:ffff8881211afd10 EFLAGS: 00010206
- RAX: dffffc0000000000 RBX: 0000000000000038 RCX: 8000000000000000
- RDX: 0000000000000012 RSI: ffffffff8588bdfb RDI: 0000000000000090
- RBP: ffff8881211afe70 R08: 0000000000000001 R09: 0000000000000000
- R10: ffff8881083f8000 R11: ffffed10247ebc54 R12: 0000000000000000
- R13: 0000000000000000 R14: dffffc0000000000 R15: 1ffff11024235fac
- FS:  00007fb27d236780(0000) GS:ffff8882b4581000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 000055fb6eb6e008 CR3: 000000011d26e006 CR4: 0000000000172ef0
- Call Trace:
-  <TASK>
-  ? seq_lseek+0x60/0x3d0
-  ? kmem_cache_free+0x14b/0x610
-  ? __pfx___mutex_lock+0x10/0x10
-  ? do_sys_openat2+0xd8/0x180
-  ? seq_lseek+0x60/0x3d0
-  seq_lseek+0x60/0x3d0
-  ? __pfx___x64_sys_openat+0x10/0x10
-  ksys_lseek+0x3c/0xb0
-  do_syscall_64+0xcd/0x6f0
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
- RIP: 0033:0x7fb27d33fa17
- Code: 8b 05 fd 03 0e 00 64 c7 00 0d 00 00 00 eb b2 e8 ef 98 01 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 08 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 c9 03 0e 00 f7 d8 64 89 02 48
- RSP: 002b:00007ffd486d0258 EFLAGS: 00000202 ORIG_RAX: 0000000000000008
- RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fb27d33fa17
- RDX: 0000000000000002 RSI: 0000000000000000 RDI: 0000000000000003
- RBP: 00007ffd486d0280 R08: 0000000000000000 R09: 0000000000000000
- R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
- R13: 00007fb27d482000 R14: 00007ffd486d03b0 R15: 000055fb6eb6cdd8
-  </TASK>
- Modules linked in:
- ---[ end trace 0000000000000000 ]---
+> > > If this change is intended solely to improve performance for an extremely
+> > > unlikely use case, I would, at the very least, make the size configurable
+> > > via Kconfig.
+> > > 
+> > > Since this change affects all architectures, those working with small,
+> > > embedded-system chips might be reluctant to "pay" 32 KB for a use case
+> > > that is highly unlikely to ever occur.
+> > 
+> > I can add CONFIG_KPROBE_HASH_BITS with range 6-16. I'd keep 6 for
+> > CONFIG_BASE_SMALL, so small systems don't pay anything, and use
+> > 10 (8KB on 64-bit) as the default otherwise, which gets most of the
+> > speedup from the table in the changelog
+> 
+> That is good. If you introduce the inline function support which is
+> enabled by some kconfig, that kconfig can increase the hash bits. That
+> should be more reasonable.
 
-A helper function "tracing_lseek()" already exists for this use case. Have
-the file_operations for the recursed_functions file use that.
+yes, good idea, something like below, I'll send that as part of the
+inline tracing changes
 
-Cc: stable@vger.kernel.org
-Fixes: 773c16705058e ("ftrace: Add recording of functions that caused recursion")
-Reported-by: sashiko-bot@kernel.org
-Closes: https://sashiko.dev/?list=org.kernel.vger.linux-trace-kernel#/patchset/20260502174741.39636-1-yashsuthar983%40gmail.com
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+thanks,
+jirka
+
+
 ---
- kernel/trace/trace_recursion_record.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_recursion_record.c b/kernel/trace/trace_recursion_record.c
-index 4f63bec052fc..0452c9c4c558 100644
---- a/kernel/trace/trace_recursion_record.c
-+++ b/kernel/trace/trace_recursion_record.c
-@@ -217,7 +217,7 @@ static const struct file_operations recursed_functions_fops = {
- 	.open           = recursed_function_open,
- 	.write		= recursed_function_write,
- 	.read           = seq_read,
--	.llseek         = seq_lseek,
-+	.llseek         = tracing_lseek,
- 	.release        = recursed_function_release,
- };
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 1163736de1f9..350144df6863 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -141,6 +141,23 @@ config KPROBES
+ 	  for kernel debugging, non-intrusive instrumentation and testing.
+ 	  If in doubt, say "N".
  
--- 
-2.53.0
-
++config KPROBE_HASH_BITS
++	int "Kprobe hash table size in bits" if EXPERT
++	depends on KPROBES
++	range 6 16
++	default 10 if DEBUG_INFO_BTF_INLINE
++	default 6
++	help
++	  Size of the kprobe hash table as a power of two. The default
++	  of 6 (64 buckets) is enough for a small number of probes.
++
++	  Attaching to inlined functions can register thousands of
++	  kprobes at once, so the default is raised to 10 (1024 buckets,
++	  8KB on 64-bit) when the inline site information is available
++	  (DEBUG_INFO_BTF_INLINE).
++
++	  If in doubt, keep the default.
++
+ config JUMP_LABEL
+ 	bool "Optimize very unlikely/likely branches"
+ 	depends on HAVE_ARCH_JUMP_LABEL
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index f14f7ff45961..eba446e8ae37 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -50,7 +50,7 @@
+ #include <asm/errno.h>
+ #include <linux/uaccess.h>
+ 
+-#define KPROBE_HASH_BITS 6
++#define KPROBE_HASH_BITS CONFIG_KPROBE_HASH_BITS
+ #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
+ 
+ #if !defined(CONFIG_OPTPROBES) || !defined(CONFIG_SYSCTL)
