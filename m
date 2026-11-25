@@ -1,99 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.48
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795608216;
-	b=UPpVKjsevxkqgoeoWoieVDtm2s7ZBIbRyNqEVLPb9GBh1AKXWJ00z8sEj+n5uqVUTTI2
-	 MFvOHolczZ90a5MVeEzHUFrzOs7xx8a9R2G5yzvO9VKcmiAbS2mRMYESeZ94xOic5Xa6O
-	 LjY3YXaCgzZTc3KgOwWOkmX1fL2kGLyny/3dhwqLIussIUMeZwTyzwedAP86I+RpQgxoo
-	 3hHbqU5uvZ2TBT9MLuEmDNjQMZWoqhQhW2R7gSJldMkJx4NwuV7x6Mpa6prcLxhGksVy0
-	 xe/RndghykkanlhIkIacvsUILDGVqlaXiyukGObPmzCQVFbY/rLEetfaypZijY97uHw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795608216;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.41
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795610652;
+	b=HPcWi4IhuVrVedAmpHRXRexeMuL7WWJ+u4KHSZTnm6eOptnmTAZBfBS3RotDM123Sakm
+	 6FDGmdhnErV45Qo2iwQQPAUU9WzOQTRcc2H4BjSb+6v6w3V4uGN4NaWAm9/xYLu9yU7wk
+	 Bi3X4TDvvM7RO5jxZwy5pLV72iyeZkm815vpHDK/0qVUERQ3uEy02QFsHEXnKkHtsmIqZ
+	 JZw5/H0QJVt2vyccm/+/xrYi22MOAKpx+tw1JG1aw+juwLVXA7YnKbXsjrFHATzg0gFpy
+	 49LjiKDGRVcBCDuIJJeTnp1weRpb/YWwYM4nbA0YwgZOfSIcK0fYKjN+lYmZNXXoiVw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795610652;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=tup9wrbU8nf0eWmfjcOGu/NZ/iv8Wqyf43zvkmJl048=;
-	b=Z/nIK2QwVSpnnS6hWZ43jhC8lWsgcFmp8BDSLwdnBDXIHGWS2r0wGcPNfz+DjRJkQ5fy
-	 n1oDn62a/OqZ0+3p/pWZQWgnXhCtF7eE5cu53rd9yojw7xCOhNA1I0sjWgvAfkTivX/PZ
-	 AXgq0TjJCNvVIKBc73r1y5aCu4A+AibtEXmnlwWBadK5u+JSoJ8F7GakbmKZmnNn0EB/U
-	 XUcGYF5nRCqBqVQXhzTcY7kq6tYk35axs/vJRJMAOOO4xRdkeIDPpFDX+l/JaVdF4znem
-	 Fr1QyUmGot3gEe6xe9EhjKjMHG35hsYsXXrPX+ykBUientMKehXbgjBr51up8qD98pg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=sentinelone.com;
-	spf=pass smtp.mailfrom=sentinelone.com;
-	dkim=pass header.d=sentinelone.com header.i=@sentinelone.com header.a=rsa-sha256 header.s=google header.b="Vs6Ga95/";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.48
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:Content-Transfer-Encoding:User-Agent:MIME-Version;
+	bh=n3kRI1t8FC4sBJ1KlH6nbApPr67WWAzYu4YOF8wU9ro=;
+	b=bMireh6KJdiXzecx05J2EyBi72olBwzbFSmiOGU+O647vl+ubBhtED5JDvdxbVZUGXpb
+	 5DcvtL+zhYNmBJ6BcDfEc6QjCA7kEJs8V+klSWestZWhhOIlQQ9eWLxrd90awsJez7EOy
+	 F/EzQkq6WPbA5TOh/XU3Uy0Pu1z6yqr/8Juu8eYTAun+NJImJLozK6NRiTy+DhZUpyEnA
+	 4OU+uobyhmb9zaGXaECDAaXrlESWvS0nLIWyZDejqm1G6ZIZcp7UCLU8IDfeFJiEr6MJs
+	 mjA01JnNZGRI1e+/0XaV+ceIZviwUQbPz95NnKtGrj5CWrzA8X8dlicVGCCn+zTruvw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=amutable.com;
+	spf=pass smtp.mailfrom=amutable.com;
+	dkim=pass header.d=amutable-com.20260707.gappssmtp.com header.i=@amutable-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=JcoUc7GM;
+	arc=none smtp.remote-ip=209.85.221.41
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBB8606A33B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 12:03:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DBB8606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sentinelone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sentinelone.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C8E606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 12:44:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 84C8E606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amutable.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amutable.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sentinelone.com header.i=@sentinelone.com header.a=rsa-sha256 header.s=google header.b=Vs6Ga95/
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3b4ab53a966so518075a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 04:03:36 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795608216; cv=none;
-        d=google.com; s=arc-20260327;
-        b=T5RFfqf3f0rKxZ6lFWpJxoSg/8OqdlQvKuaJpP0ysz4fpOpHmot3dJ5peNbjOiIB+3
-         YnEudNrCEMswP98+TBogm9ffLyzL/6+xMnQNsA6EcmgDPj+PJ4OneiPlyv2bawCLAbZR
-         egwz+YvCLbTMODCr3CuMH4I9DDCGrb7SZ70kJ51M3r9vYx684FA7oW43oL8oC4YFJuaK
-         +pRn9reSRyXesGqYx8fjruwOcraq9QDJLpsvv+5JEaFXQO9V5vTRqzmwnMgUtyZZUYLK
-         jFJS8PP/dZSELy5QEpZH/4FSZhmYvabgVDMKVozP7qYujodvuc0wM6ficSssCgUy7xrH
-         k1KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=tup9wrbU8nf0eWmfjcOGu/NZ/iv8Wqyf43zvkmJl048=;
-        fh=a2WQ2y3v82Oz/JFsO4Cp/ANe3N3QRKE7+vIX6rU34sU=;
-        b=G4WfhSkXojmmQBmgWo2tSVn8LjKX9gyDY2R6FQn/dcTveXGouYwf1l1jl2IjnRF8qb
-         HivuSgmaP6NXJzDTRH5BuhBO5kc3mY7u0gIzB7s2DuIRqhyaBBIEd3F8X03BhqTVV5xL
-         Bym8JNjXLHIw7tGzYxPzKMzJMSpZJgEZxHVvFjk8iIkDs/e+n0c+0KCTpcQB1k9CKP90
-         CYKNgvJ1Jh7BAT2+UXPQJv90VKY1Xh32xkzisDZGt98xgh19sq992gQoBom49R3NcIs9
-         ks6i/2V50upoOkoQS49q51rzTpvCOpdrl9FSUfDBLtIruZ2bTk8b0iAngZcE1FCDszFM
-         +g8g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=amutable-com.20260707.gappssmtp.com header.i=@amutable-com.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=JcoUc7GM
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-49465892f7bso4148017f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 04:44:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sentinelone.com; s=google; t=1795608216; x=1796213016; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tup9wrbU8nf0eWmfjcOGu/NZ/iv8Wqyf43zvkmJl048=;
-        b=Vs6Ga95/mRaUREGKXZ9E4vdoMP0K1u9J5ZpXSDocWX2J/AeqvLDgfwj209rKQRafb1
-         p7Seom0kCONOkXHyUXxIOsSFwZ1qfTJxeAhYpEamQvZwu5PW8C3lKiMG3FjLgBoAmfrs
-         A7E5+JIuzjNhhWEm+MRBVT/DvhQ1+uzse5Po9d8OXJ+D1ivxlOQMIk7y0hB4Gif2fLBD
-         GS/uTRxI57SYIJj6HSKCfeJpH2jzpzvyyLwi1eeS5DX91EWIT92HC2J+HL8OBbXrNbIH
-         oTys+Rzp14daPGst8Cc5CAkfolTWfg/wAy7f25XrKdYcDwKGF+2u2m6JC2/AkZLvM7fk
-         3cBg==
+        d=amutable-com.20260707.gappssmtp.com; s=20260707; t=1795610650; x=1796215450; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=n3kRI1t8FC4sBJ1KlH6nbApPr67WWAzYu4YOF8wU9ro=;
+        b=JcoUc7GMiAh0LkpV1E480w7GXCIAW/e8cF7hpO69S4aq0dcYx4tjFtoWiYr/DAm4+r
+         yQ/2E0q/ZEtANpcmhRiWttvENm2b4bj22INjO2Cx/R+/hBXaXVuDkjlb15+GWRRpJToA
+         gOt2R0IR6kS/Ao9M36XuCAmR5ct6HS3dYddtARbxeWS1JjHEBmwNCLXhc2QkvjRgk2lT
+         AJJAOIWWGoD+UkNdRCPXyT74UpyGH73ouJzCAPdkF/Lr70PZiakzkApmnO3aBQ+SwCeG
+         0TuQ+Y4k0z+qEetWXaTlu1C1y6AjZth3CoXXov75D3SM0G7QrDYTrkbxN01Y+ILgo/HG
+         90Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795608216; x=1796213016;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=tup9wrbU8nf0eWmfjcOGu/NZ/iv8Wqyf43zvkmJl048=;
-        b=kqIF2GjndBTT4b9GKhOAg5Lth0lvLCQH7jk7Wg4sVwTKeccJb1I5GE7oLEXiH/GwSl
-         zaSC4rtJ94vK8afblUq1jSBtX0McvPiOH8658rp12MJTnmRBurf1ZUTHoHRdvfAAw6ou
-         TFKVfopTgcvPgcuyFoqhoAbPD3Bk2WZyP+8nc12rFKej5j04M6Anvg8pDXyO+qN5FnCL
-         vGX0VV5A/clbHXK8d+aBo/ENu+VY74ukUdxygk9/eaMrZJtk+Tctku6vN+H4mpXp1wpv
-         Oii47jJCRAvvTJOMl05FLhZa+62IQUOqja8yH6IIiAHctov5kSjWJf7fsr6jkGyXo7iO
-         ni8g==
-X-Forwarded-Encrypted: i=1; AL+hErESwLf8ThjKzvmKhMx/6vTk58zqflGU4S1CmR7d4d3H0HYVTaqnEBNwAwQyfsK3gdrstuOOKU7OVZgA3RZoh+WPiC8=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/TPC80XGQ6AQVsngjPkDexQG5+rSqpYHQnpxV8J8IDltv+07E8
-	XeVJcyKljbipnnuTG/pefcwSbNebBW2QL7ZqY9tLo1PcTYA89eSvZyyUDlhl69XsFySHnQvKQnN
-	Kuug34kJOgXcdiARza7jYIAcRpGraRag0mohbgQFF3A==
-X-Gm-Gg: AZFdTZeb8aQnU2TP27IXSiqNmeISEUue83AjOkbeZrUnhYRCtGe257WMW9N/WymLaiG
-	nBwtuVzmXg1rrBtB/SzMWhtazVBoLyGVN7OdGWNDLlHqX0ZJk5p8vvLFUTzoQa7s0aYUYrBiDHa
-	LGOK2lbKAFTzjnUslmvJoaIqSsZTgrkxMX15JZJ9W3VqHj9sFTGxyI1l3alYAjknysATas015tt
-	VVg1iS+ow5twiKcWHbYsgtHUZQfTUL6/jqzhfE3C4PvaOtzKtPQ91pgKeJOhe8kNTlG5dCp19wQ
-	drKlfTUdZBVYCgF6IFpPvXNFSFdoHt+yTZ+qoxnxrTWx03c8MQ5izpbA/3WyoQKHlyQlwAEjJbH
-	to3/CPT5zfdl5uXXlG/1s5d5cVJQ6VmpvXZ0=
-X-Received: by 2002:a17:90a:c10e:b0:3b3:c92e:f523 with SMTP id
- 98e67ed59e1d1-3b41c917320mr29094246a91.3.1795608215341; Wed, 25 Nov 2026
- 04:03:35 -0800 (PST)
+        d=1e100.net; s=20260707; t=1795610650; x=1796215450;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=n3kRI1t8FC4sBJ1KlH6nbApPr67WWAzYu4YOF8wU9ro=;
+        b=b0RG0v6wFymFy6qrJ0MRWA1nT7LGGStpdSQ/X1qi6PG8Hn6AmE3Ak2rn57vp+WgwuW
+         U+iM5thhfJCpb3p9SwAjcEUiUKVnTOlGW1SpaCqyRi1p6TEUr2r8KrYpR9vEq61Wh8fB
+         PG77Ldmy/bhIP7QBkVPgV6YkyOXa/78cPeq4qLE89ZPSpoyDp4HwzL3Z0Ik7N0Jdikfw
+         Pse1TQpGZeWeXa9FYOGZ+VSbwFO2yJXRTrTMwbZ9INMfkXns452/2XuId+WcAGwaMw9N
+         UQx4a/fJNJ+58iqJw4DFhEii+BdC5AiQuSnGMu4SFTEEijqKlujdLFfuDcUmu9mIUrAw
+         3Hzw==
+X-Forwarded-Encrypted: i=1; AL+hErEuGTVV+3eWAgJD2/IDTUs8U68iLuYThut4HpT0KmQyRE2iY7su1ruhtrhCDOCtM7NMWBusvkIw10FRBGVjwiraZPo=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8lkdemR+E/Q7q8EyOIoV7L0hay/WohCtROaQiev4837FDf5oPo
+	x7yL4J7dz7Vwh5JAK1Zl4QRLIaICC4sTgTDp3jjoMKyP9ICWUtiEHejPG3f6/v87b9gN
+X-Gm-Gg: AZFdTZcpR6qE1U9IQ8mja39TRhOIakDebPBYRE/8KrmdBzVqgyPLtuB5AXvZnsEyuYl
+	YtH5Ng9RXqKbMolint7QMuN+g0xX2/BR+J07+9STeEwnS8aaJmwBM7doYaP+iNv+mw+Aq/YNy4X
+	ME1iyhZCWIVOyBtTwt8+cKuQXipCYOvja6m9T8gcN8T4ThjdJMhJtSpZlafluHIAH8N6C1Z4sD9
+	aGwtWFLQ5GBEMiP1IPeDPiLMjktiFAPw/mh41kPcMAPM97HHym7pzpGQ7WAm6tlBbeXAtn/eHok
+	L0IxpmPQhcLG/0Rr61977zevawF0IKKfY7tt0TjGaLNR6LAGfnwHlLICxaH4Im1g98CJ+xNlXyF
+	5MdRSmPiwRO4X3BIQnwhPL76s0yugZk+nBEKndZRmQdeirz0W/zHqIYbC9yzQsMsl3T3QRt4qoH
+	yKfU/GD1eGzCFzv52ti3BabhOZO24h/Rh6gS8heH2Ch8RFnmmUnK2qQc/COab/uK0NekrRXL2sE
+	MlM0ui2a9guKCOmc88awgOG+8mSdh/xwweGtieWJijoT9Qg/EJbG+sVDIy6EWCPZXo3x6COZdYR
+	Wat6uqcGMKCJXXq9JykVLR122LbIFmgOt9+up3G7ym6liUg5JAlKt6w0dgf7GArBK57avUOPY2H
+	eM0ZEYThZ+95pVMK3P4fBcD0qj/4g789zteDPEVpAUf3UmcrfvFQBgFM=
+X-Received: by 2002:a5d:584f:0:b0:4b9:8ac3:f5fa with SMTP id ffacd0b85a97d-4b98ac3f6d5mr4714062f8f.48.1795610649431;
+        Wed, 25 Nov 2026 04:44:09 -0800 (PST)
+Received: from ?IPv6:2003:cf:572c:2800:c235:97b:8b16:8928? (p200300cf572c2800c235097b8b168928.dip0.t-ipconnect.de. [2003:cf:572c:2800:c235:97b:8b16:8928])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67fe75sm38964871f8f.24.2026.11.25.04.44.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2026 04:44:08 -0800 (PST)
+Message-ID: <e6c23984f7b47f9dcfffd6de2f6fdf75d07a14fe.camel@amutable.com>
+Subject: Re: [PATCH v2 01/13] ovl: don't warn when the lazy lowerdata lookup
+ fails in ovl_d_real()
+From: Alexander Mikhalitsyn <alex@amutable.com>
+To: Christian Brauner <brauner@kernel.org>, Amir Goldstein
+ <amir73il@gmail.com>, 	linux-fsdevel@vger.kernel.org
+Cc: Chris Down <chris@chrisdown.name>, Miklos Szeredi <mszeredi@redhat.com>,
+ 	linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, 	linux-trace-kernel@vger.kernel.org,
+ linux-integrity@vger.kernel.org, 	linux-security-module@vger.kernel.org,
+ linux-mm@kvack.org, 	stable@vger.kernel.org, Sashiko
+ <sashiko-bot@kernel.org>
+Date: Wed, 25 Nov 2026 13:44:07 +0100
+In-Reply-To: <20261116-work-ovl-d_real-v2-1-90564c4ae347@kernel.org>
+References: <20261116-work-ovl-d_real-v2-0-90564c4ae347@kernel.org>
+	 <20261116-work-ovl-d_real-v2-1-90564c4ae347@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-0+deb13u1 
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -103,72 +108,101 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com>
- <DN38312WXPDJ.2KLUTCWSDFL3P@gmail.com> <CAPnbwjpP9Fin=CyD0WiA2c4sxqbfyK7AziE64PCX4w9kbz55Kw@mail.gmail.com>
- <DN3Q2CZJSC2C.IM2EYLF1NR9X@gmail.com>
-In-Reply-To: <DN3Q2CZJSC2C.IM2EYLF1NR9X@gmail.com>
-From: Mike Bazov <mikeba@sentinelone.com>
-Date: Wed, 25 Nov 2026 14:03:38 +0200
-X-Gm-Features: Aa3M54oy1asy-clEA0aiBgUJI2wZjpNvBPoFr8M2_NvkO6W7Ay5C4UmmNBOTtyg
-Message-ID: <CAPnbwjpLcyJF70D5j-q23L3TQSFXebB_RndQRmDe+_5h02YazA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 0/4] bpf: Check recursion per task for
- preemptible programs
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Emil Tsalapatis <emil@etsalapatis.com>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	JP Kobryn <jp.kobryn@linux.dev>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Nov 24, 2026 at 08:26 PM Alexei Starovoitov wrote:
-> Keep count and timestamp per-cpu. Call bpf_timed_may_goto_save() in
-> bpf_prog_enter_run_ctx() and bpf_timed_may_goto_restore() in
-> bpf_prog_exit_run_ctx(), like bpf_timer_cb() does.
-> Then the preempted run gets its count and timestamp back.
+On Mon, 2026-11-16 at 10:43 +0100, Christian Brauner wrote:
+> ovl_d_real() looks up the data of a metacopy file in a data-only
+> layer
+> itself if nothing has done that yet. If that lookup fails it WARN()s
+> and
+> returns the overlayfs dentry.
+>=20
+> Commit 42dd69ae1af4 ("ovl: implement lazy lookup of lowerdata in
+> data-only layers") assumed that the file would be read before
+> trace_uprobe places a uprobe on it so the data would be there
+> already.
+>=20
+> But nothing actually guarantees that. trace_uprobe takes the path
+> from
+> kern_path() and calls d_real_inode() on it when the event is created
+> and
+> again when it is enabled. So a uprobe on a metacopy file whose
+> redirect
+> points at nothing warns twice:
+>=20
+> =C2=A0 ovl_d_real(/f, 0): real dentry not found
+> =C2=A0 WARNING: fs/overlayfs/super.c:79 at ovl_d_real+0xc9/0x210, CPU#2:
+> sh/279
+> =C2=A0 Call Trace:
+> =C2=A0=C2=A0 <TASK>
+> =C2=A0=C2=A0 __trace_uprobe_create+0x1869/0x25b0
+> =C2=A0=C2=A0 trace_probe_create+0xcc/0xe0
+> =C2=A0=C2=A0 dyn_event_create+0x46/0x70
+> =C2=A0=C2=A0 create_or_delete_trace_uprobe+0x3c/0x70
+> =C2=A0=C2=A0 trace_parse_run_command+0x1a6/0x320
+> =C2=A0=C2=A0 vfs_write+0x1cd/0xfa0
+> =C2=A0=C2=A0 ksys_write+0x116/0x250
+> =C2=A0=C2=A0 do_syscall_64+0x10e/0x5e0
+> =C2=A0=C2=A0 entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> =C2=A0=C2=A0 </TASK>
+>=20
+> bpf's uprobe_multi does the same.
+>=20
+> A failed lookup isn't a bug though. The data can be missing, its
+> verity
+> digest can be wrong or a signal can interrupt the wait for the inode
+> lock. ovl_open() simply fails in that case and
+> ovl_maybe_lookup_lowerdata() already warns ratelimited about failed
+> lookups. So return the overlayfs dentry without warning. That's what
+> the
+> WARN() path returned anyway.
+>=20
+> Fixes: 42dd69ae1af4 ("ovl: implement lazy lookup of lowerdata in
+> data-only layers")
+> Cc: stable@vger.kernel.org=C2=A0# v6.5+
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/sashiko-outbox-214581@kernel.org
+> Reported-by: Chris Down <chris@chrisdown.name>
+> Closes:
+> https://lore.kernel.org/all/20261114120557.4bc1eb6e57218cdc@chrisdown.nam=
+e
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-i tried it, it works when the run that preempts finishes first, as
-with bpf_timer_cb(). With preemption it can be preempted too, and the
-preempted run can go on before it ends:
+Reviewed-by: Alexander Mikhalitsyn <alex@amutable.com>
 
-  task A, cpu 0                  task B, cpu 0
-  loops, preempted
-                                 save: A's budget into B's stack,
-                                 fresh one in the per-cpu struct
-                                 loops, preempted
-  goes on with B's fresh budget
-  exits: owner is B's, no restore
-                                 goes on, exits: restores A's,
-                                 which nobody uses any more
-
-A fentry prog spins in a can_loop loop, 3 SCHED_OTHER tasks on one
-CPU, 4 runs each:
-
-  kernel              runs  dropped  longest   over 500 ms
-  bpf-next            4     8        250 ms    0
-  save/restore        12    0        1253 ms   7 of 12
-  save/restore        12    0        1752 ms   9 of 12
-  save/restore (*)    24    0        2263 ms   22 of 24
-
-  (*) 6 tasks instead of 3
-
-You can see it in the run times: they land near multiples of 250 ms,
-one extra 250 ms for every fresh budget a run picked up from another.
-
-An lsm prog has no prog->active, so the same test gives the same
-result on plain bpf-next: 1253 ms, 8 of 12 over 500 ms. The overwrite
-already exists for all progs that can be preempted (lsm, cgroup,
-struct_ops, uprobe, iter, sk_msg, syscall).
-
-A fix for all of them has to change how may_goto keeps its budget:
-lsm, cgroup and sk_msg progs never go through bpf_prog_enter_run_ctx().
-I'd rather split it out of this series: v4 takes may_goto out of the
-mark, so tracing progs behave like lsm ones today, and a separate
-series fixes the budget for all prog types. Does that work for you?
-
-Thanks,
-Mike
+> Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+> ---
+> =C2=A0fs/overlayfs/super.c | 10 ++++------
+> =C2=A01 file changed, 4 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+> index 08695a99f4f93..1985b553a47b7 100644
+> --- a/fs/overlayfs/super.c
+> +++ b/fs/overlayfs/super.c
+> @@ -58,15 +58,13 @@ static struct dentry *ovl_d_real(struct dentry
+> *dentry, enum d_real_type type)
+> =C2=A0
+> =C2=A0	/*
+> =C2=A0	 * Best effort lazy lookup of lowerdata for D_REAL_DATA case
+> to return
+> -	 * the real lowerdata dentry.=C2=A0 The only current caller of
+> d_real() with
+> -	 * D_REAL_DATA is d_real_inode() from trace_uprobe and this
+> caller is
+> -	 * likely going to be followed reading from the file, before
+> placing
+> -	 * uprobes on offset within the file, so lowerdata should be
+> available
+> -	 * when setting the uprobe.
+> +	 * the real lowerdata dentry. Callers may ask for files that
+> were never
+> +	 * opened, e.g. for uprobes or O_PATH files, so the lookup
+> can fail
+> +	 * here. Return the overlayfs dentry then.
+> =C2=A0	 */
+> =C2=A0	err =3D ovl_verify_lowerdata(dentry);
+> =C2=A0	if (err)
+> -		goto bug;
+> +		return dentry;
+> =C2=A0	lower =3D ovl_dentry_lowerdata(dentry);
+> =C2=A0	if (!lower)
+> =C2=A0		goto bug;
