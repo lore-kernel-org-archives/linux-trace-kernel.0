@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795587400;
-	b=v+yxd9STMe4R9QJjnP46dZgSa0fqsBQnVdHJyuxq1B29emHAjTsycl81ayhI2FvRaVMX
-	 jRQQgqMren2DnymfisOJ5ZGU4sCG3/2Yj8Oe84TwlqgxEQ1PGZ0XChShH0HyPvVcsuuGJ
-	 7KihadsXHemM8g9nk68GbMPmXFg0tIy+6urUDzg+QeMuzRFuoezcsIg5732wNbDhzZvTT
-	 gvCSISDgvbecKVTA+GHFU/8p2sVLLHlUJk4/cU30oOfWcEJxCxKlizAgJsO6ioJ07N5Yx
-	 oGcELWrlRcwgenFkf4FonsQmeR9E+jFqQthiRIRuN4Ekxznhl2s/7Fen5ZSVB1ywmIg==
+	t=1795587402;
+	b=1p25581KwFO563MqmtFNGYpgUCk3z3umXE8pI6PR7yHXDg28heWExIxqdwvFjKP+/mj7
+	 6Dt6AjHhZJ/Lg9Hze/cc86pnOpyqWjq1g6xtjDlxPsuEpXGN9e2QMeV0+ShwmLeQVWrfH
+	 +j+As2PKcfZNKouTBfQvAvyEZTuBDscqGCkC7tJA7jUYMk2PKN9QPCX6kISs+rHUFSWex
+	 P+IADg/ckhWzyvgiqqXUohFv9oGKKJ3s4iZY30hsra9zBoMZ0OcjAcizXkHIxoOmvfIlE
+	 x5/PY2llrLJxdL8fkYQ7pqV+29NGWqkx+iNBXy+IBrtJzF4+hjNvhYRMjaBtTqCz1qQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795587400;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795587402;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=aajn/8LcP4bWu3au0+O3opUba5V5ruiLTgKiznF6dW0=;
-	b=imev607+RbQKeDdcIdkoNR64CGefrPDrP6ls+eDPqkrAa0p0cohaQnZqckfAbz2o052H
-	 b6cirSwe84RHH+3nMel3n2f4RCInh/3qZbHGD7xngG9hXVou69MiUKVBkGQNVyQ1LRetM
-	 n8n2ctNk33KSM0tuS4N8LD53Mlr5OAf6WRC75C3cbDc7ZIKUw1HzL2II7U239vXhOdt5s
-	 jmd0Ylmz0+Iiua2Cr+KhQMP8VZjja20CL4bLrqcGThGMqaK0PCQxfvCJAM6mfoxgbSkA6
-	 gHhpXmE3T8bV0tsQrlvPuMItar//+475b52kTF5v7ASBj43/z03kPVK2qCKeXy/yk4g==
+	bh=WUUeXjjWyK6qjX9x82xlteWuEad8XsxvDUnphU7EmH0=;
+	b=Ig9gYgtS866mSWotLubZe30sHkGFF8INzoDxVBOJUi27fYSIES0s7uCFieMYow+n4Krf
+	 rQKqalt/daWvtvfpEg84iG7SF8u7Dq6FJef+fn3KG0wzUsWcwM6kY0lchmDvpJ1SNNX78
+	 Qkzri1mN6qijmmJr+TPrv07hhnKcY8lDYJ+J3L4v3bwMfRN9tNxIByFopMJpfu9bQIw1b
+	 COSCiDRu+tLtp3PWlKE5BNHB/DqkjmZNLKYlGsfiOSfjj+J6RdUv+O2xSc2MbeHU0Efnx
+	 cdgmPGi6nmNkffeH36goKExW2Xbtk9EZPXbwaRhZK+YowEuox0/7zyxrz67gfGfgtnQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=kUnemsy4;
-	arc=none smtp.remote-ip=209.85.160.72
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="P/6VrMLd";
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CDA606B8F9
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 06:16:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 84CDA606B8F9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2974B6077BDD
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 06:16:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2974B6077BDD
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=kUnemsy4
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-4574f1cac98so5685621fac.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:16:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=P/6VrMLd
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-383ec96a7deso6021722eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:16:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795587397; x=1796192197; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795587401; x=1796192201; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=aajn/8LcP4bWu3au0+O3opUba5V5ruiLTgKiznF6dW0=;
-        b=kUnemsy4QQI753M8cJpfjjvfttoZa9q20+jvCaCBS8lySVD8OIYiJTOBjr7hrsFLNf
-         5+H81GVUaimeX7wACxbcQcnCMQM162uGMxhmD7u0C8tmz74Q96GHpi/XWBN0bVgizuaY
-         pNlzj3+dDzOLSyJMts6sB6P8gFmfd5WLjabX5vY1IyXk2Z9bYAX64CF668NfnTZD+Bej
-         +k6db5vptQb5Ar8mzLkO/UtpwfH3oA0g33YmzkkrhcWbsj+fXKoKMVFmiHDAZz0zs7ji
-         x2trfFqSfLoXNjuDCfE/kFqN8kXVoE8xn2Qqk5V14tU8wOY3CPf7SkKW9pLjoDfJY76V
-         mLQA==
+        bh=WUUeXjjWyK6qjX9x82xlteWuEad8XsxvDUnphU7EmH0=;
+        b=P/6VrMLdYfYArUFioPhit1ABBARFXOClMQPYcGsbvhHdv2QeNNh/sMQHXeRTMCNdcy
+         p+6CG2SwLhTyZzIOw0w2Svezd4KyjfG/3CDdRku/dPEl00xb92xvQcjsnMD4XgCMobmX
+         yO9Ev1AsIKKR6npY5APykjzGGkpe52YcZFScWTGzvU0h5DVmGweEIGwpR7vUxRXl8byL
+         UOycmUKuTyEBn10qn14UipKGoH7yQSpWgkcHrpabH9WbJVi3T0Vl+VHIfZkb/IrnXGIf
+         lZS1Yro7jVASiZRUc3aVH2w7DhgqKKDynxAUE6F2xsL7XSOSDEh0qcMfORhh4RcgzfLI
+         D/Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795587397; x=1796192197;
+        d=1e100.net; s=20260707; t=1795587401; x=1796192201;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=aajn/8LcP4bWu3au0+O3opUba5V5ruiLTgKiznF6dW0=;
-        b=HaA33hQPaAtFfbuj5nf7AMkYmp/S+opDSMoDaj7YXJIP5HkJ4wMfJIkxcSNyOKVfEB
-         /6SY34EmVW1kRXla9k3NhbyE5mXKBdb2CUIlR4AS8TX4IUnSCLoX0aFUDHUQngmnPRBg
-         I+JGmv49iQx6WBmoNwbHjq0Uy8euaqbFBSr706py2iGsyO0NtTLKAGRQ+n+om6aWCzU5
-         jjQARKwQmgzuWpNR3yPTqaMyUtIg5U1NnRe7oFjzbdG8Qfx/St/9GavPR2qRNSOj53zF
-         +OthkyzW0ndVfusn1104SY/34nXiWMyK0foPKbWJM9lCZgbIzfWpCF4JlNaukPv42lEy
-         mKwA==
-X-Forwarded-Encrypted: i=1; AL+hErH4bKkm4Ubmi/NGml/sKlD1LsDFV7/as9Qra/s+cIqdgO1w7D60WtvbbK+ZMU7Y/qRB8Xx0T9zn95qtSop1NVyI9kg=@vger.kernel.org
-X-Gm-Message-State: APuU4Z91i4/+MXa6OClO1y+7u0k+akF1vI+ecxlvj4H+SvCUm+v9NHZe
-	W1KwAbT40BKVFm8vnlhipTnmciJRvnoAEOXIdx76I+reY1kU38IOO5XZYNBSTtYp9rPorGFQBDS
-	cY3iqel0y3w==
-X-Received: from oakt7-n1.prod.google.com ([2002:a05:687c:41c7:10b0:494:50e2:71dd])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:c087:b0:4a9:58d3:b60c
- with SMTP id 586e51a60fabf-4bc835713b6mr16383166fac.32.1795587397055; Tue, 24
- Nov 2026 22:16:37 -0800 (PST)
-Date: Tue, 24 Nov 2026 22:15:13 -0800
+        bh=WUUeXjjWyK6qjX9x82xlteWuEad8XsxvDUnphU7EmH0=;
+        b=LkLyXx+3SSMfZxqb3qjF7pOr8vSYynrIn+2s4sRGEuq4XfquxOOt82PzUZzPRUEuTb
+         UhVyNk136K+AOj1AXDujgLinf8XK9D0OUA5y8A8CatK1+xo/uBmM610zOoEM2Ao4T2EC
+         Jvs8Fa96luKjiMA/adwOCib1hEqf0tJ+Z6qwUaaG2biSoqVrFdNy049PJEEwsU74LKv2
+         5qJS0gRCJ725MmxQFYrovw1gWbqPbg3TlqXM3Tman0oX9CwIS+s4vjKbkNStUdD0525b
+         Y86mm/byEbLgS8i28xj+yXO1wW/KMS/QrDQ9Fu6P/a458ho9dLMQBrkgL6aqKYXyS7G2
+         ldGw==
+X-Forwarded-Encrypted: i=1; AL+hErHRWiqZE89Lkny2qnFW3c0AKys5TQEJBjshxRXhte/XuVGomtpwIek39/e+b3bLI4/48kfAUu8U0nM7TSvwikzzqmE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z+1WiaD9MA7xhMW9+7SXu/duSoEzElCO8j+2dD97E6sRhSP++dR
+	OI/Tj2Mlnlc5IYC1D5Z0i20Nhjv6KDYWajAk5Yx8Rj+04ktQG3MDzU5F2zvoErJ3uPKyeeABRxa
+	XnqSVuadEMw==
+X-Received: from dycnn7.prod.google.com ([2002:a05:7301:1407:b0:384:71f1:1227])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:5093:b0:36a:31b2:8643
+ with SMTP id 5a478bee46e88-386992b3f3bmr14119799eec.38.1795587400863; Tue, 24
+ Nov 2026 22:16:40 -0800 (PST)
+Date: Tue, 24 Nov 2026 22:15:15 -0800
 In-Reply-To: <20261125061523.1540234-1-irogers@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261125061523.1540234-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.831.g720f3f5937-goog
-Message-ID: <20261125061523.1540234-21-irogers@google.com>
-Subject: [RFC PATCH v2 20/30] selftests/perf_events: Add Minimal DWARF CFI
- deferred user unwind test
+Message-ID: <20261125061523.1540234-23-irogers@google.com>
+Subject: [RFC PATCH v2 22/30] tools headers: Add linux/kmsan-checks.h copy
+ from the kernel sources
 From: Ian Rogers <irogers@google.com>
 To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-arch@vger.kernel.org
@@ -103,541 +103,134 @@ Cc: jpoimboe@kernel.org, rostedt@goodmis.org, peterz@infradead.org,
 	wnliu@google.com, dylanbhatch@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add a multi-architecture kselftest (unwind_user_cfi) under
-tools/testing/selftests/perf_events/ exercising deferred user-space
-callchain unwinding (PERF_RECORD_CALLCHAIN_DEFERRED) compiled with
--O2 -fomit-frame-pointer -fasynchronous-unwind-tables across:
- 1. Standard SP-based frames with the architectural frame-pointer
-    register (%rbp / x29 / s0) explicitly clobbered
- 2. Dynamic alloca() VLA FP-based frames (DW_CFA_def_cfa_register)
- 3. 64-byte stack-realigned frames (DRAP on x86-64)
- 4. Shrink-wrapped early-return functions (remember_state/restore_state)
- 5. Anonymous RX JIT-style frame-pointer stubs lacking .eh_frame_hdr
-    (including a >16-byte AArch64 frame testing state->sp_valid across
-    FP -> CFI transitions), exercising per-frame CFI -> FP -> CFI -> FP
-    -> CFI fallback and negative VMA caching in find_user_eh_frame_hdr()
-
-Skip gracefully via dl_iterate_phdr() if the test binary lacks
-PT_GNU_EH_FRAME (e.g. 32-bit ARM EHABI builds using .ARM.exidx).
+Copy include/linux/kmsan-checks.h to tools/include/linux/kmsan-checks.h
+so host tools in tools/ can compile kernel sources using
+kmsan_unpoison_memory() without referencing ../../include/linux
+directly, and register it in tools/perf/check-headers.sh.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../testing/selftests/perf_events/.gitignore  |   1 +
- tools/testing/selftests/perf_events/Makefile  |   4 +-
- .../selftests/perf_events/unwind_user_cfi.c   | 482 ++++++++++++++++++
- 3 files changed, 486 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/perf_events/unwind_user_cfi.c
+ tools/include/linux/kmsan-checks.h | 98 ++++++++++++++++++++++++++++++
+ tools/perf/check-headers.sh        |  1 +
+ 2 files changed, 99 insertions(+)
+ create mode 100644 tools/include/linux/kmsan-checks.h
 
-diff --git a/tools/testing/selftests/perf_events/.gitignore b/tools/testing/selftests/perf_events/.gitignore
-index 4931b3b6bbd3..4567b6563646 100644
---- a/tools/testing/selftests/perf_events/.gitignore
-+++ b/tools/testing/selftests/perf_events/.gitignore
-@@ -3,3 +3,4 @@ sigtrap_threads
- remove_on_exec
- watermark_signal
- mmap
-+unwind_user_cfi
-diff --git a/tools/testing/selftests/perf_events/Makefile b/tools/testing/selftests/perf_events/Makefile
-index 2e5d85770dfe..6a3a774544e8 100644
---- a/tools/testing/selftests/perf_events/Makefile
-+++ b/tools/testing/selftests/perf_events/Makefile
-@@ -2,5 +2,7 @@
- CFLAGS += -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
- LDFLAGS += -lpthread
- 
--TEST_GEN_PROGS := sigtrap_threads remove_on_exec watermark_signal mmap
-+TEST_GEN_PROGS := sigtrap_threads remove_on_exec watermark_signal mmap unwind_user_cfi
- include ../lib.mk
-+
-+$(OUTPUT)/unwind_user_cfi: CFLAGS += $(TOOLS_INCLUDES) -O2 -fomit-frame-pointer -fasynchronous-unwind-tables
-diff --git a/tools/testing/selftests/perf_events/unwind_user_cfi.c b/tools/testing/selftests/perf_events/unwind_user_cfi.c
+diff --git a/tools/include/linux/kmsan-checks.h b/tools/include/linux/kmsan-checks.h
 new file mode 100644
-index 000000000000..a36e9f4d39e2
+index 000000000000..e1082dc40abc
 --- /dev/null
-+++ b/tools/testing/selftests/perf_events/unwind_user_cfi.c
-@@ -0,0 +1,482 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/tools/include/linux/kmsan-checks.h
+@@ -0,0 +1,98 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * unwind_user_cfi.c - Multi-arch selftest for Minimal DWARF CFI user unwinding.
++ * KMSAN checks to be used for one-off annotations in subsystems.
 + *
-+ * Verifies that deferred user-space stack unwinding (PERF_RECORD_CALLCHAIN_DEFERRED)
-+ * accurately walks user callchains compiled with -fomit-frame-pointer across:
-+ *   1. Standard SP-based frames with the frame-pointer register (%rbp / x29 / s0)
-+ *      explicitly clobbered to defeat FP unwinding
-+ *   2. Dynamic alloca()/VLA FP-based frames (DW_CFA_def_cfa_register)
-+ *   3. 64-byte aligned stack-realigned frames (DRAP on x86-64)
-+ *   4. Multi-return shrink-wrapped epilogue functions (remember/restore_state)
-+ *   5. Anonymous RX JIT-style frame-pointer stubs lacking .eh_frame_hdr,
-+ *      verifying per-frame CFI -> FP -> CFI -> FP -> CFI hybrid fallback and
-+ *      negative VMA caching in find_user_eh_frame_hdr()
-+ */
-+
-+#define _GNU_SOURCE
-+#include <alloca.h>
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <link.h>
-+#include <linux/perf_event.h>
-+#include <stdbool.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <sys/syscall.h>
-+#include <time.h>
-+#include <unistd.h>
-+
-+#include "../kselftest.h"
-+#undef __always_inline
-+#undef __attribute_const__
-+#undef __must_check
-+#undef __printf
-+#include "../../../../include/linux/compiler_attributes.h"
-+
-+struct perf_record_deferred {
-+	struct perf_event_header header;
-+	uint64_t cookie;
-+	uint64_t nr;
-+	uint64_t ips[];
-+};
-+
-+/*
-+ * Tiny architecture-specific machine-code stubs for:
-+ *   int jit_stub(int (*fn)(int), int arg);
++ * Copyright (C) 2017-2022 Google LLC
++ * Author: Alexander Potapenko <glider@google.com>
 + *
-+ * Mapped into an anonymous PROT_READ | PROT_EXEC VMA without an ELF header or
-+ * PT_GNU_EH_FRAME segment. Each stub establishes a standard architectural
-+ * frame-pointer record before calling fn(arg), forcing unwind_user_next() to
-+ * fall back from UNWIND_USER_TYPE_CFI to UNWIND_USER_TYPE_FP on the JIT frames
-+ * and resume UNWIND_USER_TYPE_CFI on the surrounding -fomit-frame-pointer C
-+ * frames.
 + */
-+#if defined(__x86_64__)
-+#define HAVE_JIT_FP_STUB 1
-+static const uint8_t jit_stub_code[] = {
-+	0xf3, 0x0f, 0x1e, 0xfa,		/* endbr64 */
-+	0x55,				/* push   %rbp */
-+	0x48, 0x89, 0xe5,		/* mov    %rsp, %rbp */
-+	0x48, 0x89, 0xf8,		/* mov    %rdi, %rax */
-+	0x89, 0xf7,			/* mov    %esi, %edi */
-+	0xff, 0xd0,			/* call   *%rax */
-+	0x5d,				/* pop    %rbp */
-+	0xc3,				/* ret */
-+};
-+#elif defined(__i386__)
-+#define HAVE_JIT_FP_STUB 1
-+static const uint8_t jit_stub_code[] = {
-+	0xf3, 0x0f, 0x1e, 0xfb,		/* endbr32 */
-+	0x55,				/* push   %ebp */
-+	0x89, 0xe5,			/* mov    %esp, %ebp */
-+	0x83, 0xec, 0x04,		/* sub    $4, %esp */
-+	0xff, 0x75, 0x0c,		/* pushl  12(%ebp) */
-+	0xff, 0x55, 0x08,		/* call   *8(%ebp) */
-+	0x83, 0xc4, 0x08,		/* add    $8, %esp */
-+	0x5d,				/* pop    %ebp */
-+	0xc3,				/* ret */
-+};
-+#elif defined(__aarch64__)
-+#define HAVE_JIT_FP_STUB 1
-+/*
-+ * Allocate a 32-byte frame (> 16 bytes) with {x29, x30} at [sp, #0] per
-+ * AArch64 PCS so fp + 16 != caller_sp, exercising state->sp_valid tracking.
-+ */
-+static const uint32_t jit_stub_code[] = {
-+	0xd503245fU,			/* bti    c */
-+	0xa9be7bfdU,			/* stp    x29, x30, [sp, #-32]! */
-+	0x910003fdU,			/* mov    x29, sp */
-+	0xaa0003e9U,			/* mov    x9, x0 */
-+	0x2a0103e0U,			/* mov    w0, w1 */
-+	0xd63f0120U,			/* blr    x9 */
-+	0xa8c27bfdU,			/* ldp    x29, x30, [sp], #32 */
-+	0xd65f03c0U,			/* ret */
-+};
-+#elif defined(__riscv) && __riscv_xlen == 64
-+#define HAVE_JIT_FP_STUB 1
-+static const uint32_t jit_stub_code[] = {
-+	0xff010113U,			/* addi   sp, sp, -16 */
-+	0x00813023U,			/* sd     s0, 0(sp) */
-+	0x00113423U,			/* sd     ra, 8(sp) */
-+	0x01010413U,			/* addi   s0, sp, 16 */
-+	0x00050313U,			/* mv     t1, a0 */
-+	0x00058513U,			/* mv     a0, a1 */
-+	0x000300e7U,			/* jalr   ra, 0(t1) */
-+	0x00813083U,			/* ld     ra, 8(sp) */
-+	0x00013403U,			/* ld     s0, 0(sp) */
-+	0x01010113U,			/* addi   sp, sp, 16 */
-+	0x00008067U,			/* ret */
-+};
-+#else
-+#define HAVE_JIT_FP_STUB 0
-+#endif
 +
-+static int (*g_jit_fn)(int (*fn)(int), int arg);
++#ifndef _LINUX_KMSAN_CHECKS_H
++#define _LINUX_KMSAN_CHECKS_H
 +
-+static uintptr_t expect_ip_leaf;
-+static uintptr_t expect_ip_shrink;
-+static uintptr_t expect_ip_jit;
-+static uintptr_t expect_ip_bridge;
-+static uintptr_t expect_ip_drap;
-+static uintptr_t expect_ip_vla;
-+static uintptr_t expect_ip_clobber;
-+static uintptr_t expect_ip_main;
++#include <linux/types.h>
 +
-+static __always_inline uintptr_t caller_return_ip(void)
-+{
-+	return (uintptr_t)__builtin_extract_return_addr(__builtin_return_address(0));
-+}
++#ifdef CONFIG_KMSAN
 +
-+static long sys_perf_event_open(struct perf_event_attr *attr, pid_t pid,
-+				int cpu, int group_fd, unsigned long flags)
-+{
-+	return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
-+}
-+
-+noinline __noclone
-+static void cfi_do_nanosleep(const struct timespec *ts)
-+{
-+	expect_ip_leaf = caller_return_ip();
-+	asm volatile("" ::: "memory");
-+	nanosleep(ts, /*rem=*/NULL);
-+	asm volatile("" ::: "memory");
-+}
-+
-+noinline __noclone
-+static void cfi_leaf_sleep(void)
-+{
-+	struct timespec ts = { .tv_sec = 0, .tv_nsec = 1000 * 1000 };
-+
-+	expect_ip_shrink = caller_return_ip();
-+	asm volatile("" ::: "memory");
-+	cfi_do_nanosleep(&ts);
-+	asm volatile("" ::: "memory");
-+}
-+
-+/* 4. Shrink-wrapped early-return epilogue before main call */
-+noinline __noclone
-+static int cfi_shrink_wrap(int mode)
-+{
-+	expect_ip_jit = caller_return_ip();
-+	if (mode < 0)
-+		return -1;
-+
-+	{
-+		char pad[32];
-+
-+		memset(pad, mode, sizeof(pad));
-+		asm volatile("" : "+m"(pad) :: "memory");
-+		cfi_leaf_sleep();
-+		return pad[0];
-+	}
-+}
-+
-+/*
-+ * 5. Hybrid CFI -> FP -> CFI -> FP -> CFI bridge:
-+ *    cfi_pre_jit -> jit_stub #1 -> cfi_jit_bridge -> cfi_mid_jit ->
-+ *    jit_stub #2 -> cfi_shrink_wrap
++/**
++ * kmsan_poison_memory() - Mark the memory range as uninitialized.
++ * @address: address to start with.
++ * @size:    size of buffer to poison.
++ * @flags:   GFP flags for allocations done by this function.
 + *
-+ * Invoking the anonymous RX JIT stub twice with -fomit-frame-pointer C frames
-+ * in between exercises both per-frame CFI<->FP transitions and negative VMA
-+ * cache insertion + hit in find_user_eh_frame_hdr().
++ * Until other data is written to this range, KMSAN will treat it as
++ * uninitialized. Error reports for this memory will reference the call site of
++ * kmsan_poison_memory() as origin.
 + */
-+noinline __noclone
-+static int cfi_mid_jit(int x)
-+{
-+	size_t sz;
-+	char *pad;
-+	int res;
++void kmsan_poison_memory(const void *address, size_t size, gfp_t flags);
 +
-+	expect_ip_bridge = caller_return_ip();
-+	asm volatile("" : "+r"(x));
-+	sz = (size_t)((x & 0xf) + 32);
-+	pad = alloca(sz);
-+	memset(pad, x + 5, sz);
-+	asm volatile("" : "+m"(*(char (*)[32])pad) :: "memory");
-+	res = g_jit_fn ? g_jit_fn(cfi_shrink_wrap, x) : cfi_shrink_wrap(x);
-+	asm volatile("" : "+m"(*(char (*)[32])pad) :: "memory");
-+	return res + pad[0];
-+}
++/**
++ * kmsan_unpoison_memory() -  Mark the memory range as initialized.
++ * @address: address to start with.
++ * @size:    size of buffer to unpoison.
++ *
++ * Until other data is written to this range, KMSAN will treat it as
++ * initialized.
++ */
++void kmsan_unpoison_memory(const void *address, size_t size);
 +
-+noinline __noclone
-+static int cfi_jit_bridge(int x)
-+{
-+	char pad[32];
-+	int res;
++/**
++ * kmsan_check_memory() - Check the memory range for being initialized.
++ * @address: address to start with.
++ * @size:    size of buffer to check.
++ *
++ * If any piece of the given range is marked as uninitialized, KMSAN will report
++ * an error.
++ */
++void kmsan_check_memory(const void *address, size_t size);
 +
-+	memset(pad, x + 7, sizeof(pad));
-+	asm volatile("" : "+m"(pad) :: "memory");
-+	res = cfi_mid_jit(x);
-+	asm volatile("" : "+m"(pad) :: "memory");
-+	return res + pad[0];
-+}
++/**
++ * kmsan_copy_to_user() - Notify KMSAN about a data transfer to userspace.
++ * @to:      destination address in the userspace.
++ * @from:    source address in the kernel.
++ * @to_copy: number of bytes to copy.
++ * @left:    number of bytes not copied.
++ *
++ * If this is a real userspace data transfer, KMSAN checks the bytes that were
++ * actually copied to ensure there was no information leak. If @to belongs to
++ * the kernel space (which is possible for compat syscalls), KMSAN just copies
++ * the metadata.
++ */
++void kmsan_copy_to_user(void __user *to, const void *from, size_t to_copy,
++			size_t left);
 +
-+noinline __noclone
-+static int cfi_pre_jit(int x)
-+{
-+	size_t sz;
-+	char *pad;
-+	int res;
++/**
++ * kmsan_memmove() - Notify KMSAN about a data copy within kernel.
++ * @to:   destination address in the kernel.
++ * @from: source address in the kernel.
++ * @size: number of bytes to copy.
++ *
++ * Invoked after non-instrumented version (e.g. implemented using assembly
++ * code) of memmove()/memcpy() is called, in order to copy KMSAN's metadata.
++ */
++void kmsan_memmove(void *to, const void *from, size_t to_copy);
 +
-+	expect_ip_drap = caller_return_ip();
-+	asm volatile("" : "+r"(x));
-+	sz = (size_t)((x & 0xf) + 32);
-+	pad = alloca(sz);
-+	memset(pad, x + 9, sz);
-+	asm volatile("" : "+m"(*(char (*)[32])pad) :: "memory");
-+	res = g_jit_fn ? g_jit_fn(cfi_jit_bridge, x) : cfi_jit_bridge(x);
-+	asm volatile("" : "+m"(*(char (*)[32])pad) :: "memory");
-+	return res + pad[0];
-+}
-+
-+/* 3. 64-byte aligned local buffer forcing stack realignment (DRAP on x86-64) */
-+noinline __noclone
-+static int cfi_drap_realigned(int x)
-+{
-+	uint8_t __aligned(64) aligned_buf[128];
-+
-+	expect_ip_vla = caller_return_ip();
-+	memset(aligned_buf, x + 3, sizeof(aligned_buf));
-+	asm volatile("" : "+m"(aligned_buf) :: "memory");
-+	return cfi_pre_jit(x) + aligned_buf[0];
-+}
-+
-+/* 2. Dynamic VLA / alloca() forcing FP-based CFA (DW_CFA_def_cfa_register) */
-+noinline __noclone
-+static int cfi_vla_fp_frame(int n)
-+{
-+	size_t sz;
-+	char *dyn;
-+
-+	expect_ip_clobber = caller_return_ip();
-+	asm volatile("" : "+r"(n));
-+	sz = (size_t)((n & 0x3f) + 32);
-+	dyn = alloca(sz);
-+
-+	memset(dyn, n, sz);
-+	asm volatile("" : "+m"(*(char (*)[32])dyn) :: "memory");
-+	return cfi_drap_realigned(n + dyn[0]);
-+}
-+
-+/* 1. SP-based frame with FP (%rbp / x29 / s0) clobbered to defeat FP unwinding */
-+noinline __noclone
-+static int cfi_clobber_fp(int x)
-+{
-+#if defined(__x86_64__)
-+	register long bad_fp asm("rbp") = 0x13579bdfL + x;
-+#elif defined(__aarch64__)
-+	register long bad_fp asm("x29") = 0x13579bdfL + x;
-+#elif defined(__riscv)
-+	register long bad_fp asm("s0") = 0x13579bdfL + x;
 +#else
-+	long bad_fp = 0x13579bdfL + x;
-+#endif
-+	char pad[48];
 +
-+	expect_ip_main = caller_return_ip();
-+	asm volatile("" : "+r"(x));
-+	memset(pad, x, sizeof(pad));
-+	asm volatile("" : "+r"(bad_fp), "+m"(pad) :: "memory");
-+	return cfi_vla_fp_frame(x + 1) ^ (int)bad_fp ^ pad[1];
-+}
-+
-+static int check_main_eh_frame_cb(struct dl_phdr_info *info, size_t size,
-+				  void *data)
++static inline void kmsan_poison_memory(const void *address, size_t size,
++				       gfp_t flags)
 +{
-+	bool *has_eh_frame = data;
-+
-+	(void)size;
-+	if (!info->dlpi_name || info->dlpi_name[0] != '\0')
-+		return 0;
-+
-+	for (int i = 0; i < info->dlpi_phnum; i++) {
-+		if (info->dlpi_phdr[i].p_type == PT_GNU_EH_FRAME &&
-+		    info->dlpi_phdr[i].p_memsz > 0) {
-+			*has_eh_frame = true;
-+			return 1;
-+		}
-+	}
-+	return 1;
 +}
-+
-+int main(void)
++static inline void kmsan_unpoison_memory(const void *address, size_t size)
 +{
-+	struct perf_event_attr attr;
-+	struct perf_event_mmap_page *mpage;
-+	size_t page_sz = (size_t)sysconf(_SC_PAGESIZE);
-+	size_t mmap_len = (1 + 16) * page_sz;
-+	void *jit_page = MAP_FAILED;
-+	uint8_t *ring;
-+	uint64_t head, tail;
-+	bool got_deferred = false;
-+	bool saw_leaf = false, saw_shrink = false, saw_jit = false;
-+	bool saw_bridge = false, saw_drap = false, saw_vla = false;
-+	bool saw_clobber = false, saw_main = false;
-+	bool saw_full_chain = false;
-+	bool has_eh_frame = false;
-+	int fd, arg = 1;
-+
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
-+#if !defined(__x86_64__) && !defined(__i386__) && !defined(__aarch64__) && \
-+	!defined(__arm__) && !defined(__riscv)
-+	ksft_test_result_skip("Architecture lacks Minimal DWARF CFI user unwind support\n");
-+	ksft_finished();
-+#endif
-+
-+	dl_iterate_phdr(check_main_eh_frame_cb, &has_eh_frame);
-+	if (!has_eh_frame) {
-+		ksft_test_result_skip("Test binary lacks PT_GNU_EH_FRAME\n");
-+		ksft_finished();
-+	}
-+
-+#if HAVE_JIT_FP_STUB
-+	jit_page = mmap(/*addr=*/NULL, page_sz, PROT_READ | PROT_WRITE,
-+			MAP_PRIVATE | MAP_ANONYMOUS, /*fd=*/-1, /*offset=*/0);
-+	if (jit_page != MAP_FAILED) {
-+		memcpy(jit_page, jit_stub_code, sizeof(jit_stub_code));
-+		if (mprotect(jit_page, page_sz, PROT_READ | PROT_EXEC) == 0) {
-+			__builtin___clear_cache((char *)jit_page,
-+						(char *)jit_page + sizeof(jit_stub_code));
-+			g_jit_fn = (int (*)(int (*)(int), int))jit_page;
-+		} else {
-+			ksft_print_msg("W^X JIT mprotect unavailable (%s); skipping JIT stub\n",
-+				       strerror(errno));
-+			munmap(jit_page, page_sz);
-+			jit_page = MAP_FAILED;
-+		}
-+	}
-+#endif
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.type = PERF_TYPE_SOFTWARE;
-+	attr.size = sizeof(attr);
-+	attr.config = PERF_COUNT_SW_CONTEXT_SWITCHES;
-+	attr.sample_period = 1;
-+	attr.sample_type = PERF_SAMPLE_IP | PERF_SAMPLE_CALLCHAIN;
-+	attr.disabled = 1;
-+	attr.defer_callchain = 1;
-+	attr.defer_output = 1;
-+
-+	fd = (int)sys_perf_event_open(&attr, /*pid=*/0, /*cpu=*/-1,
-+				      /*group_fd=*/-1, /*flags=*/0);
-+	if (fd < 0) {
-+		if (jit_page != MAP_FAILED)
-+			munmap(jit_page, page_sz);
-+		if (errno == EACCES || errno == EPERM || errno == EINVAL) {
-+			ksft_test_result_skip("perf_event_open(defer_callchain) unavailable: %s\n",
-+					      strerror(errno));
-+			ksft_finished();
-+		}
-+		ksft_exit_fail_msg("perf_event_open failed: %s\n", strerror(errno));
-+	}
-+
-+	mpage = mmap(/*addr=*/NULL, mmap_len, PROT_READ | PROT_WRITE,
-+		     MAP_SHARED, fd, /*offset=*/0);
-+	if (mpage == MAP_FAILED) {
-+		if (jit_page != MAP_FAILED)
-+			munmap(jit_page, page_sz);
-+		close(fd);
-+		ksft_exit_fail_msg("mmap failed: %s\n", strerror(errno));
-+	}
-+
-+	ioctl(fd, PERF_EVENT_IOC_RESET, 0);
-+	ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
-+
-+	asm volatile("" : "+r"(arg));
-+	cfi_clobber_fp(arg);
-+
-+	ioctl(fd, PERF_EVENT_IOC_DISABLE, 0);
-+
-+	ring = (uint8_t *)mpage + page_sz;
-+	head = __atomic_load_n(&mpage->data_head, __ATOMIC_ACQUIRE);
-+	tail = mpage->data_tail;
-+
-+	while (tail < head) {
-+		size_t mask = 16 * page_sz - 1;
-+		struct perf_event_header *hdr =
-+			(struct perf_event_header *)(ring + (tail & mask));
-+
-+		if (hdr->type == PERF_RECORD_CALLCHAIN_DEFERRED) {
-+			struct perf_record_deferred *rec = (void *)hdr;
-+			bool c_leaf = false, c_shrink = false, c_bridge = false;
-+			bool c_drap = false, c_vla = false, c_clobber = false;
-+			bool c_main = false, c_jit_ok = false;
-+			unsigned int c_jit_hits = 0;
-+
-+			got_deferred = true;
-+			for (uint64_t i = 0; i < rec->nr; i++) {
-+				uintptr_t ip = (uintptr_t)rec->ips[i];
-+
-+				if (ip == expect_ip_leaf)
-+					c_leaf = true;
-+				else if (ip == expect_ip_shrink)
-+					c_shrink = true;
-+				else if (ip == expect_ip_jit)
-+					c_jit_hits++;
-+				else if (ip == expect_ip_bridge)
-+					c_bridge = true;
-+				else if (ip == expect_ip_drap)
-+					c_drap = true;
-+				else if (ip == expect_ip_vla)
-+					c_vla = true;
-+				else if (ip == expect_ip_clobber)
-+					c_clobber = true;
-+				else if (ip == expect_ip_main)
-+					c_main = true;
-+			}
-+
-+#if HAVE_JIT_FP_STUB
-+			if (g_jit_fn) {
-+				uintptr_t jb = (uintptr_t)jit_page;
-+
-+				c_jit_ok = expect_ip_jit >= jb &&
-+					   expect_ip_jit < jb + sizeof(jit_stub_code) &&
-+					   c_jit_hits >= 2;
-+			} else {
-+				c_jit_ok = c_jit_hits >= 1;
-+			}
-+#else
-+			c_jit_ok = c_jit_hits >= 1;
-+#endif
-+			saw_leaf |= c_leaf;
-+			saw_shrink |= c_shrink;
-+			saw_jit |= c_jit_ok;
-+			saw_bridge |= c_bridge;
-+			saw_drap |= c_drap;
-+			saw_vla |= c_vla;
-+			saw_clobber |= c_clobber;
-+			saw_main |= c_main;
-+
-+			if (c_leaf && c_shrink && c_jit_ok && c_bridge &&
-+			    c_drap && c_vla && c_clobber && c_main)
-+				saw_full_chain = true;
-+		}
-+		tail += hdr->size;
-+	}
-+
-+	munmap(mpage, mmap_len);
-+	if (jit_page != MAP_FAILED)
-+		munmap(jit_page, page_sz);
-+	close(fd);
-+
-+	if (!got_deferred) {
-+		ksft_test_result_skip("No PERF_RECORD_CALLCHAIN_DEFERRED records\n");
-+		ksft_finished();
-+	}
-+
-+	ksft_print_msg("def=%d ok=%d leaf=%d shr=%d jit=%d br=%d drap=%d vla=%d fp=%d entry=%d\n",
-+		       got_deferred, saw_full_chain, saw_leaf, saw_shrink,
-+		       saw_jit, saw_bridge, saw_drap, saw_vla, saw_clobber,
-+		       saw_main);
-+
-+	ksft_test_result(saw_full_chain,
-+			 "unwind_user Minimal DWARF CFI across SP, VLA, DRAP, shrink-wrap, and hybrid JIT FP frames\n");
-+	ksft_finished();
 +}
++static inline void kmsan_check_memory(const void *address, size_t size)
++{
++}
++static inline void kmsan_copy_to_user(void __user *to, const void *from,
++				      size_t to_copy, size_t left)
++{
++}
++
++static inline void kmsan_memmove(void *to, const void *from, size_t to_copy)
++{
++}
++
++#endif
++
++#endif /* _LINUX_KMSAN_CHECKS_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 531c0e0e84df..76fc6e20096c 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -28,6 +28,7 @@ declare -a FILES=(
+   "include/vdso/unaligned.h"
+   "include/linux/gfp_types.h"
+   "include/linux/hash.h"
++  "include/linux/kmsan-checks.h"
+   "include/linux/list-sort.h"
+   "include/uapi/linux/hw_breakpoint.h"
+   "arch/x86/include/asm/cpufeatures.h"
 -- 
 2.56.1.831.g720f3f5937-goog
 
