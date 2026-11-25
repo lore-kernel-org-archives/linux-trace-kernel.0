@@ -1,58 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=113.46.200.223
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795567485;
-	b=y4P+bH4dfY6SUU3+7z3rlwcTbxbWN2eNgWkp+Jq97HCIxkpgmdSVcBuTCzfzwAIEkzqp
-	 k9gJ5pF864kQqt/6IR7EJvhKJj4CXv8yU6PWSpE+gmqy6ZxQLtchGOjVN9LlwpKtdoc3y
-	 AK0KFw4M6Np1L6e6SRVXylQQPafMQbnXUT17uNbp0soszD6CJwefsMRDipQqfdRDecRUh
-	 kw246BRe+DbQYM5C4MuipK92t/zQprH/ZvDdheC/t/1PNmREjdY4CCu21mp7RGiREAxgk
-	 7+jfuDHpAUpRT/imM6pTEPWcKBrbwsGnmP7sl22nGGwZdr4yEXtTPNPZT9/jMA7yIlA==
+	t=1795570588;
+	b=O8dboAOv8kIMX0BqYqaC1JSwuiRE+OlY7nNzE7dDJzp+UpL79YDPwYJ1BKgH1ulzC5yX
+	 WV4qCf4k8IBJclq/GuZGVQxAHKte2HNad6a+xIiYhzmvcGFAwC7IOs6XzLLryuKtrYXiM
+	 FjNOsi9VmG3R+9511kUYZl/wjWe4zJ0cPi47CA0IcaGKmHMkSLzm2FLxA52rm1Ork0qUQ
+	 GEmLn8+/Kt46YI5rnMmQjEXwPz3S9j0xvfc9ldfsLmakYnVeQpXHC2SqtHXKg/KMgQqfV
+	 Und6xyatfbpmXGnJTr2W3xFwFdblU2cWyo3IhLFffW/7f+uyuFFqvc57MuLEA0PZf5w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795567485;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
-	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=eLqiru6IB8X1vm5kTLkMtYcaQdNbgpYL+qb0lIcTVWo=;
-	b=dh7vNYk8T032bTY+7e7l+CZf93MQYVZffhgLGh3G32IFRSCDdvv2jv5bQIPoZlM7A8+2
-	 w2HqPWskB4jshFRSeZcacVGmLYIvvP0X7OJuZKARtk3F/N/WUXKb+975NOwRsFkqajaio
-	 YLwmm1fFpaAxhUF7mi0SXZjwFGwLCXp6036g7cuCgVFZK8CZeIktBsKa+0tNlwI5cC0un
-	 RWIFsm/VN40Nb19raz8k76A9FhH6pQa7wasxFACNcxetXLmRPfb6J1/39/NBXZMdUpgd9
-	 Q7B3iG8QSSDOOjCvllx6xwRFJLho7ZgZiJGuyosiN/+1MTkr2BhD1BXzQKDpFrRcM/w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795570588;
+	h=DMARC-Filter:dkim-signature:Received:Received:Received:From:To:CC:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
+	 X-ClientProxiedBy;
+	bh=CoDH69e6XzIOtyxojAs/Hua9h2l7rwpIoBGHHmKkX/0=;
+	b=XPcBx0mz5cyis01khxIsp/VGtHzgLQw7NVmz5pTOZr2ThwAwvkot9PkY8erRKUjKc19m
+	 IZ7ZJTTYVdoYVpWF0gLbHzE3acgOAC7C8QnWstixARJ7Sv6qAiKleL2MAE0zHvNBkGKpI
+	 sQf+DLAsV7ZHx+R0DKTDgBeJfdoMsgNNJ7REkeZPmn7n+aJHOUCaye9WgUXCB2U2RUFLn
+	 qTA0ClcAIB20VJM9raYj0KN91zJ9tr2gldokWH+fKs8MME7yXiFBBH9yLqxh/3Z/hIUSC
+	 P3GymIlmIPr5gyjXv50wdBDU+blRLr1q3tRa1w/ZId6Soi5JN/4Vs8L4Bxg/F2nGb9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=XByrIElw;
-	arc=none smtp.remote-ip=216.40.44.15
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	dmarc=pass header.from=huawei.com;
+	spf=pass smtp.mailfrom=huawei.com;
+	dkim=pass header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=AJzm+MRn;
+	arc=none smtp.remote-ip=113.46.200.223
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B06606A321;
-	Wed, 25 Nov 2026 00:44:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9B06606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14D4606A321;
+	Wed, 25 Nov 2026 01:36:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E14D4606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=XByrIElw
-Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6B4F21C486B;
-	Wed, 25 Nov 2026 00:44:37 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 75B8730;
-	Wed, 25 Nov 2026 00:44:35 +0000 (UTC)
-Date: Tue, 24 Nov 2026 19:44:34 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 13/15] tracing/filters: Fix error positions for CPUS
- mask parsing
-Message-ID: <20261124194434.21d76102@robin>
-In-Reply-To: <179323796570.740114.12151091552524337676.stgit@devnote2>
-References: <179323784538.740114.15323117974242744566.stgit@devnote2>
-	<179323796570.740114.12151091552524337676.stgit@devnote2>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=AJzm+MRn
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=CoDH69e6XzIOtyxojAs/Hua9h2l7rwpIoBGHHmKkX/0=;
+	b=AJzm+MRn1kIlxfFbZWUb3cfgNUmek2GqBNhHqigRQR025B6jY0e8r+99HpWLGK442Q8ZphyXA
+	JiUtke7ZEpnOGfX8cb6EbnGzNf9t1PU0KQ+WVpUFlWPBVZfamdxDURNKiYMOOH9EUlZMwJNUW4v
+	3IrPdCwyI5CzYsze9KE9Sy0=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4jZ2M52YhZzmV6H;
+	Wed, 25 Nov 2026 09:36:01 +0800 (CST)
+Received: from whupemk300003.china.huawei.com (unknown [7.152.185.49])
+	by mail.maildlp.com (Postfix) with ESMTPS id E542B40563;
+	Wed, 25 Nov 2026 09:36:24 +0800 (CST)
+Received: from huawei.com (10.50.87.204) by whupemk300003.china.huawei.com
+ (7.152.185.49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Wed, 25 Nov
+ 2026 09:36:23 +0800
+From: Zhang Yuwei <zhangyuwei20@huawei.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<chenjun102@huawei.com>, <zhangyuwei20@huawei.com>
+Subject: [PATCH] iommu: Trace I/O page fault response latency
+Date: Wed, 25 Nov 2026 09:34:30 +0800
+Message-ID: <20261125013430.2144822-1-zhangyuwei20@huawei.com>
+X-Mailer: git-send-email 2.22.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,87 +73,274 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ytcodhten8f6ckybsp8n438zaez9mz7b
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 75B8730
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18JBBogJHR+mPThdh6z8Vw6dGAN+/JMwyk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=eLqiru6IB8X1vm5kTLkMtYcaQdNbgpYL+qb0lIcTVWo=; b=XByrIElwAmEiIV9tx4H+Gzi8X3Z0/D0XREouLdnKhWOv/fcS5n8QxJFB6GeoXRCZ6aA4UHUdlTCRjDaFHS52kuGwOGSghyUjoRGefPbwNCzddQmphIoos1HaB9u5mRenfpYgnxOs9xtxb5uBKVB5ra8mHfIx/DZXZj/TzvQf6ZQ=
-X-HE-Tag: 1795567475-545701
-X-HE-Meta: U2FsdGVkX19eY7ChfWCVUrNiHsjN5Stn/IWM6xZezIl6wvc2QvZUQPV8qfUSdBoYMH6uWWGglgFGfMQT/F79WxgQ171wPoYGOGnyJdq5Jt+JbzebhhcWOc6XxuMISBHG+OH7uZ88vVlOcug49ltEzkbd1coa7zoycgnAXfWhI+j5ZVaaalsC4LidI9ijgoTkGYL8trmUdgw72xUpJw37VbL+I/C7KnegeR+A4/vWAfX0/3SI9XQ52Q0Ti33EfI/HBsGMXabUQ2TsBe7hZHm+JdniUw4CACbGvOi+YByLuZDdz4HYw3LSe4+dw7KRU2uo40W9QNFEMhWgCI2n+QTqIhomJowG69CK
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ whupemk300003.china.huawei.com (7.152.185.49)
 
-On Thu, 29 Oct 2026 10:39:25 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+From: Chen Jun <chenjun102@huawei.com>
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> In parse_pred(), CPUS mask error paths report incorrect error positions:
-> - Checking 'str[i++] != '\'{'\'' post-increments 'i' before calling
->   parse_error(), shifting the error caret one character past the
->   missing brace position.
-> - In the CPUS operator check and comparison function selection check,
->   'pos + i' points to the CPUS operand or past it instead of the
->   unsupported operator.
-> 
-> Check 'str[i] != '\'{'\'' before incrementing 'i', and pass 'pos + op_pos'
-> for the operator checks so the error caret points accurately.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> Changes in v4:
->  - Drop Fixes and Cc: stable tags since these error position fixes are
->    cleanups.
-> Changes in v3:
->  - Group error position fixes for CPUS mask parsing into a single patch
->    targeting commit 39f7c41c908b and commit 3cbec9d7b93d.
-> ---
->  kernel/trace/trace_events_filter.c |    7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index 9b1100769676..1a9a1cc8daa2 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -1932,16 +1932,17 @@ static int parse_pred(const char *str, void *data,
->  		case OP_BAND:
->  			break;
->  		default:
-> -			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-> +			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + op_pos);
->  			goto err_free;
->  		}
->  
->  		/* Skip CPUS */
->  		i += 4;
-> -		if (str[i++] != '{') {
-> +		if (str[i] != '{') {
->  			parse_error(pe, FILT_ERR_MISSING_BRACE_OPEN, pos + i);
+Carry an optional monotonic timestamp with each IOPF and preserve it
+across group construction, including allocation error paths. Sample it
+at the common report entry point and record latency after the driver's
+page_response callback returns.
 
-Instead of moving the i++ to below, couldn't you just make the above:
+Cover asynchronous group responses and synchronous error responses. For
+grouped requests, measure from reporting the last fault in the group.
+Use existing tracing configuration and record fault identity, response
+code and elapsed nanoseconds without command submission return values.
+Print PASID validity inline as pasid(v) or pasid(i), retaining the raw
+validity field for programmatic consumers.
 
-  			parse_error(pe, FILT_ERR_MISSING_BRACE_OPEN, pos + i - 1);
+Document the software timing boundaries and tracefs interface.
 
-?
+The implementation was validated with x86_64 builds with tracing
+enabled and tracing disabled.
 
--- Steve
+Signed-off-by: Chen Jun <chenjun102@huawei.com>
+Signed-off-by: Zhang Yuwei <zhangyuwei20@huawei.com>
+---
+ Documentation/trace/index.rst      |  1 +
+ Documentation/trace/iommu-iopf.rst | 52 ++++++++++++++++++++++++++++++
+ MAINTAINERS                        |  2 ++
+ drivers/iommu/io-pgfault.c         | 17 ++++++++++
+ drivers/iommu/iommu-traces.c       |  1 +
+ include/linux/iommu.h              |  2 ++
+ include/trace/events/iommu.h       | 36 +++++++++++++++++++++
+ 7 files changed, 111 insertions(+)
+ create mode 100644 Documentation/trace/iommu-iopf.rst
 
-
-
->  			goto err_free;
->  		}
-> +		i++;
->  		maskstart = i;
->  
->  		/* Walk the cpulist until closing } */
-> @@ -2029,7 +2030,7 @@ static int parse_pred(const char *str, void *data,
->  			}
->  		}
->  		if (pred->fn_num == FILTER_PRED_FN_NOP) {
-> -			parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
-> +			parse_error(pe, FILT_ERR_INVALID_OP, pos + op_pos);
->  			goto err_free;
->  		}
->  
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index f4058e8e92e3..e61e428ecd68 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -57,6 +57,7 @@ applications.
+    events-landlock
+    events-pci
+    events-pci-controller
++   iommu-iopf
+    boottime-trace
+    histogram
+    histogram-design
+diff --git a/Documentation/trace/iommu-iopf.rst b/Documentation/trace/iommu-iopf.rst
+new file mode 100644
+index 000000000000..259cf23c6899
+--- /dev/null
++++ b/Documentation/trace/iommu-iopf.rst
+@@ -0,0 +1,52 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++IOMMU I/O page fault response latency
++====================================
++
++The event uses the existing IOMMU I/O page fault handling and event tracing
++configuration; no additional configuration option is needed. For example,
++``CONFIG_ARM_SMMU_V3_SVA`` selects the I/O page fault handling infrastructure
++for ARM SMMUv3.
++
++The ``iommu:iopf_latency`` event measures software response latency from
++entry to ``iommu_report_device_fault()`` until the IOMMU driver's
++``page_response()`` callback returns. Both asynchronous group responses
++and synchronous error responses are covered. It includes software queueing
++and fault handling, but excludes time in hardware queues before reporting.
++The meaning of callback completion depends on the driver; for ARM SMMUv3
++it is after RESUME command submission returns, not after transaction
++recovery. No additional command synchronization is issued.
++
++For grouped requests, one sample measures the interval from reporting the
++last fault in the group to responding to that group. Earlier partial
++requests do not each receive a separate latency event when assembled into
++a group. The address and PASID fields identify the last fault. A
++synchronous error response instead identifies the fault being rejected.
++For ARM SMMUv3 EVTQ stall faults, each reported event is marked as the last
++fault of its group.
++
++For example, with tracefs mounted at ``/sys/kernel/tracing``::
++
++    echo 1 > /sys/kernel/tracing/events/iommu/iopf_latency/enable
++    cat /sys/kernel/tracing/trace_pipe
++    echo 0 > /sys/kernel/tracing/events/iommu/iopf_latency/enable
++
++Each response records the device name, PASID and its validity, group ID
++(stall tag on ARM SMMUv3), fault address, response code, and ``duration_ns``
++in nanoseconds.
++Response codes are
++``IOMMU_PAGE_RESP_SUCCESS`` (0), ``IOMMU_PAGE_RESP_INVALID`` (1), and
++``IOMMU_PAGE_RESP_FAILURE`` (2). The event does not report whether command
++submission succeeded.
++
++Timestamps are taken only while the tracepoint has an enabled consumer.
++A response without a sampled start time produces no latency event. A
++sampled request may span disabling and re-enabling the event, in which case
++the full interval is reported if the tracepoint is enabled at response
++time. Enable transitions are best effort with respect to concurrent faults.
++Trace filters and ring buffer overruns can discard records as usual.
++
++``tracing_on=0`` stops trace buffer recording but does not necessarily
++disable the tracepoint. Other consumers, including perf and BPF, can also
++keep it enabled. Events that never reach the response callback have no
++completed interval to report.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 782389bd5cd3..82217afd67e2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13704,10 +13704,12 @@ L:	iommu@lists.linux.dev
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git
+ F:	Documentation/devicetree/bindings/iommu/
++F:	Documentation/trace/iommu-iopf.rst
+ F:	drivers/iommu/
+ F:	include/linux/iommu.h
+ F:	include/linux/iova.h
+ F:	include/linux/of_iommu.h
++F:	include/trace/events/iommu.h
+ F:	rust/kernel/iommu/
+ 
+ IOMMUFD
+diff --git a/drivers/iommu/io-pgfault.c b/drivers/iommu/io-pgfault.c
+index c16ff1fc4b95..72e654ea5ffe 100644
+--- a/drivers/iommu/io-pgfault.c
++++ b/drivers/iommu/io-pgfault.c
+@@ -6,11 +6,14 @@
+  */
+ 
+ #include <linux/iommu.h>
++#include <linux/ktime.h>
+ #include <linux/list.h>
+ #include <linux/sched/mm.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+ 
++#include <trace/events/iommu.h>
++
+ #include "iommu-priv.h"
+ 
+ /*
+@@ -96,6 +99,7 @@ static struct iopf_group *iopf_group_alloc(struct iommu_fault_param *iopf_param,
+ 
+ 	group->fault_param = iopf_param;
+ 	group->last_fault.fault = evt->fault;
++	group->last_fault.report_time_ns = evt->report_time_ns;
+ 	INIT_LIST_HEAD(&group->faults);
+ 	INIT_LIST_HEAD(&group->pending_node);
+ 	list_add(&group->last_fault.list, &group->faults);
+@@ -155,6 +159,14 @@ static struct iommu_attach_handle *find_fault_handler(struct device *dev,
+ 	return attach_handle;
+ }
+ 
++static void iopf_trace_response(struct device *dev, const struct iopf_fault *evt,
++				const struct iommu_page_response *resp)
++{
++	if (trace_iopf_latency_enabled() && evt->report_time_ns)
++		trace_iopf_latency(dev, evt, resp,
++				   ktime_get_ns() - evt->report_time_ns);
++}
++
+ static void iopf_error_response(struct device *dev, struct iopf_fault *evt)
+ {
+ 	const struct iommu_ops *ops = dev_iommu_ops(dev);
+@@ -166,6 +178,7 @@ static void iopf_error_response(struct device *dev, struct iopf_fault *evt)
+ 	};
+ 
+ 	ops->page_response(dev, evt, &resp);
++	iopf_trace_response(dev, evt, &resp);
+ }
+ 
+ /**
+@@ -219,6 +232,9 @@ int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
+ 	struct iopf_group abort_group = {};
+ 	struct iopf_group *group;
+ 
++	/* Error paths may respond synchronously before reporting returns. */
++	evt->report_time_ns = trace_iopf_latency_enabled() ? ktime_get_ns() : 0;
++
+ 	attach_handle = find_fault_handler(dev, evt);
+ 	if (!attach_handle)
+ 		goto err_bad_iopf;
+@@ -334,6 +350,7 @@ void iopf_group_response(struct iopf_group *group,
+ 
+ 	mutex_lock(&fault_param->lock);
+ 	ops->page_response(dev, &group->last_fault, &resp);
++	iopf_trace_response(dev, iopf, &resp);
+ 	list_del_init(&group->pending_node);
+ 	mutex_unlock(&fault_param->lock);
+ }
+diff --git a/drivers/iommu/iommu-traces.c b/drivers/iommu/iommu-traces.c
+index 23416bf76df9..ce2ab3277b5f 100644
+--- a/drivers/iommu/iommu-traces.c
++++ b/drivers/iommu/iommu-traces.c
+@@ -25,3 +25,4 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(unmap);
+ 
+ /* iommu_error */
+ EXPORT_TRACEPOINT_SYMBOL_GPL(io_page_fault);
++EXPORT_TRACEPOINT_SYMBOL_GPL(iopf_latency);
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index ac43b8b93f14..d797b42fdb20 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -125,6 +125,8 @@ struct iopf_fault {
+ 	struct iommu_fault fault;
+ 	/* node for pending lists */
+ 	struct list_head list;
++	/* Fault report timestamp in ns, or zero if not sampled. */
++	u64 report_time_ns;
+ };
+ 
+ struct iopf_group {
+diff --git a/include/trace/events/iommu.h b/include/trace/events/iommu.h
+index 373007e567cb..cfcc29a792b2 100644
+--- a/include/trace/events/iommu.h
++++ b/include/trace/events/iommu.h
+@@ -11,6 +11,8 @@
+ #if !defined(_TRACE_IOMMU_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_IOMMU_H
+ 
++#include <linux/device.h>
++#include <linux/iommu.h>
+ #include <linux/tracepoint.h>
+ 
+ struct device;
+@@ -156,6 +158,40 @@ DEFINE_EVENT(iommu_error, io_page_fault,
+ 
+ 	TP_ARGS(dev, iova, flags)
+ );
++
++TRACE_EVENT(iopf_latency,
++
++	TP_PROTO(struct device *dev, const struct iopf_fault *evt,
++		 const struct iommu_page_response *resp, u64 duration_ns),
++
++	TP_ARGS(dev, evt, resp, duration_ns),
++
++	TP_STRUCT__entry(
++		__string(device, dev_name(dev))
++		__field(u32, pasid)
++		__field(bool, pasid_valid)
++		__field(u32, grpid)
++		__field(u64, addr)
++		__field(u32, response)
++		__field(u64, duration_ns)
++	),
++
++	TP_fast_assign(
++		__assign_str(device);
++		__entry->pasid = evt->fault.prm.pasid;
++		__entry->pasid_valid = evt->fault.prm.flags &
++			IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
++		__entry->grpid = resp->grpid;
++		__entry->addr = evt->fault.prm.addr;
++		__entry->response = resp->code;
++		__entry->duration_ns = duration_ns;
++	),
++
++	TP_printk("device=%s pasid(%c)=%u grpid=%u addr=0x%llx response=%u duration_ns=%llu",
++		  __get_str(device), __entry->pasid_valid ? 'v' : 'i', __entry->pasid,
++		  __entry->grpid, __entry->addr, __entry->response,
++		  __entry->duration_ns)
++);
+ #endif /* _TRACE_IOMMU_H */
+ 
+ /* This part must be outside protection */
+-- 
+2.22.0
 
