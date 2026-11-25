@@ -1,51 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795638233;
-	b=D85JqspWX6rwDxLk6fjLaKLBdZBykmanf77wtaOPMjUt6rjRVME0GeUMUbRuyjqWKRlX
-	 esVl7sNW04yZeyi1Npazuik14yEmqQhn01GDVNPJ8Q7/8gLRh6gmbeAaomuy8j1/KQp1N
-	 JdHlC/lvSxbzVEsHNb0q23xzA5fuuHv+URrzHNjzn0ov3hoTXZ3CNQ45a7RD4zOuo5g8L
-	 lRvDQ+F33JcEdKjR+ElVYdneklTdC2g9mebvh8spc8GYv2ljCnk79rBBWcrUp0bah4qv9
-	 XdNuPB1KCBbx5psQ86914sIQwYHPCp6qwf2fbAD17zhS0WJwfWGlUztPFOVBr2V426Q==
+	t=1795640472;
+	b=zlMdQb6+DethwXdGmUUn2rQyh8lX5VfuFEZ6nkp8HJQqPJv9SA8sua0ZvfnR3dXIsJ2C
+	 Fy4b4YyMhrafc1x0JZD3CNqDvr2INzGFthrHud+Ya6GtAmd32XG6lrGXq0DLJYVAvLSCJ
+	 6MqZ0V9oDbY+BsqBXzEagpkYiTCxdjvIvqz+Y61Pc8ehNb92jE1ac7XDPl8odlsRhTh/k
+	 OS6SNXvqRryQ6wgaD/+jJux2TUWI3oUTmhzdJl7GH1G7d+8W1jIOZANCFdShKXIc3IOVb
+	 ShB4Oe5aFjHtnlT6WTNy8YXO69VWfpUPGYH3lsIvjc4mOUBrRSLJQJJZwo1u09q8a/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795638233;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=hKUU2imahZE4B9a0pwQkizpFVuU4ssI550E629F+HU4=;
-	b=xbWWL1lFJTT85+KB07LQ5sKzZkS7VanAKHWZpsd5uqndzvxA2fwirxhG9LJk3QBYTagv
-	 yVPE8lKRJdCERu3LeUr5H0q9Qg1w+bvdgm3ppRtGAcx5PwhrpNDmv6vSD5wLliLt2WYZY
-	 6/pfykdjeRMVzETmrIMpSn4glJC5qKghhVCcTJydgFdqSqUZOCAVsUA12zp0zTQF3MoNM
-	 TzapG9yFp92jY7zoAzGe0N278ERf9AniGlo0hmbrZAbLnIdxDX1LmSZuVWbtA9jfGHKHJ
-	 CXGLewwgT3GV15sdO1FK4L54HquyQ3hBRg37yUeGzEmH/sYOBONCyvx/48wgLIAcITQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795640472;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=gyynnWw1IwEuOIm71kj420EQ/jKqlvd+zpN7hzxu5dU=;
+	b=P53V54VcLgvqtPUT82fndAdKjjib7sMzhUgRKxV0STXyYnF48vDXZub0n3uk3cQEBikZ
+	 cu+X1KTjIicXlPRTlPtYmbSJJLlEUQTkGRnhNtffPZ5yfpEjJ+2ik3ICwjQ9sTtKenHB5
+	 nRdLjNXFvto6QX1HfD3DiUYy+CxFxL9qo/yDFNv7eFu35TcfeSemDTWm8zfFtGjToPmx/
+	 OulFOa9GPi+xvrcmDmN4I/nA0v0VTT3M60u0LwhCv6Uv/jSM54k8H5kfktpx6hx64eQCJ
+	 2cacjpNwxZ6LQe/F/5710ELRPARQ1Nhzkkk6TOjgZrn8jg1ZGGxPuGYrj+o+HVCdTBw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	arc=none smtp.remote-ip=95.215.58.172
-Received: from mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Ab6qbPph;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D75A606A323
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 20:23:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6D75A606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=fdrz78OYlKMGHh6IXGtV5XttBhxWpJMlzeekMNBSw3k=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795638225; v=1; x=1796243025;
- b=w0DU1h2Iu7iOo5sYgszHSa2bYau5G741zzfxIlhRUY4uRk8oGxMFoJi3sj3Sj8bU1t3mZIeo
- +qhSzLfqJqJybM2BJIFx/c7EQGh9J0GVhY7Rc+S+q7qWFm27v5HJDsbJQ6DHZ4cLyPfEKvwTS3w
- vZ5fmeV8kCyGDXA5HfvDf85E=
-X-Envelope-To: linux-trace-kernel@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 92300b7e95544926;
-	Wed, 25 Nov 2026 20:23:44 +0000
-X-Mizu-Trace-ID: 92300b7e95544926
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <4f83adb6-29d7-44d0-8dbc-beb28231a8b5@linux.dev>
-Date: Wed, 25 Nov 2026 12:23:39 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5612D606A32C;
+	Wed, 25 Nov 2026 21:01:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5612D606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=Ab6qbPph
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 7F3301C3D89;
+	Wed, 25 Nov 2026 21:01:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id B401230;
+	Wed, 25 Nov 2026 21:01:07 +0000 (UTC)
+Date: Wed, 25 Nov 2026 16:01:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 00/21] tracing/remotes: Add printk, dump_on_panic and
+ boot parameters
+Message-ID: <20261125160106.01c468e2@gandalf.local.home>
+In-Reply-To: <20261124152845.2233401-1-vdonnefort@google.com>
+References: <20261124152845.2233401-1-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -55,49 +61,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3 0/4] bpf: Check recursion per task for
- preemptible programs
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- mikeba@sentinelone.com, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Emil Tsalapatis <emil@etsalapatis.com>,
- Ihor Solodrai <ihor.solodrai@linux.dev>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Martin Kelly <martin.kelly@crowdstrike.com>,
- Andrey Grodzovsky <andrey.grodzovsky@crowdstrike.com>,
- tyler.wilson@crowdstrike.com
-References: <20261117-bpf-preempt-v2-r2-v3-0-586376ec3672@sentinelone.com>
- <44034fa7-91ab-4777-ba72-0037a6932b56@linux.dev>
- <DN3ZR4IBQUKK.2KZHQUDH3ZRAC@gmail.com>
-Content-Language: en-US
-From: "JP Kobryn (CrowdStrike)" <jp.kobryn@linux.dev>
-In-Reply-To: <DN3ZR4IBQUKK.2KZHQUDH3ZRAC@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: B401230
+X-Stat-Signature: wwpfufqqgq5f6hgq8sg8a9axfnjn7act
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/7cbng2B5iyqOHuLe/ruR6GbmFD0udSo0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=gyynnWw1IwEuOIm71kj420EQ/jKqlvd+zpN7hzxu5dU=; b=Ab6qbPphpdBffCvzRCypyR01b3EmdxewC1ELFo6txrt4xP8qGZGeu5h5Pa3Imbb3whpnrzn1wU7UDi2l83HJIBvRzDdLCu/myfzIqmg5QopCRKcXmRrSKLkb1gZZcWuIz6g+eXV3XbIgx0GS+0L5cZ4ELKqmmM+6pt9EQTKEhnM=
+X-HE-Tag: 1795640467-282171
+X-HE-Meta: U2FsdGVkX19u79LZ8tOspIAhCeImDDydmmEiq5pJxSjLZEarFFwnD9LpU4MbCsOaw1UQs2Q1y7ambv7JoUuuI6uzLanXUjOxhpXb+JcM975ZCcRUKOzSbOuSEGD9Wr3s/EJpQFfxzNXemm4d7vxLK6n7a74Y/gMci9qBIbKpX/2dGdoS+Eixmg9bQkGJWd0nE63nA/WKhrPHFOJStug14WQhMxu6A7SKqR8x2B+Xl9gRRdDmoq0uOfu43W0Datepjun/OkTPmKKJXKe/Ir/Z96e6gaGAAYVAFK98YBoDGFswI8dkEHWO1i1Hp0Eiq0A39KCb3e89iqSPIYK8gz59RP0kTfUyK3pu
 
-On 11/24/26 8:02 PM, Alexei Starovoitov wrote:
-> On Tue, Nov 24, 2026 at 06:06 PM JP Kobryn (CrowdStrike) <jp.kobryn@linux.dev> wrote:
->> The patch below is a proof of concept scoped only to x86_64 trampolines.
->> It was validated with the bpftrace prog that precedes the patch, along
->> with jited assembly dump to inspect the new private frame API calls.
->> Overhead measured was roughly 60ns, but this was just a first take and I
->> believe it can be optimized especially in the JIT area. If it makes
->> sense, this could be integrated into the series or sent as a follow-up.
-> 
-> If you want to redesign private stack please take inspiration
-> from insert_arena_stack_get(). Much lower overhead and no artificial limits.
+On Tue, 24 Nov 2026 15:28:24 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-Thanks for taking a look. Since it looks like v4 will conditionally disable
-preemption for run context entry to exit, this concept does not have to be
-tied to this series.
+> Vincent Donnefort (21):
+>   tracing/remotes: Gate tracefs files opening on trace remote
+>     registration
+>   tracing/remotes: Release tracefs,eventfs on registration failure
+>   tracing/remotes: Use kstrtobool for boolean tracefs files
+>   tracing/remotes: Initialise pos in trace_start()
+>   tracing/remotes: Annotate remote shared fields with
+>     READ_ONCE/WRITE_ONCE
+>   tracing/remotes: Use a single per-remote polling work
+>   tracing/simple_ring_buffer: Add support for compressed length
+>   tracing/remotes: Add dmesg tracefs file
+>   tracing/remotes: selftests: Add a test for the dmesg tracefs file
+>   tracing/remotes: selftests: Prefix hypervisor folder
 
-We'll pursue the private stack work separately, but will continue testing
-revisions of this series.
+
+>   ring-buffer: Use irqsave for the reader lock in
+>     ring_buffer_poll_remote
+>   ring-buffer: Avoid reader_lock deadlock during panic
+>   ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
+>   ring-buffer: Add kerneldoc for ring_buffer_poll_remote
+
+Do the ring-buffer specific changes need to be part of this remote patch series?
+
+They probably should be separate.
+
+-- Steve
+
+
+>   tracing/remotes: Use ring_buffer_capacity() in trace_remote_has_cpu()
+>   tracing/remotes: Add dump_on_panic tracefs file
+>   tracing/remotes: selftests: Add a test for the dump_on_panic tracefs
+>     file
+>   tracing/remotes: Add poll_ms tracefs file
+>   tracing/remotes: Add trace_remote cmdline options
+>   Documentation: tracing/remotes: Add detailed tracefs layout
+>   Documentation/kernel-parameters: Add trace_remote
