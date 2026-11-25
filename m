@@ -1,56 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.157
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795616884;
-	b=RlsdWVlc8newdaqldbr9DpsBkXtmChiup2t5millyQ/rNxscsG/xlZi4uFXJ/sUuyJUY
-	 HqcrXbnwRno70Vl3b5E3G0NItD1dPgEZJGUSwT07kEhF5Sr7NPWq6pM5RsJmtIqRNa4tm
-	 QCNgHk3oTeY+mFY+XU5P5PRPouR2UCJoa0IqS+TRrlTC7tAsLwrQPmfn+i86O9j4I4tZq
-	 6kRfHL128dtzNSTH+FHezGMyZ0PBtCRWtXV3KSCSkEjBvfrSshn432yExHe+WOBQTFxq+
-	 HM2QJ6/N60UO8Wyv7jBxRiHWquXP5AtHDOzJn/WBxL68X6OguSh3eWC2nimGs8KoYCQ==
+	t=1795617121;
+	b=H+4WZGCciOtNwRK6Cau0iE9/HTL7tXhdVv6nn04hq9DmdV4YTi4r4wD2BsYEtOyD0Bob
+	 A8yY9g6rdOY0las3ic2nUKJOqjMl7TjVVQu2dJz7czj+yTeBv36/aBwfNTSl1vfq2IMh0
+	 vk5QFgn8lyR+V3UsyXtV8aSGL8Tspr70fqL57F/+WHDpV4c05SX9pdkbJ3RrOAQFBzu9T
+	 8+hWNDQD+IMjwFUvJ6xzgTNOX0hm8S3Xx28l0gSMuuLk6K/CTpG4IBDfAtAX18Y9N9rJd
+	 Dr3TFnNPRywaViLk6odadcQIcaLTvFsyOfWnSej9pDAHrUUqdektuoSX9fcyMDmaEig==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795616884;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Stat-Signature:X-Spam-Status:
-	 X-Rspamd-Server:X-Rspamd-Queue-Id:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=UuGSEIer+lttMFzkYvmA6Ig4E8zspvMFk8zDOK8jpbI=;
-	b=Nb/pOPF6B2MMXggrnsdDCsxwj+roZ/0yTz5ulsCPlT1QzJXfBIluzgXEfseZ0VQ+1qXB
-	 Lml+ccplNPTHhlU+03EZDqLDAOU6gF1ZauZ/teyijVl9IuoB7sNk0y4978BjcIYEBdOcg
-	 dG6mOqAcdoBdhQSx6GFsCOMiFOOlujz49gfRVfqcrwrz+/+Jhr+wpsm9Y+pEJHTxvZXf2
-	 uyzTSYaqyoR5wKD33p4sa+wOxSEJ7UMqK2GG6VaxbW9n4lv9M3zFRkQTV9XIxG0eAW0UI
-	 DvhLkOV68aDFY9W7vGpw4IKyZAUH0i1C8oBfoJHIC/WBSznpSsOfryUYYAc/dYedzIA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795617121;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=W9vKBkuf9EfCK/eG7T7fyygPvv7SG3tP86gxBxZ2fjY=;
+	b=LlhNFgmuoyl91gV1wk47BL+drTPkZjGPPjIx7lEaUW76v34IW1RA5XGvDgg7UVVyzlCy
+	 K51soGDxJmN7ZVs327UprhY4sPpLkZ91IYKgwx0bIMZd1z9iVVk1FyTe2/3B/VhLK2dxs
+	 PStvXro+yH5IXXk36qMiixidv06bVYWql9fEr52/tknKUlDuG1PjQtZ3UhVGW29H3gDOZ
+	 bt86fTNSSKPMTDSdBNqFCwNnpG5ObxLXO3WqQtHZ9Mfi8hprmz/CxTTdwLC4TElVahNJe
+	 XSCQihGZfT6J2BCsgiAzzxVP8jmdcBlnQPYiqoM/cxe/tr2z4+tCSPy16vyyWl9wIKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=yIgvt3OF;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=JeoanDhG;
+	arc=none smtp.remote-ip=95.215.58.157
+Received: from mta1.migadu.com (out-157.mta1.migadu.com [95.215.58.157])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B6A606A32E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 14:28:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A8B6A606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76F2606A337
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 14:31:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D76F2606A337
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=yIgvt3OF
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 3912D160E73;
-	Wed, 25 Nov 2026 14:28:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 984C920011;
-	Wed, 25 Nov 2026 14:28:00 +0000 (UTC)
-Date: Wed, 25 Nov 2026 09:27:59 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: sashiko-bot@kernel.org
-Cc: sashiko-reviews@lists.linux.dev, "Avi Weiss" <thnkslprpt@gmail.com>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Restore custom event creation selector
-Message-ID: <20261125092759.687dca28@gandalf.local.home>
-In-Reply-To: <sashiko-outbox-225150@kernel.org>
-References: <20261120122837.1597798-2-thnkslprpt@gmail.com>
-	<sashiko-outbox-225150@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=JeoanDhG
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=XKKXO3M5xHnltq0mNRZ0f54bFSZ0rb5xvZeNSjm/bpw=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795617118; v=1; x=1796221918;
+ b=JeoanDhG0AgIB1oayKn+DEIIEXrxwQ5rgZPExT6gURaCwGlloVXxrJrsqBX03tpxgvZX3AFi
+ huK/JuV4xRxcPQB1KObikR+pJxKJAUPMeKTjb+hHRGTUvwEZTfF1xbya9R/LAApP0RUA1PiwArk
+ uDpqgfa2PzIRZcFSVXZ6+JaM=
+X-Envelope-To: linux-trace-kernel@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id aab6a3ba64b69de4;
+	Wed, 25 Nov 2026 14:31:57 +0000
+X-Mizu-Trace-ID: aab6a3ba64b69de4
+X-Migadu-Flow: FLOW_OUT
+From: Leon Hwang <leon.hwang@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Emil Tsalapatis <emil@etsalapatis.com>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <matt@bobrowski.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Leon Hwang <leon.hwang@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH bpf-next v4 0/6] bpf: Add log support for tracing link_create
+Date: Wed, 25 Nov 2026 22:31:32 +0800
+Message-ID: <20261125143138.47174-1-leon.hwang@linux.dev>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,49 +84,89 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: hsriou9n5nzzrz69c1o8nxf15nughaoi
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 984C920011
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18GCb6sOnEXLcg7O4BgQEPhjk7yUFODuPc=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=UuGSEIer+lttMFzkYvmA6Ig4E8zspvMFk8zDOK8jpbI=; b=yIgvt3OFezTSRGb4dLPKMEr/jR93/J+PZtLIwpV62pBRIN2Ily9WlPOv8d7HK5Hkdt7gbEol0D4OQGEwO03c5pm9WSW4C5NPPbsmiIk912Wu0bwpsFrDVv4VVOW340IiwNIE1tekrgG1xE1V+p7b0GoAIIVOG+IC8O3sThJ1nSw=
-X-HE-Tag: 1795616880-628015
-X-HE-Meta: U2FsdGVkX19FPi4j3ugQ3/6KHEYxSd5uEjSbIah0aDhpNuQc7baZ1OknyjnA3V2rKlc+vFWauGZ2eeGmt/w7mbnE7YUAgIKWUorVdLpsSdPe+fDX5PI6w5quy7qmUHb73WgQh9JDk5JQrFwwEqIDFbgNt9kwLqaTWuQc1nrAg1QceP75iESL1Lhd4KFif0eobw4Lan26/kWyLwQCC9tgJUW/93X0HbELTW8yyV4HjUqkxi/WXZzP85SwWJx+00MXt0pYhnHpqtUBM36cYFqZU6gygyAaJbwJ7fSyo9XUTc7TM7ZLtp5o4relcDZ15oGJ2tHZvIS8cdllH7tgmYsQkOU6OveNQNAb
+Content-Transfer-Encoding: 8bit
 
-On Fri, 20 Nov 2026 12:37:24 +0000
-sashiko-bot@kernel.org wrote:
+I'm planning to add syscall common attrs support for LINK_CREATE cmd.
 
-> [Severity: Medium]
-> Does including a second custom event header under CREATE_CUSTOM_TRACE_EVENTS
-> now fail to compile with a redefinition of str__custom__trace_system_name?
-> 
-> Each inclusion of include/trace/define_custom_trace.h includes
-> include/trace/trace_custom_events.h, which sets TRACE_SYSTEM to custom and
-> includes include/trace/stages/init.h:
-> 
-> include/trace/trace_custom_events.h:
-> #undef TRACE_SYSTEM
-> #define TRACE_SYSTEM custom
-> 
-> #ifndef TRACE_SYSTEM_VAR
-> #define TRACE_SYSTEM_VAR TRACE_SYSTEM
-> #endif
-> 
-> /* The init stage creates the system string and enum mappings */
-> 
-> #include "stages/init.h"
-> 
-> include/trace/stages/init.h then invokes TRACE_MAKE_SYSTEM_STR() to emit
-> static const char str__custom__trace_system_name[] = "custom"; on every
-> pass, because all custom event headers share the custom TRACE_SYSTEM and
-> the definition is not guarded against multiple inclusions in the same
-> translation unit.
+This is the second series for the plan, that adds syscall common attrs
+support for LINK_CREATE of tracing prog and cgroup prog.
 
-So basically what Sashiko is saying, having two custom headers defined by
-the same C file still will not work.
+BTW, address Andrii's review [1] in patch 5:
+1. Change if (!OPTS_ZEROED(opts, iter_info_len)) to if
+   (!OPTS_ZEROED(opts, log_opts)).
+2. Add comment to iter_info and iter_info_len that they are
+   deprecated, and use iter.info and iter.len instead.
 
-Have you tested your patch? Does it work with multiple custom header files?
+Links:
+[1] https://lore.kernel.org/bpf/CAEf4BzbW4zwL-9j8e2B6KNXVNwsfWyMSAo_RsGCqv-nu_yGhTg@mail.gmail.com/
 
--- Steve
+Changes:
+v3 -> v4:
+* Collect Acked-by tag from Jiri, thanks.
+* Change 'tgt_fd' to 'target_fd' in patch 1. (Sashiko)
+* Trim tests to 4 tests for tracing, tracing_multi, iter and cgroup links.
+  (Alexei)
+* v3: https://lore.kernel.org/bpf/20261123152743.19629-1-leon.hwang@linux.dev/
+
+v2 -> v3:
+* Add log support for bpf_check_attach_btf_id_multi().
+* Add more selftests to cover more logs for link creation failures.
+* Update some log messages in patch 1. (Alexei)
+* Add log for dst attach type check in bpf_check_attach_target(). (Alexei)
+* Update some log messages in patch 2. (Alexei)
+* Pass 'log' to btf_attach_func_proto() and btf_distill_func_proto() in
+  bpf_check_attach_btf_id_multi(). (Alexei)
+* Add a log msg in check_dup_ids() when dup ids. (Alexei)
+* Add a log msg in bpf_tracing_multi_attach() when it returns
+  -EOPNOTSUPP. (Alexei)
+* Swap function names between iter_info and iter_info_len selftests.
+  (Sashiko)
+* v2: https://lore.kernel.org/bpf/20261114150610.84507-1-leon.hwang@linux.dev/
+
+v1 -> v2:
+* Add log_opts support for bpf_program__attach_iter() API in libbpf.
+* Add test to verify the log for freplace max_ctx_offset case.
+* Update a subtest to verify the log_opts in bpf_program__attach_iter()
+  API.
+* Add log for freplace max_ctx_offset case. (bot+bpf-ci)
+* Drop unnecessary bpf_verifier.h include. (bot+bpf-ci)
+* Change log to "Invalid tracing attach_type.\n" when the link
+  attach_type is not prog->expected_attach_type. (bot+bpf-ci)
+* Change BPF_XDP to BPF_TRACE_FEXIT in tracing link_create test.
+  (bot+bpf-ci)
+* Drop dead iter.len check in libbpf. (bot+bpf-ci, Sashiko)
+* Add OPTS_ZEROED(opts, iter) check. (bot+bpf-ci, Sashiko)
+* Swap log positions of iter_info and iter_info_len. (Sashiko)
+* Update bpf_program__attach_iter() to use iter.info and iter.len.
+  (Sashiko)
+* v1: https://lore.kernel.org/bpf/20261109140816.5196-1-leon.hwang@linux.dev/
+
+Leon Hwang (6):
+  bpf: Add log support for tracing link_create
+  bpf: Add log support for tracing_multi link_create
+  bpf: Add log support for iter link_create
+  bpf: Add log support for cgroup prog link_create
+  libbpf: Add log_opts support for BPF_TRACE_ITER
+  selftests/bpf: Test tracing and cgroup link creation logs
+
+ include/linux/bpf-cgroup.h                    |  6 +-
+ include/linux/bpf.h                           |  9 +-
+ include/linux/bpf_verifier.h                  |  3 +-
+ include/linux/trace_events.h                  |  7 +-
+ kernel/bpf/bpf_iter.c                         | 27 ++++--
+ kernel/bpf/cgroup.c                           | 76 ++++++++++++-----
+ kernel/bpf/syscall.c                          | 30 +++++--
+ kernel/bpf/trampoline.c                       |  5 +-
+ kernel/bpf/verifier.c                         | 51 ++++++++---
+ kernel/trace/bpf_trace.c                      | 27 ++++--
+ tools/lib/bpf/bpf.c                           | 23 +++--
+ tools/lib/bpf/bpf.h                           |  8 ++
+ tools/lib/bpf/libbpf.c                        |  5 +-
+ tools/lib/bpf/libbpf.h                        |  3 +-
+ .../selftests/bpf/prog_tests/link_log.c       | 85 +++++++++++++++++++
+ 15 files changed, 290 insertions(+), 75 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/link_log.c
+
+-- 
+2.55.0
+
