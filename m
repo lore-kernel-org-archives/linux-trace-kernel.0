@@ -1,58 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795616177;
-	b=dyEULg6nQbIr4dFXhr9XK9nx08poBs8bKkOIy8eU1+YjvFvSF7VzcSseua63Qr2pXYhm
-	 N4Tkxtejdg53di1l5IMg5uNQTbdUJUyAUtr3iDf82FwcsXgdSWhxqqB0cFpAsvMZ77y1h
-	 vFCUvioiiNSD+jY3zWbAx0HTcI5AxSeMKPShxRUPo8yXJvUAtquj02tjPypGxOrZMBwXc
-	 /XiKwugQMh9Oagf2qWb18oCTwHkSMlZKWi1IpFcp7XaW4lvDu3boVahePwlSttn2uRoiS
-	 2Y6r1NnEfTFd/g6mnc0ZrrvrcSRN5lyvTF62Ai+bdHBFlsCvF21zd+Hd+pvZYcVhBCA==
+	t=1795616485;
+	b=xeX6n4b4IcSlYx2w5ndOgY3m/aY3BYL8aCblfH0cY4ri19ohuHjwwKe+rlbJ5qa22E9X
+	 cNyFt0VcIY/hiFcLhaE8jyzGdSIzwFhrnGa5jdF1IGT8CAdWIGoLRuIXj/uuSZ+/venu6
+	 oeXQlsTCZD1UCZkC30aPB4ZNm0rIFlt2ZfRDf6tmsyNskgYXJ9iOvHUpTRBNI45OaBdZr
+	 g19jA2uPbWiv90birOPbEqo2BQqFFslceo+zHIw1HpPEISnNPyRgms5t2HpqWsF05PO2l
+	 siqUcoh6kz5Qq4Fio6I5Qvefme+BRVei4UnHkc8qZn4qlSChQLaDK7o2gupQuCShawQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795616177;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=aWyI2O7H0NtGnKP5/F2krKuxvxxzodN6y5EnFjYm8Wk=;
-	b=f6rphA+uNDaGjIXjRFKCSCCYkaD/nNl0q/qa1WJJMRKky4cYvca3PJNU03ImoEorbTGD
-	 rqf0k69whOIvPQxIOKGulXUiwbzOQArYgo2zN0XRt8B0gpqa5TByHJNtP14gwS7rqWNxi
-	 PhGDS0vOg1ljT/Qry+/RLsODh1+nCY4YArmaGgCbPoK88zK6w5zIymm9p0JT6tMcRkjb0
-	 LDtX87tcfmKRuQIW6Vjzd6G7u3vNDjsmQjm0bXtCDGxhu8JkVPyXMjZAwSqsLR4VYHX3Z
-	 iJr97rZew1utgFGn6lJ9J6W3RLVhZHCyLwYvtoQaIvIWhSGH8K+i1EtijN+mtivspdA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795616485;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=U+xnevs0V4p93jojRdwNAhj1e+8w16LoaDM5qUqFnh0=;
+	b=W6rdl+2iDtWSSqFEQP6NrsSeV6SOwKG1PuPd3T34jZDvJsJaKPX+qqtzUsASWs93lbDz
+	 vmDPqNPY7/aKxFwEoLfjSuw4VtwBUceAf4id+ge5nmToabmQEm6YfrE6UUvJxEROjxAcX
+	 QsB7wVtuI9vRDqdSr2F6uXSkjjIdt1y+TTtgT9s32v8UhLfpuMZhEAFaLW9V4PphAvUAX
+	 2/aCbPuz6poInx18GbHy7/2tdl1rt9egIc8UdLtzUVqDVXk/qRzjRVILPyBIDs+PQuV8m
+	 RLDWdFgyr/J8Apddc4U6neaqdLdU+ihEiHn04z3rMWV3OAfzxCez1s5yfhS1ksUjFmQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=rj19RG6Q;
-	arc=none smtp.remote-ip=216.40.44.12
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OEA59VMe;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA5E606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 14:16:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0FA5E606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31C8606A326;
+	Wed, 25 Nov 2026 14:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=rj19RG6Q
-Received: from omf13.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id AE3A0A0F4B;
-	Wed, 25 Nov 2026 14:16:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id D9FB420012;
-	Wed, 25 Nov 2026 14:16:13 +0000 (UTC)
-Date: Wed, 25 Nov 2026 09:16:12 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Crystal Wood <crwood@redhat.com>
-Cc: Tomas Glozar <tglozar@redhat.com>, John Kacur <jkacur@redhat.com>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 05/10] tracing/osnoise: Per-cpu mutexes and fd
- detachment
-Message-ID: <20261125091612.5458e933@gandalf.local.home>
-In-Reply-To: <20261125090122.22fdb88d@gandalf.local.home>
-References: <20261113064103.3041704-1-crwood@redhat.com>
-	<20261113064103.3041704-6-crwood@redhat.com>
-	<20261125090122.22fdb88d@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OEA59VMe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF0A1F00A19;
+	Wed, 25 Nov 2026 14:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795616484;
+	bh=U+xnevs0V4p93jojRdwNAhj1e+8w16LoaDM5qUqFnh0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=OEA59VMep+ap3nxbsFbvOyuf1k3jMtdBKbJmCWGNpbynBOQBfkAHt16RGL5Ui9azl
+	 k7zUTVV4smtxoihdf5pD0EtgsUWvx+dRLi6Hx3CZF9rVrM2Q9PdJHLERkn7jYr15DD
+	 dXGqK6CbJKuxPPRX+iChzjLLZRTDIls+mCPegdlrfUHKFQDvFfhHzV0tmZgiC0HX1z
+	 LthrTRS9OfCWC15NlUrWR0OtwXjEMsCR/VvAaxYFQVZvpJs7tzkIcjeAopr5vQ0XRW
+	 8k14nLiXOO51UxIGxl0Xwdmwjin/GYfgYBOhA4U6MDVObWYLDY+qSLyIBWu3D8bPf+
+	 YZ+09X5q1Pk0Q==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Naveen N Rao <naveen@kernel.org>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCHv2 1/2] kprobes: Increase the kprobe hash table size
+Date: Wed, 25 Nov 2026 23:21:20 +0900
+Message-ID: <undine-1795616480318619368-1be7e961905611b5@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <awWdDfj1fknA8fuF@krava>
+References: <20261122200239.1481088-1-jolsa@kernel.org> <20261122200239.1481088-2-jolsa@kernel.org> <undine-1795477745290490698-99e2fcc5c9b45beb@undined.local> <awWdDfj1fknA8fuF@krava>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,130 +58,180 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: D9FB420012
-X-Stat-Signature: euikbp9rxmzw8pxrsx44fof1cctw66s6
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/ZI8H7qxrdo4aXIPD6XC9VyPXhSlUTWKI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=aWyI2O7H0NtGnKP5/F2krKuxvxxzodN6y5EnFjYm8Wk=; b=rj19RG6QqUtXqrcuEjsuRDcyls9emkUY+NAUtuLTRHXAUUPIypb1a4h6gJRG0AHpMV2T+oe+MQh5wZYh5XPqfWM/YcfWXQfBhhYt3PWN9RcGW5cnS8vijYlMuIxG9aNqKOfDDqM7RmEWgv2n4eDQCQtlfSHowHuj4ICKZrqN9Tc=
-X-HE-Tag: 1795616173-333785
-X-HE-Meta: U2FsdGVkX19ZDj+Qfe8Y3WXxsL/L+hR1d5CaHp18+kcv7VZ5IbYSYX9AFW5UjzUjoO8IvXRK4SJmGBVqAFV5hyMcvOW+ODeynpzqR01qejyJXq7S9FWfLVddQZyJHTpwDKuQcahQEWjsko+mWVehPpMqKvhYWX36PTnRj7OGP17rCjljezVNqJDZrWNj5OTwFcPdJcd0zetRoDEKCa+pVCQ2VBg0gmMnyZJ8mfFhJ2E03yR0dZKswPOD3bsBndDsyolreZc7crRJnFOradwrg7XF/dQ+8Oc805NEJzpDsUi93dcDxGjYXdYlGyOAxihZrIRFmoR/XMaEJypqD20508l2zZqLW2jDI1NuBfWr6+WeQ+0d12P6FIUMaN3/CTBf
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 25 Nov 2026 09:01:22 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 24 Nov 2026 15:19:57 +0100, Jiri Olsa <olsajiri@gmail.com> wrote:
+> On Tue, Nov 24, 2026 at 08:49:05AM +0900, Masami Hiramatsu (Google) wrote:
+> > On Sun, 22 Nov 2026 21:02:38 +0100, Jiri Olsa <jolsa@kernel.org> wrote:
+> > > The kprobe hash table has 64 buckets, so with many probes registered
+> > > each get_kprobe() call walks a long chain. With 20000 probes that is
+> > > more than 300 entries per bucket on average, and every entry is a
+> > > separate struct kprobe, so the walk is mostly cache misses.
+> > > 
+> > > get_kprobe() is not called just once per registered probe. On x86 the
+> > > registration path calls it for each address it has to check around
+> > > the new probe: get_optimized_kprobe(), __recover_probed_insn(),
+> > > __recover_optprobed_insn() and arch_check_optimized_kprobe() all do
+> > > one lookup per byte or per decoded instruction, and most of these
+> > > lookups miss, which means walking the whole chain. It is also called
+> > > from the breakpoint and ftrace handlers on every probe hit.
+> > > 
+> > > Increase KPROBE_HASH_BITS from 6 to 12, which gives 4096 buckets and
+> > > cuts the chains to about 5 entries for 20000 probes and about 12
+> > > entries for 50000 probes.
+> > > 
+> > > Time to register the probes with the kprobe_many_example sample
+> > > module [1] (insmod with nr_functions=20000 and nr_functions=50000)
+> > > in a KVM guest, mean of 5 runs, for different KPROBE_HASH_BITS
+> > > values. The table memory is the size of the static kprobe_table on
+> > > 64-bit:
+> > > 
+> > >   bits   buckets   table memory   20000 probes   50000 probes
+> > >      6        64          512 B         4.71 s        29.99 s
+> > >      8       256           2 KB         2.05 s         9.90 s
+> > >     10      1024           8 KB         1.39 s         4.63 s
+> > >     12      4096          32 KB         1.30 s         3.64 s
+> > >     14     16384         128 KB         1.28 s         3.41 s
+> > >     16     65536         512 KB         1.28 s         3.38 s
+> > > 
+> > 
+> > Thank you for conducting the testing and evaluation. The results show
+> > a trend similar to that of a study I previously carried out[1].
+> > 
+> > [1] https://qiita.com/mhiramat/items/1bbeb309ee5dfbc979ce (Japanese
+> > article)
+> > 
+> > > With 12 bits the registration of 20000 probes is 3.6 times faster
+> > > and the registration of 50000 probes is 8.2 times faster than with
+> > > the current 6 bits. 12 bits is where the curve flattens: compared
+> > > to 10 bits it is still 21% faster for 50000 probes (6% for 20000),
+> > > while going further to 16 bits gains only 1.5% for 20000 probes and
+> > > 7% for 50000 probes, for a table 16 times bigger (512KB vs 32KB).
+> > > 
+> > 
+> > I personally think 6 bits is too small, maybe up until 9 bits (4KB)
+> > will be OK.
+> > 
+> > > The cost is the size of the static table, which grows from 64 to
+> > > 4096 hlist heads, that is from 512 bytes to 32KB on 64-bit. The
+> > > functions that walk the whole table (module notifier, arming or
+> > > optimizing all probes, the debugfs list) are slow paths that take
+> > > kprobe_mutex and now scan 4096 buckets.
+> > 
+> > What I still fail to understand is the use case for employing such a large
+> > number of Kprobes simultaneously. If the goal is to trace individual
+> > functions, Fprobes are already available and offer better scalability.
+> > Personally, while I might occasionally deploy around 100 probes, I cannot
+> > conceive of a scenario requiring 1,000 or more. Would you have actual
+> > usecase maybe from eBPF?
+> 
+> the use case is the kprobe multi link support for inlined functions,
+> which I have in this branch:
+> 
+>   https://github.com/olsajiri/bpf/commits/inlined/
 
-Hi Crystal,
+Ahh, got it.
 
-> >  static int timerlat_fd_open(struct inode *inode, struct file *file)
-> >  {
-> > +	struct fd_data *fdd;
-> >  	struct osnoise_variables *osn_var;
-> >  	struct timerlat_variables *tlat;
-> >  	long cpu = (long) inode->i_cdev;
-> > +	int ret = 0;
-> >  
-> >  	mutex_lock(&interface_lock);  
 > 
-> Hmm, if we switch this to:
-> 
-> 	guard(mutex)(&interface_lock);
+> inlined instances are not function entries, so they can't be attached
+> through fprobe/ftrace and each instance needs a standard kprobe
 
+Yeah, for inlined functions, we need kprobes.
 
-I see now that patch 8 does this.
+> 
+> number of instances gets big quickly, even for a single function, some
+> examples of functions that have both an out-of-line copy and inlined
+> instances in my x86_64 build:
+> 
+>   function                inlined instances
+>   __list_del_entry                     4144
+>   list_add_tail                        1196
+>   folio_put                             629
+>   put_task_struct                       373
+>   percpu_ref_put_many                   273
+>   kmemdup_noprof                        207
+>   fdput                                 189
+>   sock_put                              161
+>   migrate_enable                        131
+>   migrate_disable                       123
+> 
+> attaching to the list functions is not necessarily a good idea,
+> but other functions have a high number of inlined instances too
 
-Can you make the guard conversions first, and then do updates. I rather not
-have patches that add gotos just to be removed later in the series.
+Hmm, that's the reason why perf-probe -F skips the inline function by
+default...
 
-Thanks,
+> 
+> the goal is not to attach 20k functions, but to make the inline
+> attachment fast.. user specifies just a few functions by name and
+> has no control over the number of their inlined instances, so even
+> a small set of functions can end up with thousands of kprobes,
+> and the attach time should stay reasonable for that
+> 
+> > 
+> > If this change is intended solely to improve performance for an extremely
+> > unlikely use case, I would, at the very least, make the size configurable
+> > via Kconfig.
+> > 
+> > Since this change affects all architectures, those working with small,
+> > embedded-system chips might be reluctant to "pay" 32 KB for a use case
+> > that is highly unlikely to ever occur.
+> 
+> I can add CONFIG_KPROBE_HASH_BITS with range 6-16. I'd keep 6 for
+> CONFIG_BASE_SMALL, so small systems don't pay anything, and use
+> 10 (8KB on 64-bit) as the default otherwise, which gets most of the
+> speedup from the table in the changelog
 
--- Steve
+That is good. If you introduce the inline function support which is
+enabled by some kconfig, that kconfig can increase the hash bits. That
+should be more reasonable.
 
-> 	
-> >  
-> > @@ -2437,16 +2495,16 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
-> >  	migrate_disable();  
+Thank you!
+
 > 
-> and this to:
-> 
-> 	guard(migrate)();
-> 
-> >  
-> >  	osn_var = this_cpu_osn_var();
-> > +	tlat = this_cpu_tmr_var();
-> > +	mutex_lock(&osn_var->lock);  
-> 
-> and use:
-> 
-> 	guard(mutex)(&osn_var->lock);
-> 
-> >  
-> > -	/*
-> > -	 * The osn_var->pid holds the single access to this file.
-> > -	 */
-> > -	if (osn_var->pid) {
-> > -		mutex_unlock(&interface_lock);
-> > -		migrate_enable();
-> > -		return -EBUSY;
-> > +	if (osn_var->fdd) {
-> > +		ret = -EBUSY;
-> > +		goto err;  
-> 
-> 	this could simply be:
-> 
-> 	if (osn_var->fdd)
-> 		return -EBUSY;
+> thanks,
+> jirka
 > 
 > 
-> >  	}
-> >  
-> > +	WARN_ON_ONCE(osn_var->kthread);
-> > +
-> >  	/*
-> >  	 * timerlat tracer is a per-cpu tracer. Check if the user-space too
-> >  	 * is pinned to a single CPU. The tracer laters monitor if the task
-> > @@ -2455,33 +2513,47 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
-> >  	 * setup.
-> >  	 */
-> >  	if (current->nr_cpus_allowed > 1 ||  cpu != smp_processor_id()) {  
+> > 
+> > Thank you,
+> > 
+> > > 
+> > > The sample module was posted as the last patch of the kprobes
+> > > lookup cost series [1] only to demonstrate the testing, it is not
+> > > merged and is not going to be.
+> > > 
+> > > [1] https://lore.kernel.org/bpf/20261109195827.1091410-1-jolsa@kernel.org/
+> > > 
+> > > Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  kernel/kprobes.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > > index f14f7ff45961..47ce0bfb7298 100644
+> > > --- a/kernel/kprobes.c
+> > > +++ b/kernel/kprobes.c
+> > > @@ -50,7 +50,7 @@
+> > >  #include <asm/errno.h>
+> > >  #include <linux/uaccess.h>
+> > >  
+> > > -#define KPROBE_HASH_BITS 6
+> > > +#define KPROBE_HASH_BITS 12
+> > >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
+> > >  
+> > >  #if !defined(CONFIG_OPTPROBES) || !defined(CONFIG_SYSCTL)
+> > > -- 
+> > > 2.56.1
+> > > 
+> > >
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> 		return -EPERM;
-> 
-> > -		mutex_unlock(&interface_lock);
-> > -		migrate_enable();
-> > -		return -EPERM;
-> > +		ret = -EPERM;
-> > +		goto err;
-> > +	}
-> > +
-> > +	fdd = kmalloc(sizeof(*fdd), GFP_KERNEL);
-> > +	if (!fdd) {  
-> 
-> 		return -ENOMEM;
-> 
-> > +		ret = -ENOMEM;
-> > +		goto err;
-> >  	}
-> >  
-> >  	/*
-> >  	 * From now on, it is good to go.
-> >  	 */
-> > -	file->private_data = inode->i_cdev;
-> > +	fdd->thread = current;
-> > +	fdd->detach = timerlat_fd_detach;
-> > +	fdd->cpu = cpu;
-> > +	file->private_data = fdd;
-> >  
-> > +	tlat->tracing_thread = false;
-> > +	tlat->thread = current;
-> >  	get_task_struct(current);
-> >  
-> > -	osn_var->kthread = current;
-> >  	osn_var->pid = current->pid;
-> > +	osn_var->fdd = fdd;
-> > +
-> > +	hrtimer_setup(&tlat->timer, timerlat_irq, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
-> >    
-> 
-> 
+>
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
