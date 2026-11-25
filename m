@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795587376;
-	b=f8EYNbYRnHedlaXRKLiLNEj5Q1a603f1MIcuYqe86pCYerDPJd6SmjWQ43CM3tMrvh4v
-	 M7OjqC4lrtOMd7ZdcfXXOtLSkabdmsqklXNHiAzgEf/2P9bxUOQTb/bYKwqwngVnhqetW
-	 dUiB9EfX6VSgQcuTcfwxHd7VMg8SPYL91VaNO0h2I0aQ3HnjMhw3f2UQF+5w7MjNYQbgg
-	 hJtUOZeeL6Hpo58F/ruYRVVmWOWRuiHfjNalOTj8HXkc46Qp9KliInrRxklv18A5P50Yl
-	 Pa9k66rn+sS9oT0x5kC3rFuGd/gsk7E9xZ0VSMkk0W+b3drarYDcQfY8aBGG6Qg1PgA==
+	t=1795587378;
+	b=MFitObzvGYDhIVaoM4Z4uRuF8TOCi9VKA3+zazeZgbnfFBD7HWr2rl3iF11DkBqrSEOL
+	 ZeUwIu9bEud11lhzJkbcrAHVaWTINzJ90Z3XFljy9y3oex2H7FKKhZPY0oWkjwpgnWWmC
+	 gly2yySFwkfKeKJ1k78Oi00gkcmsfaTpDmDZ4eaPoKrH1erkHXj3TqVuruxgRb1KMsVr8
+	 OMj42ilzA6c1UqPHTQznx52X7gsqKf2YqoWy7AR+vhWzwE7OykwfOpx133COUjtVzVQM1
+	 MPsNBiXO5AKTZUfJAPTJqJRcRzz6PYGSm/yuTOm7RBJJYlR75fKjKJU1t4WN0uK2stQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795587376;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795587378;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=GGDahMitB3LSpaFaJkVUo1Pzx9kbamS5IbDP2+gBQRY=;
-	b=PmKkgvn63J3avLfuydDUk/AX/7+8P+51Mq3COLoQdYZbNMYGHdG9dkQacTvDd1Aee5/y
-	 24v4Osy8WRGy/rvyKwQ/7k+JdSX0QVBqFlrPWXRTe/Lywh9ck9pk6tUl9/cpv8sS3cW6b
-	 qzkiXYw7oRuLdmFcK+/XPJ5fiGk14ergEhJyvoeH39xlLI4RXg81WYDE/h73IZ7rZ+3Y3
-	 x2HlkJTJ5scPTVI6XmAEiUlaUTN40THCR+iwsgzA1Lu2vQWzOCVzYCSUNZq3QHFaqx2FX
-	 dCpmcOQKZS/d+5Eo71b5T8ydgBYWvCUJt8ubKZU52WRaZfShMX5v+i77M+L6qn/J/vw==
+	bh=09MAmcu0nJvDv2rEHeASXKSxzXy8pllt4XI/+xpi/1s=;
+	b=UuMI2bvQmCxBypg1zWJ/9iy7vxDG/Q8KvkUEcY4CSbxnEC7Bnh/Dxp2OuoNWsnBdv/fe
+	 Pc3H2zgd9Tx83pTLnod56iYh4MtCB1CddRA4KR27zpAA36ZCwXOPpuWZY/17nT7dR7/CL
+	 HBO2Kq+PRnOq+wWpBOxDkO1oXvCMms+bB+1oZaCgcA8iz8R5sCieykMeZhlU5IBtwgJvH
+	 kraR1jbltiSpztxfcBF7jAZEIIEKwMeSKu8GUHNFawMaw1cMzg3/hbpJ6G8fJqIgxl7Jb
+	 maLMsCyXYnaAZ+vJU3ZHdXSn6nUswjvUB5cJhYlfvb8t4icrV72PCI0j745zkVANN1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NC8TFIwL;
-	arc=none smtp.remote-ip=74.125.82.69
-Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hRuoW9J8;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B7B60A381A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 06:16:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 15B7B60A381A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4227160A5BC4
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 06:16:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4227160A5BC4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NC8TFIwL
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-154e9d2d94fso393067c88.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:16:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hRuoW9J8
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-384c78aa0dbso7370455eec.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:16:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795587375; x=1796192175; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795587377; x=1796192177; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=GGDahMitB3LSpaFaJkVUo1Pzx9kbamS5IbDP2+gBQRY=;
-        b=NC8TFIwLTkPbzeWjMCBEzMycXowBO7nwlg1PQhGSIEdoRdcynFgU3xj0z346DalUvK
-         CclzOOgsc08nnESEFqDQN8grEdC2dvQQay+O8qqF/cXS/Sx/3fHPHv22bsBKHsHYhqhL
-         N7MKQrt38DWZocIKvHgSCP6atdy4p9PvnCrh+EVUWREweUMREZchFqy91Sxrc/M3Gq0x
-         4IxBXWtMXRPrVFIYr3Tg854QTdurR/WVRTSLuOea9bx7plqd3QRfrjLI4E++6f3fadBC
-         EcD9m8j1xBeixoCWAUp7sngoetkh00EBHTIE3CwevkPOOdyD58gjHWhr5ITeQvpeR1pk
-         iPrA==
+        bh=09MAmcu0nJvDv2rEHeASXKSxzXy8pllt4XI/+xpi/1s=;
+        b=hRuoW9J8UJ5yS/JbLIPTKOa778F9ZokFaUcinY54/eCRvUv6mGjwCMD0feOmkcMbLJ
+         7/tSKllEbV27lrjk0ZY+RCDtM0uL8at9+R5XeYGH3AmiziDmJdtx9B6UaHGW/VIvV/00
+         VedPE+5Z6xF3Z1wOEOz/Io4w8fgtaCQGWPvWqVJzP6AZLyK5Kx/vc7EzMY1E1imbfIKt
+         XMcdEpABCqSsMZwhJyT5A0yBC+xGgBW7fWDDgoOEJAUrZJXrZZ8OITnTOnIl0ZCnQ1NB
+         LlcHvEUyU5R+tM9y4sTahYg/orpjOBqsXC/TrGgUMsyiLHFFB40cNCohzAldAZ5Zkege
+         K1aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795587375; x=1796192175;
+        d=1e100.net; s=20260707; t=1795587377; x=1796192177;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=GGDahMitB3LSpaFaJkVUo1Pzx9kbamS5IbDP2+gBQRY=;
-        b=kiOPUCY3RCw4WVU8FCn8qQDNSPvnaNBl1HquqN94kbwnnNI3igC5X6MozJZFuUODyu
-         J97BaJDYtWTXqH6pE+lFnaqe3FgUH+4H+xvZ8yMpd5WHmXSMOYhXkcoZrPsPkiIYJZvu
-         H1hNQeTyLYGOwh8IV3e5ZVTewhjBcbF4PyKctYOHCXD9R6R/0DSYyEvWB6YT2+DDLiXa
-         ngV7UXpFshu6SpAOQLvkuMbHoOR6IiY7JM0r/1PrJGi4cmro633357Vv7Q3rAM2BLvvj
-         qZe/C0xyiQFR03qL1l5/XdujrrULPUJOmi8Lm7/6FdV3AAu2+i35Jn/2aew+QC7hXCER
-         EulQ==
-X-Forwarded-Encrypted: i=1; AL+hErFZnSXOMRGJ1KjliABP+PcDBSzU7vKRzM6IKb0c3F6ygvQIja8RIXpRCPrq9MF6mi+nGSvqAWTRk5aFB/ASQ68xSSo=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8AqAHj5orJCP8mLwy3sH9b7kdYWNpsKvcgNuk0/ueQ63BkNBcR
-	jhkIOTAmaDr/kNE7HYJV11vBfSDx7cZf3h42wsz82m2rlhMj4Z7SmWlmaR1ETkpPL6vwDytzSCe
-	Nd5U6Yc5HCQ==
-X-Received: from dloo27-n2.prod.google.com ([2002:a05:7023:a5b:20b0:1b5:8761:cc11])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b902:b0:1a5:9abb:fdd7
- with SMTP id a92af1059eb24-1b556877a2bmr15589113c88.9.1795587374885; Tue, 24
- Nov 2026 22:16:14 -0800 (PST)
-Date: Tue, 24 Nov 2026 22:15:02 -0800
+        bh=09MAmcu0nJvDv2rEHeASXKSxzXy8pllt4XI/+xpi/1s=;
+        b=SNWWEAPA5FSBDlUPvd/QEON2JqjEg8H2zXM1RJLO5Lw2yfB9Y9Rqb+AQ5VOtgVgwh7
+         nKIJKtMesPemYWM45Zm+x9b+jyLk/xK3sEzA5JzaJy/vpaRfYHALM37MqaHszATwLyih
+         +os6iQ8bgswhRt6P7c+bodyM9+XAMsbWYr81IkC0amc6yzF53USR/e6ymB8YkPiEldJv
+         EplaqwVgV5/Wd7NqbNn59RS+kiEnV5hPFvvn1mQtGU1aeYF1ssDuXenFXbZ+3YYFvcZ2
+         FrXUQYW1Rw/c0gpCJuD+0ev60QwIMalePLBXSqGa1wisLd+hD68Z7uI6sVAteIZCGWaL
+         Z9jw==
+X-Forwarded-Encrypted: i=1; AL+hErHEhX8zGHR+rtZsprtuspPiia9Zj97BQKbMoaSfh+tjinRO2V4jjhGjEv/dC9G4d0h2HsprFcuut+2jnbmEyQS2reQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9E0sjcq1x9xkshDtVvk5RL4BDQK1TUQi6rXlq72wgmSCfnn+NB
+	v2rZlRmiCmecyDx08WQkoqY4Avn/9cGuXlbeT3+M2bs8r+SqfD8fHxzmp1eT9OLwaHTVBzuHkUz
+	As+lVqXZ6Gg==
+X-Received: from dyba9.prod.google.com ([2002:a05:693c:63c9:b0:386:a06c:3241])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:c72d:b0:369:f9c4:1fda
+ with SMTP id 5a478bee46e88-38570845628mr15750428eec.27.1795587377097; Tue, 24
+ Nov 2026 22:16:17 -0800 (PST)
+Date: Tue, 24 Nov 2026 22:15:03 -0800
 In-Reply-To: <20261125061523.1540234-1-irogers@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261125061523.1540234-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.831.g720f3f5937-goog
-Message-ID: <20261125061523.1540234-10-irogers@google.com>
-Subject: [RFC PATCH v2 09/30] efi/libstub: Disable unwind tables in x86 and
- RISC-V EFI stubs
+Message-ID: <20261125061523.1540234-11-irogers@google.com>
+Subject: [RFC PATCH v2 10/30] tracing: Skip internal ftrace frames under CONFIG_UNWINDER_DWARF_CFI
 From: Ian Rogers <irogers@google.com>
 To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-arch@vger.kernel.org
@@ -103,41 +102,75 @@ Cc: jpoimboe@kernel.org, rostedt@goodmis.org, peterz@infradead.org,
 	wnliu@google.com, dylanbhatch@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Pass -fno-unwind-tables and -fno-asynchronous-unwind-tables when
-building x86 and RISC-V EFI libstub objects so enabling kernel-wide
-asynchronous unwind tables under CONFIG_UNWINDER_DWARF_CFI does not emit
-unwanted .eh_frame sections into the standalone EFI boot stub.
+Calibrate ftrace internal stack-trace skip counts under
+CONFIG_UNWINDER_DWARF_CFI alongside CONFIG_UNWINDER_ORC so stack traces
+captured from tracepoints and function tracers omit internal ftrace
+wrapper frames consistently.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- drivers/firmware/efi/libstub/Makefile | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c                | 4 ++--
+ kernel/trace/trace_events_trigger.c | 2 +-
+ kernel/trace/trace_functions.c      | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index bbab12b8eb4b..19c2822eb302 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -19,7 +19,8 @@ cflags-$(CONFIG_X86)		:= $(filter-out -mcmodel=kernel \
- 				     $(PADDING_CFLAGS), $(cflags-y))
- cflags-$(CONFIG_X86_32)		+= -march=i386
- cflags-$(CONFIG_X86_64)		+= -mcmodel=small
--cflags-$(CONFIG_X86)		+= -fPIC
-+cflags-$(CONFIG_X86)		+= -fPIC -fno-unwind-tables \
-+				   -fno-asynchronous-unwind-tables
- # Nothing enables IBT while the stub runs, so ENDBR would only take space.
- cflags-$(CONFIG_X86)		+= $(call cc-option,-fcf-protection=none)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 65b9d67647e5..6d36c790c2b0 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2156,7 +2156,7 @@ void __ftrace_trace_stack(struct trace_array *tr,
+ 	 * Add one, for this function and the call to save_stack_trace()
+ 	 * If regs is set, then these functions will not be in the way.
+ 	 */
+-#ifndef CONFIG_UNWINDER_ORC
++#if !defined(CONFIG_UNWINDER_ORC) && !defined(CONFIG_UNWINDER_DWARF_CFI)
+ 	if (!regs)
+ 		skip++;
+ #endif
+@@ -2258,7 +2258,7 @@ void trace_dump_stack(int skip)
+ 	if (tracing_disabled || tracing_selftest_running)
+ 		return;
  
-@@ -29,7 +30,9 @@ cflags-$(CONFIG_ARM)		+= -DEFI_HAVE_STRLEN -DEFI_HAVE_STRNLEN \
- 				   -DEFI_HAVE_MEMCHR -DEFI_HAVE_STRRCHR \
- 				   -DEFI_HAVE_STRCMP -fno-builtin -fpic \
- 				   $(call cc-option,-mno-single-pic-base)
--cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax
-+cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax \
-+				   -fno-unwind-tables \
-+				   -fno-asynchronous-unwind-tables
- cflags-$(CONFIG_LOONGARCH)	+= -fpie
+-#ifndef CONFIG_UNWINDER_ORC
++#if !defined(CONFIG_UNWINDER_ORC) && !defined(CONFIG_UNWINDER_DWARF_CFI)
+ 	/* Skip 1 to skip this function. */
+ 	skip++;
+ #endif
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index a2487ad7fef8..c79df5b526e5 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -1597,7 +1597,7 @@ static __init int register_trigger_snapshot_cmd(void) { return 0; }
+ #endif /* CONFIG_TRACER_SNAPSHOT */
  
- cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)	+= -I$(srctree)/scripts/dtc/libfdt
+ #ifdef CONFIG_STACKTRACE
+-#ifdef CONFIG_UNWINDER_ORC
++#if defined(CONFIG_UNWINDER_ORC) || defined(CONFIG_UNWINDER_DWARF_CFI)
+ /* Skip 2:
+  *   event_triggers_post_call()
+  *   trace_event_raw_event_xxx()
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index acaba990aaaa..d601fdedceaa 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -251,7 +251,7 @@ function_args_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	ftrace_test_recursion_unlock(bit);
+ }
+ 
+-#ifdef CONFIG_UNWINDER_ORC
++#if defined(CONFIG_UNWINDER_ORC) || defined(CONFIG_UNWINDER_DWARF_CFI)
+ /*
+  * Skip 2:
+  *
+@@ -602,7 +602,7 @@ ftrace_traceoff(unsigned long ip, unsigned long parent_ip,
+ 	tracer_tracing_off(tr);
+ }
+ 
+-#ifdef CONFIG_UNWINDER_ORC
++#if defined(CONFIG_UNWINDER_ORC) || defined(CONFIG_UNWINDER_DWARF_CFI)
+ /*
+  * Skip 3:
+  *
 -- 
 2.56.1.831.g720f3f5937-goog
 
