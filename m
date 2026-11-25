@@ -1,184 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795560351;
-	b=bLuuliCOoElgYkO5yWhMh+p/Dmt7hAuOOot84RYbhmBq5XEmX0NtXxJv8p8d0G3PYc/x
-	 cK/uvsUwS7Y/mQpt3T5cTr4JIY6AJ3fhSOlRDBSNVVh62H5u53D8c9ldYYiuf7vOolVK3
-	 uLiKHckPlDZACt4/V9fzpHritlQnn5zKholKHncuHNVGpdkiTgVVoZF4Q+sNhzuuo5tov
-	 +1ZNANJBLRnqvm/K2DdQvYT5dzTdfarkJKQ1T9Inb99OuQleBIraqlwHVDGkgXNz89WFl
-	 nuROW6dEKnpSlGYXZ1dEdAMlEHztLVBGpTcxpUjS1vWLRKG5Nlvc3ZFa7hekOCOhc+Q==
+	t=1795567485;
+	b=y4P+bH4dfY6SUU3+7z3rlwcTbxbWN2eNgWkp+Jq97HCIxkpgmdSVcBuTCzfzwAIEkzqp
+	 k9gJ5pF864kQqt/6IR7EJvhKJj4CXv8yU6PWSpE+gmqy6ZxQLtchGOjVN9LlwpKtdoc3y
+	 AK0KFw4M6Np1L6e6SRVXylQQPafMQbnXUT17uNbp0soszD6CJwefsMRDipQqfdRDecRUh
+	 kw246BRe+DbQYM5C4MuipK92t/zQprH/ZvDdheC/t/1PNmREjdY4CCu21mp7RGiREAxgk
+	 7+jfuDHpAUpRT/imM6pTEPWcKBrbwsGnmP7sl22nGGwZdr4yEXtTPNPZT9/jMA7yIlA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795560351;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:Message-ID:Subject:From:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:
-	 MIME-Version:User-Agent:X-TM-AS-GCONF:X-Proofpoint-Reinject:
-	 X-Authority-Analysis:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=ZGiGop5d+F8Rtl4gJM+e51darej3tvaxLWXElW4mntw=;
-	b=WTmCkFA9uBWlOnaJqJGM8YlwMiV9gg6kHMAsZkktwzouEhWW4ETMUFfQivtzUBden8Sl
-	 oQ7bzd9qd29qFaidO2ExDO6wM1gtOYjXDeg5QGtl08UVANyYjoUFuqZ2B8e8FXcJnOf4d
-	 AkkOcpkcOhTiBkT4s407SQ0f5sv2oc8gXNIiK7gDKAzecREINtGVOiumGeBab6aq6vr93
-	 3c1BZSrhhV4vr4JuWKNCO/ECfuAmrF2Au/iOcgJ+l3rpHI0cto540g0QbXAZDvPqYn3oq
-	 EGAkm2svUjGn6IxR9VsMhMg8xyZQ2chDW9KJhU4ugp86zlegVryNmbSpDmccNKJmnbQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795567485;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Stat-Signature:X-Rspamd-Server:
+	 X-Rspamd-Queue-Id:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=eLqiru6IB8X1vm5kTLkMtYcaQdNbgpYL+qb0lIcTVWo=;
+	b=dh7vNYk8T032bTY+7e7l+CZf93MQYVZffhgLGh3G32IFRSCDdvv2jv5bQIPoZlM7A8+2
+	 w2HqPWskB4jshFRSeZcacVGmLYIvvP0X7OJuZKARtk3F/N/WUXKb+975NOwRsFkqajaio
+	 YLwmm1fFpaAxhUF7mi0SXZjwFGwLCXp6036g7cuCgVFZK8CZeIktBsKa+0tNlwI5cC0un
+	 RWIFsm/VN40Nb19raz8k76A9FhH6pQa7wasxFACNcxetXLmRPfb6J1/39/NBXZMdUpgd9
+	 Q7B3iG8QSSDOOjCvllx6xwRFJLho7ZgZiJGuyosiN/+1MTkr2BhD1BXzQKDpFrRcM/w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=nTvh+C8v;
-	arc=none smtp.remote-ip=148.163.158.5
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=XByrIElw;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEE5606A32D;
-	Tue, 24 Nov 2026 22:45:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7BEE5606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B06606A321;
+	Wed, 25 Nov 2026 00:44:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9B06606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=nTvh+C8v
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AOMZaJD3653444;
-	Tue, 24 Nov 2026 22:43:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ZGiGop
-	5d+F8Rtl4gJM+e51darej3tvaxLWXElW4mntw=; b=nTvh+C8vIj7OYYIXDe5d2R
-	kjD5qV3PLuWeVi06lfK7L2UJEji/0Y0NTNorE2sOm+OZV0abykWH0eDGNBghYJ0X
-	rq2iLVPK+mHk5L80j6FsTx3l+8sZ//o+V5DQlP8WI3upQAwt3HFFUd/psna68+YU
-	1f0SS6s2B0uwnUx5Fbet+kOp1fhhomrUiRev86n5oFeFHEaCz89bG2qaXYanxHkt
-	72GhPgk0UkvUIrOg6jofFdrKRCxRn1TnFQHCx3alMAUuJk8ditj+psJO5dju10fP
-	ZVp+oTdmh2KXNvrOZYqQt4KSurp9qFLtHQQTRoz7RDiHEaL6YTVCV5sjlgTsfu+A
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j34gv9hk6-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 24 Nov 2026 22:43:47 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AOMZNrm2939889;
-	Tue, 24 Nov 2026 22:43:46 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4j5kfa00u5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Nov 2026 22:43:46 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AOMhiTQ17891842
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Nov 2026 22:43:44 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2BF575805C;
-	Tue, 24 Nov 2026 22:43:44 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5736D58051;
-	Tue, 24 Nov 2026 22:43:39 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.169.243])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 24 Nov 2026 22:43:39 +0000 (GMT)
-Message-ID: <dfc8eada26ec70fdb802d71d4ade50e52917af26.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 10/11] ima: convert VMA flag tests to use vma_flags_t
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
-        Andrew Morton	
- <akpm@linux-foundation.org>,
-        David Hildenbrand <david@kernel.org>, Jason
- Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>, Peter Xu
- <peterx@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jan
- Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>,
-        "Liam R. Howlett"	
- <liam@infradead.org>,
-        Vlastimil Babka <vbabka@kernel.org>, Harry Yoo	
- <harry@kernel.org>,
-        Jann Horn <jannh@google.com>, Lance Yang	
- <lance.yang@linux.dev>,
-        Zi Yan <ziy@nvidia.com>, Matthew Brost	
- <matthew.brost@intel.com>,
-        Joshua Hahn <joshua.hahnjy@gmail.com>,
-        Byungchul
- Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
-        Ying Huang	
- <ying.huang@linux.alibaba.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Nico Pache
- <nico.pache@linux.dev>,
-        Ryan Roberts	 <ryan.roberts@arm.com>, Dev Jain
- <dev.jain@arm.com>,
-        Barry Song	 <baohua@kernel.org>, Usama Arif
- <usama.arif@linux.dev>,
-        Kiryl Shutsemau	 <kas@kernel.org>, Xu Xin
- <xu.xin@linux.dev>,
-        Chengming Zhou	 <chengming.zhou@linux.dev>,
-        Madhavan
- Srinivasan <maddy@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Christophe Leroy (CS GROUP)"	
- <chleroy@kernel.org>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>,
-        Pedro Falcato <pfalcato@suse.de>, Kairui Song <kasong@tencent.com>,
-        Qi Zheng <qi.zheng@linux.dev>, Shakeel
- Butt <shakeel.butt@linux.dev>,
-        Axel Rasmussen	 <axelrasmussen@google.com>,
-        Yuanchu Xie <yuanchu@google.com>, Wei Xu	 <weixugc@google.com>,
-        Baoquan He
- <baoquan.he@linux.dev>, Mike Rapoport	 <rppt@kernel.org>,
-        Suren
- Baghdasaryan <surenb@google.com>,
-        Michal Hocko	 <mhocko@suse.com>, Leon
- Romanovsky <leon@kernel.org>,
-        SJ Park <sj@kernel.org>, Rakie Kim
- <rakie.kim@sk.com>,
-        David Rientjes <rientjes@google.com>,
-        Alexander Viro	
- <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo
- Carvalho de Melo	 <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland	 <mark.rutland@arm.com>,
-        Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@linaro.org>,
-        Masami Hiramatsu
- <mhiramat@kernel.org>,
-        Oleg Nesterov	 <oleg@redhat.com>,
-        John Johansen
- <john.johansen@canonical.com>,
-        Georgia Garcia	
- <georgia.garcia@canonical.com>,
-        Paul Moore <paul@paul-moore.com>, James
- Morris	 <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Roberto
- Sassu	 <roberto.sassu@huawei.com>,
-        Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>,
-        Eric Snowberg <eric.snowberg@oracle.com>, Fan
- Wu <wufan@kernel.org>,
-        Stephen Smalley	 <stephen.smalley.work@gmail.com>,
-        Ondrej =?UTF-8?Q?Mosn=C3=A1=C4=8Dek?=	 <omosnacek@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm@vger.kernel.org, damon@lists.linux.dev,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-In-Reply-To: <20261124-late-2026-vma-flags-v2-10-bf3fade93064@kernel.org>
-References: <20261124-late-2026-vma-flags-v2-0-bf3fade93064@kernel.org>
-	 <20261124-late-2026-vma-flags-v2-10-bf3fade93064@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 17:43:38 -0500
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=XByrIElw
+Received: from omf14.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6B4F21C486B;
+	Wed, 25 Nov 2026 00:44:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 75B8730;
+	Wed, 25 Nov 2026 00:44:35 +0000 (UTC)
+Date: Tue, 24 Nov 2026 19:44:34 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 13/15] tracing/filters: Fix error positions for CPUS
+ mask parsing
+Message-ID: <20261124194434.21d76102@robin>
+In-Reply-To: <179323796570.740114.12151091552524337676.stgit@devnote2>
+References: <179323784538.740114.15323117974242744566.stgit@devnote2>
+	<179323796570.740114.12151091552524337676.stgit@devnote2>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -188,44 +62,87 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Evolution 3.58.3 (3.58.3-2.fc43) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=CYCdd7rl c=1 sm=1 tr=0 ts=6b061323 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=TGgUVIJ8l62jgltsAYIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTI0MDA4OSBTYWx0ZWRfXwDA9Nt+nzQXw
- 9KrWXP5B8HLKCLWjlN02XC/5HPXZXxZsTDWoRUxxxW6lQ3FZ8mC11QweKx47A+E9TdWAwk1cOug
- sFMAIkU09NA25vt8l/0xpra1E7Xg8fo=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTI0MDA4OSBTYWx0ZWRfX4lLDXZnSTgup
- AU6qwfIygRxvBGLVJ3VZuQ2vQEBroYM2OKsmMQ6snD+HV9RnWCzLaKuCqDXutrOsby4RCqqg8UJ
- SsfKlMMH8F6LVUCaD8RR7BbuIv+XPhpBSBnxZCeknTuXXJDVTvAR7Bw2DoNd6JzHNA2XjuKWSrp
- iL316AsRfmGY6o+l/cAaLYZIXE7x6iJkdIeU9Xa9YYSKxK4wx5aTChW46MaOuudWvgAZYAVQihK
- hcYBFyGorat/+d6x133HD2fjjxCW3NKbBTBFkPlIA6ogQ5ppIKZJ8DQQSBJSbHsjOktIZZ+Cj7X
- mzfjG7/063RQmfm4E4SrHYYm3CQqMMeMfyQ5SdtF17YNLbsI9YFOWCzWTVlt2R0isDZVBVmjkpQ
- UMBNWVaSYOQFsWxeiCTAouBAmMoQAuODDconbgEa0DcV6dCu4ZFfBblcKeOY2QAAEdZQXJKIinC
- 3AkZuP9U1m6cGZIvVNw==
-X-Proofpoint-ORIG-GUID: TZok2wQxCK2m2X0K2LNljqKg3jP9hqoK
-X-Proofpoint-GUID: JKZjqjFSjC84u0cIzqrZZyhq1-jp0JkF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-24_06,2026-11-23_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1011 spamscore=0 bulkscore=0 impostorscore=0 adultscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
- definitions=main-2611240089
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: ytcodhten8f6ckybsp8n438zaez9mz7b
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 75B8730
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18JBBogJHR+mPThdh6z8Vw6dGAN+/JMwyk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=eLqiru6IB8X1vm5kTLkMtYcaQdNbgpYL+qb0lIcTVWo=; b=XByrIElwAmEiIV9tx4H+Gzi8X3Z0/D0XREouLdnKhWOv/fcS5n8QxJFB6GeoXRCZ6aA4UHUdlTCRjDaFHS52kuGwOGSghyUjoRGefPbwNCzddQmphIoos1HaB9u5mRenfpYgnxOs9xtxb5uBKVB5ra8mHfIx/DZXZj/TzvQf6ZQ=
+X-HE-Tag: 1795567475-545701
+X-HE-Meta: U2FsdGVkX19eY7ChfWCVUrNiHsjN5Stn/IWM6xZezIl6wvc2QvZUQPV8qfUSdBoYMH6uWWGglgFGfMQT/F79WxgQ171wPoYGOGnyJdq5Jt+JbzebhhcWOc6XxuMISBHG+OH7uZ88vVlOcug49ltEzkbd1coa7zoycgnAXfWhI+j5ZVaaalsC4LidI9ijgoTkGYL8trmUdgw72xUpJw37VbL+I/C7KnegeR+A4/vWAfX0/3SI9XQ52Q0Ti33EfI/HBsGMXabUQ2TsBe7hZHm+JdniUw4CACbGvOi+YByLuZDdz4HYw3LSe4+dw7KRU2uo40W9QNFEMhWgCI2n+QTqIhomJowG69CK
 
-On Tue, 2026-11-24 at 17:08 +0000, Lorenzo Stoakes (ARM) wrote:
-> Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
-> IMA mprotect LSM hook.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+On Thu, 29 Oct 2026 10:39:25 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> In parse_pred(), CPUS mask error paths report incorrect error positions:
+> - Checking 'str[i++] != '\'{'\'' post-increments 'i' before calling
+>   parse_error(), shifting the error caret one character past the
+>   missing brace position.
+> - In the CPUS operator check and comparison function selection check,
+>   'pos + i' points to the CPUS operand or past it instead of the
+>   unsupported operator.
+> 
+> Check 'str[i] != '\'{'\'' before incrementing 'i', and pass 'pos + op_pos'
+> for the operator checks so the error caret points accurately.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> Changes in v4:
+>  - Drop Fixes and Cc: stable tags since these error position fixes are
+>    cleanups.
+> Changes in v3:
+>  - Group error position fixes for CPUS mask parsing into a single patch
+>    targeting commit 39f7c41c908b and commit 3cbec9d7b93d.
+> ---
+>  kernel/trace/trace_events_filter.c |    7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 9b1100769676..1a9a1cc8daa2 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -1932,16 +1932,17 @@ static int parse_pred(const char *str, void *data,
+>  		case OP_BAND:
+>  			break;
+>  		default:
+> -			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
+> +			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + op_pos);
+>  			goto err_free;
+>  		}
+>  
+>  		/* Skip CPUS */
+>  		i += 4;
+> -		if (str[i++] != '{') {
+> +		if (str[i] != '{') {
+>  			parse_error(pe, FILT_ERR_MISSING_BRACE_OPEN, pos + i);
+
+Instead of moving the i++ to below, couldn't you just make the above:
+
+  			parse_error(pe, FILT_ERR_MISSING_BRACE_OPEN, pos + i - 1);
+
+?
+
+-- Steve
+
+
+
+>  			goto err_free;
+>  		}
+> +		i++;
+>  		maskstart = i;
+>  
+>  		/* Walk the cpulist until closing } */
+> @@ -2029,7 +2030,7 @@ static int parse_pred(const char *str, void *data,
+>  			}
+>  		}
+>  		if (pred->fn_num == FILTER_PRED_FN_NOP) {
+> -			parse_error(pe, FILT_ERR_INVALID_OP, pos + i);
+> +			parse_error(pe, FILT_ERR_INVALID_OP, pos + op_pos);
+>  			goto err_free;
+>  		}
+>  
+
