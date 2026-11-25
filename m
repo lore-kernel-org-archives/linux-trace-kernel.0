@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795633114;
-	b=bOBH/n3GrZFqoWPvbzcJJtRKzHW0Nd7IT9b1xBioEoEuRABXDAZitaKHRyXqaW48yhVb
-	 azoeVdC/gnHxi7WwxZ903DJWP+PRQmjbMbphOgc0qEXsMzloUMJ7SpLI+Q9Wwb0YAM/mP
-	 0FEUn8uSgg5pqFLE5vTDRMNsXMBU8r78ZxHA04s5pj3UdiY72O9gYjgQKnMgsn2Pb9Qsp
-	 3RMncqzC14rfC9NJVUoW+ewJRMJ8OoLB9RcFP5Le9kMWhg6go4pU6/akxNACd9LHLcUdI
-	 3vLTEAkw6/8zeNoT/GgkW4qq+A1eMTl7X7ADyCqIyOhzdlCz/muB1bXsuy/oNovHI6A==
+	t=1795633150;
+	b=WlctEvFDaPLZWtK3mvJDsXISLiPbUuuSELFz4zXuAk6RtGxnOWtD4RjQo8U/WV5i0LXU
+	 ABtH8saH7q7jYnEoO/Bo39ymVgUX0HescLaEqnzTWcEaXDVXPOhQDojJbyLjQTGzRMeHr
+	 iZMQWb3igJkZe5wZw1OWAxczga9beHHy9iKxcQ2cQC2AEUcziIfcokU/EOlCfWjXNwJ5n
+	 8S520AcdQl7cEJPYbrpQe4iSTOsVxCtg15pR03EQYNFrRmAB/jEglWIZO/kLXrjIpMjo/
+	 d2JT+NC0B65ACmzptXbFNv51/Rw9F0VyPS+dFFiC39j5rAR6GIJL34x9ARJDebXRtcQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795633114;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795633150;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=64n0F5NcVx514Spn8/266f5XHop1OmMR3by48iAzxaY=;
-	b=29IWpJxUS+AEJzEGmrq9nwSOHDj2Fue6FRWR0ZWj2a61Z+GWsrzRUtd9Ft19ua0F9Pen
-	 stQ6+yT97rrAlwiUqgwwuDo07X4emOg1bdiHf+bMWVpeYwL9YWc8vcCrGBBNMMUWYmHO1
-	 Rf7bv9PruV3S0Ak1vJPDQLp7p8Uo90t+PX0y2ZLQbGSuEdPN/i6vDTBkas5xOcwCpuePg
-	 Yk1A1x7RbjtfwSqFBVyl/liyc+artZ2ZZS5FmCeYxW65CG8j8a0TRFKVLcoSmrq+AOCEX
-	 sSwgURZH9VmA7uFna2l/Dk/LvFA/IKPKdf6vV1a8aABFwQ+9g2JbA2sP2JrShzG9X5Q==
+	bh=Hd8RyLjbUGxi/bqv3N8S9ii2w4FgLse5+gFtdBQPMts=;
+	b=plSzXblsTsbbQhxd7d966D086pLqUIssi835gyoedidz7/empIsPlf73t20yEKRxVU+P
+	 dbf2KOp4LqhFyGYgs06i5gKseNRRJ2eAHU6kV3TneZK2KWhwegtPRX+gp6hYPTcmRs1KN
+	 dm6o2BNPPdr+IIk5Iaaluv77dYphskHC1rbX9nvJJeeKiOv4pjuIrn8e8QqsmvbC+YFqh
+	 yoQxzFkOYDteFhe7VZw+4pfr7j6ghf32sNQH0FxfgAUCQLeFDuF0Qyw3/r/dwcQ1VEdL7
+	 az32nqw3rWX7o5W9B4O/e0kcG83gcZJQAJQ3R8G4UxA8AOWj1YaEKKCPCVBvJBK15/w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IdquRMQF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UaomJgk6;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C025606A321
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 18:58:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051E1606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 18:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IdquRMQF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A131F000C0;
-	Wed, 25 Nov 2026 18:58:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UaomJgk6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B63681F000C0;
+	Wed, 25 Nov 2026 18:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795633114;
-	bh=64n0F5NcVx514Spn8/266f5XHop1OmMR3by48iAzxaY=;
+	s=k20260515; t=1795633149;
+	bh=Hd8RyLjbUGxi/bqv3N8S9ii2w4FgLse5+gFtdBQPMts=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IdquRMQFPRoUe8VPmGMUgMXkL3Qzc5O8DBZ/ACFTPHD8lYuF0XOozNJEWEVz3lrdC
-	 /f5aWzW0FRrgfJprw2FpPSpdwM6vJXNuXs34lAAbnvjk7DT+F2nZyptfpZMC4J/J+k
-	 QnKNqZG1E7UJDqSicZmfrFdgenl6UyGkuN2Ola0wz2MVZVMQ3fnxUbBdgVMIV0E6bP
-	 N89CAtZM3l2yZDRY0wVn1avgMbZ0W3VOuXp6HL5DQWd+BNSfiFf6ERzoxwC/EXBuhE
-	 9YNEH7WPMQddwLkGDWf0kpOOifVeuqUUfr4xkydHN/zvOsZE6f7xErZ8vay+4sbPXx
-	 ZHoCaiSmiCFqQ==
-Message-ID: <sashiko-outbox-234024@kernel.org>
+	b=UaomJgk6Mg5UXG2oJf7yyzrVoIpHdfe030lcOS5nWiz3dc5nu+cZEFsL3EVNG4xZ0
+	 FAtOl2mS43umLMZ0uP3ylh9aXPU4q3kaZ3zBf9rDG13cP70U5gggPnqRaTLrEK8J2q
+	 btZ8Fv7PhEwq63aaWyiTF5KB0XE0Pve4AMCOjgMwmc2ia+fq/siFIBGZRWYS35ahl1
+	 VdpGMbQsPmEt5VMn/A5IfTVftevnIHaJAvm8+Gefavl+326GyPQxa8VHCBySA0hA88
+	 a42fuS/jRmUd+O6MkmenjInWl2B5U813+Yjl797JdzCGwTrmvBmMDyDjqGC6F4K0I6
+	 O95V/97ywR4iQ==
+Message-ID: <sashiko-outbox-234026@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/9] media: Move visl traces to v4l2-core
+Subject: Re: [PATCH v3 3/9] media: Add tgid and fd fields in v4l2_fh struct
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Detlev Casanova" <detlev.casanova@collabora.com>
 Cc: linux-trace-kernel@vger.kernel.org, media-ci@linuxtv.org
-In-Reply-To: <20261125-v4l2-add-ftrace-v3-1-1d1db48372ed@collabora.com>
+In-Reply-To: <20261125-v4l2-add-ftrace-v3-3-1d1db48372ed@collabora.com>
 References: <20261125-v4l2-add-ftrace-v3-0-1d1db48372ed@collabora.com>
- <20261125-v4l2-add-ftrace-v3-1-1d1db48372ed@collabora.com>
+ <20261125-v4l2-add-ftrace-v3-3-1d1db48372ed@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 18:58:33 +0000
+Date: Wed, 25 Nov 2026 18:59:09 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -62,63 +62,113 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 3 potential
 issues to consider:
-- [High] media: v4l2-trace: missing exports for HEVC SPS RPS tracepoints
-- [Medium] media: v4l2_controls: commit message and doc trace system
-  mismatch
-- [Low] media: v4l2_controls: V4L2_FLAG() truncates HEVC PPS flag name
+- [Medium] media: v4l2: file descriptor 0 misrecorded as -1 in
+  __video_do_ioctl()
+- [Low] media: v4l2: mismatched tgid and fd across processes in
+  __video_do_ioctl()
+- [Low] media: v4l2: unlocked data race on vfh->fd init in
+  __video_do_ioctl()
 --
 
-commit b360e3a86b5f1b07ed4a6b17a95a0ae81a5babd6
+commit bce5397775deae4092f0cee0059ee45f433e0773
 Author: Detlev Casanova <detlev.casanova@collabora.com>
 
-media: Move visl traces to v4l2-core
+media: Add tgid and fd fields in v4l2_fh struct
 
-This commit moves the stateless V4L2 control tracepoint definitions from
-the visl test driver into include/trace/events/v4l2_controls.h and exports
-them from v4l2-core so other V4L2 drivers can use them.
+This commit adds tgid and fd fields to struct v4l2_fh, recording the
+opening process's tgid in v4l2_fh_init() and resolving the file descriptor
+number via iterate_fd() on the first ioctl in __video_do_ioctl().
+
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-co=
+re/v4l2-ioctl.c
+> index 17ba1ae707355..5d7fbaa1b41a1 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+[ ... ]
+> @@ -3063,6 +3064,16 @@ void v4l_printk_ioctl(const char *prefix, unsigned=
+ int cmd)
+>  }
+>  EXPORT_SYMBOL(v4l_printk_ioctl);
+> =20
+> +static int _file_iterate(const void *priv, struct file *filp, unsigned i=
+nt fd)
+> +{
+> +	const struct file *fh_filp =3D priv;
+> +
+> +	if (fh_filp =3D=3D filp)
+> +		return fd;
+> +
+> +	return 0;
+> +}
+> +
+>  static long __video_do_ioctl(struct file *file,
+>  		unsigned int cmd, void *arg)
+>  {
+> @@ -3083,6 +3094,12 @@ static long __video_do_ioctl(struct file *file,
+>  		return ret;
+>  	}
+> =20
+> +	if (unlikely(!vfh->fd)) {
+> +		vfh->fd =3D iterate_fd(current->files, 0, _file_iterate, file);
+> +		if (!vfh->fd)
+> +			vfh->fd =3D -1;
+> +	}
 
 [Severity: Medium]
-Does the commit message match the trace header and trace system names
-introduced by this patch?
+Does this misrecord valid file descriptor 0 as -1?
 
-The commit message refers to a new v4l2_requests.h header and a
-v4l2_requests event directory, whereas the patch adds
-include/trace/events/v4l2_controls.h and sets TRACE_SYSTEM to
-v4l2_controls (placing the events under
-/sys/kernel/tracing/events/v4l2_controls/).  In addition,
-Documentation/admin-guide/media/visl.rst still tells users to look up and
-enable trace events under the removed per-codec visl_*_controls
-directories.  Also, in drivers/media/v4l2-core/v4l2-trace.c,
-EXPORT_TRACEPOINT_SYMBOL_GPL(v4l2_ctrl_vp9_frame) is placed under the VP8
-controls comment block instead of the VP9 comment block.
+iterate_fd() stops only when the callback returns a non-zero value:
 
-[Severity: High]
-Are EXPORT_TRACEPOINT_SYMBOL_GPL(v4l2_ctrl_hevc_ext_sps_lt_rps) and
-EXPORT_TRACEPOINT_SYMBOL_GPL(v4l2_ctrl_hevc_ext_sps_st_rps) missing from
-drivers/media/v4l2-core/v4l2-trace.c?
+fs/file.c:iterate_fd() {
+	...
+	for (fdt =3D files_fdtable(files); n < fdt->max_fds; n++) {
+		...
+		res =3D f(p, file, n);
+		if (res)
+			break;
+	}
+	...
+}
 
-Both trace events are defined in include/trace/events/v4l2_controls.h and
-called from visl_trace_ctrls() in
-drivers/media/test-drivers/visl/visl-dec.c.  When CONFIG_VIDEO_VISL=3Dm and
-CONFIG_TRACEPOINTS=3Dy, the build fails at modpost with undefined symbol
-errors for both tracepoints, and scripts/tracepoint-update warns about
-unused tracepoints when CONFIG_TRACEPOINT_VERIFY_USED=3Dy and visl is not
-built-in.
+When a video device is opened at fd 0 (for example, in a daemon or test
+process that closed stdin), _file_iterate() returns 0 on match, so
+iterate_fd() treats it as a non-match, scans the rest of the fd table
+under files->file_lock, and returns 0.  __video_do_ioctl() then sees
+!vfh->fd and overwrites vfh->fd with -1.
+
+Initializing fh->fd to -1 in v4l2_fh_init(), checking vfh->fd < 0, and
+returning fd + 1 from _file_iterate() (then subtracting 1) would handle
+fd 0 properly.
 
 [Severity: Low]
-In include/trace/events/v4l2_controls.h, does V4L2_FLAG(HEVC_PPS_FLAG_OUTPU=
-T,
-PRESENT) in v4l2_ctrl_hevc_pps_tmpl truncate the printed flag name for
-V4L2_HEVC_PPS_FLAG_OUTPUT_FLAG_PRESENT?
+Can concurrent ioctls on the same struct file race on vfh->fd here?
 
-Because V4L2_FLAG(type, name) stringifies only its second argument, this
-expands the trace output string to "PRESENT" instead of the previous
-"OUTPUT_FLAG_PRESENT", which is ambiguous next to the five other
-*_PRESENT flags in struct v4l2_ctrl_hevc_pps.  Using V4L2_FLAG(HEVC_PPS,
-OUTPUT_FLAG_PRESENT) would preserve the full flag name, and V4L2_FLAG
-should also be undefined before the end of the header so it does not leak
-into including translation units.
+This initialization runs before v4l2_ioctl_get_lock() is acquired, so two
+threads calling ioctl() on the same open file description can read and
+write vfh->fd concurrently across the two-step assignment, triggering a
+KCSAN data race and potentially observing an intermediate 0 value.
+
+> diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h
+> index aad4b3689d7ea..080cb00e3867b 100644
+> --- a/include/media/v4l2-fh.h
+> +++ b/include/media/v4l2-fh.h
+> @@ -28,6 +28,8 @@ struct v4l2_ctrl_handler;
+>   * @vdev: pointer to &struct video_device
+>   * @ctrl_handler: pointer to &struct v4l2_ctrl_handler
+>   * @prio: priority of the file handler, as defined by &enum v4l2_priority
+> + * @tgid: process id that initialized the v4l2_fh
+> + * @fd: file descriptor associated to this v4l2_fh for the process id in=
+ tgid
+
+[Severity: Low]
+Does vfh->fd always belong to the process identified by vfh->tgid?
+
+v4l2_fh_init() records current->tgid at open() time, whereas
+__video_do_ioctl() looks up vfh->fd in current->files of whichever process
+issues the first ioctl without checking current->tgid =3D=3D vfh->tgid.  If
+the open file is inherited across fork() or passed via SCM_RIGHTS before
+the first ioctl, vfh->tgid and vfh->fd will refer to different processes.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125-v4l2-add-f=
-trace-v3-0-1d1db48372ed@collabora.com?part=3D1
+trace-v3-0-1d1db48372ed@collabora.com?part=3D3
