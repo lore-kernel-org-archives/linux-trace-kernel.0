@@ -1,57 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.14
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795621107;
-	b=r0l6SWZXL7JlV4+vigtC1mtFgR+0+MB6svvoO3zTqJ3jQvci32AA0a+7CMcNo5UoxuJt
-	 7NveyroXOE2ED/Jv5auiJvvkbdudn/SJ1QdsLYjhmrJ2JbW2Br3pgl8mrfT7Y01feH6sH
-	 wvdO81QiTEOrnIJWWxuu+h44Jt1BJNdUH/OCbOMIT08Ca6xo9aB4co38RFoTrescTPYf0
-	 1rtKH7cyR3beX+ebJvwBO/w+0ZBMQrf8TmVgY9OjpLAmPoYQ/e0PvXmP89rtV836dn1EQ
-	 ljp6X1Sphn2sZVj8o+zUl2slAo6HwVV4miCmd3vVuVPlB5t2k0a3UcH16P8WHT9Q1Fw==
+	t=1795621573;
+	b=y9Jn/TWbg1TxOYnA12W1Jj8jIeEGFbKyabngDaJlKXXm7gBBZkqhB2XmXqQ09NHgZzBI
+	 D/vjWQCpor+cP0Ee2ZqjZVJUck9824A5MZVaVjud8nIS8/R1XFF7SulFETuu7HTAHmYkp
+	 H19/fHdyQI1jGh59zrcASO1fsrJ94tfn2d7GHZS4Kvg5ITblNGYsyinnnGFoy68SEwgry
+	 ppv7ROvNfbazquRRxct0pL71sxQ2TbPbUeQtibZhcVQJes3H5RKpoJuGfeX/slB1yYbkd
+	 dHGJCNAW61B8I9K6ub6gJ4dyDoHYfwuCGxismF2p96FX+GGVmaJq3zxe4Q745hOP2vg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795621107;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795621573;
 	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
 	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Spam-Status:
+	 X-Rspamd-Server:X-Stat-Signature:X-Session-Marker:X-Session-ID:
 	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=zKCR4oP/mX5BJ7mTpADOUsC3cnHnHzXBJf9HdDltW00=;
-	b=ckKa3yR6TkfvmGTDJGm8BwKLNo6B7ky495ofXX1fam3gw4v6D//jULtnB0eBTqDhUrPt
-	 Lpn7ewcHCGIzxK674v7QMxI6fNK2AllR6AAppdH8kbcqDoGaqTQqx/6KEnOSOKG9v8WrH
-	 9s0rFJU8+XmfIOlgfAjryOzcVIWCGkex7il4O1QXTOSDNlijlmtzYX72QBE4tZaKxcfa/
-	 hwrLiTt8B7ePSxsnyLJBt9bNt/GJ5H8CwkHwnoJVkJL5b4C30VOBPryL6rFcSQ4mD9Mfy
-	 zZkWVT4W5eJFGRvlPjGgPaCXNimWykdqj5RD6Y1DTktQ+OXG/ZilP6fxlLxm9n3pl9Q==
+	bh=8MIZWno2npoMUIlLN3kS7mGO/9uJ/IFSOHAZr4ADfQE=;
+	b=06du/IRXy1GyIzuWeC0/ufwY5Jtjo2HN4+blqE2Z5rlIWEr+Jmccb4wh7VfU8tMLqm/d
+	 pgYE16xZp2XbuuF7UUXa1Q8PbikXrmkAkJby4ppFAy3k5lKrnb++sruQOZ1WX0y3SgAtu
+	 4CzUM6qE4oGpMYu6hHebvFSyKx0b9fXviCRSsMzvG6vvNbKMLcxI6Et5SjskTfCpHTjUQ
+	 nQmU3T4Icfw7setO7xTpnN93aF68nt+fv8bR0uPYHMRhND+RrRZLBYnNvMI+YZaQOq7l3
+	 zVZiKdAZP0PLcr8tm7rz11cnS+NucQK7MAO5Kffe0MEC7gssDtTG0E/Fcoun++gH0qA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=goodmis.org;
 	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=RujuUyP2;
-	arc=none smtp.remote-ip=216.40.44.12
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=OavIN4WE;
+	arc=none smtp.remote-ip=216.40.44.14
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B892D606A31E;
-	Wed, 25 Nov 2026 15:38:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B892D606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE52606A31E;
+	Wed, 25 Nov 2026 15:46:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDE52606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=RujuUyP2
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=OavIN4WE
 Received: from omf07.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 4EB4BA0FB2;
-	Wed, 25 Nov 2026 15:38:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 7154120037;
-	Wed, 25 Nov 2026 15:38:23 +0000 (UTC)
-Date: Wed, 25 Nov 2026 10:38:22 -0500
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id DFD4A140DD1;
+	Wed, 25 Nov 2026 15:46:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 397FE2002E;
+	Wed, 25 Nov 2026 15:45:59 +0000 (UTC)
+Date: Wed, 25 Nov 2026 10:45:57 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Wenwu Hou <hwenwur@gmail.com>, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/hwlat: Bind the sampler kthread instead of
- setting its affinity
-Message-ID: <20261125103822.2129a7ec@gandalf.local.home>
-In-Reply-To: <awbklFE66PIMKFop@localhost.localdomain>
-References: <20261125084600.2306377-1-hwenwur@gmail.com>
-	<awbklFE66PIMKFop@localhost.localdomain>
+To: Leon Hwang <leon.hwang@linux.dev>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, Emil Tsalapatis
+ <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, KP Singh <kpsingh@kernel.org>, Matt
+ Bobrowski <matt@bobrowski.net>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 2/6] bpf: Add log support for tracing_multi
+ link_create
+Message-ID: <20261125104557.1f0fb120@gandalf.local.home>
+In-Reply-To: <20261125143138.47174-3-leon.hwang@linux.dev>
+References: <20261125143138.47174-1-leon.hwang@linux.dev>
+	<20261125143138.47174-3-leon.hwang@linux.dev>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,37 +73,51 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 7154120037
-X-Stat-Signature: g1hnmyttzo9tnhqq1u7kt8xf6sj8zk7u
+X-Rspamd-Queue-Id: 397FE2002E
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: bakjba3n8hiay8ri5ncytaycwy31fqbq
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18umlukJvwoHDIfgGPDrfhRzvlEEpeAWz0=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=zKCR4oP/mX5BJ7mTpADOUsC3cnHnHzXBJf9HdDltW00=; b=RujuUyP2JA1/EKN9fCHIzUbuH/rHGhTDNiAYFJpsXYIG/rbIoNGXl8Vbn5eBNAqA1QJAvDtV3GHTjk8faEQHcknTT/rOqBpWj4wya71U/5otjtLhZJmOHAgP4fZJBWUaQPJKU91IsKLt8vv8nQQ3WF1sWHTJfRqqC6Vt7o/dlLg=
-X-HE-Tag: 1795621103-29035
-X-HE-Meta: U2FsdGVkX19yRzOLkjBZpHGVK2kE7mt94uJO6OGBXapd17g13p5lNTl4H5e6JHuZan1oeBo4aimNmcLhWh98oG2jiAIOx+yf7wwCw6pIxRYDyZ9Pv7Gsg9K4/cLKCQ6/0tPQ9Oin9huMX63XXFTYkjrXYHYd5FSJ2WKGVXQa2Mn0/jcAqnYDQE6+SPwEvNnQoAjvunl3rrgSciYMduevyX0V/4dOCVPNEPIbgkd1UK7fCu3NnxnLh5olHlkEDgsyxaSjP1G7wf6jojkOHKCckZlLyg4TX1SJdnGXqdr8M+J3iGur5noW+r1aZtLNtbHMF4y0bZ5YO/8/cx9m+rI8FAmUy4OIILzK
+X-Session-ID: U2FsdGVkX1/A9ii1UvUhkDfPAVQ+ewQptk1Gg2iKK30=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=8MIZWno2npoMUIlLN3kS7mGO/9uJ/IFSOHAZr4ADfQE=; b=OavIN4WEfnNtug+3I6hEwZWTSLkq1bzW4MTbfS2GFmzt4Y8DV8PPAAvppseBfP9aHQD45kU+F/kRyzmrb1u94PGq9lZ0S3lnwkm0QpIQqMyMaIONaGiJTONVKuRnIXPIB+mgfD5XQvpMk72J2jw+4ygH8U/E+OcZJz5a6GUVl2I=
+X-HE-Tag: 1795621559-927810
+X-HE-Meta: U2FsdGVkX1/QsWFimWrlcmB8dh0NeoeGxBpXwOM3wRsvnP7Oyi0I/tsdmP5eWFht6ZXfsbL4SFtlKwz2QCkilFkCyLb5tNazmsifniUKP0ZfZaGwS4eCksT3LYK/2zK1kRct0rUE3NFlczQKLY/S4mLAZrM0h6stM08t8qlEl8ldk6RBuHqzqk1/RwmZLuzrt8UnfCx1K/NRwqf6wQ0dg7PClJhhwUSIA/9iYGDwOrFNmAxz421QDWBsQ90bs4eTDLbVn1gv0525W4zXx6BxZd7uChhkK1fHK8OMGDazZSiBVMvHjsoyRUSNNU0AQAMQPkCCTFw2SB31S6rurHCRAu70CBdPoLCkeOiX25mgqbOUOjSrN+wKB7UNoF6bTnJc
 
-On Wed, 25 Nov 2026 14:37:24 +0100
-Frederic Weisbecker <frederic@kernel.org> wrote:
+On Wed, 25 Nov 2026 22:31:34 +0800
+Leon Hwang <leon.hwang@linux.dev> wrote:
 
-> >  static int kthread_fn(void *data)
-> >  {
-> > +	unsigned long flags;
-> >  	u64 interval;
-> >  
-> > +	/*
-> > +	 * kthread_bind_mask() sets PF_NO_SETAFFINITY to keep the initial
-> > +	 * affinity from being overridden by kthread_affine_node(). Clear it
-> > +	 * now to allow userspace affinity changes and cgroup migration, but
-> > +	 * keep per-CPU threads bound to their CPUs.
-> > +	 */
-> > +	if (hwlat_data.thread_mode != MODE_PER_CPU) {
-> > +		raw_spin_lock_irqsave(&current->pi_lock, flags);
-> > +		current->flags &= ~PF_NO_SETAFFINITY;
-> > +		raw_spin_unlock_irqrestore(&current->pi_lock, flags);  
-> 
-> This is not pretty but moreover, is it a good idea to let the user override
-> that affinity?
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 321f2f3a6c8e..bb825ea5d09c 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -16,6 +16,7 @@ struct tracer;
+>  struct dentry;
+>  struct bpf_prog;
+>  union bpf_attr;
+> +struct bpf_verifier_log;
+>  
+>  /* Used for event string fields when they are NULL */
+>  #define EVENT_NULL_STR		"(null)"
+> @@ -796,7 +797,8 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+>  			    unsigned long *missed);
+>  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+>  int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog);
+> -int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr);
+> +int bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr,
+> +			     struct bpf_verifier_log *log);
+>  #else
+>  static inline unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx)
+>  {
+> @@ -855,7 +857,8 @@ bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>  	return -EOPNOTSUPP;
+>  }
+>  static inline int
+> -bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr)
+> +bpf_tracing_multi_attach(struct bpf_prog *prog, const union bpf_attr *attr,
+> +			 struct bpf_verifier_log *log)
+>  {
+>  	return -EOPNOTSUPP;
+>  }
 
-No, but we used to. Perhaps we should make that not possible instead? :-/
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
 
 -- Steve
