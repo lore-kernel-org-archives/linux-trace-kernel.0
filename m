@@ -1,78 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.251.105.195
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795631246;
-	b=0bu7Pur2JkIyIdfrIoo+6YLFqZpNQrLUhI7k17ec6RUfj2y4dO5TQfqbywTR6avU3LOV
-	 rZHXBMGxyIyLsely2N+4O4eMPcK66097gTqZWOdEUTidHZ0Cc+7DMQ2KfurNYliaGTE5N
-	 V2TIzl5JszIRYchwkKpz64AGCyB/DTCkr6WhQIs0aaza8ePfgODmO+KXD3S/llIgpLy15
-	 IvdRrNy50mTmYfQWOHUz2al33m03xTQEw56Uvd9rpr3xW36WWM6Z0iGL6G+yumuF/XlXm
-	 HjrgjeDmSkbJnq6jxcUoBfT5jjdBmky+02U5Q5rd9pTJ0nMdqx0jg1Bl+5T7XOVtYig==
+	t=1795632291;
+	b=v6sHWXzqnvrsS9HzIRJ56eKg1QFJRIpjuBCcseLvKTBKaRE41Mou+EnKPA9CLrIfxcxp
+	 E3pEJhah276OpWrFT2IJ1+4DTRnu7SWhOeVW3Iet/WiFWIQA4FwNzlTiLJQK6oBQYh7Ry
+	 OGYt7grpNsDjM909Bfe6X5Guc7DzbZQrZomHLETShgPHjr21cUI/xC3bz5ruHPJGsNym8
+	 BL/MkKGnZ7jTiBryqee+uFq/UmX/ZR9/elD5mUgC3JbgdypLhPZLeqCvSqTjK9HTlb7gp
+	 cjsrwWgUWIttEAXzUN3S04cQK8+X/stgXVXcyFV3zRalAhW2OXfjfJeqzWdvjvQ4ZuQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795631246;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:In-Reply-To:X-Scanned-By:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Disposition;
-	bh=AdJ2OcPY7PZL5nLS/dMp3rb5ggUheY55JCQ/vRYqFRQ=;
-	b=ZaPKZiI7Tlr88xWMOaTnr+SAVekoeZb3nWM1o5FVxzM3Q/FJNX/HfMYkMdmzSZU/PjKp
-	 eMyQcxy8P8kLFYm9zf+Zk0MohSEPPR9dO6M0EkS4VWOtagf8zEzuulXg52DogVG0XFGka
-	 laUtx0OICV1bQEHGWkcZtUBB3iTwX3q0bhSImX6pCHm6uyEsaC1EC6bkK0Da3ZyfaozIZ
-	 dOf2/gXweqKRAN7kWZvzgSbG9t/ab+g54U9zdOafhhuT7uqokFn/xHMmHcih9iPsK9ilq
-	 McDgUwRIM8Hrre6o3oLfRSegj4npsJKiND7cS4PX1cIK1khkUcIAHyOwH/tGMa+o5CA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795632291;
+	h=DMARC-Filter:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer;
+	bh=6F84u6ZBVj7ALWr80TaqS6VtUD2KAvnZJ83oz57lmZc=;
+	b=xqWTlnqKk3Aoh674pWFwExlqX1skXEzMfjBemA7OgpmxQTb0hatHoQgBk9fAunVMKU6G
+	 AQROCxPvcJNQJF2+F8czhsb4HZ+w6eOGbmNB7PbM7JScALVOJSzLbRbcZWDBits05sWTH
+	 FVPihYaCU5eoN3mjd+zdU5UTtNdNDvYfMPIH9jPJiFbJDX6sPufMkJao2MofNA+GR4/0H
+	 TfZuQhRUfySKo84K6KO1nqjpGd3wcDntIY5jZxy5ompqfmvJ6sjTHVTxHrQkyJRrSYY41
+	 7CddjAFwGnjQgOeD4RGigwpmJT+XRyj9w9T3Tc5SAzDYm7UI2VA8Cey0h8HvI1ahLEQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NU11L4Ni;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dmarc=pass header.from=collabora.com;
+	spf=pass smtp.mailfrom=collabora.com;
+	dkim=pass header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=pOXUaG3v;
+	arc=none smtp.remote-ip=148.251.105.195
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C761606A333
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 18:27:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1C761606A333
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46956606A31E;
+	Wed, 25 Nov 2026 18:44:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 46956606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NU11L4Ni
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795631245;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AdJ2OcPY7PZL5nLS/dMp3rb5ggUheY55JCQ/vRYqFRQ=;
-	b=NU11L4NiPNztAQVSfzem5C8CxNkWFRF1Cb9g8i+iHYNcbHvtOKfgFxOvrVzMuoVYOQIP2e
-	3g2I91aKbY9W5THcIV6XMOXg8avSo8/lP4i4Rv1BPCbgDaScyRO+Q7fP/XpYTM7oaxUMWe
-	A50qxT7jRXg5mIqvJFlf2z/Co/M0tE4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-321-SVBYfSOMM1O8gH4B10pXrA-1; Wed,
- 25 Nov 2026 18:27:19 +0000
-X-MC-Unique: SVBYfSOMM1O8gH4B10pXrA-1
-X-Mimecast-MFC-AGG-ID: SVBYfSOMM1O8gH4B10pXrA_1795631237
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	dkim=pass (2048-bit key, unprotected) header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=pOXUaG3v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1795632288;
+	bh=yxfmqiNlPULeAg2Eo0frbq3KoaSsflm2PJoZO/n5BNA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=pOXUaG3v2Oir5YLQg3e8qaSg8cOpi+BVPlyEixuHDKm8Vb4bBZHFhxz6+NcyBpsME
+	 kEOZ+8VbX4Shx21q3CEOf4Ez8aOlri87czxNs7uZQr3FxmZwQ+QZayqsfe0+F25yOQ
+	 tV8wnYHb1V/c6k+LcFA4J5HYiFem/0Wj1L5Ez4U2kUGrg5CnlVlcVaFwIwBPPfWNM3
+	 pKovJSbPyTo1zlp5Gcqzq/CIPzsOZS9Y8wS5zWm/NMIV0GvvUiV07jrVZMZabqVqK8
+	 gGi4cEa2LEWewI81tXM0uDQFhasyPLu7ypiWnapyZtv9/43K9Y26MdEUfwkfnSaqoD
+	 gmIumRH1lBt2w==
+Received: from [192.168.0.15] (unknown [100.64.0.170])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 790AF18002A1;
-	Wed, 25 Nov 2026 18:27:17 +0000 (UTC)
-Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E25AE195608C;
-	Wed, 25 Nov 2026 18:27:14 +0000 (UTC)
-Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
-	oleg@redhat.com; Wed, 25 Nov 2026 19:27:17 +0100 (CET)
-Date: Wed, 25 Nov 2026 19:27:13 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Avi Weiss <thnkslprpt@gmail.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, andrii@kernel.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: avoid postponing return-probe SRCU lease
- expiration
-Message-ID: <awcogTgVYXBEDD-2@redhat.com>
-References: <20261124091252.567037-1-thnkslprpt@gmail.com>
+	(Authenticated sender: detlev)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 674EF17E0EBF;
+	Wed, 25 Nov 2026 19:44:46 +0100 (CET)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+Subject: [PATCH v3 0/9] v4l2: Add tracing for stateless codecs
+Date: Wed, 25 Nov 2026 13:33:22 -0500
+Message-Id: <20261125-v4l2-add-ftrace-v3-0-1d1db48372ed@collabora.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -82,53 +63,130 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-In-Reply-To: <20261124091252.567037-1-thnkslprpt@gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: -5zGscH02yWH_z3e-rMdhDK8JqcdKQbC7CKW-PjjKFg_1795631237
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2WNQQ6CMBBFr2Jm7ZhStagr72FYDNOp1CA1LTYaw
+ t0FdOfyJe+/P0CS6CXBaTVAlOyTD90E2/UKuKHuKujtxKCVNsqoA+Zdq5GsRddHYkESNlI6o8g
+ wTKtHFOdfS/FSfTk965twP2dmo/GpD/G9XGY9e796of7qWaPCY7k3Yl2piYszh7alOkTacLhDN
+ Y7jB48EffjEAAAA
+X-Change-ID: 20260608-v4l2-add-ftrace-aec6e7f60a6c
+To: Daniel Almeida <daniel.almeida@collabora.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, kernel@collabora.com, 
+ Detlev Casanova <detlev.casanova@collabora.com>
+X-Mailer: b4 0.15.2
 
-On 11/24, Avi Weiss wrote:
->
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -2052,6 +2052,13 @@ static void ri_timer(struct timer_list *timer)
->  	 */
->  	raw_write_seqcount_begin(&utask->ri_seqcount);
->  
-> +	/*
-> +	 * expire_timers() calls detach_timer() before invoking us.
-> +	 * Order its pending-state store before loading return_instances.
-> +	 * A publisher that saw the timer pending must be visible here.
-> +	 */
-> +	smp_mb();
-> +
->  	for_each_ret_instance_rcu(ri, utask->return_instances)
->  		hprobe_expire(&ri->hprobe, false);
->  
-> @@ -2304,7 +2311,16 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
->  	ri->next = utask->return_instances;
->  	rcu_assign_pointer(utask->return_instances, ri);
->  
-> -	mod_timer(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
-> +	/*
-> +	 * Order the return-instance store before timer_pending() loads
-> +	 * the pending state. Either the callback sees this instance or
-> +	 * we rearm the timer.
-> +	 */
-> +	smp_mb();
-> +	if (!timer_pending(&utask->ri_timer)) {
-> +		utask->ri_timer.expires = jiffies + RI_TIMER_PERIOD;
-> +		add_timer(&utask->ri_timer);
-> +	}
+Hi !
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+This patchset aims to improve codec event tracing in v4l2.
 
+The traces added in visl by Daniel Almeida are moved to the global trace
+events.
+They are adapted to trace each each field separately and not just the
+whole struct so that userspace can filter on different fields and
+libraries like libtracefs and libtraceevent can be used to list the
+fields instead of parsing the trace printk's.
 
-But... If you ever send V3 for any reason, please also add the
-"pairs with ..." comments back. At the start of the new (and imo good)
-comments which explain why is this barrier needed.
+The trace event templates are also reworked to avoid long lines, but
+quoted string splits are kept as they don't cut words.
 
-Oleg.
+To each trace event are also added a tgid and fd fields, helping
+userspace track different decoding sessions (contexts) based on the given
+file descriptor used by the given process id.
+
+Also for better tracking, stream on and stream off events are added as
+well as HW run and HW done events to track decoder core usage.
+
+The main focus is to be able to generate perfetto traces to show VPU usage,
+a perfetto producer using this can be found at [1] (it will be renamed to
+match the more generic approach than hantro).
+Other controls can be traced later as well, this patch set only focuses on
+mem2mem type drivers.
+
+[1]:
+https://gitlab.collabora.com/detlev/hantro-perf/-/tree/hantro-improved-info
+
+Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+---
+Changes in v3:
+- Rebased on master
+- Fixed sps_st field size in traces
+- Fixed checkpatch issues (except parenthesis alignment in trace headers)
+- Link to v2: https://patch.msgid.link/20260610-v4l2-add-ftrace-v2-0-9756edf72ac1@collabora.com
+
+Changes in v2:
+- Don't modify the printk format
+- Trace all fields of the structs instead of the whole struct as a buffer
+- Remove fdinfo patches (they will come in another patch set)
+- Fix long lines
+- Rename v4l2_requests.h trace header to v4l2_controls.h
+- Add basic documentation
+
+To: Daniel Almeida <daniel.almeida@collabora.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: kernel@collabora.com
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+
+---
+Detlev Casanova (9):
+      media: Move visl traces to v4l2-core
+      media: Map each struct field to its own trace field
+      media: Add tgid and fd fields in v4l2_fh struct
+      media: Add tgid and fd to the v4l2-requests trace fields
+      media: Add missing types to v4l2_ctrl_ptr
+      media: Trace the stateless controls when set in v4l2-ctrls-core.c
+      media: Add stream on/off traces and run them in the ioctl
+      media: Add HW run/done trace events
+      media: hantro: Add v4l2_hw run/done traces
+
+ drivers/media/platform/verisilicon/hantro.h        |    1 +
+ drivers/media/platform/verisilicon/hantro_drv.c    |   14 +-
+ .../platform/verisilicon/rockchip_vpu981_regs.h    |    1 +
+ .../media/platform/verisilicon/rockchip_vpu_hw.c   |    4 +
+ drivers/media/test-drivers/visl/Makefile           |    2 +-
+ drivers/media/test-drivers/visl/visl-dec.c         |   76 -
+ drivers/media/test-drivers/visl/visl-trace-av1.h   |  314 ---
+ drivers/media/test-drivers/visl/visl-trace-fwht.h  |   66 -
+ drivers/media/test-drivers/visl/visl-trace-h264.h  |  349 ---
+ drivers/media/test-drivers/visl/visl-trace-hevc.h  |  464 ----
+ drivers/media/test-drivers/visl/visl-trace-mpeg2.h |   99 -
+ .../media/test-drivers/visl/visl-trace-points.c    |   11 -
+ drivers/media/test-drivers/visl/visl-trace-vp8.h   |  156 --
+ drivers/media/test-drivers/visl/visl-trace-vp9.h   |  292 ---
+ drivers/media/v4l2-core/v4l2-ctrls-api.c           |   10 +
+ drivers/media/v4l2-core/v4l2-ctrls-core.c          |  113 +
+ drivers/media/v4l2-core/v4l2-fh.c                  |    1 +
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   37 +-
+ drivers/media/v4l2-core/v4l2-trace.c               |   48 +
+ include/media/v4l2-ctrls.h                         |   19 +
+ include/media/v4l2-fh.h                            |    4 +
+ include/trace/events/v4l2.h                        |   71 +
+ include/trace/events/v4l2_controls.h               | 2705 ++++++++++++++++++++
+ 23 files changed, 3026 insertions(+), 1831 deletions(-)
+---
+base-commit: 8d7fe9885c62fc9a95bf55d9db244d9672a8aadc
+change-id: 20260608-v4l2-add-ftrace-aec6e7f60a6c
+
+Best regards,
+--  
+Detlev Casanova <detlev.casanova@collabora.com>
 
