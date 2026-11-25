@@ -1,62 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.147
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795623166;
-	b=ElyiDPg1VW9dvac2sRigyBxmY3TL7ACqV9IeLZxuCwHh0Oc4WTxEGHNn7aiXd4P42agh
-	 bmkfyafgFDojuWyAlZSqRQI9M8tbZ57AopLEn6RFWpoCIinZ4ZwbNpJKf6BKKYSeg2GRb
-	 k6nmNJbkJ0ra6fWk5rdjU9j+OsXlaFTiQJ2sePGgoZF1LMmN49LI4GiFUmLRLqUy6v3z4
-	 zYsp1fBxPvFeP1kRsOdkvczLWVG5RYacZA1km139DfLBcnQijgmjKs24KeKYYsUajWj/L
-	 gv7nvo76dunY2eDtsShVB4nn8WgF5NDMp656YA4dr93OMUHwa89IVGLQBuQKpmk3LsA==
+	t=1795623877;
+	b=Rfu5LWOHViNSJIBXBGiHCiPAZw6Yx+NywlLpTnz9CjCCLbek9g9QhNf9kJIjHb/saCHC
+	 yLdyB6qvvIZc6WCZ9aJCz/EzDJjjx9eEKiC8+GtiTtR0yWUWi7GC/85aC42aHom3/x5zv
+	 6pj147RbqZ6LTczPpJOkuaFSayJ0YgCD0tzO9mEYmisO9AgMPfrFQ6M04CDpy/qcTXm9s
+	 KMsP5uiLyJbwVC2eDO8J0kdpu96GrIZgrgTPpKDG9Nyx3zGe3gYnUCKUppNm1FpidLEZa
+	 +XGRxhi1ePLog+C7GBCJltUm1S9E1/1RM/SlBtWlky9xWgolQdyVV8kK1zNThPydNLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795623166;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer;
-	bh=Pk46cj7nVppPyv1SdgYuZqus5oI9EjsT7BSpkL/ALFw=;
-	b=pL0IRSAyrYNMNY0atfWRscoLtoAa/5cr4F3ULdjd7INX8/MB3jr6e7x+XMXdVWNmhgHM
-	 9x9JPOl3B0s0okaRUs9Llvfo+yZ/NOwzDMKlKM1lPfRgXZY3i/QTZJKayWFn/X4xenvEK
-	 /O67icwdgGuOiMYVCg6LOjnDLeK3+Jhycq3O1676fCqA/gcnYd1ng4f/73FTxrRISicX0
-	 6klbjVeiQ0Uj0pr/1SrVXwa0fuSsKdPGF9+gK6ltqcw7j+JsAQW+nsxbkJr/pnd83yzFX
-	 55nO77xTXYulFOhA8S7ZC58Mihsc8DJ/DFPELQY3yopU5Gef8y1r06m2yDlbfUvgNQg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795623877;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=oDFTFosBzQG0VfMl98eS0TLW4cOq9rDdBGbG0JR7/Ok=;
+	b=u5KlS9peVTpgbm44IWhQV4YrenzztnNfdDvDUJAn3TNQQWR385Z6gO3/XgSmIO2ut1R5
+	 9An8ptWnX2GiO8cicb7OhUwoBaJfTnMUlbGLoo3CdWX1OaAu4WbVRU1WS904TGlyHDu2g
+	 3ePmtWmGYKeXxUqeF9uMBaRY7OenltU4QLHH0kyYuJ5P9L1uNI3n/FbEyGDIjUa8xPO/H
+	 k+w946aC3QoLjDTOXmhFw3OGYw15vyywCQ0zUrqPzZ7IwIH8XVRcUjuP8Vn7H5pbEhkHu
+	 9ypM7quFThIKKHG9vLLv4ULYIDA8y5Kk7U6AEYuI64E9eve50dNwQOfJoUkOahedOeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=23.90.104.147
-Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5542B606A32A;
-	Wed, 25 Nov 2026 16:12:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5542B606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1795623173; x=1827159173;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=hBFiaxNAO8+/OHuQPaW+LpZx9mtSCVvvtreXstWnX98=;
-  b=MgyL7eGFKK0qJV2Ih16hVWmPQR1zl5BybEP9icb/+0F3tdTm83eCc7Pi
-   Xc1V6o6zimrZQ4KNIQ9eKX0fWaPg6z4SJUWLErFUlqeQMvnZTX1VaJoK3
-   XRQIqL3ltyoYRK7W71iK0gtwkorIqx6cNbNzsp/VMr8b9qUUpQeiyh09/
-   8nbMfehK2zrWBjloXlvDIN8FVfU+bKtTywKL2BBE2wYzW5kHk0g1voqXi
-   vRCj6Rtx8XfVYQ4qdSiM4Ahi4Luuf8142cmtRj/39eFC7bQyq2iK9Yrqf
-   3pPIf4WP3LSKXD9OnhQo90UPFikTPzUqR/HMyqL8JPf3+2bQKtx7b8jjN
-   A==;
-X-CSE-ConnectionGUID: 68gFUhiVSEeRj4swVpyeQw==
-X-CSE-MsgGUID: +pahGX0GTcyaqZv/4NESlw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 18:12:42 +0200
-X-CSE-ConnectionGUID: oJMcifliQjW9YKQBlxbgrQ==
-X-CSE-MsgGUID: cBrXRjMLR0OGTKib8Uh/Ng==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
-  by ces02_data.me-corp.lan with SMTP; 25 Nov 2026 18:20:57 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Wed, 25 Nov 2026 18:12:33 +0200
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Wed, 25 Nov 2026 18:12:17 +0200
-Subject: [PATCH v5 1/3] riscv: kprobes: fix out-of-bounds read in
- riscv_probe_decode_insn
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KpfcYpPd;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AE1606A323;
+	Wed, 25 Nov 2026 16:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KpfcYpPd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C691F000C4;
+	Wed, 25 Nov 2026 16:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795623877;
+	bh=oDFTFosBzQG0VfMl98eS0TLW4cOq9rDdBGbG0JR7/Ok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=KpfcYpPddVppreFVMWSuxzh9nGhWX+7dReoJZ9KcUE5jydGICOfQskl3gfZqqxpHH
+	 6Fzy3ndjRz17PAPx1ekbZqbAdTR01zW9GCmTCU0ufzqEBu4p1h51b8qYisslDkl8BK
+	 KVjeDYVEIINSb9NNQFymANGe10JQlPI1Zk+kQnfTaLRXyL2kH7RJmAvEIHF+YLBPkD
+	 v2louP04ieiQPC4WDQIoMBy4rrRvggBDiyNsUPzf1+GZx5D7pNB8bxsN8Zxg6EPMn9
+	 f8K4Te2WvAsww89xV9AZdedu8Whr7yOJL+rKBsugK3oVNrXvuKusj8bO8745XYh9il
+	 MISPUZYq/QqxQ==
+Date: Wed, 25 Nov 2026 17:24:34 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Wenwu Hou <hwenwur@gmail.com>, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/hwlat: Bind the sampler kthread instead of
+ setting its affinity
+Message-ID: <awcLwio_qyE3d1bL@localhost.localdomain>
+References: <20261125084600.2306377-1-hwenwur@gmail.com>
+ <awbklFE66PIMKFop@localhost.localdomain>
+ <20261125103822.2129a7ec@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -66,62 +61,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261125-probes-in-lrsc-v5-1-38a32e53fcc2@mobileye.com>
-References: <20261125-probes-in-lrsc-v5-0-38a32e53fcc2@mobileye.com>
-In-Reply-To: <20261125-probes-in-lrsc-v5-0-38a32e53fcc2@mobileye.com>
-To: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Guo Ren <guoren@kernel.org>, 
- Pekka Enberg <penberg@kernel.org>, 
- =?utf-8?q?Patrick_St=C3=A4hlin?= <me@packi.ch>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, 
- Palmer Dabbelt <palmerdabbelt@google.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Sashiko <sashiko-bot@kernel.org>
-X-Mailer: b4 0.16.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20261125103822.2129a7ec@gandalf.local.home>
 
-riscv_probe_decode_insn() can trigger an out-of-bounds page fault
-when probing a 16-bit compressed instruction at the end of a page.
+Le Wed, Nov 25, 2026 at 10:38:22AM -0500, Steven Rostedt a écrit :
+> On Wed, 25 Nov 2026 14:37:24 +0100
+> Frederic Weisbecker <frederic@kernel.org> wrote:
+> 
+> > >  static int kthread_fn(void *data)
+> > >  {
+> > > +	unsigned long flags;
+> > >  	u64 interval;
+> > >  
+> > > +	/*
+> > > +	 * kthread_bind_mask() sets PF_NO_SETAFFINITY to keep the initial
+> > > +	 * affinity from being overridden by kthread_affine_node(). Clear it
+> > > +	 * now to allow userspace affinity changes and cgroup migration, but
+> > > +	 * keep per-CPU threads bound to their CPUs.
+> > > +	 */
+> > > +	if (hwlat_data.thread_mode != MODE_PER_CPU) {
+> > > +		raw_spin_lock_irqsave(&current->pi_lock, flags);
+> > > +		current->flags &= ~PF_NO_SETAFFINITY;
+> > > +		raw_spin_unlock_irqrestore(&current->pi_lock, flags);  
+> > 
+> > This is not pretty but moreover, is it a good idea to let the user override
+> > that affinity?
+> 
+> No, but we used to. Perhaps we should make that not possible instead? :-/
 
-arch_prepare_kprobe() safely reads 16-bit parcels into p->opcode, but then
-passes p->addr to riscv_probe_decode_insn(), which unconditionally
-dereferences *addr as a 32-bit probe_opcode_t
-
-If a 16-bit instruction sits in the last two bytes of a mapped page next
-to an unmapped page, the 32-bit read of *addr crosses the page boundary
-and faults.
-
-Passing &p->opcode instead of p->addr to riscv_probe_decode_insn()
-(as arch_uprobe_analyze_insn() already does) avoid reading past the
-instruction.
-
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/#/bug/linux-812af091-20d1-4915-97a6-741f51e07022
-Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
-Reviewed-by: GUO Ren (XuanTie) <guoren@kernel.org>
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
----
- arch/riscv/kernel/probes/kprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
-index 9e2afabf94e8..63ee5066def5 100644
---- a/arch/riscv/kernel/probes/kprobes.c
-+++ b/arch/riscv/kernel/probes/kprobes.c
-@@ -85,7 +85,7 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
- 		p->opcode |= (kprobe_opcode_t)(*insn) << 16;
- 
- 	/* decode instruction */
--	switch (riscv_probe_decode_insn(p->addr, &p->ainsn.api)) {
-+	switch (riscv_probe_decode_insn(&p->opcode, &p->ainsn.api)) {
- 	case INSN_REJECTED:	/* insn not supported */
- 		return -EINVAL;
- 
+Right, the affinity should only be changed by the kernel if tracing_cpumask is
+written. Otherwise it doesn't seem to make sense to let the user play with the
+affinity.
 
 -- 
-2.43.0
-
+Frederic Weisbecker
+SUSE Labs
