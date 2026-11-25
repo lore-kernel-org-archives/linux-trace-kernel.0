@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795587372;
-	b=vNT2MmLfKx5QfTPj1Gh+QmzLd5d5H+F11Pu/Ab2H1lzSyQfp8P8gC/Zkczqt3o1DAQYO
-	 1VTwf9biKeDBAntAPZlsY62YvgqEPaXfFghO3b77TbC0lzjquq0Z2nEO3kYCgxldrOSWK
-	 XbOUqUvXi8Fac44pxmivVLbCrRwyB42zxE/YLiIX+T1HMSld78cpJK8WWwwafr0+kJgD0
-	 EqnnkhEY3qF2QpBcsHJ2PfegKcB28aFtXkz0a+xLnDDP6mdcVdEDXneaLc69/hJPah4DE
-	 lXpNEbKohUgLcv1tizKcaVGqcYRdbuFuP9iNZ75w2VBRqaflE1vjMDIlxIEZB+LdgVA==
+	t=1795587374;
+	b=U0lV1N91i1aSpFEdp6Q/bMY/NBXFCz3RjJHrC6NeBJkg+ZZJLlxz0bXi5T9kek9NkQOT
+	 1wOs9jf5YnieCTsBCxof4rPOU2xi6tvKYqjeRs3Zd2sNHbwvSz5oPS+nD5MhFgOciPvgF
+	 f/tvAJ1v0Lsgh3d5hyzezrWI8EZCEpiP61vDAeAWP2JWaFK/tIz6fPI94zK4KIdjzb02M
+	 yuKjnyDppYYHM8qugKIvZNbnXCxjx+BFb3IF+OWydlNWPVhFmnE3WKehSVF036AY7AR+0
+	 5/98+7mAF1dtgKRb5I9yqrG6657tpSVmhW7IcAb9wIy4NOMt6p6oBfsTR2cLvlgljxA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795587372;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795587374;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=bS1O6gZBZC8eMhEAflyw/nPs5CPcAQAclZg8OIJWUGg=;
-	b=bnQ757CJGQdmL/iAp7ZTHu4jg69rKrQ015tK9v9iyE2x2tFt9Ev6Qi5CMu66/yhiXWLl
-	 3EokxJUE6pJKlewaI33H8hutMaiyTJVm3+wF4+AglnPAYkbYTV6CBngSv88yhDDjHoRhc
-	 E7qBrdt937iFkRCDu7ytnIzgPzCusFlVBb4e8RX++nH8rOGIr0JDBZHY7xl4qNlDiszao
-	 H/nHdQxsDmjhtQk40ojUbO2mknOKFI1jfWTN/zVS9JsHBC2xa0wLDWf0CNy1Qm4tOog8S
-	 qv9ShcClIfHrpiZWletL5Q0cWiC9ZFD6zLdpa+Z4My2kPz4Lx6bQb+x+WO6FkYmzh1w==
+	bh=+3YNbw7npHYIz6vJpu6w5t/t1EQu1XAkIQnaB2DVcXE=;
+	b=FMVeRicLZLHvFiBCq+FACFBLV+cvj6kigSTqrGrogluwEpEmXMEnceC1udCNPgmTZD5Z
+	 /MgfpK1bZtvMu3CZ9vyWwSa2Wcb5pbVxKsd600d9IFEakA1cQnUnXWxi8mbIMua9S+zVQ
+	 24a4jPKXMyYYHxAFV9DACe+CZO7vWF6OKwUTM2VrdUzPAKWRnuT3lr0nR3gvbnw+uSMh4
+	 ZXPAJwcLbr0FIscVvQDOflqmD3ZfZW5OIfzQvas9wRX2LwHF6fnEqJs2OM/cC1fDD59rF
+	 ASsD4SNDFQ6Orh1rM4dK4U16akBIVVHhj4Vmb/KLuDeubO4TdnCDyh+bnMkxzJSHmZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="Db/cRPFL";
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=iLdYEq6j;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8249606E97F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 06:16:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B8249606E97F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0738760A2617
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 06:16:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0738760A2617
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Db/cRPFL
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-386b8624cf7so555026eec.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:16:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=iLdYEq6j
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-383ec96a7deso6021380eec.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Nov 2026 22:16:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795587371; x=1796192171; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795587373; x=1796192173; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bS1O6gZBZC8eMhEAflyw/nPs5CPcAQAclZg8OIJWUGg=;
-        b=Db/cRPFLfYVCp+2GdQfozLgX7xQ22/ZFmmU+8ONn0ztqKNHD5GQP6wLynJKPPmdp9v
-         CjY4/zp3pIGiflimiES3q8iGcr0M9XMEu9XRaXQY1lXYRJ14v0lU/NxPyl3FNsagDWsm
-         meKiuP4xhYuX5egFh4+zDmRCql+CDY3MNDoZ2Vjuom3u46bjoTR/E4w4/qkQ6ljAvVBC
-         hvgS0Ll/7G0ispHlE9t1ZSd3RQtHvUMXRWroFpGoP5AjRsRc6A+psnQojtxX+CIgFxNl
-         d7rElfx3LYYsCEoXoomSKrJg9l0SUi1X9vw9lifNDMMI6qq86Rpbqhqk3PDRLQoncrjp
-         BmxQ==
+        bh=+3YNbw7npHYIz6vJpu6w5t/t1EQu1XAkIQnaB2DVcXE=;
+        b=iLdYEq6jPFG1k6lRURVTYgkpU0tn2xfKdgxbC9QNFC6g3K7bQcnhf9FCdYqi9Xo5uo
+         SBN5Gv4/P2cgIp08qAw8QZoMsboROqKfZkGHPwrTxb0h0vSuGg6jqfV7Pdsi5ps2gvAH
+         OdOhZYiJQTNxO6ZwFaUem9SrQ3LA7rcXlYT8RxQANhUprqB2xFBi/FVwPlL4f59N8akj
+         B398DOc9rQ7NbwrKpH2N76vv0eAPJUQve1bVdW9SfzaT6L7W8lPsXM/WaRPCqvSfTtUy
+         Gbw8nVhHeASvK7e1vBllLSDnJplJRmM16lY1l5+ob+71ZDXfeVq7x0A0bpDEjTwFslrT
+         ATvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795587371; x=1796192171;
+        d=1e100.net; s=20260707; t=1795587373; x=1796192173;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=bS1O6gZBZC8eMhEAflyw/nPs5CPcAQAclZg8OIJWUGg=;
-        b=xvmR44nV5LPcNUFEDkAfQBs+o80y0szElGdrvouy/U0ePL1uPWD3EF7uQ9qvz97RYR
-         coVdH0UwZ802IE95TP1vwKSR/tzvAfJdTyyWYm/oauZLkm1OImURAPxNWxcHIaIGuWrp
-         eWhaxnktl9u6E7bpcxealEd6pjndxFB6LSwLAnl75/cVFX8QvhZBhqUmwngbkUwQB8hF
-         1wdg+HLqxZviwQFEvI6ztgpVKsuC8gHbsFPlvLi2Uwhc6w77xSCY74YeuHkUjItEfztr
-         HyCD5+mbjEUPkUdvI6O9IpCVbxFxHVBL7kgLgaispEwMRbjRMl85riDPTBKsxwTXoBLk
-         m6CA==
-X-Forwarded-Encrypted: i=1; AL+hErHbWjyfqacJPpJ/l5ZoiYyPwgj8nGk4H77sOU1+x6jyn7o94CU7gjoZlEb/GNHnamiaP8nDfNlsc0BLOEWbX9nbfGg=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9FOHp+vYABlsF03N4Uk9lSwmXO/Db7zQv4DWLg+A/iyxn2lB7w
-	27DEHwdOu7i+rkH/HBHUpeiwK6XDSG5347OPccM4kzlB8+MDY3AfCAzJzy1dTcFQScc4bbHuJwl
-	w+e/g9RYc/A==
+        bh=+3YNbw7npHYIz6vJpu6w5t/t1EQu1XAkIQnaB2DVcXE=;
+        b=w4QrSb1DEj4fcuMfDn2NLFxdkBcpZ9v3ryNag9EN/qpwkZEGOB3b7bvr1a3VIxHIgv
+         fBVV7r6kE7qSJvtuu+TSmIqVvVAjjCNCC4/kqvNcOsOyJVld+EI+zQzB/MN+WHGw82Lp
+         kLio6zrc6N8vL3D7GGFlJFKpumBlm0FB/uCgERLBb1a39OubMwdNAn4N9MA1Razb/8Q4
+         9hO9AP5sND3mArm5bttstvoq0eUMKnftEf0IMVUsSKFnzBj1qcVklbsoJy44G5m43aj/
+         2aCE76Ui/jy3AWLGxiIJkuNJ4tY76U7cl63MxuvRhVrOouHjXU80LIIv/FqyWpzp4A5P
+         Eqmw==
+X-Forwarded-Encrypted: i=1; AL+hErHCKQv/3qD89UMrdQW1xi/At39hdlFGbGUJg5ClufoOj9PiQowd5r1Nr/+CLy9V51uvDGOiEX+GsDg5fROCI+8yRNE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8EWXcBXb8HEf5dR1cMvAsAa46WVTwDWJjkMI8raTck6AXQE77I
+	GTSEwvXn3eSD0MyGaW3tTs25Yo/JuLzp4EZ9Fz1WFtSKurdzJf25/W6Qgjiij91yT8B3cPHOPVz
+	qopA1OggYdg==
 X-Received: from dybou2.prod.google.com ([2002:a05:7300:e5c2:b0:384:c70c:3c65])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:269e:b0:376:5b99:a816
- with SMTP id 5a478bee46e88-3856c2c3fb4mr17120337eec.3.1795587370674; Tue, 24
- Nov 2026 22:16:10 -0800 (PST)
-Date: Tue, 24 Nov 2026 22:15:00 -0800
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:d809:20b0:386:b070:6f1c
+ with SMTP id 5a478bee46e88-386b0707151mr8742111eec.21.1795587372849; Tue, 24
+ Nov 2026 22:16:12 -0800 (PST)
+Date: Tue, 24 Nov 2026 22:15:01 -0800
 In-Reply-To: <20261125061523.1540234-1-irogers@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261125061523.1540234-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.831.g720f3f5937-goog
-Message-ID: <20261125061523.1540234-8-irogers@google.com>
-Subject: [RFC PATCH v2 07/30] objtool/ibt: Ignore .eh_frame relocations during
- ENDBR validation
+Message-ID: <20261125061523.1540234-9-irogers@google.com>
+Subject: [RFC PATCH v2 08/30] vmlinux.lds.h: Allow architectures to emit
+ custom RO_DATA sections
 From: Ian Rogers <irogers@google.com>
 To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-arch@vger.kernel.org
@@ -103,31 +103,39 @@ Cc: jpoimboe@kernel.org, rostedt@goodmis.org, peterz@infradead.org,
 	wnliu@google.com, dylanbhatch@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When vmlinux.o is built with -fasynchronous-unwind-tables and
-CONFIG_X86_KERNEL_IBT=y, .eh_frame FDE headers contain PC-relative
-relocations referencing function start addresses across .text. Because
-.eh_frame is read-only unwind metadata rather than executable code or
-indirect branch targets, skip .eh_frame* sections during objtool's IBT
-relocation validation alongside .orc_unwind_ip and DWARF .debug_*
-sections.
+Add an optional ARCH_RODATA_SECTIONS hook inside RO_DATA() so
+architectures using runtime .eh_frame / .eh_frame_hdr kernel unwinding
+can place unwind tables inside write-protected RO_DATA without leaving
+them in unmapped rodata/data gap pages.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/asm-generic/vmlinux.lds.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 931c5c412f15..e631b0da9bad 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -4644,6 +4644,7 @@ static int validate_ibt(struct objtool_file *file)
- 		if ((!strncmp(sec->name, ".discard", 8) &&
- 		     strcmp(sec->name, ".discard.ibt_endbr_noseal"))	||
- 		    !strncmp(sec->name, ".debug", 6)			||
-+		    !strncmp(sec->name, ".eh_frame", 9)			||
- 		    !strcmp(sec->name, ".altinstructions")		||
- 		    !strcmp(sec->name, ".ibt_endbr_seal")		||
- 		    !strcmp(sec->name, ".kcfi_traps")			||
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 3eb732942d69..1bde7a2a19d0 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -472,6 +472,10 @@
+ #endif
+ #endif
+ 
++#ifndef ARCH_RODATA_SECTIONS
++#define ARCH_RODATA_SECTIONS
++#endif
++
+ /*
+  * Read only Data
+  */
+@@ -554,6 +558,7 @@
+ 	RO_EXCEPTION_TABLE						\
+ 	NOTES								\
+ 	BTF								\
++	ARCH_RODATA_SECTIONS						\
+ 									\
+ 	. = ALIGN((align));						\
+ 	__end_rodata = .;
 -- 
 2.56.1.831.g720f3f5937-goog
 
