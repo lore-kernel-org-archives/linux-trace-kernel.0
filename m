@@ -1,97 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795723798;
-	b=RDJbE4vGhscD9aK6bGlX4UGl+I2hhjNd7IZHNB4Cxi3AMQO6BFmOgHuWWtpQHz/JoejE
-	 Sr+U4qLbJSpI/5V4YUZKZ9WYfdQF27Th96y5vQEmbL3uIwEckwX+bWEEs/6x7c/xwRClf
-	 hVFTlDcP57k0XzlMddK99ieYjimDrb+5XBHB5yV3743UGExZ9FXb83gu6lXNCsHJTKE9b
-	 S5LzLzIAhMbuKe2olCOmioaBvMzaCq6zvmZNEmKRYFVARzh3EtK0R//pYTGXQM9XVPY7t
-	 JO+qghvNn0vng8hRL0lw+tGcGHGaWtLGfTox4Upb46DBqGqTa04opN1aJd+FhHvFmLg==
+	t=1795723883;
+	b=S1eYnnCP3l/JLTBpT0OUBJORZ9C9unCaBXAkX+FZg7j7wAG//pWLvjUje2HBydZtWPHh
+	 bQkkZfxAERTgKw8jDtwoO1FynGjrrHeigtTi8KXXaKxU5tzglN1yNKaN5OBMIxnrULTOH
+	 FPGrfHDsP1ED0nvGra58zfvRON2ly1iqPu44RXG50PgLWYG+70Ipeb6LzEl9c0CoAbw53
+	 ODY7mFY64dBRcfgVTSQbQLr0HjYeCmxwm5vDQp35D3Utn15bqxnwODhJBGJp0Rk/+sIyF
+	 +z0GudRd0T7s7KOpiHbNMbhh+9DMH/6SXkU/mStCj5kmbr79fDKGIGuiJ8JsfPy1pVg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795723798;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795723883;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
 	 Content-Type:Content-Disposition:In-Reply-To;
-	bh=/OrrKD4PbU8J1zBT1VW3T/D/BHUVvLrmnY9knf4JEkk=;
-	b=ZszlnOZwX2pnIxYCAnQUUVgRvTNqDI/0Ch2Oeiw+jGuBsZkC+vA0f/5VmesYxlcdvBrz
-	 54i8EGt8wVfP9pI+803DmtnG9YghDzrWrGfx+XYb2tDrOdvqtSBTquKwdlqW+QKZyWLB3
-	 1c5nUpbtOk89ZHEeiHTKmYwe7hXQAkVbTcaJOsuUy2mORAoqEwDN0BAHSLqqK6KllUDef
-	 1nzmBTfOGkFWRs7i6HGImdkgMEJzqJBJiggmVQk6c/HxIQsyMIAGPT5Lp8ub2TSG3vcSD
-	 6S/9VB3baWPmv3z922gdJdiux4t17sxN/8iENVc5ZgHzr9ARUupANfy+kNJlogTbAgg==
+	bh=Nj/WNmNbH2CCgoWWWQhTKahPha5+ME+4yoPGAZbSie0=;
+	b=CTbJHgAhUCybQHGtABMyWQI6IG8yKOwL8E9TsaWpxl0X+wqBQpAVVnaAPxwWtA5QFedq
+	 WLMyD4TNNItKavQIC9xZjf95nazrCGTjCSRwI0VNB7QCvLdJEaavLVTSbg3GiVYej6pwY
+	 lEKDiuydWo3jFoQPiw78BPUbnuEOjasyVpqvEUTq6q66HKdt9rSrru/5P1dcDeDTWEuft
+	 M608Gha8KVVeVw32V/1lxqsJzDjCwagKptMcSQEqexCRZux76NagVxFCCNq8pyS1GPUHz
+	 Jdb3Hbv/WKI7EJbG5falZbyF/5eUWCjgi+n989PL4Jq2ucExApl7siwB1+9a8OurzLQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dn9pOQUq;
-	arc=none smtp.remote-ip=209.85.221.54
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=n5wLgfHB;
+	arc=none smtp.remote-ip=209.85.128.54
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CF3606A68C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 20:09:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 17CF3606A68C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039F9606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 20:11:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 039F9606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dn9pOQUq
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-490f38e9688so5169144f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 12:09:57 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=n5wLgfHB
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4a2d6d01ecbso39975555e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 12:11:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795723796; x=1796328596; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795723881; x=1796328681; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=/OrrKD4PbU8J1zBT1VW3T/D/BHUVvLrmnY9knf4JEkk=;
-        b=dn9pOQUqmIA6QOfUKt+k2aFnxD4sE8qGh9LlHU/8NKYf+C/7yk80j94i2FYny3it54
-         bs3ukKO5Kws0wO/QML1kVl2cKdTDNv8mhRLT/ksqWWIvbb/HO8qnU4b0xRRnl1CYWRf3
-         FxMAwLQKk4Ki/3rkPq996pKuzlCr8CpwrLAwHz6jk33jzCEv1rlYMOsfIwLGRocp/Kd0
-         Zd2TaIF73+Q1EflQ7Y+aiKJixdAupQH8Nv9wa2VGekg1qC9DhbgRntOW2SoSRv4Av1T7
-         80yMBniIozPDV53Rh6eBJI0fwIy1E4E6Ri1R980idAbZpw2QN5lHwC6vce7iKQDSzwdt
-         tGCQ==
+        bh=Nj/WNmNbH2CCgoWWWQhTKahPha5+ME+4yoPGAZbSie0=;
+        b=n5wLgfHB651Ue69O8vuJNdc3m9TPZ3NV736Bukjoncr14J6JE6ZlPSDZf7cla6cn2V
+         ORIDrgd2fLu04O14u8BfyVeJIx/nMFXCAfZYs1bDJyr1l/pY5LDq4+l08uv5RxnwOYUn
+         jpnsmkJdjsLEsI/NL/VH2wmaRpWXyzCs/GitGAGbHX/URfwmgNr0eDFACsg9gnwuiMZ3
+         nTti0NiKz/zCW0Mz8EpKZEjCzFXKxGtV4wl0hX0zNn2Ym0v55YcaJhyqzVh4oUAYQzK3
+         6XRiJH+piIcKnoulAcULwF6A3YlxwLFe0eG7SwiIq0o/LifXE064nF2hWbx6hdCBsUcx
+         Y6xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795723796; x=1796328596;
+        d=1e100.net; s=20260707; t=1795723881; x=1796328681;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/OrrKD4PbU8J1zBT1VW3T/D/BHUVvLrmnY9knf4JEkk=;
-        b=cr2qRipphdAYyf5mmokVFHEgNw7v3ajR7y0ISVUicFUdkUqDrdU5DEE0hflnOGhUjV
-         pp/DJN4OBcyuI9ps/DTCr26B9yqke1UpwRKn1T3MUo7gm5ulhEy0j7Y4Y2Gy+oy5zaYJ
-         bXn0GOUPNXltgXPNhcf6roG9/ck7+9WxZoq77WVRpU9mQL7hOJW4gjPZS42FsLuLrBKo
-         l4yjuqnC9rcuF1J+peL8jjsWccvTyd2IxP+vuy9dIa2oUww2XKhzLJCuCY4J9d6PwQ3/
-         bs14YaVfu18oOJSy0OgHatMynMYXPyVg1zn1toYBG4Kvhn6Me0c2519BF0vmImFFnssG
-         angg==
-X-Forwarded-Encrypted: i=1; AL+hErGyvsNC0eQUWaHnYmtc/ue0WmdDg+2M3Yt64gjJXa+lhT2PWA0Ag1jIjiMqMNTLyD+h+pMSjHcNyDsnk968yvm24kQ=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8ilx1RwdIwUBWVh6kL9/JtWiU6kyW3wTLh/J4oIC2f6RTgzfir
-	yndZZTDKKqNaGYQFdwlJFyXlAYhXySBkAk18KnCNBiOPlpURfpLhylyEB5JCiFvAupf1xQWlLru
-	KN6J0iA==
-X-Gm-Gg: AZFdTZe/mtYi7A5K25VEnTDFPJjWRWk6wJFk/bQ0lxUtxQMi2MjZQuC/0sfWRFtXmHL
-	sNNme4ySKCsAprELUns3gigwIkV4pDvS3fmGgkklYjCrxKAs6wffOykdbCKhF+tThTsta9XjMA4
-	oe5H0ErpZomxPxLmcrVmIQhahrmInIjojuxPoTP0tMsdn7ApCPkk6xyFxZPNOsFtyRgFEQAgFxj
-	BzLOif+1062SqOsnCbnJCU+M/GAc5CzMkNgCRjM5NlyO8+C3/FoOhuQdPL3J+eY8dP1joeMxFqp
-	7cRy/7lTwDdsWQx9JBCKqHYwA1NVuDMV5ygMDqmd121Obv6kcAHl9YDjUOe7uhJEQb+q3SO8iqG
-	/sPkJPw4ZKDDrhmm0YXUn1SDcbQodDB6YupEWFjHlM8nL5O3tY8fJ0da73VtX78o20hKmavJ1Ly
-	u3O5n7UA6VkBHab5bpgD6yKaJmkFhxl7Du1rklahppzbKkFw9VB/y2D/WFA2CF9VYY8WN4PSVyq
-	MoCBZLclgRu4PJHkwzAd5Eq36GI7Ap4kgtvYQhuJKD7AbsUI3MYL3VYzAfyPRiaz7Zi0ePIM9qZ
-	RRoYJJl2EVnsFH0hUB8YZYxJdcJMe4bH1Ac4GZZM0QL/BHxHoJoNHfGpOlHNd1XTqa7UZz1Vf2D
-	NYULwn7Z9TdtHF0Ol5Sf63Q==
-X-Received: by 2002:a05:6000:29d8:b0:4ab:1d39:92c3 with SMTP id ffacd0b85a97d-4ab1d39937emr31825976f8f.20.1795723796009;
-        Thu, 26 Nov 2026 12:09:56 -0800 (PST)
+        bh=Nj/WNmNbH2CCgoWWWQhTKahPha5+ME+4yoPGAZbSie0=;
+        b=fN4RJKStsTxfg+vzcJ3gcvEXDdI3WqNMSiza+wGBWupjEuljkWELOJOugJKIr/S4wE
+         7yLGH/1Q7vM6B/oly38kftrNGDz/JtEn7m6EBnnfS3iqUYWifjGnTdrqfkHV5I0zglXG
+         nlWVgQzgcBrTQ4d2XYbh0vFut5I0Ms5bx3Shl/1kClW/MhLOW0s7tHuE5BOmo669beCU
+         X0tYtxzMlk3ct54RzxuaYLt05E355XwlSv6BfDvquvUY7AXLeJcXIq5UQIIoCEyRCJ5O
+         VdaxI4pK8UjNNnF2HVDvxxep0zbFpnP0Spx9bLZ0t05eCs/RaldFOtRh3X1qsQ0jVdty
+         P6dA==
+X-Forwarded-Encrypted: i=1; AL+hErGVxxj8MyO/VPiNJpk8tqTKdAwUJK13EqdiqLYVGkzERak2KmVOVodC8OTxki3yKrTnDI7e0MxSf5NRuQ/eIQU4k6E=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9+GD5H1eMRh3IBx/fXajC45OCqeoAHK8Xg79H2iPK6RdZ4gh+I
+	bWPzpl3YgK5BDc3BRLf+bfLPf3GJsZRvlSqvLib7YqXnMWzQA7UrNP27ZLrpPa1sYw==
+X-Gm-Gg: AZFdTZdgPITZ+YHRjlgHqNp0kl+gDsCUN7QAskNNXk8DtMVNI5mWNWM2z4VkXsTdvQD
+	v9KefOXb2xiWqYSQsNERQ7NZo0og8Q60cXov8pQ1HtMCMKI3IBiL3LB6gTQZDACzYQSaG+T1l/6
+	EfqlMWgUqyiDVyqngECSBRWMiHcAxLVaZkq6kgQC/1zSd3g6OPm2aIzjZR3xGDe9zGDcpAA9EfO
+	aE7KvlqhLuUfsQM+GF+9Gg1dtmEY/Xlgivy+9Z7bd1OVThwYr+0Zen4Qg1i6CLnF1dz6u1YGWhc
+	H6i199UiQ3AcHBUogYnpr+1hZb8aHcbh2+yUaSqOqOvUp2cvuxfDHnO3tSMCbjGdx+qy9/EqXEV
+	Y8j7Vln/vYSGP+FjHVAyoEDa4gL+KF3ZFg4KLN3Wp4jTTcSp5B+1l/kNCLUf4Jv+f0idERF+6IO
+	oLvADP7DWcA5il0JCbzSR+DcprtzemenB9Cb3t0P6Ces0LDsrkcNxzymTglZAk+3z2iGcO6IWlc
+	QK281oe0wm56uEwThPS58c7C9/H1wD8akqAkO7xAL8ulgkxevzyUsQ2Yhgb0f1N8yg5OY4eQoRk
+	Znym7//FmT6VhEHbcSij0QTKcKYSA+lQakcQaNf+bheymMTW4LpohVOOStGudqwQNdM4ghYtzSa
+	DWERQOJ5FbJQE3EE5/z1L7Q4=
+X-Received: by 2002:a05:600d:8402:b0:4a3:5a91:5f61 with SMTP id 5b1f17b1804b1-4bb88806287mr356853825e9.14.1795723881055;
+        Thu, 26 Nov 2026 12:11:21 -0800 (PST)
 Received: from google.com (0.182.34.34.bc.googleusercontent.com. [34.34.182.0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6c340df4sm48791551f8f.55.2026.11.26.12.09.55
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b2c5sm618620195e9.5.2026.11.26.12.11.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2026 12:09:55 -0800 (PST)
-Date: Thu, 26 Nov 2026 20:09:52 +0000
+        Thu, 26 Nov 2026 12:11:20 -0800 (PST)
+Date: Thu, 26 Nov 2026 20:11:17 +0000
 From: Vincent Donnefort <vdonnefort@google.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
 	mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 00/21] tracing/remotes: Add printk, dump_on_panic and
- boot parameters
-Message-ID: <awiSEPZdfQog3o-k@google.com>
-References: <20261124152845.2233401-1-vdonnefort@google.com>
- <20261125160106.01c468e2@gandalf.local.home>
+Subject: Re: [PATCH 1/2] ring-buffer: Remove unused absolute timestamp mode
+Message-ID: <awiSZeJM642t3ScT@google.com>
+References: <20261105202814.1350312-1-vdonnefort@google.com>
+ <20261105202814.1350312-2-vdonnefort@google.com>
+ <20261124210350.718adb37@robin>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -103,64 +102,41 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261125160106.01c468e2@gandalf.local.home>
+In-Reply-To: <20261124210350.718adb37@robin>
 
-On Wed, Nov 25, 2026 at 04:01:06PM -0500, Steven Rostedt wrote:
-> On Tue, 24 Nov 2026 15:28:24 +0000
+On Tue, Nov 24, 2026 at 09:03:50PM -0500, Steven Rostedt wrote:
+> On Thu,  5 Nov 2026 20:28:13 +0000
 > Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> > Vincent Donnefort (21):
-> >   tracing/remotes: Gate tracefs files opening on trace remote
-> >     registration
-> >   tracing/remotes: Release tracefs,eventfs on registration failure
-> >   tracing/remotes: Use kstrtobool for boolean tracefs files
-> >   tracing/remotes: Initialise pos in trace_start()
-> >   tracing/remotes: Annotate remote shared fields with
-> >     READ_ONCE/WRITE_ONCE
-> >   tracing/remotes: Use a single per-remote polling work
-> >   tracing/simple_ring_buffer: Add support for compressed length
-> >   tracing/remotes: Add dmesg tracefs file
-> >   tracing/remotes: selftests: Add a test for the dmesg tracefs file
-> >   tracing/remotes: selftests: Prefix hypervisor folder
+> > Since commit b94bc80df648 ("tracing: Use a no_filter_buffering_ref to
+> > stop using the filter buffer") dropped the last user of
+> > ring_buffer_set_time_stamp_abs(), there's been no one enabling absolute
+> > timestamps on the ring buffer.
+> > 
+> > Drop the support to simplify the ring buffer code. Keep the read-only
+> > tracefs timestamp_mode file to preserve the ABI.
+> > 
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > ---
+> >  Documentation/trace/ftrace.rst | 19 ++-------
+> >  include/linux/ring_buffer.h    |  2 -
+> >  kernel/trace/ring_buffer.c     | 77 ++++++++++------------------------
+> >  kernel/trace/trace.c           | 10 +----
+> >  4 files changed, 26 insertions(+), 82 deletions(-)
+> > 
+> > diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> > index 9423722848c6..88c0de3619be 100644
+> > --- a/Documentation/trace/ftrace.rst
+> > +++ b/Documentation/trace/ftrace.rst
+> > @@ -712,27 +712,16 @@ of ftrace. Here is a list of some of the key files:
+> >  
+> >    timestamp_mode:
 > 
-> 
-> >   ring-buffer: Use irqsave for the reader lock in
-> >     ring_buffer_poll_remote
-> >   ring-buffer: Avoid reader_lock deadlock during panic
-> >   ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
-> >   ring-buffer: Add kerneldoc for ring_buffer_poll_remote
-> 
-> Do the ring-buffer specific changes need to be part of this remote patch series?
-> 
-> They probably should be separate.
+> I think we should just delete this file too. And every mention of it.
 > 
 > -- Steve
 
-I could separate
-
-   ring-buffer: Use irqsave for the reader lock in ring_buffer_poll_remote
-   ring-buffer: Avoid reader_lock deadlock during panic
-   ring-buffer: Add kerneldoc for ring_buffer_poll_remote
-
-They are into this series because those issues came out while working on this
-series and I thought they weren't important enough to be on their own, but I can
-surely send them separately.
-
-   ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
-
-This one however is only useful with that series.
+ack, I'll clean that up too.
 
 -- 
 Vincent
-
-> 
-> 
-> >   tracing/remotes: Use ring_buffer_capacity() in trace_remote_has_cpu()
-> >   tracing/remotes: Add dump_on_panic tracefs file
-> >   tracing/remotes: selftests: Add a test for the dump_on_panic tracefs
-> >     file
-> >   tracing/remotes: Add poll_ms tracefs file
-> >   tracing/remotes: Add trace_remote cmdline options
-> >   Documentation: tracing/remotes: Add detailed tracefs layout
-> >   Documentation/kernel-parameters: Add trace_remote
-> 
