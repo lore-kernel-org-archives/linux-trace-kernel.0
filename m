@@ -1,75 +1,95 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795729073;
-	b=in8cdDwiLqVYkCAOuN52vH6pqbxlIzDXE+rz320MXZkUZg6lUSbfgUQ6dinuF5rAqcM8
-	 T0531mA7C5akKN7fG5EnI/zKSalKgpbsLRdbyqgWk1G9YC469jVcRZOWcnPxZN24DBOCx
-	 6ngWwBVFIR2UBYoeeFjFToZckQoZSV2N5hBR6tZMBu3aKxHTkMO6DB7vrY9SlX/b+EY+9
-	 MYnrG27QXNWdGKRQM/v71VjGEWZhIpZMp3jW1uTUrB/y1b42cZgBcpHP1A6e3Vi/h49os
-	 08rox6dwm0V0smXHHKapBMrL5Q1C/JJKwBpOQ1S1JccGV9TGg1Xl/6kL3+fiMOLZxJQ==
+	t=1795729550;
+	b=C91V4puix4+dF4Zqus2tcFK0PAiSSZsXknq3VWMjVQ7hoFvdURPsAEYCnDvYXLDylQJE
+	 DxBVLpLMaPXjvGjas2xsma4lanPtdr+3rt6ccbfnvQc6eV9m/uWUTYFF48n0n+ZMH3YAf
+	 2/nTcBXQbjTfaX8lykya+f2e6iXHSXJyQ4boQY6DLyu3kFDZ6r9dKzGQXjaQ4Lr40nW3G
+	 Va4sdJM1wQiPuEQh/pBGCtiZ4Y4PJQh3kdYWFliEQXXWTTF5xUNe2WX/26MJGcv+q3jWY
+	 rhGE9uT5dIjxEIRxvlAhH/AxpiI5N/iHtNHHgd+swgE5pNGzUMFh4AX7v0IwoxWyJpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795729073;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795729550;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=Pf1Iv+5ca8YRb5pDxLLHR9feXnZofasjqRfhcx/I4d4=;
-	b=iiYSxk20rsnAMfk6hAAGRROdU8Kkxg6CVUEVmx75DH1ynf9igvIEFnB+5aRM/i7jmyNK
-	 VXkiR/iIFeZrnfaXL2UbpId+cGQugMnVv4+1DK8+Zr0/yNOw6UStReVD/sLN45MDCbco0
-	 vr+eGrgrwcTQmMvajqQF4y+h9uONYw4zeT9chXKkDZ+b1FvtwSLNmxEhmGpGdN3IMRnkh
-	 +RXmz6tl68Itokr5+qXdZqUJIcRa6Svuwno1L9VSaLfnQjfh4MWpokZNQRlLIBcaqYNuW
-	 J5QEryWCkSLSXe7nlJ148/5ZGtSPcDOo8qN+ljNPcN+IH3cwLua4yCGlvD1Y5M3isfg==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=rbnALwWQni6QwZzrT13h6XvdU083PfOU1t4S0GjBaUw=;
+	b=Qx2oSu4jGbbMaH0jpT7ItwLQCeF4a5RN6k5N76bjxfYAsvcernOvvW+QsgQwUwShotD2
+	 4q782YrvbwI8Cy0HOlvIn0Sbx9zFuVocmb1dNd6rxmLfS08kDwNVlkGUpUiSMF+FjDjAe
+	 LOWDCGa3ZC8xkhcyFVFhdlzwUZaaW5KxIgd1mP2IALkKpEdR20DDrpFaGx0mCjkxkbiVM
+	 OLNV+zujxkNV2ICksWzQZir40FCTFRDd4DgJ50ubcBa1UQvUi1znJrOjZ3AMwhQLe7y6u
+	 y+kDVuEeAogWdEp9R5zNhHtVz0hZB8K7BDjzu9n7FPN4drA4ChpSZ/W/PdmqFo5V2zg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Mw7p9x2E;
-	arc=none smtp.remote-ip=209.85.128.72
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Nvn5o3t4;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFBB606A33D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 21:37:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFFBB606A33D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64AE606A321
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 21:45:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C64AE606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Mw7p9x2E
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4bb67b2c00cso42506115e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:37:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Nvn5o3t4
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4b79502c27aso75444225e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:45:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795729071; x=1796333871; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Pf1Iv+5ca8YRb5pDxLLHR9feXnZofasjqRfhcx/I4d4=;
-        b=Mw7p9x2EZ9pfyVczwC81vadEIVNDo6/huFqtYIA1nDTuI3L1QnCY+kNqYpar0saKX3
-         7HeuP/+fgNyMZMQflAF25wPBgDYb9deavQn8tIMfrKlg31YGtoolHGUpc6V1Hn+eu+Cy
-         YA6YIxPonBvcj1UXnhSrXVCILy9lf4HSJU8/phuZxiq08fWOYXtTnytBoF8m8B+CTbyT
-         WirFS5V9LDOTOHF7FSBSPTYH2jtRf4vqtB9d6XKvDHRy36eJHEeCqJlm1JixXmDLNXLE
-         0Colw0uxWS8UJqiEE0g84scccvFDZ7i9EX/uY/7PFhb0vJzo3f4C8VJEhBL/NqY8M+QL
-         Yi4A==
+        d=gmail.com; s=20260707; t=1795729548; x=1796334348; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=rbnALwWQni6QwZzrT13h6XvdU083PfOU1t4S0GjBaUw=;
+        b=Nvn5o3t4utjFHwq8P8C6aVYApdvQi/eP6pXDMwbDBFNn+Zgs+Spze6FEolyTC2A32Z
+         w46FB8WOcZWJVaNrPLBu66odoBKakmSn6VG+/uO+VsppyYJU8O9cyQ8jmcSIp+bm7piE
+         URb3Is1TN7AbvHT04OMQVQnQ5gV430WRjcampM7+J7jQdNV7Ufq4+jUDbR4ztiYtABZk
+         S2gT+BLg97r0yPg6jKQNXzJyItAtSz3UxeyZ5CxFmA9EHnJAlsr2plu3Q4HqT5HN3HFf
+         Cz/FI32hxPt106VQserQpFlOmXee2KupSO1NBxKW17hz4yt0f+BRX68pg91EWjnNhkDd
+         l3BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795729071; x=1796333871;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1795729548; x=1796334348;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Pf1Iv+5ca8YRb5pDxLLHR9feXnZofasjqRfhcx/I4d4=;
-        b=DezHwHNLGv8Do+wbIhrf9CypDSKGtygsQNixCnMRbJomXHGyUC8KO+1Sw/BLzuRpmE
-         qryNV1MHSswmoyU0TaCcAFp6eXtwiwqkFdMbAt7FZs7Jaaw4VgZlORyqed9h9IvDXXlM
-         Da5r3HZTOaxw4wltfbRKJbA6bzdDq/5VczQ2FimB8OPMP5JUfJYSJNQ+3E5hvAzU17wA
-         0vhmoc2WpJscjEJMbdhnyhCnuk8ZDHufTfmN2akftiWUfuMUrJt82WasYIQl0rZ3gsQy
-         GPs30NVqVu25tWJQQJ65+NC8L3yjXKVupYtJQL7l/77PNmLLSnUBNt40i65zOZej4kvG
-         FB1w==
-X-Forwarded-Encrypted: i=1; AL+hErGf0D/2kQ+V1zJSgFd7JkldIsklzuzi/oIKzLb23Bifj8eNY76Gn49dU13PY27G+ufjwAANgKHPX7SmPFEw2pJwEOM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8/Lp/WW7AyZxsdJXCYygReMXsC0RJwigvmaxWUYdILzZMLkkq9
-	2YCblNrVQp9OAH0shZC72nmQ8yoB1FyTSBSh+GFW5CnjkiiZbspit3rdsigOEvmT7O/IUBCOf8y
-	+Z3Ry/l1HHOVLCp4mvEv2Bg==
-X-Received: from wmxt6-n1.prod.google.com ([2002:a05:600d:8646:10b0:4bb:6c3d:a4ef])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a085:b0:4bb:85d9:156e with SMTP id 5b1f17b1804b1-4bb8880fe46mr448975345e9.11.1795729071298;
- Thu, 26 Nov 2026 13:37:51 -0800 (PST)
-Date: Thu, 26 Nov 2026 21:37:43 +0000
-In-Reply-To: <20261126213743.3044079-1-vdonnefort@google.com>
+        bh=rbnALwWQni6QwZzrT13h6XvdU083PfOU1t4S0GjBaUw=;
+        b=aOV3SolaT4QeHEugxmENQPH5U6OAczFRS2EyVGgD1ao1mfHZ8Z43q4hSrv0qIoBHHU
+         GsbOz2KrY+Gto+Z4pjtGhG00MGc7QB19GbyzxOrhbCbMmWdricTLNJNtRvc9T7Yp0omA
+         j5ymArVwfNjxcpgG0wqNSaY2JB50z2Cj2LXKy4LfCgSepCYxQm+d7xn+eLLHebicjeQL
+         cHIrzR9YuNn/HJVwSE5q0XthvhySXpZhzb0iKCVdO+MwCkRL1zYcnbanrQiNXxSFgdod
+         p+LMsj8CJjhNHXwG5LBzFTI/tFGQ70Wq6QTD0pjK7bhaZPLOD/pMKaoS7KTKTr3cTU0V
+         /bug==
+X-Forwarded-Encrypted: i=1; AL+hErEwwYcHOYMAu2jWYhiHjMLGpk3L2Lz3qEiCvHjjl5YF7G1QTBzNVER0yGnsOSAAaG9Jk8TG2y3qOdTbJ1SppdFS9Zs=@vger.kernel.org
+X-Gm-Message-State: APuU4Z980TQhQm2oz5sdQUL8F7d2uT1aj1sbpF2i8cxhAhc/IXyhbiZO
+	4tTdC5L8PdOMYXJyvs8Fe9M80EZTVSjoyid3trSgnpvLTDbj1eKT07ZI
+X-Gm-Gg: AZFdTZcBf21E/SFY1PYSEc2OiqqQx+bXiLQXaiGbWm4iUXGX4GkV5GZhwITjvRChRtf
+	FMOrlEKoOOMVUUd6T8R03XxOEaFBhCKx3CZ2z8M4lXBYRqab2/wubHLWPP5EztC8aPewxQ/Hfrp
+	6K7qvgkkIQ97grlm88NUjxvnziEoXzRavLWjNijJwKnx4L7wHfgwajqhtoKFLgpjDGYfqYysVZu
+	F9Zv5TatBHkCgzD+mIAo5aMJCMwg/NoirPt6/nqq6RfPAMFBem7ur6u5EEz8HMRq+uh3x5Easre
+	FD5XoOOF4V0muowzNDeC0NUZxnTFkhILbPNNkvEcEFdBDkpKHhbvYCLbP7ttPxdp+2iIOixfFBx
+	zsLkVRM5+zo2ROM3zJ73wKTazR5uY2PhAlw9atExzdGDtmcZalAoO/sdTQoT8iwE7UlTwsZRrqg
+	xXLbPOPzt3j3A2DA3IQHdhrwLfvnPOqGiXBoWhm5remc0G1DvjLpzY/BgORq6fzdeA884QJvcba
+	xgJV95IxX85DHYERzTAbIzrH8u1sdTGJTH7n1RSYrkbPVN5foQOV6W2nWm1+ge9/XcSv+VK6i8d
+	IgxQDQvsIHbDbsyWpGpEyoMli5wV3TWbKepTT+NwIVJjlorJwRC31ioy/Ky4wuBwAadb4Ra1G+y
+	XyGOqrkSdl7wb0A==
+X-Received: by 2002:a05:600c:1d86:b0:4a1:fa27:df7c with SMTP id 5b1f17b1804b1-4bb88922972mr472705935e9.34.1795729547788;
+        Thu, 26 Nov 2026 13:45:47 -0800 (PST)
+Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb884a3a3dsm623698185e9.10.2026.11.26.13.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2026 13:45:47 -0800 (PST)
+From: David Carlier <devnexen@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Carlier <devnexen@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] tracing: Fix trace_event_file leak on read-only instances
+Date: Thu, 26 Nov 2026 21:45:44 +0000
+Message-ID: <20261126214544.1202386-1-devnexen@gmail.com>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -78,50 +98,64 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20261126213743.3044079-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
-Message-ID: <20261126213743.3044079-3-vdonnefort@google.com>
-Subject: [PATCH v2 2/2] tracing/histograms: Drop stale absolute timestamp note
- from docs
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Since commit b94bc80df648 ("tracing: Use a no_filter_buffering_ref to
-stop using the filter buffer") stopped using absolute timestamp for the
-histograms, the paragraph about timestamps has been stale. Update it.
+event_create_dir() takes a reference on the trace_event_file that is
+dropped by the release callback of the "enable" eventfs entry. A
+read-only (backup) instance only registers the first
+NR_RO_EVENT_ENTRIES entries, so release_ei() never reaches that
+callback and every trace_event_file of the instance is leaked when it
+is removed.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Move the release callback to the "format" entry, which all instances
+have.
+
+Fixes: 2c79da099aac ("tracing: Make the backup instance non-reusable")
+Cc: stable@vger.kernel.org # 7.1+
+Signed-off-by: David Carlier <devnexen@gmail.com>
 ---
- Documentation/trace/histogram.rst | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ kernel/trace/trace_events.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-index 97b67f05f5ea..9b301b86a4df 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -1676,12 +1676,11 @@ features have been added to the hist trigger support:
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 7f89160aeff3..b3f63b1f86e0 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3276,7 +3276,7 @@ static int event_callback(const char *name, umode_t *mode, void **data,
+ 	return 0;
+ }
  
- A note on inter-event timestamps: If common_timestamp is used in a
- histogram, the trace buffer is automatically switched over to using
--absolute timestamps and the "global" trace clock, in order to avoid
--bogus timestamp differences with other clocks that aren't coherent
--across CPUs.  This can be overridden by specifying one of the other
--trace clocks instead, using the "clock=XXX" hist trigger attribute,
--where XXX is any of the clocks listed in the tracing/trace_clock
--pseudo-file.
-+the "global" trace clock, in order to avoid bogus timestamp
-+differences with other clocks that aren't coherent across CPUs. This
-+can be overridden by specifying one of the other trace clocks instead,
-+using the "clock=XXX" hist trigger attribute, where XXX is any of the
-+clocks listed in the tracing/trace_clock pseudo-file.
+-/* The file is incremented on creation and freeing the enable file decrements it */
++/* The file is incremented on creation and freeing the event directory decrements it */
+ static void event_release(const char *name, void *data)
+ {
+ 	struct trace_event_file *file = data;
+@@ -3298,6 +3298,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 		{
+ 			.name		= "format",
+ 			.callback	= event_callback,
++			.release	= event_release,
+ 		},
+ #ifdef CONFIG_PERF_EVENTS
+ 		{
+@@ -3317,7 +3318,6 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 		{
+ 			.name		= "enable",
+ 			.callback	= event_callback,
+-			.release	= event_release,
+ 		},
+ 		{
+ 			.name		= "filter",
+@@ -3380,7 +3380,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
  
- These features are described in more detail in the following sections.
+ 	file->ei = ei;
  
+-	/* Gets decremented on freeing of the "enable" file */
++	/* Gets decremented by event_release() when the ei is freed */
+ 	event_file_get(file);
+ 
+ 	return 0;
 -- 
-2.56.1.839.g22a8290db9-goog
+2.55.0
 
