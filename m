@@ -1,83 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795698059;
-	b=Sy4SrGV3BrB23G741cBtqG2LKBfwT+a1cLNDhaxpAsHW9Bz7YfBa5M5bbz7sQu7Sh9CX
-	 /Z6USKcroEuL4A1MFha6zk3qH1U8XTyZ2i9qmSD7p8Ko85akP8qa6KglURGdnetfkOZ22
-	 EjPwLQEv+YlDiFHh6mzOkunZ9OSy1burJEmfTZWo+qdr5L/5oWu5Y3OZTYY9n48bHKS8J
-	 NVk51PUhWUl7+55c45/BVkCOKtWy5JMAhDDoqCxQhO4OfU5QbgOWhwRQwbL8XQy56MvZJ
-	 Rgi8KZd805QRrDFcqQWW4y14OC2vem+tyOA+hdjMPQSFiDKlN1pAWYXW4h1t4kOyKrQ==
+	t=1795698063;
+	b=ttM5wTp1zXN57ft62oycrctw5yPtyvrdxb6MV0SOucnNAKU6ew9YlyskkOFofX7OzsXI
+	 MLpqOsWuWu7LbkMxuPwu5MzYo/3GHSpJHvJcz8ASH/Bhs7AberJlUvb6Rjw2Soy/lBEHn
+	 SFIIrhs8MgLItc5rzVO4/2npz+yUHcxayE8Hin1S1lY7GZbccCmduvjtZJ0iv5n2ni/8U
+	 TDmVBbYdo2nHQzHvcJl1VwOCEURHAOL4tO2fzR9TMG57k5K5tV58RVpXdRCQZ/n3WFYZX
+	 oGLIBnzjBNWBzHoj+IehqOy/JmCMG18Fa/Q23iAS81eSOZtGnSUeYl7vRnVu13MyZOw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795698059;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795698063;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:To:Cc:Subject:Date:
 	 Message-ID:In-Reply-To:References:MIME-Version:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
 	 Content-Transfer-Encoding:content-type;
-	bh=zE0J4QpIwg5IzzFAu5Y4rWVJIQvYvQMiA6xWd26mo7U=;
-	b=X/3FNB/wwaeD9TXwL6MWbiXI5NT4jvM4JOq9+aizd5r3rtwK4NX799n9caE0NRX98pXg
-	 1OgoYp4Ro8L/3e0kb3alVX4skAogGjlDuugLJ6Nu1L+hxI5BH2koki0JUSU+qE6u8wlBV
-	 G2Satam83PqAlL9c0yzUt85X3CUYUoOo50Em58C1qXEu8hCO8D/iPkkqOMqvj/1qVzlVI
-	 jXLp1AZD7sg/+AqItbhQX1xdkkSGnAH9euyDf+d9FLLJDUOhpF6QqRduncrgzksvSTykP
-	 cE7qOxrl6+KP6J42PeeM+s25TTH32Eltv3igsRDLfttuHB5WxX0YUUiY1G6q8JZuzmg==
+	bh=2TuYN3pP/IAzKqWS/FNEppG7GioCEjQUwDIqKAyfFfU=;
+	b=A2nMciVCU7Dhe6BmbK8IdTEiVriZBSXULI1erPmRHA+JVlunf5qCWAsSLxbvtLwOoGxH
+	 TBNX3NfUXzLyKYIQ9j98FlgHcLDY2OFbwT+C7nb/18QA+kJ2R6IDUTRY/HZQ+Nr5H5Ey+
+	 Udbk9wzn5GLc3gMtIEIWES+Wef7wvfzZJy76gCPnpLWXPYdqaTeLbmxLpfT53IkMZqRlz
+	 Na1d2E+1+pt+SDmMAf/slFlIzpRItN1JSM1Dqps/zC7YLZm34iJTo8UFgrAI1iZ/3fveh
+	 jE7FNnyWabnMwTfoYtksIxr+tIdEcoym98QlXHnB5F95A8q2O04cluNamxU45RK4h3A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QyRQuGG+;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=SGGOCNqw;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3059E606A326
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:00:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3059E606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238E5606A331
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:01:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 238E5606A331
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QyRQuGG+
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=SGGOCNqw
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795698057;
+	s=mimecast20190719; t=1795698062;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zE0J4QpIwg5IzzFAu5Y4rWVJIQvYvQMiA6xWd26mo7U=;
-	b=QyRQuGG+BYq11327LAxNaa/hteOgCTtpvjsfHgFUd2CKrAKh8ochkBQAuJJEP48a0SY5Vp
-	hatQ+AL6Oczm5q24+Rm7oPqrANg1CKZcaHlH7gF4rpjLhn+JaGFLJX2/OJdE1S2fHMJFav
-	mjaqWdVfjw4DzrdImKX8U2fWgD2C6fY=
+	bh=2TuYN3pP/IAzKqWS/FNEppG7GioCEjQUwDIqKAyfFfU=;
+	b=SGGOCNqwXNoou5NWJIgsuqd7XrdDTO4maUoxNainOdkfM50DbMvvfy//hMvx+B0RcjTx0q
+	Pj2VXLLPiHulQMx3ij7VK8UXYYSoh4/oYKDT3j66Hll9EDPC5WeR7yrb+jyYID8oVKcpyG
+	4Z5ypLPGrtMaSW3ooh85tvuF+hVss50=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-284-yhw7V2xDPyeuUEFGcwh1bA-1; Thu,
- 26 Nov 2026 13:00:53 +0000
-X-MC-Unique: yhw7V2xDPyeuUEFGcwh1bA-1
-X-Mimecast-MFC-AGG-ID: yhw7V2xDPyeuUEFGcwh1bA_1795698051
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-31-VEPcXDOpOhuyzlggLXn4Vw-1; Thu,
+ 26 Nov 2026 13:00:57 +0000
+X-MC-Unique: VEPcXDOpOhuyzlggLXn4Vw-1
+X-Mimecast-MFC-AGG-ID: VEPcXDOpOhuyzlggLXn4Vw_1795698055
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 149051800984;
-	Thu, 26 Nov 2026 13:00:51 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4ECBE1800651;
+	Thu, 26 Nov 2026 13:00:55 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7B2DB1801A70;
-	Thu, 26 Nov 2026 13:00:46 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 317CB1800543;
+	Thu, 26 Nov 2026 13:00:51 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
 	Nam Cao <namcao@linutronix.de>,
 	Wen Yang <wen.yang@linux.dev>,
 	Tobias Schaffner <tobias.schaffner@siemens.com>,
 	Viktor Malik <vmalik@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v3 05/18] rv: Add generic monitor event tracepoints and BPF kfuncs
-Date: Thu, 26 Nov 2026 13:59:51 +0100
-Message-ID: <20261126130004.127155-6-gmonaco@redhat.com>
+Subject: [PATCH v3 06/18] tools/build: Add a feature test for bpftool-btf
+Date: Thu, 26 Nov 2026 13:59:52 +0100
+Message-ID: <20261126130004.127155-7-gmonaco@redhat.com>
 In-Reply-To: <20261126130004.127155-1-gmonaco@redhat.com>
 References: <20261126130004.127155-1-gmonaco@redhat.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -90,174 +89,60 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: knKQaDv1ZuNwPbm7gH4R0JNweEOKLlMAHyw_uNyPT-o_1795698051
+X-Mimecast-MFC-PROC-ID: -o4ne4BI5L0yvzJJDZjs1N08JhkP4SvStmdaQysQzqA_1795698055
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Add event_monitor and error_monitor tracepoints, carrying a monitor
-name and a single formatted message. These tracepoints aim to replace
-the per-monitor tracepoints for a set of monitors (now BPF only) and are
-generic enough to allow reporting from different monitor classes.
+RV can run bpf monitors and also build them, only the latter requires
+the vmlinux.h from bpftool btf.
 
-Add also bpf_rv_event_monitor() / bpf_rv_error_monitor() kfuncs wrapping
-them, so BPF monitors can emit similar events to in-kernel monitors.
-
-Userspace callers need now to use ftrace filters to get the right events
-but events and errors are separate channels to ease the most common
-filtering and account for dramatically different volume (errors are
-rare).
+Add a feature so that RV can be built with BPF support without having to
+build in-tree BPF monitors if not supported on the system.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/Makefile   |  1 +
- kernel/trace/rv/rv_bpf.c   | 76 ++++++++++++++++++++++++++++++++++++++
- kernel/trace/rv/rv_trace.h | 37 +++++++++++++++++++
- 3 files changed, 114 insertions(+)
- create mode 100644 kernel/trace/rv/rv_bpf.c
+ tools/build/Makefile.feature | 1 +
+ tools/build/feature/Makefile | 7 ++++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index c895d81dfdad..588250ce3fa9 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -3,6 +3,7 @@
- ccflags-y += -I $(src)		# needed for trace events
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index c010049d9720..79e08fc62bb5 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -129,6 +129,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          libdebuginfod			\
+          clang-bpf-co-re		\
+          bpftool-skeletons		\
++         bpftool-btf			\
+          libunwind			\
+          libunwind-debug-frame		\
+          $(foreach arch,$(LIBUNWIND_ARCHS),libunwind-$(arch) libunwind-debug-frame-$(arch))
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 359da8b98bc5..e021846fb662 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -71,7 +71,8 @@ FILES=                                          \
+          test-libpfm4.bin			\
+          test-rust.bin				\
+          test-libopenssl.bin			\
+-         test-bpftool-skeletons.bin
++         test-bpftool-skeletons.bin		\
++         test-bpftool-btf.bin
  
- obj-$(CONFIG_RV) += rv.o
-+obj-$(CONFIG_RV) += rv_bpf.o
- obj-$(CONFIG_RV_MON_WIP) += monitors/wip/wip.o
- obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
- obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
-diff --git a/kernel/trace/rv/rv_bpf.c b/kernel/trace/rv/rv_bpf.c
-new file mode 100644
-index 000000000000..f39f33335c71
---- /dev/null
-+++ b/kernel/trace/rv/rv_bpf.c
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * BPF kfuncs for Runtime Verification (RV)
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/bpf.h>
-+#include <linux/btf.h>
-+#include <linux/btf_ids.h>
-+#include <rv_trace.h>
-+
-+__bpf_kfunc_start_defs();
-+
-+/**
-+ * bpf_rv_event_monitor - emit an RV monitor event tracepoint
-+ *
-+ * @msg must be NULL-terminated, drop the event if it isn't. This happens by
-+ * construction if using snprintf-like functions and passing the right @msg__sz
-+ * to both.
-+ *
-+ * @mon__str: name of the monitor
-+ * @msg: message string
-+ * @msg__sz: message string size
-+ *
-+ * Return -EINVAL if @msg is not NULL-terminated, 0 otherwise.
-+ */
-+__bpf_kfunc int bpf_rv_event_monitor(const char *mon__str, const int *id__nullable,
-+				     const char *msg, u32 msg__sz)
-+{
-+	if (strnlen(msg, msg__sz) == msg__sz)
-+		return -EINVAL;
-+
-+	trace_event_monitor(mon__str, id__nullable, msg);
-+	return 0;
-+}
-+
-+/**
-+ * bpf_rv_error_monitor - emit an RV monitor error tracepoint
-+ *
-+ * @msg must be NULL-terminated, drop the event if it isn't. This happens by
-+ * construction if using snprintf-like functions and passing the right @msg__sz
-+ * to both.
-+ *
-+ * @mon__str: name of the monitor
-+ * @msg: message string
-+ * @msg__sz: message string size
-+ *
-+ * Return -EINVAL if @msg is not NULL-terminated, 0 otherwise.
-+ */
-+__bpf_kfunc int bpf_rv_error_monitor(const char *mon__str, const int *id__nullable,
-+				     const char *msg, u32 msg__sz)
-+{
-+	if (strnlen(msg, msg__sz) == msg__sz)
-+		return -EINVAL;
-+
-+	trace_error_monitor(mon__str, id__nullable, msg);
-+	return 0;
-+}
-+
-+__bpf_kfunc_end_defs();
-+
-+BTF_KFUNCS_START(bpf_rv_kfunc_ids)
-+BTF_ID_FLAGS(func, bpf_rv_event_monitor)
-+BTF_ID_FLAGS(func, bpf_rv_error_monitor)
-+BTF_KFUNCS_END(bpf_rv_kfunc_ids)
-+
-+static const struct btf_kfunc_id_set bpf_rv_kfunc_set = {
-+	.owner = THIS_MODULE,
-+	.set   = &bpf_rv_kfunc_ids,
-+};
-+
-+static int __init bpf_rv_kfunc_init(void)
-+{
-+	return register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING, &bpf_rv_kfunc_set);
-+}
-+late_initcall(bpf_rv_kfunc_init);
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 24d4b94a54a5..9fa9e1230e84 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -292,6 +292,43 @@ DECLARE_EVENT_CLASS(error_ltl_monitor_id,
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
- #endif /* CONFIG_LTL_MON_EVENTS_ID */
+ FILES := $(addprefix $(OUTPUT),$(FILES))
  
-+DECLARE_EVENT_CLASS(event_template_monitor,
+@@ -370,6 +371,10 @@ $(OUTPUT)test-bpftool-skeletons.bin:
+ 	{ $(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons'; } \
+ 		> $(@:.bin=.make.output) 2>&1 && touch $@
+ 
++$(OUTPUT)test-bpftool-btf.bin:
++	$(SYSTEM_BPFTOOL) btf help \
++		> $(@:.bin=.make.output) 2>&1 && touch $@
 +
-+	TP_PROTO(const char *mon, const int *id, const char *msg),
-+
-+	TP_ARGS(mon, id, msg),
-+
-+	TP_STRUCT__entry(
-+		__string(	mon,	mon	)
-+		__field(	u8,	has_id	)
-+		__field(	int,	id	)
-+		__string(	msg,	msg	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(mon);
-+		__entry->has_id = !!id;
-+		__entry->id = id ? *id : 0;
-+		__assign_str(msg);
-+	),
-+
-+	/*
-+	 * The id is used only for filters, if it is of interest in the format,
-+	 * callers should pass it to the msg too.
-+	 */
-+	TP_printk("%s: %s",
-+		__get_str(mon),
-+		__get_str(msg))
-+);
-+
-+DEFINE_EVENT(event_template_monitor, event_monitor,
-+	TP_PROTO(const char *mon, const int *id, const char *msg),
-+	TP_ARGS(mon, id, msg));
-+
-+DEFINE_EVENT(event_template_monitor, error_monitor,
-+	TP_PROTO(const char *mon, const int *id, const char *msg),
-+	TP_ARGS(mon, id, msg));
-+
- #ifdef CONFIG_RV_MON_MAINTENANCE_EVENTS
- /* Tracepoint useful for monitors development, currenly only used in DA */
- TRACE_EVENT(rv_retries_error,
+ # Testing Rust is special: we don't compile anything, it's enough to check the
+ # compiler presence. Compiling a test code for this purposes is problematic,
+ # because Rust will emit a dependency file without any external references,
 -- 
 2.56.1
 
