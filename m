@@ -1,49 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795726810;
-	b=k/DaoAJWKY0SjXjkhq9JOXV9nAlyInLfU89kvK2i6TpCg7QgKO4vP8au4yERNCgavGzx
-	 qYy7P+WbQte0g7U+InBUiQBaUJ6ZW5AafexC/GNx6V38YcWQJCEOYI+UjmBPzlsJdgnry
-	 SU4dFZBmtA7fAhxymK8huvmEOgVuT0VVY93Qnp0A8+GH300mgugU5AhM8YicayWsscp0b
-	 U9VH74dWoaEYWPD9Qi6Z7gmb7e7v+miwsZmysAD4g6WkVMQ0+t+Bae/mjagW7WujL7ppY
-	 RNNaWh0xEnuNA2MOxK9oc6u1arO16ileXypoaJwWLLi0WIaN7H6f5dXf4l5PmcCbB+Q==
+	t=1795729072;
+	b=Ewzf72LNjP7io/vh0ftGIQSRiKg/Lx2vnUJkGy9kUGTdEeusZ60bPhZ4+rbwRnAZPcqG
+	 KSG/9Dm+2kX4hk4ykGsCF/ln1Q8gtytPI93WKiHJXbVRtZdgqYiZVpiLWQI0mt/3NZntv
+	 odExci3at67dgtmWlWgLWrSx/fqxDmtc6dDdnjFH949RAUomPsTVsfwL2o733Kd6jrfWv
+	 jgT9FQej1h5HBaIjuWPgnkSKlObiBSq2COU5t592FCVvJC7RSB2PMmn6QwHqB+o5gMm2O
+	 rwdBIFFUuOeUntX59sTqyffZtm39ffWbiv5JPgw0yCaBkX3ZZmtFo52jA2JAh/A8wIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795726810;
-	h=Received:DKIM-Signature:Received:Content-Type:MIME-Version:
-	 Content-Transfer-Encoding:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc;
-	bh=L2EUDWrGprysBtTQg6JNgt9Au2GThQvZuOs0KqhjIOc=;
-	b=LYIqHWFPzu6XF9pjsiuql3pJcesU5Ptma0Bj+8y98EkkJqFwCx3Mf+tsmWkWTU7Us90x
-	 2F0TsYflr/2pVwzM/3RKAgCRL+YhE0BvbU2vv60CTTjjrkbRdedZ7T4np6GTZhWhm2V1Z
-	 axu96DeU0x8GwRyZbl81vFbGqZ/VjCTg3dGGQh2m6XeLuw2R5vuL7/M5MJgYQjdyXUi9d
-	 kLMMeik8+Of3PC+ddbzvI+sIJQCqVtFJe083cmwMYzN2zYeqOZbX40ketNAt53iiPo5LX
-	 k8ESQiOmmRTwCLDX99HPMExYPGEX0GkESx8+ND8aMYIAn4kGHxY4fvdoUHu6TsBxXxA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795729072;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=+mFlV1Y/d18LL9hJ2/iQPBUptGZF6KZfpVM7ZDgF2QM=;
+	b=qhRkymICIj4aNDhxtCmMr735NN+5s3BNgfa6eIvFVyyk1pXOEew/iDCQjEXbZ6Wmu0RN
+	 kh7scB4Cik9GHdsTNDJGWKSYT3yJlqHglGwz84RBn9d0UvGo9L/p/4LFhBiGbwHB/JyO8
+	 lClWPSc0oel2t/m9doSJkn6oNqmYPDw7NKHpgH2IgB53AEmpT4CpzCVJcOO+0QIVFn1jO
+	 5r+czHUiJQagVUs5Ln5N1IJiccHrJHGzDO1EFz0vZxF9WAxQIrRcsPNhCN6d0f3fOWYs3
+	 2ce/BNV0JeNYC5LhPx36pznIJAJcw4lKcZjF0ASWtyZzJvfeHQpILq6HmMpvTIbC0ig==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=acxnUDQv;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eX0cfqBM;
+	arc=none smtp.remote-ip=209.85.221.70
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B226606A323;
-	Thu, 26 Nov 2026 21:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0F1606A32C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 21:37:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ED0F1606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=acxnUDQv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B72D31F000C1;
-	Thu, 26 Nov 2026 21:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795726809;
-	bh=L2EUDWrGprysBtTQg6JNgt9Au2GThQvZuOs0KqhjIOc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=acxnUDQvYX7IUP6aztJayBqdQ+yBjo1O220TVMSoV6okvGms61PVW0Ga6u/m0JMeD
-	 oqgKZTFgaaKrbkPHwGYXZGf+Pl2nBeD7HwKwwl7Nnzz9tE5+JU5FahrMfbCmHBPnkT
-	 JDL1xZUwUJIR+myWD2TH/0QPZu8pbD4Js6KAyqZutBrfhW1BVmwcnf3lJNL5Xz/lz7
-	 FVrIcn2XWXAeBNpS3ZD1E+S7wUj8KbSQcOLFxAGABistMtV4Ay0Gm5usIC2a/WS7xU
-	 Zpc4Zm0sJNDsxeruF1D1Jq1AM6F+n44Y3F2cxFPdMhCDKx0pjdgPKL6yd8sgtiS7tP
-	 mVLSxW+i0Ahbw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE82F3803326;
-	Thu, 26 Nov 2026 21:00:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eX0cfqBM
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4b9f361d9b8so1443836f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:37:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795729069; x=1796333869; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=+mFlV1Y/d18LL9hJ2/iQPBUptGZF6KZfpVM7ZDgF2QM=;
+        b=eX0cfqBMsqkjTdAZKa26yO8ixE52LhB94CBDyUa8d9rxejQ/65p00cva/9T98VenN7
+         sYwwtl9hqLhOyLjfuHjjAX/cdXD7Q+nlu/d5dq187nNAJhB1HbQO/ZVJOJkec5m3434p
+         ZCRDW8OBfGSd+1JEGki3VSqNRc5tDfOd7mq1oJCZkDJNn8N319qBR9zGX0/Je5HHmYQB
+         Q8kWLs4+C5xZvyA898bccsqQ2ULta1jzBx0PvWf19oHpfUpfCEqxfOaXGKX/fhEqlMpr
+         GG6EuvuPh0rKf8pbjdrCJkaK/lJ1Bu6WehHR274j4m7Ti4IW+tfPSApopXSwaUv6n7QT
+         FtWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795729069; x=1796333869;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+mFlV1Y/d18LL9hJ2/iQPBUptGZF6KZfpVM7ZDgF2QM=;
+        b=AQ4oitDIzbGZyqARwX9hBiwP/nWwWRkZAzxCZ4v2PTO54E/cMmLyFky2qqatlVQbbg
+         Y8sRqcTOmJKmZUgFlzOrwFA6/OEJNbL6NNI6b4dvDZHMVZrxveE6qjXSNG6CfGmtnobm
+         Jo72hbdj+gnipfBYuagHdpVADtEulJpB561vRkcH3CxnJPpnF3RmxjaXA9qvxxsrgVWd
+         M8QJf9lRLZMh5nqnDoSHnGDHqlfuKbBGD3N00FokyplDE6TWTnlwwzlCw14tZuo7/2X3
+         d6+Vg1WLkOWfd2TxaViPvqV0aBCGa1sLOn9NsZIy1dagh4Xi0Q3EaHhaJIL4wWaZLKo4
+         wTnw==
+X-Forwarded-Encrypted: i=1; AL+hErGZeEbeX0wBcBYNuzOjfsc7UMcL1UU9iQ/6X5kmAFV0lgmCOUzdeGP4tqIX6sxzuuEZ/yBr53XW8wZn0Jv91Js1dYI=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/Gy/ts2qnqZeil8ABgk5ggP9ojHfwx+40IxwaZUkbwj3KyjhfA
+	qBGPHHgsdOSiqPMeUAFYxY/ozB6teFdNcBBnqEWy5LuSHylM9/ItJzv+fHPkkRMwQ+NTmElLwNC
+	D27kYHSGiIqjSSShCzhm5Bg==
+X-Received: from wmsp23.prod.google.com ([2002:a05:600c:1d97:b0:4a1:811f:6de2])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3ba5:b0:4b0:a307:46f8 with SMTP id 5b1f17b1804b1-4bb8880f29bmr507010265e9.10.1795729069135;
+ Thu, 26 Nov 2026 13:37:49 -0800 (PST)
+Date: Thu, 26 Nov 2026 21:37:41 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -52,63 +75,44 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v4 0/6] bpf: Add log support for tracing
- link_create
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <179572680824.617567.1633909900114303634.git-patchwork-notify@kernel.org>
-Date: Thu, 26 Nov 2026 21:00:08 +0000
-References: <20261125143138.47174-1-leon.hwang@linux.dev>
-In-Reply-To: <20261125143138.47174-1-leon.hwang@linux.dev>
-To: Leon Hwang <leon.hwang@linux.dev>
-Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
- john.fastabend@gmail.com, andrii@kernel.org, eddyz87@gmail.com,
- memxor@gmail.com, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev, jolsa@kernel.org, emil@etsalapatis.com,
- ihor.solodrai@linux.dev, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, kpsingh@kernel.org, matt@bobrowski.net,
- shuah@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- netdev@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
+Message-ID: <20261126213743.3044079-1-vdonnefort@google.com>
+Subject: [PATCH v2 0/2] ring-buffer: Remove unused absolute timestamp mode
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+Since commit b94bc80df648 ("tracing: Use a no_filter_buffering_ref to
+stop using the filter buffer"), nothing enables buffer-wide absolute
+timestamps on the ring buffer and userspace has no interface to set it.
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+This series remove that dead code.
 
-On Wed, 25 Nov 2026 22:31:32 +0800 you wrote:
-> I'm planning to add syscall common attrs support for LINK_CREATE cmd.
-> 
-> This is the second series for the plan, that adds syscall common attrs
-> support for LINK_CREATE of tracing prog and cgroup prog.
-> 
-> BTW, address Andrii's review [1] in patch 5:
-> 1. Change if (!OPTS_ZEROED(opts, iter_info_len)) to if
->    (!OPTS_ZEROED(opts, log_opts)).
-> 2. Add comment to iter_info and iter_info_len that they are
->    deprecated, and use iter.info and iter.len instead.
-> 
-> [...]
+Changelog:
 
-Here is the summary with links:
-  - [bpf-next,v4,1/6] bpf: Add log support for tracing link_create
-    https://git.kernel.org/bpf/bpf-next/c/be52e74c3df1
-  - [bpf-next,v4,2/6] bpf: Add log support for tracing_multi link_create
-    https://git.kernel.org/bpf/bpf-next/c/3e5de7a1a5a8
-  - [bpf-next,v4,3/6] bpf: Add log support for iter link_create
-    https://git.kernel.org/bpf/bpf-next/c/892d17776b75
-  - [bpf-next,v4,4/6] bpf: Add log support for cgroup prog link_create
-    https://git.kernel.org/bpf/bpf-next/c/554864149321
-  - [bpf-next,v4,5/6] libbpf: Add log_opts support for BPF_TRACE_ITER
-    https://git.kernel.org/bpf/bpf-next/c/72fb27b0551d
-  - [bpf-next,v4,6/6] selftests/bpf: Test tracing and cgroup link creation logs
-    https://git.kernel.org/bpf/bpf-next/c/42fe7db4d6b6
+v2:
+  * Drop the tracefs timestamp_mode file and its documentation. (Steven)
+  * Rebase on 7.4-rc4.
 
-You are awesome, thank you!
+v1 (https://lore.kernel.org/all/20261105202814.1350312-1-vdonnefort@google.com/)
+
+Vincent Donnefort (2):
+  ring-buffer: Remove unused absolute timestamp mode
+  tracing/histograms: Drop stale absolute timestamp note from docs
+
+ Documentation/trace/ftrace.rst    | 24 ----------
+ Documentation/trace/histogram.rst | 11 ++---
+ include/linux/ring_buffer.h       |  2 -
+ kernel/trace/ring_buffer.c        | 77 +++++++++----------------------
+ kernel/trace/trace.c              | 43 -----------------
+ 5 files changed, 26 insertions(+), 131 deletions(-)
+
+
+base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.56.1.839.g22a8290db9-goog
 
