@@ -1,91 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.15
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795650015;
-	b=V2qxGvwkFJ6lXLVEocLJOOZWGr3qVBjtieVdFyQ/WSa2r5REyI8CQNxsNShpZerqMp4o
-	 Z7cJpng3gD0VTTjKbREM/qYLVslbPuYYkpx4uzLSJcvzHyO7+bF1QSP37euBWLRZ/FwIr
-	 ta19bWsPDn9DJllmr7yBsOBtv2r/6yqrcZcfiCnqPAIDO/vu10h1c0E8Z1rZ+UvFX7hOR
-	 WwKEMq1YE6YIcM0aCQMR2o6jdpjNZoJ1NgUUGn/K2Ax1gdD4Q0bty0pdSHY4GOdqm2Ywb
-	 5z/BtDiPBtviDSCO7ZZi5oqiTjfq3qhtUe7lMWaH9I0anec4Et8NyDPQGO5cJ+XTSSw==
+	t=1795657649;
+	b=XNAV5zjiS84bdoZkWG1EWROOlJhUh+uuZuxMMpgBsboquPVrZY653JmRedWAg7HD+/or
+	 AlQQm1R4CDlaxcrOEUfLgfr7LlFhgv29V0vy2Enic/OMklLNRj7WhuRWJbbp5LTP2u6JI
+	 0fRUTFAoD69rgG3tsiEI0D6L04eDjtMx8FkImRCIyPJIZAFoy4qAK/FReKpPQWAuVFTJu
+	 qNtyWMaqUfyYst85R9pT40kFzLOhEpRM26nvPd09zzuFtUc4VMyfhVJM43h96bK74I4hK
+	 1joTUat/BMzy02rJ1EHJjjYl8IgHfanMogS+XfS1qHiV08Jrs3B6ttgIovOuoGYXhYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795650015;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=sy32AM7OWNp5QprjDSdpmB7KMgeEhH1/PrZNTOpYGSI=;
-	b=ZPzUGakFhNGvQET9ctE6EchEyqtj9nS0Of4Guet62MvUn+yTOHiEw1TuXS6+oG6hmc4K
-	 j1BMNYaC5IIs2OS2njHNkV/ckCQAWJLpiNVoGFTDYRNaWfzxV4LHVkG/100RbFkpIWbeP
-	 +DhFhOovhHqIs8s0+m4ggMjZmEM94x/jKsm7KhnTdgdUksactwJCxki3STWQe5NHI47Vv
-	 /wOsA9rKej44w50AygF706+3RIeYKE05bn1Eg58y8n7nlii8pwXNaAuTdFlUTl97nAK1I
-	 hIsl0flXgeIL7HCtJf/uNwYAHsyV2V4WUWnlageuigZUz4uM69M5ai3wXLpSuriX6Zg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795657649;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
+	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=9pSoGA0FKgybkC+5W6ehrJyA9Ds4tlrBQ8bhP15p+dQ=;
+	b=thmo9gArJEJN1128ezDBv2NESr35aJ5ovAQZPRMBd3N4AdTLAK/6TaON2eAZ4jmsxMDE
+	 U+Yfkgw3l6rlkSHn/6D2yjtNPOl7qukZ0YKFl6PRxdyBpcS5qhVVGd8Ge++HeAzZsM7zt
+	 IIgQrSXo4Z6W8xLIhx4jW6+LGwKEHEyJLK5/kkBoonEKqrRrZ2iXyCKEuMn6pg3sgLEBw
+	 MgY1IROjDMmgqc3CtBDyZV+9aYHHPu7f6OzxdtDazjOw2YstNaz81Ko3Pq1W9PWD8tOOz
+	 WGXCjvBd/7+74HhcTprkWJL32gLyBbhgd0Maidkg1wx5W/27Z0Oa+L3r3SR6JNcUKyA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=eV7s7p48;
-	arc=none smtp.remote-ip=209.85.128.54
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=3U+fUPGX;
+	arc=none smtp.remote-ip=216.40.44.15
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18505606A323
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 23:40:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 18505606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1768E606A31E;
+	Thu, 26 Nov 2026 01:47:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1768E606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=eV7s7p48
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4bb69f5b161so41587225e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Nov 2026 15:40:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795650013; x=1796254813; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=sy32AM7OWNp5QprjDSdpmB7KMgeEhH1/PrZNTOpYGSI=;
-        b=eV7s7p48l0yWT+W7zLISJg0zwgqnRnYXAqaouqk6QzCcqvsKi6IQ6gvBcuKe3y3jEI
-         U/gO/KkZKX7nPeIDHZhOmTYGTD8oQruIjejDeGJQDxIyARVwAQrCs/FnHVm/sGmmAtP0
-         eFX5dWz7uBGLNOCvmKgWyCM2ClO6v7WccN92uBSdDZcJB9ka0iSXLL7CtikujSwRHEp2
-         cIY/0zTCEpoqeUS5HCT4arF4+dbh4Cq4eUJep6GFwOXmg5ISC/0x7dIwRlH84RzMRLWv
-         23zuRHDaokVfMqMEM4A4RU+IRaSC+ZeWVJGT4/7ym+U1LtsT87BzsfTP+WdFov4UYMZY
-         8lbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795650013; x=1796254813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=sy32AM7OWNp5QprjDSdpmB7KMgeEhH1/PrZNTOpYGSI=;
-        b=yD9+4WMeWRwmWu7chXcRKYqZerreTOlExwI6B85KN2RZJU4JUF67L7/LZ/b5KzRsRw
-         Oo6tLXDvC5PX703J0BbITyvpWgEPyaNzQuOSR5K+Yv3zE8QJX2wzpgKun5iL5MQ1iogO
-         mxE+PfhfCyTnvMETR2sgVBsoV5hcM//fWaVYPChLS3r4gZp37NCE9874Nw3T/IU7oxBN
-         VTt65r2/igf2pSSndfgLMnDTM8krcafSxUjWA8FP/FNQATnxoHvG+UsEUIbfp1S4IWz4
-         LxmY/cPgU8UVOIbKxtEO/V8ewRnMo0B6MO1mT1qGxM9Fn2J4iuDwxraZHkwXnR/bkXUk
-         9ieQ==
-X-Gm-Message-State: APuU4Z/SpmRrwSHcU6whSk+WWnzY9UGR/MvXUhENLMw770pSbZXKJY0d
-	jndG0DLMRQwp+fvTGQ6oxPLisRc1u4anuSe9MTU82oeL0aj9ae56pZ9COo8www==
-X-Gm-Gg: AZFdTZd+YoNmMdUm9WsXw6p+ED/37SGrw8qQbX2V3QpgxD7umMAlEXB0eBolJtg29aG
-	xVZpyXoUnE6cUDteuySA6VLb8Fyp6tBA1CugjCzXKpucSOjAr17Uc2U7iU6JhW2HO8ojUJJFs7q
-	34fGxYCpoQu647wgghPkpXEEqTpR0PIu3pKWUxVoe9fK51UP4VHeDzq4L+IO75NlG/REQfvtp4I
-	Ipfpl1o/4NIfKoekUYMOrgbar8+tWx7rmL2k4aMejyUwREZPhQ93Xd/1vEI6jBsFLNOcMYjyPyB
-	gnxdolLnXZ/MvPxqHD/c2yg+R6YKobBcUWau0WDvoV/keRSBdxKZeqhCjItE1bga3TjXEabT578
-	td3NNeAX4A2zjaFkHdseDbhRGyW04lxqR9g5uRzKwFNc2WufOHvbF1FhF4l4A97PYVVe3sUtJ3t
-	eOld24spU0icJFvsNV1fFlwD8GxIoFF8NgEXsxuXgpqACr0AqOtbZzr6B+iOceryjfB7kv+6CiM
-	EeUxGdiPoyWtZZnoCnivH+I2FgTwgDXLudDmBp/m0CrjfFPjGL6Xbt5BrrRfaXoLNaXgcOSSmlu
-	bC6OUlUlckExHFPvUSvruI7J0+/nMryqNOwv/GDwPzaBDNzXbM8GStH+7wVPul4d/cz+hnkiRsM
-	8BaFEHFFclQd3QNH6pjoMkLB45T8KgPqqD56KTQyLmHvfklExvuVcVg7kr+yJzQqEaI5fvJgBqr
-	J4/2GAer6RK1dAmF/Up9bM//6psnF8goh42CwovbIublwHkzoUgbasdyykdJRPv3MmQ9PCyOhA5
-	dwRYh+QOYDvHpXBFQNbHR4MunPapeY+CUIBmCg=
-X-Received: by 2002:a05:600c:1d09:b0:4bb:6fd3:5ac0 with SMTP id 5b1f17b1804b1-4bb88816c7emr423168995e9.28.1795650013339;
-        Wed, 25 Nov 2026 15:40:13 -0800 (PST)
-Received: from longitude (2a02-8434-fda5-4201-e77f-3dca-f235-969c.rev.sfr.net. [2a02:8434:fda5:4201:e77f:3dca:f235:969c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67fe75sm42466849f8f.24.2026.11.25.15.40.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 15:40:12 -0800 (PST)
-From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-To: mhiramat@kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/bootconfig: Reject extra positional operands
-Date: Thu, 26 Nov 2026 00:40:04 +0100
-Message-ID: <6e1358cefd6ed85c1c264cfbe195b913a8a0aca1.1795650002.git.edumucelli@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=3U+fUPGX
+Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id B50748022B;
+	Thu, 26 Nov 2026 01:47:20 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id E65A32E;
+	Thu, 26 Nov 2026 01:47:18 +0000 (UTC)
+Date: Wed, 25 Nov 2026 20:47:17 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 15/15] selftests/ftrace: Add event filter syntax
+ check test case
+Message-ID: <20261125204717.260e01cf@robin>
+In-Reply-To: <179323798449.740114.5416715723328926616.stgit@devnote2>
+References: <179323784538.740114.15323117974242744566.stgit@devnote2>
+	<179323798449.740114.5416715723328926616.stgit@devnote2>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -95,67 +62,30 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: E65A32E
+X-Stat-Signature: ygsi43z5rtkjdzb85kmbigep5k6wsaok
+X-Rspamd-Server: rspamout03
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/5kGPTTv1YJg3M6gt8AiU2JDJeCpz1o5o=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=9pSoGA0FKgybkC+5W6ehrJyA9Ds4tlrBQ8bhP15p+dQ=; b=3U+fUPGXCzdyI64OMpciwBcG2RNdKBY1QGL117mH41t8WD8ZoeQ/XVrQ6EKQEIiJAAXRt5daMcNmyG49RM86F9PMwQa3m/sgCCHfLHa1iaqA3GVr8NPz4zQ6EO5f2UzjV61DQ9A74A6nMsd2n5EQMw0DvoihVSlbpGwEx4D0a/c=
+X-HE-Tag: 1795657638-91179
+X-HE-Meta: U2FsdGVkX18elQPnQSUv2kb8GzgfKs6fS5Buo1kblyqjOj9sqyvJxe9FRvcC9xTZE+ytheo29FGZVZ1OtR+opo0QsONjPz1VB46k2bnFGMuyyJ56v4NOIGbs94cnDaJvOK732I7oURcRRA7IWVi8NGkhchoMg6aH6MOgCcw/ZoGZWYQrqgjoN6H3M3A1Vz893aJHI/fGJt6IBfh7s/xYKQi86W5S/hT9ddk1RmLPOHS5xuaLLx93A7btEjlfNTleTzzrDsr0qbUePF1oL1/J/AfIeIzLso2ZrRVeLf0SvuwkbGLmgVf8cko6iMNfnWhrt86QpsOPMseu9aDA4CeUkDOUJyMGA1gW3HCWmGQTf39WcXCetMfcuA==
 
-The bootconfig CLI accepts one input path but only checks whether a path
-is missing. Commands with several operands act on the first one and can
-report successful completion. For example, bootconfig -d first.img
-second.img removes bootconfig from only the first image and exits zero.
+On Thu, 29 Oct 2026 10:39:44 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Reject surplus operands before calling the command handler. Add tests
-for list, apply and delete with an extra path.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add a new ftracetest test case (filter-syntax-check.tc) to verify valid
+> event filter expressions, error_log caret reporting for malformed filter
+> expressions (empty filters, missing fields, unbalanced parentheses and
+> quotes, dangling logical operators, invalid fields/values/cpulists),
+> newline truncation on multi-line filter input, and error returns on
+> invalid subsystem filters.
+> 
 
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
----
-Hi Masami,
+I added this and it fails on a kernel with this series, so I'm removing it.
 
-I ran into this while checking how the tool handles more than one input
-path. An extra argument was easy to miss because the command still
-succeeded. I added cases for list, apply and delete and ran the full
-bootconfig CLI suite on my Ubuntu machine.
-
-Thanks,
-Eduardo
-
- tools/bootconfig/main.c             | 5 +++++
- tools/bootconfig/test-bootconfig.sh | 5 +++++
- 2 files changed, 10 insertions(+)
-
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index c85e58fcb6b0b7..3e56a618fe3a58 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -592,6 +592,11 @@ int main(int argc, char **argv)
- 		return usage();
- 	}
- 
-+	if (argc - optind > 1) {
-+		pr_err("Error: Specify only one input path.\n");
-+		return usage();
-+	}
-+
- 	path = argv[optind];
- 
- 	if (apply)
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index a93a40d11d278f..ac0ffeffe1f7ce 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -71,6 +71,11 @@ xpass $BOOTCONF -a $TEMPCONF $INITRD
- echo "File size check"
- xpass test $new_size -eq $(wc -c < $INITRD)
- 
-+echo "Reject an extra positional path"
-+xfail $BOOTCONF -l $INITRD $OUTFILE
-+xfail $BOOTCONF -a $TEMPCONF $INITRD $OUTFILE
-+xfail $BOOTCONF -d $INITRD $OUTFILE
-+
- echo "Delete command check"
- xpass $BOOTCONF -d $INITRD
- 
-
-base-commit: 56bb11fe6aacc7666938e8e6765b44aa0cf1fcdd
--- 
-2.53.0
-
+-- Steve
