@@ -1,98 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795684635;
-	b=szsx6r+oBFok/N4HKfDEQ2dUFOW2Q2w8EcTJo/OzwTWGby0nbqzgePtcLYpFkhuc7mMl
-	 pHTJFi3hFiwT3tO7k11tUu//roDvj5HzQSnfmunttNmfR4QwyKHjWQYB0fo1eYJkdRAE0
-	 El7nT8xUkDWsTgeXJwcsAaYnr9670O5yUSV8DlvX8sVXytpH/3ti8hWj/j4ucJeeB+9Ss
-	 7DL2/n5AE/iPpcjq2VuhrREpHE4B5RRzBmKXDD1Nb7pR5+gQZRgkeExmtBQWuwQHcIdvN
-	 iogwh4D9dodAzPWzhOkCm+oKn+RfJ2TtefemWeawg8LzE/qpmaVZek6ji8JKS3Qk44A==
+	t=1795698026;
+	b=gJ6mBnH5LXd/3dl12sQufIAjn1ZYJMKDSuqjkYtIF/ayGDzuRPVExlt94y3ET11lsTxJ
+	 H9ib30fReXGzNzspbHjIhD/UnC3LKcYWikUQT14tK72/abeXqpVGpUAXYQgOqbkRfnMC3
+	 xt6E39qbUOIXIifiEezrTb4zd/cA13N8XfJLbnAZOYbC2rnHHzLyEtqcrqYV5zDQihtzN
+	 LQzFM2+Zdgk3fHxNCN8JuX+vvSPidmji8KDKpYJSzCBgDf+anRQCjWe3RJKgiXBoI5h1v
+	 faE3Z/CusV4iFqjfnn2slbHonFtnYjpyZMFxZ85jOaFsR8M855k45wgX1DGlIvL6p7A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795684635;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
-	 In-Reply-To;
-	bh=C/z0kFZffqp1LFtR2rltFphJVQEqkB2za+Qwi9gT7eY=;
-	b=oYelOwKgS/omOZnJBZZm3hihEItuwnPPcSeXxL9JwLHCXcxVtzuY9Jrhm7JKbeJQGR9e
-	 F/Geg1qVa9nbbwxzUoz9o0w9ghSyK++cc0y8+Ugaw3GM8wrq0yV8ls0FEBuGlccTVBmWh
-	 x+jNtj+hhtdCcWM2ALWA/sZHD1LEE9WRPC5be4ughMp6V2zwNiywMz3IZWtgcUfyenxwO
-	 qaADvGPpw0fHsB76+EGRJB351MCfaTO+dBkPhg0XVZjryCTgsGbp7qEdtttXpVX8M1LDC
-	 RXlGejHuHYKpBMZWAO3zWvx+xiCxOFxjkM4Xa/SdUMtTtXRncjzOq/+9ZbhilIo/mwA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795698026;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:From:To:Cc:Subject:Date:
+	 Message-ID:MIME-Version:X-Scanned-By:X-Mimecast-MFC-PROC-ID:
+	 X-Mimecast-Originator:Content-Transfer-Encoding:content-type;
+	bh=/Kf10qZB7UPXUDrWQIBN4qCOuiQbUCmK1+A/fPD+Cms=;
+	b=lHRCEK8dXZSCuZqSTrQYaMpBwMNG7gzByI4XkRaFxUK+Iu1MY3m3hjB3Mqgx8SwqZb0H
+	 FSjhzT2hbf1ir/9j110Lrn0LPe3v7j2Nrf/PwPIwNgiY9c8X9wW6jd6v3hD56qhnEn7ad
+	 p3luLRVs2/AlOh0cE8+REw9Zl+yi3EXH2hlPJgtQx0vuaR18vxMF8bv7ZiwH/Vp4LGWNO
+	 mACVmOvIlG6q+NUmEVtZPlozQltc8Q/TzmzwyI1W/RxdAque0L7aSNm2sFSvWLV+3fwdg
+	 shuA0NGpQgZQLVuPUruCrDF1u5ze3walckltKTc6dyhVDhETAh1eWO7CIPlEaD9dhuw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=r6p70MTL;
-	arc=none smtp.remote-ip=209.85.216.44
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BdhH4m+J;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE1B606A33B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 09:17:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0CE1B606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89987606A323
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:00:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89987606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=r6p70MTL
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3b413f6dda6so852052a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 01:17:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795684634; x=1796289434; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=C/z0kFZffqp1LFtR2rltFphJVQEqkB2za+Qwi9gT7eY=;
-        b=r6p70MTL3/Xp7tYLBv0xUqK504I7RvC/GMoANlXUQwqgpJFW0Q4Y2tC2alhflbNCcq
-         /A8OA8nFLlUaOsHPDDxNBtdwCZPltr1p2LvUwRUQhOyArmF/IR3WwgGe5dXg6IfHlKNS
-         +CdwQ4IQmsDjXCIdGvgan72z07pP11kM/KVZ7xqRc2CWoZryv8mmX51MM67mmPj4Vmd8
-         AxWq64uSSQvpvxxiJteq0d46UF1dtU+vczWaEJGHBm41Bpnx1gBebTGekyVP+MR/n0dn
-         7+pRd2c9o37KOdlt2eNX23MFQlOe1WECONDYqFpdILvnKHPceVidEXjVbPBliyfgliAY
-         EYdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795684634; x=1796289434;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=C/z0kFZffqp1LFtR2rltFphJVQEqkB2za+Qwi9gT7eY=;
-        b=hlO9RHvGo9Xeb73MqPDmCi/171geS5A+Jrx/E7v43bXQYcGUHTSPFfpJZbUqVD5Zsb
-         0FR11dpQWzrMV1T3Av9dON9te9U0gioxnyjJ7sxeH8FuaZXLpaXSjoQEdLihLsH0TEi5
-         eqAnwq6oAnMKddGxDJ1mubGvnsWY/GEv5rMbgCwDPjiiLreL7m/kkx/bhhx337yCtwTr
-         gq7SDsg8zltQQngB+DYV74KD84Z2uaHotrTLPlGkGyaG84PC+lOxejbuV8eRbe/Sb85F
-         +vaw6T+zOsNyBpZB4fOP9L+s7E74hnKKLRHHTZfrIZMlPb3ySWwJAyRftlDVTbU1L8P3
-         6ocA==
-X-Forwarded-Encrypted: i=1; AL+hErEclCS5fAqqw23Fpef/5TTOVhvXdy+SlJVUKMjdim3l8P2NKM8eCZh6mpf4dRmQRmDQRQ1DmhIwNalG3sjmX2LXErI=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9vH0Dw6Y9wL6y96xFPoXcrAtt6W6eycAMTwfGDbJBkfOPhsQyK
-	9hurGdPN+in41AU9Uij4xM8Re8YZoFRHm7N4Qd6N5rbjS3H3wbFfSEbY
-X-Gm-Gg: AZFdTZfz6Fa9ejXs7kcFedIDI40TLCYF4xbKa2KcAqcMzA1+BHfa0eEYQ5cw8FhlWWR
-	Lt/NiW45CzgBVpgHDu1z/l4g3m7OEqe8iRhKOtUtK8K59oYfvxQ2d2HOarnzVCaKBpV6FwDEpWF
-	SnsIToMf9hTSjfJo6ty+IASQCWgMulNqQT8v6/vQ97XbB8nghLO6sPHYCM+vNLAISvORU7FyNVV
-	D6jus2RfcL+KPgTGw4axr/Un2CAFbi06GZYnUYC3tnx0uPEuYVkv2WnLCYMJPVk+PV6JIfZBb0n
-	xawTEnKU7LEfRWD/YeU/Ns/Jh5rVvEPFZUMrsEcDIvrCXSk/7EuV4z0nO0GVEmHAKu5rqa/kYm8
-	O8thje7Uq6OSSW+n7U5lYCj29Cpl/MelMLKHtVOXY4XNOKT1gVFFnY+0rSV/WcR0j62WuFhWhTi
-	MpH5iZXAESHjvjvB4VfxAA6g/hS+siZElx/y9uSGH5EspEoD01taU1zGNjbxDbj9EGpQnp14OWv
-	L30uVbK6GMqXWEUSHuJqx1vKD/mKObToSSgYN1dfMk4Omw9iByCrn8WGd//fXsx0C5jrehKPqRo
-	7m4oYVS4ZdXF+UiCi/ieKebPv5OJc+qlFrwvglZxIzHmDw==
-X-Received: by 2002:a17:90b:498c:b0:3ac:73c7:9c07 with SMTP id 98e67ed59e1d1-3b41c55b914mr29233956a91.0.1795684634345;
-        Thu, 26 Nov 2026 01:17:14 -0800 (PST)
-Received: from gmail.com ([43.224.245.234])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b4dfbe54a2sm11023723a91.17.2026.11.26.01.17.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2026 01:17:13 -0800 (PST)
-Date: Thu, 26 Nov 2026 17:16:42 +0800
-From: Wenwu Hou <hwenwur@gmail.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/hwlat: Bind the sampler kthread instead of
- setting its affinity
-Message-ID: <awf4-hjPFkBxPUev@gmail.com>
-References: <20261125084600.2306377-1-hwenwur@gmail.com>
- <awbklFE66PIMKFop@localhost.localdomain>
- <20261125103822.2129a7ec@gandalf.local.home>
- <awcLwio_qyE3d1bL@localhost.localdomain>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BdhH4m+J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1795698024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/Kf10qZB7UPXUDrWQIBN4qCOuiQbUCmK1+A/fPD+Cms=;
+	b=BdhH4m+JN1MU2zlimC9YyjG1mGTRt3ThEfazD4Xp0TCoxmkyS0SfYJF2UYEkVIgzg23x6p
+	L0g3u7haFsxxzyw9iiGqyvfz0x+RPn4yJG6kyMHO3stBCNEuknl7oWRTd0bt8C2jwUE4L/
+	ORujL1K5gJo95F5kxOV4HdcGXamSl8U=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-103-t9XWa9FHNmusyDhPyt9erQ-1; Thu,
+ 26 Nov 2026 13:00:17 +0000
+X-MC-Unique: t9XWa9FHNmusyDhPyt9erQ-1
+X-Mimecast-MFC-AGG-ID: t9XWa9FHNmusyDhPyt9erQ_1795698015
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87E931800343;
+	Thu, 26 Nov 2026 13:00:15 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AD189180054C;
+	Thu, 26 Nov 2026 13:00:11 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Nam Cao <namcao@linutronix.de>,
+	Wen Yang <wen.yang@linux.dev>,
+	Tobias Schaffner <tobias.schaffner@siemens.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH v3 00/18] rv: Add support for BPF monitors
+Date: Thu, 26 Nov 2026 13:59:46 +0100
+Message-ID: <20261126130004.127155-1-gmonaco@redhat.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -102,43 +84,216 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: 5dJtUscK-JOB-h0NRBgTgjjF_D-QzgFkoYsIFYPMv58_1795698015
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <awcLwio_qyE3d1bL@localhost.localdomain>
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-On Wed, Nov 25, 2026 at 05:24:34PM +0100, Frederic Weisbecker wrote:
-> Le Wed, Nov 25, 2026 at 10:38:22AM -0500, Steven Rostedt a écrit :
-> > On Wed, 25 Nov 2026 14:37:24 +0100
-> > Frederic Weisbecker <frederic@kernel.org> wrote:
-> > 
-> > > >  static int kthread_fn(void *data)
-> > > >  {
-> > > > +	unsigned long flags;
-> > > >  	u64 interval;
-> > > >  
-> > > > +	/*
-> > > > +	 * kthread_bind_mask() sets PF_NO_SETAFFINITY to keep the initial
-> > > > +	 * affinity from being overridden by kthread_affine_node(). Clear it
-> > > > +	 * now to allow userspace affinity changes and cgroup migration, but
-> > > > +	 * keep per-CPU threads bound to their CPUs.
-> > > > +	 */
-> > > > +	if (hwlat_data.thread_mode != MODE_PER_CPU) {
-> > > > +		raw_spin_lock_irqsave(&current->pi_lock, flags);
-> > > > +		current->flags &= ~PF_NO_SETAFFINITY;
-> > > > +		raw_spin_unlock_irqrestore(&current->pi_lock, flags);  
-> > > 
-> > > This is not pretty but moreover, is it a good idea to let the user override
-> > > that affinity?
-> > 
-> > No, but we used to. Perhaps we should make that not possible instead? :-/
-> 
-> Right, the affinity should only be changed by the kernel if tracing_cpumask is
-> written. Otherwise it doesn't seem to make sense to let the user play with the
-> affinity.
+Extend the rv userspace tool to load BPF monitors, those can be found in
+specific locations (e.g. /usr/share/rv/bpf_monitors/) and are plain
+object files including BTF data.
 
-I agree. Perhaps v1 is better.
+This type of BPF monitors can be generated from rvgen using the -b flag
+just like in-kernel monitors and, after manual adaptation, can be built
+and run transparently by the rv userspace tool.
 
-> -- 
-> Frederic Weisbecker
-> SUSE Labs
+Only DA monitors are supported (as they are the only class the rv tool
+currenly supports) and the tool aims to work in the same way for both
+in-kernel and BPF monitors.
+
+The da_monitor header is adapted to be included directly in BPF programs
+and share as much logic as possible.
+
+BPF monitors are implemented purely in BPF and as such require the rv
+userspace tool for any operation:
+ * listing: find properly formatted objects in specific locations
+ * running: load trace handlers for events
+ * tracing: read event/errors from the ring buffer
+
+Selftests (make -C tools/verification/rv check) are present to validate
+and demonstrate the usage, which is mostly equivalent to the standard rv
+tool usage.
+
+Patch 1 adds tracepoints required in a later monitor example.
+Patch 2 improves the rv tool selftest reporting.
+Patches 3-5 prepare the kernel headers for BPF support.
+Patch 6 adds a feature check for tools/build.
+Patch 7-11 prepare and add support for BPF monitors in the rv tool.
+Patch 12-15 prepare and include BPF monitors examples.
+Patch 16 adds support for generating BPF monitors in rvgen.
+Patch 17-18 adds BPF selftests (make check) for the rv and rvgen tools.
+
+Changes since V2 [1]:
+* Use BPF_MAP_TYPE_TASK_STORAGE for per-task monitors.
+* Drop useless relocation removal in Makefile.
+* Avoid cast and propagate const to all tracepoints.
+* Validate monitor names before running.
+* Drop reactors for BPF monitors.
+* Use new generic tracepoints for BPF monitors and drop ringbuf.
+* Add -E/--errors-only option in the userspace tool.
+* Use an OFD lock to determine if monitors are enabled.
+
+Changes since RFC [2]:
+* Drop struct_ops integration to favour a BPF-only implementation.
+* Implement BPF reactors with a dynamic linker.
+* Don't pin programs and maps.
+* Improve handler performance when not tracing.
+
+[1] - https://lore.kernel.org/lkml/20261001152042.124445-1-gmonaco@redhat.com
+[2] - https://lore.kernel.org/lkml/20260831090524.106845-1-gmonaco@redhat.com
+
+To: linux-trace-kernel@vger.kernel.org
+To: bpf@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Nam Cao <namcao@linutronix.de>
+Cc: Wen Yang <wen.yang@linux.dev>
+Cc: Tobias Schaffner <tobias.schaffner@siemens.com>
+Cc: Viktor Malik <vmalik@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: John Ogness <john.ogness@linutronix.de>
+
+Gabriele Monaco (17):
+  tools/rv: Skip empty pid error in selftest if command failed
+  rv: Add wrapper macros for monitor tracepoint definitions
+  rv: Propagate const to model strings and tracepoints
+  rv: Add generic monitor event tracepoints and BPF kfuncs
+  tools/build: Add a feature test for bpftool-btf
+  tools/rv: Move argument parsing from in_kernel to utils
+  tools/rv: Move monitor trace handling to trace.c
+  tools/rv: Implement BPF monitor discovery and listing
+  tools/rv: Implement BPF monitor loading and tracing
+  tools/rv: Rework tracing to support generic events
+  tools/rv: Copy stripped bpf_atomic.h from libarena
+  tools/rv: Add BPF monitors
+  tools/rv: Define CONFIG_X86_64 statically for BPF monitors
+  tools/rv: Add -E/--errors-only option
+  verification/rvgen: Add support for BPF monitors
+  tools/rv: Add selftest for rv bpf monitors
+  verification/rvgen: Add selftest for rvgen -b
+
+Nam Cao (1):
+  sched: Add task enqueue/dequeue trace points
+
+ Documentation/tools/rv/common_ikm.rst         |   6 +
+ include/rv/automata.h                         |   4 +-
+ include/rv/da_monitor.h                       |  33 +-
+ include/rv/ha_monitor.h                       |  10 +-
+ include/trace/events/sched.h                  |   8 +
+ kernel/sched/core.c                           |  12 +-
+ kernel/sched/sched.h                          |   2 +
+ kernel/trace/rv/Makefile                      |   1 +
+ kernel/trace/rv/monitors/nomiss/nomiss.h      |   6 +-
+ .../trace/rv/monitors/nomiss/nomiss_trace.h   |  14 +-
+ kernel/trace/rv/monitors/nrp/nrp.h            |   4 +-
+ kernel/trace/rv/monitors/nrp/nrp_trace.h      |   9 +-
+ kernel/trace/rv/monitors/opid/opid.h          |   6 +-
+ kernel/trace/rv/monitors/opid/opid_trace.h    |  14 +-
+ .../rv/monitors/pagefault/pagefault_trace.h   |   8 +-
+ kernel/trace/rv/monitors/sco/sco.h            |   4 +-
+ kernel/trace/rv/monitors/sco/sco_trace.h      |   9 +-
+ kernel/trace/rv/monitors/scpd/scpd.h          |   4 +-
+ kernel/trace/rv/monitors/scpd/scpd_trace.h    |   9 +-
+ kernel/trace/rv/monitors/sleep/sleep_trace.h  |   8 +-
+ kernel/trace/rv/monitors/snep/snep.h          |   4 +-
+ kernel/trace/rv/monitors/snep/snep_trace.h    |   9 +-
+ kernel/trace/rv/monitors/snroc/snroc.h        |   4 +-
+ kernel/trace/rv/monitors/snroc/snroc_trace.h  |   9 +-
+ kernel/trace/rv/monitors/sssw/sssw.h          |   4 +-
+ kernel/trace/rv/monitors/sssw/sssw_trace.h    |   9 +-
+ kernel/trace/rv/monitors/stall/stall.h        |   6 +-
+ kernel/trace/rv/monitors/stall/stall_trace.h  |  14 +-
+ kernel/trace/rv/monitors/sts/sts.h            |   4 +-
+ kernel/trace/rv/monitors/sts/sts_trace.h      |   9 +-
+ .../trace/rv/monitors/wakeup/wakeup_trace.h   |   8 +-
+ kernel/trace/rv/monitors/wip/wip.h            |   4 +-
+ kernel/trace/rv/monitors/wip/wip_trace.h      |   9 +-
+ kernel/trace/rv/monitors/wwnr/wwnr.h          |   4 +-
+ kernel/trace/rv/monitors/wwnr/wwnr_trace.h    |   9 +-
+ kernel/trace/rv/rv_bpf.c                      |  76 ++
+ kernel/trace/rv/rv_reactors.c                 |   2 +-
+ kernel/trace/rv/rv_trace.h                    | 100 ++-
+ tools/build/Makefile.feature                  |   1 +
+ tools/build/feature/Makefile                  |   7 +-
+ tools/verification/models/nohz.dot            |  16 +
+ tools/verification/models/tqueue.dot          |  15 +
+ tools/verification/rv/Makefile                |  45 +-
+ tools/verification/rv/Makefile.config         |  49 ++
+ tools/verification/rv/Makefile.rv             |   5 +
+ tools/verification/rv/bpf_monitors/.gitignore |   2 +
+ .../verification/rv/bpf_monitors/bpf_atomic.h | 125 +++
+ .../rv/bpf_monitors/da_monitor_bpf.h          | 423 ++++++++++
+ tools/verification/rv/bpf_monitors/nohz.c     |  42 +
+ tools/verification/rv/bpf_monitors/nohz.h     |  49 ++
+ tools/verification/rv/bpf_monitors/tqueue.c   |  28 +
+ tools/verification/rv/bpf_monitors/tqueue.h   |  47 ++
+ tools/verification/rv/include/bpf_monitor.h   |  20 +
+ tools/verification/rv/include/trace.h         |   4 +-
+ tools/verification/rv/include/utils.h         |  19 +-
+ tools/verification/rv/src/Build               |   5 +
+ tools/verification/rv/src/bpf_monitor.c       | 738 ++++++++++++++++++
+ tools/verification/rv/src/in_kernel.c         | 439 +----------
+ tools/verification/rv/src/rv.c                |   5 +
+ tools/verification/rv/src/trace.c             | 237 +++++-
+ tools/verification/rv/src/utils.c             | 103 ++-
+ tools/verification/rv/tests/rv_list.t         |   6 +-
+ tools/verification/rv/tests/rv_mon.t          |  80 +-
+ tools/verification/rvgen/__main__.py          |  15 +-
+ tools/verification/rvgen/rvgen/dot2c.py       |  15 +-
+ tools/verification/rvgen/rvgen/dot2k.py       |  50 +-
+ tools/verification/rvgen/rvgen/generator.py   |  40 +-
+ .../rvgen/rvgen/templates/dot2k/main_bpf.c    |  21 +
+ .../rvgen/rvgen/templates/dot2k/trace.h       |   7 +-
+ .../rvgen/templates/dot2k/trace_hybrid.h      |  11 +-
+ .../rvgen/rvgen/templates/ltl2k/trace.h       |   8 +-
+ .../tests/golden/da_bpf_cpu/da_bpf_cpu.c      |  35 +
+ .../tests/golden/da_bpf_cpu/da_bpf_cpu.h      |  47 ++
+ .../tests/golden/da_bpf_obj/da_bpf_obj.c      |  49 ++
+ .../tests/golden/da_bpf_obj/da_bpf_obj.h      |  47 ++
+ .../rvgen/tests/golden/da_global/da_global.h  |   4 +-
+ .../tests/golden/da_global/da_global_trace.h  |   9 +-
+ .../da_perobj_parent/da_perobj_parent.h       |   4 +-
+ .../da_perobj_parent/da_perobj_parent_trace.h |   9 +-
+ .../golden/da_pertask_desc/da_pertask_desc.h  |   4 +-
+ .../da_pertask_desc/da_pertask_desc_trace.h   |   9 +-
+ .../rvgen/tests/golden/ha_percpu/ha_percpu.h  |   6 +-
+ .../tests/golden/ha_percpu/ha_percpu_trace.h  |  14 +-
+ .../golden/ltl_pertask/ltl_pertask_trace.h    |   8 +-
+ .../test_bak_kunit/test_bak_kunit_trace.h     |   8 +-
+ .../rvgen/tests/golden/test_da/test_da.h      |   4 +-
+ .../tests/golden/test_da/test_da_trace.h      |   9 +-
+ .../golden/test_da_kunit/test_da_kunit.h      |   4 +-
+ .../test_da_kunit/test_da_kunit_trace.h       |   9 +-
+ .../rvgen/tests/golden/test_ha/test_ha.h      |   6 +-
+ .../tests/golden/test_ha/test_ha_trace.h      |  14 +-
+ .../golden/test_ha_kunit/test_ha_kunit.h      |   6 +-
+ .../test_ha_kunit/test_ha_kunit_trace.h       |  14 +-
+ .../tests/golden/test_ltl/test_ltl_trace.h    |   8 +-
+ .../test_ltl_kunit/test_ltl_kunit_trace.h     |   8 +-
+ .../verification/rvgen/tests/rvgen_monitor.t  |  11 +
+ tools/verification/tests/engine.sh            |   5 +-
+ 97 files changed, 2674 insertions(+), 809 deletions(-)
+ create mode 100644 kernel/trace/rv/rv_bpf.c
+ create mode 100644 tools/verification/models/nohz.dot
+ create mode 100644 tools/verification/models/tqueue.dot
+ create mode 100644 tools/verification/rv/bpf_monitors/.gitignore
+ create mode 100644 tools/verification/rv/bpf_monitors/bpf_atomic.h
+ create mode 100644 tools/verification/rv/bpf_monitors/da_monitor_bpf.h
+ create mode 100644 tools/verification/rv/bpf_monitors/nohz.c
+ create mode 100644 tools/verification/rv/bpf_monitors/nohz.h
+ create mode 100644 tools/verification/rv/bpf_monitors/tqueue.c
+ create mode 100644 tools/verification/rv/bpf_monitors/tqueue.h
+ create mode 100644 tools/verification/rv/include/bpf_monitor.h
+ create mode 100644 tools/verification/rv/src/bpf_monitor.c
+ create mode 100644 tools/verification/rvgen/rvgen/templates/dot2k/main_bpf.c
+ create mode 100644 tools/verification/rvgen/tests/golden/da_bpf_cpu/da_bpf_cpu.c
+ create mode 100644 tools/verification/rvgen/tests/golden/da_bpf_cpu/da_bpf_cpu.h
+ create mode 100644 tools/verification/rvgen/tests/golden/da_bpf_obj/da_bpf_obj.c
+ create mode 100644 tools/verification/rvgen/tests/golden/da_bpf_obj/da_bpf_obj.h
+
+
+base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+-- 
+2.56.1
+
