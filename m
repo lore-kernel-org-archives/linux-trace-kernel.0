@@ -1,65 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.137
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.135
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795680642;
-	b=M3vIn/1pEiVhLCPTepCw6zqLulxJZB92LFsNJcafHL3Lb6C2Y1XJyPPKoyey7rKbDTNA
-	 y+lyn0RlA6Md7scKIzEEKM+QDQUpzpiHUKDYXuXD/Xc06Mqim0jQVMSPDF8F4xOmJbAKO
-	 Bt+5ns74riMTEbeM/w2A+d39Sbg5OFvRbCGuVkklDeM6gyz5Y7GqTbL8P+MPg5b3KaMgn
-	 Seztnl8Z/mkXB0yAUsCZyiXaNx2Y6Fk1aPq6mt7XPrwAqR56VNjVagT0W++iu9bH8mFnR
-	 ti1eNGMqtTfoT9p8MnJVRydEQh9tkf5JLq0id9ie23bzWbf5oifeXH2peVj00iwqE9g==
+	t=1795680670;
+	b=AHiGrPB4xOdn9sNHOs7HV9UACHShyb+PaavrHsfjzoBtcaJCQ6jqOqiAtzhe+3nATD1Q
+	 Qv0742Cvlx4FX4CA/XQ2cnnUX5W6N7aVXZzBXI+e9rzMSOVuQQAs8yjV6PnRUZZqo5ma0
+	 /QwtR5TMuUtSrtjCkj7m7hrQm+/LMfBLEznJPJ726sscLEh9IYgM1xo8dlFuuuizULcXR
+	 vqMq4pVewaYwavkUuufsM/0mjbAJKFTUtRi/HcY9LOujJm34Iz2m6fB8FSDNbT3UuXkx/
+	 n7dkCfxnrAqxa2ZrsvYj7UkuGy2axhBZXwkgi+qbk7rhMCDiU3qZMOusrBNiWEDjlJA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795680642;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795680670;
 	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
 	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
-	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
 	bh=UWeiiXU/CGZhT/IB9wANq5icufSPJ3/2vx8+tvdIqsU=;
-	b=3cnbTo5ZIqHiSj/x3wK9hKXcMLjiH1ig6xn2ciFuon26J/3384xChPbr/5B4buxcIypi
-	 ebl3kG+Vt4h3YOwxuXHU8B5Lr2e5s2imh3gKdGCuB4IeGedRYHTexsptlWlXUPv/9HHgC
-	 2opHkBli25IYqtHnE9W9SJsGchBs/9pmp4rcs4sTrECtvResE2JEKGvp5+nIWoVrxS6pY
-	 0MX8m0TTesnNITpZviRjnMqls+U4Z7p25nCxcU8Wfp8ojQfnEDURsXD3nttTBbIwD2ESE
-	 YM++pQaQoVyAb7sgD541CiYd0oCVTQzihGF5anqGikP+9pP5E1NuH6izbc7cl/lwD2Q==
+	b=dFzzF9m+bWafHIgkhooBeUuxzi787NqyOXKZoMWwwHG/6ytqbmxdaZLX56blLbZ96RzU
+	 0Oh4OYJNfMDqElYFZek+3SLbv+hnPJEnFacdY5AdBkEtk+jTCAeniRP/DecSdpRqE8SYl
+	 AlfT1CKFf4vGYMX89P7W2F3P8zfKIcXpQWOypw/dRyRVHHJ6jGCIJiDMhdpxoj9PvGUf3
+	 yfUb99RcmMKLdV7wPC7+1RDUM/+7VDiqpLomEWZeKO985tWoVFDppT82zLqzngPbykZgv
+	 G0f5CYUTHcGo0MJbvD/QDGk6faQjehKJHaBfxsgxRPjYcDYsXjjuLIsfZ8TcBkdlvNg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=cmss.chinamobile.com;
 	spf=pass smtp.mailfrom=cmss.chinamobile.com;
-	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=ks5UunoI;
-	arc=none smtp.remote-ip=111.22.67.137
-Received: from cmccmta4.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F0C5606A31E;
-	Thu, 26 Nov 2026 08:10:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5F0C5606A31E
+	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=kSjtprfG;
+	arc=none smtp.remote-ip=111.22.67.135
+Received: from cmccmta2.chinamobile.com (cmccmta2.chinamobile.com [111.22.67.135])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FFAA606A31E;
+	Thu, 26 Nov 2026 08:11:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8FFAA606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=ks5UunoI
+	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=kSjtprfG
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=cmss.chinamobile.com; s=default; l=0;
 	h=from:subject:message-id:to:cc:mime-version;
 	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	b=ks5UunoIwQG0c3kB3OBn3LgvmWS3OOJiDJ/CeJQJq0MUDA7xaKoLT9uUwvmwYddXPbYfMnv8dxbtd
-	 nhRpRUJhCC5CDU5Bsjc9es2AA0NAx6xLXqtHnfoGXRK2NTgGMEnYas+kJU2Nz7Ru8zdY6gKnoJbt1C
-	 B/UGPx8zXlBfuAIY=
+	b=kSjtprfGX4h7QS7wO1QyhzVcJd3FsvZcIU5XQzipr7AedqZUynInMdndTgl+MixI6oEZN6Ihh4plU
+	 iTVSIgwdyjX08X1pW/+xqapz0K+11EwfIgvZYxUQHeYxV6w46349bZCfGP1reSY5o82hw6Zlh6MERk
+	 IUWScND/JZWO0Etg=
 X-RM-TagInfo: emlType=0                                       
 X-RM-SPAM-FLAG:00000000
 Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee86b07e975b10-fa58c;
-	Thu, 26 Nov 2026 16:10:31 +0800 (CST)
-X-RM-TRANSID:2ee86b07e975b10-fa58c
+	by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee36b07e999eed-26204;
+	Thu, 26 Nov 2026 16:11:06 +0800 (CST)
+X-RM-TRANSID:2ee36b07e999eed-26204
 X-RM-TagInfo: emlType=0                                       
 X-RM-SPAM-FLAG:00000000
 Received:from desktop-c950f82eaac8410e-20260515094303939 (unknown[10.55.1.71])
-	by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee36b07e97458c-62f80;
-	Thu, 26 Nov 2026 16:10:30 +0800 (CST)
-X-RM-TRANSID:2ee36b07e97458c-62f80
+	by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee76b07e997bc7-634b9;
+	Thu, 26 Nov 2026 16:11:06 +0800 (CST)
+X-RM-TRANSID:2ee76b07e997bc7-634b9
 From: Mingbing Zhai <zhaimingbing@cmss.chinamobile.com>
 To: rostedt@goodmis.org
 Cc: mhiramat@kernel.org,
 	mathieu.desnoyers@efficios.com,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 05/18] tracing/sched_switch: drop duplicated NO_CMDLINE_MAP check
-Date: Thu, 26 Nov 2026 16:10:27 +0800
-Message-ID: <20261126081028.4208-1-zhaimingbing@cmss.chinamobile.com>
+Subject: [PATCH v2] tracing/sched_switch: drop duplicated NO_CMDLINE_MAP check
+Date: Thu, 26 Nov 2026 16:11:03 +0800
+Message-ID: <20261126081103.4224-1-zhaimingbing@cmss.chinamobile.com>
 X-Mailer: git-send-email 2.53.0.windows.1
+In-Reply-To: <20261126081028.4208-1-zhaimingbing@cmss.chinamobile.com>
+References: <20261126081028.4208-1-zhaimingbing@cmss.chinamobile.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
