@@ -1,94 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795729954;
-	b=R+WxbjkTNBbuAL4O87pwXQBDLIh/7suzFUs1+y7l/pBcZ9ru99uLAAbYzvou2cMpP5p1
-	 IiQK/dphWttpeHFkUNW1gcdAjzHAKmS9qTOtqiUMeNe5EU51FpW2wkKz0xBRdTHT27kq4
-	 fBOBkNH/KQAfjPFmnzgspYpEtuQgPcbmSyROL6T5jYSqUU6GVP9yYIMHF7f9xR3gvDuLS
-	 3WX32ZaGGNrvvUGvUOqgfSB+qhm1RWGOIJWJpLd05B2g057tI6jqhq8EvTK4thEGoAlQ7
-	 n/yqF+alm7fucqkUg0HITh9FIC4fVygiNhLZrWG+6uC+5soFR85Fao7fmcWs81/H9jA==
+	t=1795730981;
+	b=15hBeIzxe+LO2/Zmw3H2tuThPb+e+pcXuFHbIzWKD82SM9Jx9Id7gwmAZDfu3UQ510Dh
+	 W/fUCOjgqoL7LcVfYRqLPx1qDvkdzUCph5jsGejv5sbYRniE6zjxLm9kLSUZGDtLPe5/A
+	 cFNqWr5UAU4GfaErHw2Qjrkvgt7B+XxhRGAcSl5xvEWkNHhN6df/xgvFrs4gwrVMvLnQQ
+	 bou3nsgwrE1cPFJYIv+iDDrOHBkyOlQb8milL056yIG3GQf+W6J2AHk8W32iT973rw8Im
+	 HtSzBCMISw1Vay7g/IdbUBKexxhulei+SdfiKRPKmUmAhuFZadp2dJx1cdygTOw3llg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795729954;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=RPVjfXymlZhaC+9syUEih0oV6JaxiWkxxyBiag+otps=;
-	b=P3Q6+Qe5MKk35SOdPYP+wrp9y5MEZN+MjMHdqqKoRbngvcJ2J4TIlluM7ellrr6PIcLz
-	 99kDqRssM9OBBBtpu11saZ4kSyFZVaIGQruYqVYXZ2VGT4B7Bmd5s3/8D5tRD5a62T9bj
-	 qSP9PZz8ZgilL+idwit36TpaTrpob4coOTzrSBlA8/agihDzm1ThBjN9OsMVP7tYmRk4y
-	 wVeOmRQKLRelurpzQ9RuOVyUHLYO6dMXzztao0v8/R2gITux44kvCv6A2hmWRIuXGEuIM
-	 7uZ2sYfamqzvpPuke/VA91EgdfiAttgfwFRUoVwrigA6bxzWWmt7LsOjjFM9f/KVZhw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795730981;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=HZhnmqSAPt49qmlu2oisQZMoTBfupFfujLhSckYglEQ=;
+	b=KJ8xzV/G4yP8ItTuEe3ZFnVIGviY9IJihmf8jDsiVpZWYdHoa67YsG2J2Ar49jIEKLwl
+	 LrQRQBNME38hUSmQXiPVx7xFvK6RG/AS1yz/zDTFD5320EwFo5xkQVm97lh8LSgAUv83d
+	 ctkTZVPb4gLpURu9fInesQdnp1CVfdv97hx26qzFz9i7AtNyEnOfbZ+DIrrMj7Di8c+PX
+	 az6UAStgeQjV3Ifb0ihjbqDNdJDpguowe4vUNP5sFne7u+R0gvYzrFTHEDJp7RnddxTx2
+	 K6vBN5kvl7r7gdrKt2iguzd6VNpEoMsyudaC1FaGYVQ4KU2+PX8zUflNQPAfwHNrxvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A0D+bXLH;
-	arc=none smtp.remote-ip=209.85.128.51
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=eS1nb26A;
+	arc=none smtp.remote-ip=192.198.163.19
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EAC606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 21:52:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06EAC606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BC7606A327;
+	Thu, 26 Nov 2026 22:09:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0BC7606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=A0D+bXLH
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a2153c8525so60699675e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795729952; x=1796334752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=RPVjfXymlZhaC+9syUEih0oV6JaxiWkxxyBiag+otps=;
-        b=A0D+bXLHuzEywM/7y6O+KwNpE0sbzFoh/i8DwYTAiBHOitSTz+u0x7DkMicruESpSW
-         3u1dSjDMiGxqisIfAMzZqj+V8EmPKJ6Njh4PHdEedQ5lq2M5HCB+lEqqrGPF5ASo4kY3
-         zRa3a4kBSGRqvaw+50mtcF58XY+DOfDa5InYvhr5aJcRSV7AIEH3TFL3p+VBMXB25qHL
-         R3/HK3P+I200tAE1lXlRc6Agpu70rTL8+Ls28oj/JFTVfqFUDDGV0GtqPQUJYyw3C9Kh
-         R0hyKKHQeZaRFeSNhw3G3pl3JC7yU1+0MHW0+8km1Dnt0qVTg2Q0DyNrvofGV0TMgxIq
-         DEGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795729952; x=1796334752;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=RPVjfXymlZhaC+9syUEih0oV6JaxiWkxxyBiag+otps=;
-        b=QnBgXvqKIIWxUNWa1hJYJzELA/C5u7zJe9ozAhPXN6lN5G5/R0uT6kYAwEq4/8P1Hl
-         /qi1c2IOkNIMfx2mSgL6sqPsT2xmuIH1vsrpVXRd02eq/IDduuPGWYLz/0DY6Xoa7OyS
-         e7/dL/VCR9sFIZbXkhZDdes5cs5ypl1SQCfVx+0RRq8v0uvRw8beBZMKOAkHjEIuozwA
-         U4yk7JcZ4mN+Nr3h0MDbDeXwbwSe0POsUEwJnMbQ/5rpeDEW7iAIJWCZeFUTGN28HXIo
-         f9xgGURcoX3xWMRxeo2/WXprNe5an+vu/f0p1bDdiSkXer3ThYp5WXf8QxVdP9t+wr4F
-         ndAA==
-X-Forwarded-Encrypted: i=1; AL+hErFhLdU4YQfEGBBiKTB4+EIgyxu7cf/rzzuOU+0hv8yxs+5fMoMK/qBUQtJ23E2wF4gwSZ8oQQrGqzuSzSJZade6XEo=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/6kHI+ULFObF/Cogj3HjckOryqFidVqfHGIXcTUlRddWJplhAu
-	MsqKe98UgHL4+3dg9dcZ+X8CbxVBqCZ+L9V9uhJaerlJz03gHZkVDihHaSji9g==
-X-Gm-Gg: AZFdTZcRKOFY2G6YqNwFdFJlVRGeiUxb5eSELt7eequ+Kd2uh3ihKRLsdWbg7pBJqDF
-	Ge5TDkjoCAq9m1X+IwPP6MiIdKpo9ofBr5qWXDw9oi/WfnSy92EBm59bED6/C9PSQB+yT8mn7/e
-	Mf+XSXvZ+P6q0AWrbiZwHSygTlOIc6G6VBN3NYGtgHUSRSsuxdgUiOwcPXsXbDuU/3Jpo12tRHe
-	8PPmvq23lg4DwqrBndN8dLDMdDuSdkk4PUEc7ryi5Pl85JWNPn4auVLq3Pve3WYaQfuJGpZxKSL
-	zkFem4b7CH+3CaakSHtjDovlK144CBfZcE60PvOZUS9mUVtSYbZsgzyJXBnzY/0F2TalWBB+qvy
-	kXdYq/oPmt9RSn4ZYctmbYujLFdo6BPHFqpSvDZB/KGvCaHtZc9+xuiHmurhimT1lbl1WHpeKnL
-	9qHGNtmN9Zt1oV9+zdx9+9D2i/NiSA9dRkY/zoW/LwB87qOXrdmtbIExU4RsF6PlU9ACNZ2ikqG
-	6c8QBVSyrPDbKFYCAyyVYuCmONi0xNR/SWWqT7DWYAaamicvbBJCKPRKk7u/UU/rX+16jmvOTTm
-	gP0954/2JwJH/6yigREQi+IJrYhf6NJhr4LgsyuXTVFj40l0tPBAyfKXSZzYNq/fhUsP39wY+OF
-	X6gXQkkSKESdF7A==
-X-Received: by 2002:a05:600c:828e:b0:4a1:e6a9:4086 with SMTP id 5b1f17b1804b1-4bb88785a99mr427460815e9.0.1795729952237;
-        Thu, 26 Nov 2026 13:52:32 -0800 (PST)
-Received: from dohko.chello.ie (188-141-5-72.dynamic.upc.ie. [188.141.5.72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb884ab091sm889543065e9.11.2026.11.26.13.52.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2026 13:52:30 -0800 (PST)
-From: David Carlier <devnexen@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=eS1nb26A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795730981; x=1827266981;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y1FrIwMJzQnQKtTx2fAkalLSx4xeVaURU10IeoBIfU0=;
+  b=eS1nb26AkKUsrHyrxBzIuH6EpfMiqO7yWTyuQXU5A7hpejm+vLMWWHCg
+   alrIip+WD21cxn6mk4BGSBqVF3QZ10HPqdS+rmwi0Yv+2NE9VqVo2QY3E
+   TOCKuOwPdg18siuHUkCdfBc/fXNKtkQ4GJdYZMoaTuo7i6Aw83doTn0g5
+   p3dyZzqwirFI61pt3Pf6eAGjxk4XSZzD/TxOQfnZGnI+iYtIBg/w/2t/N
+   xY7zWxPU61s0nwNeg0XEqPUpGY1ElPC4wNE1qbmNIr3DlesyMfYjDvMD+
+   2pjqAbVtJJ8PULhE8QdoAlkmsjO5y+ZuSh1kuHFVNoT8L1ahAj7HrQ1jt
+   A==;
+X-CSE-ConnectionGUID: lmp6ElVHQcOaZ0W06sbReA==
+X-CSE-MsgGUID: 0h+iw7npT3qytiwZySgXHw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="4661061"
+X-IronPort-AV: E=Sophos;i="6.27,235,1787036400"; 
+   d="scan'208";a="4661061"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2026 14:09:41 -0800
+X-CSE-ConnectionGUID: gW5GhYWJTL+N3VD2IVZIJw==
+X-CSE-MsgGUID: fOrOBiwPS7aTmzLnX7dzRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,235,1787036400"; 
+   d="scan'208";a="12592652"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Nov 2026 14:09:37 -0800
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xWheo-00000001Uxc-15rV;
+	Thu, 26 Nov 2026 22:09:34 +0000
+Date: Fri, 27 Nov 2026 06:09:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Carlier <devnexen@gmail.com>
-Subject: [PATCH] tracing/filters: Fix MATCH_END_ONLY on dynamic char arrays
-Date: Thu, 26 Nov 2026 21:52:28 +0000
-Message-ID: <20261126215228.1205862-1-devnexen@gmail.com>
-X-Mailer: git-send-email 2.55.0
+Cc: oe-kbuild-all@lists.linux.dev,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Nam Cao <namcao@linutronix.de>, Wen Yang <wen.yang@linux.dev>,
+	Tobias Schaffner <tobias.schaffner@siemens.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH v3 05/18] rv: Add generic monitor event tracepoints and
+ BPF kfuncs
+Message-ID: <20261127053433.PIs3CD9x-lkp@intel.com>
+References: <20261126130004.127155-6-gmonaco@redhat.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -98,44 +91,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261126130004.127155-6-gmonaco@redhat.com>
 
-regex_match_end() takes the string length as "len - 1", which holds
-for __string() fields where the length counts the trailing NUL. A
-__dynamic_array() of char does not have to be NUL-terminated or
-filled to its length. The xfs namespace events copy name->len bytes
-with no NUL, so the compare is off by one:
+Hi Gabriele,
 
-  # echo 'name ~ "*.txt"' > events/xfs/xfs_lookup/filter
+kernel test robot noticed the following build warnings:
 
-misses "foo.txt" and matches "a.txtz".
+[auto build test WARNING on b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f]
 
-Use regex_match_end_str() for dynamic strings as well, which finds
-the end with strnlen().
+url:    https://github.com/intel-lab-lkp/linux/commits/Gabriele-Monaco/sched-Add-task-enqueue-dequeue-trace-points/20261126-135947
+base:   b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+patch link:    https://lore.kernel.org/r/20261126130004.127155-6-gmonaco%40redhat.com
+patch subject: [PATCH v3 05/18] rv: Add generic monitor event tracepoints and BPF kfuncs
+config: loongarch-randconfig-1000-20261127 (https://download.01.org/0day-ci/archive/20261127/20261127053433.PIs3CD9x-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 16.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261127/20261127053433.PIs3CD9x-lkp@intel.com/reproduce)
 
-Fixes: a3291c14ecf0 ("tracing/filters: Fix MATCH_END_ONLY filter matching")
-Signed-off-by: David Carlier <devnexen@gmail.com>
----
- kernel/trace/trace_events_filter.c | 4 ++++
- 1 file changed, 4 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/20261127053433.PIs3CD9x-lkp@intel.com/
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 42a57cb57ff9..68a20f5d68fa 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -2076,8 +2076,12 @@ static int parse_pred(const char *str, void *data,
- 
- 		} else if (field->filter_type == FILTER_DYN_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRLOC;
-+			if (pred->regex->match == regex_match_end)
-+				pred->regex->match = regex_match_end_str;
- 		} else if (field->filter_type == FILTER_RDYN_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRRELLOC;
-+			if (pred->regex->match == regex_match_end)
-+				pred->regex->match = regex_match_end_str;
- 		} else if (field->filter_type == FILTER_WITHIN) {
- 			unsigned long func;
- 
+All warnings (new ones prefixed by >>):
+
+>> Warning: kernel/trace/rv/rv_bpf.c:28 function parameter 'id__nullable' not described in 'bpf_rv_event_monitor'
+>> Warning: kernel/trace/rv/rv_bpf.c:51 function parameter 'id__nullable' not described in 'bpf_rv_error_monitor'
+>> Warning: kernel/trace/rv/rv_bpf.c:28 function parameter 'id__nullable' not described in 'bpf_rv_event_monitor'
+>> Warning: kernel/trace/rv/rv_bpf.c:51 function parameter 'id__nullable' not described in 'bpf_rv_error_monitor'
+
 -- 
-2.55.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
