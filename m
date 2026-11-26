@@ -1,69 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795707646;
-	b=VyoKDAtRkinVLaTwGFqF27DBvkCa6xr5SIeGSjcbXbxBABp8XCX4fjJo7v0a/Luu41Ox
-	 YEzdyR6kPnPBHK8KSzepmnTGCeTxcHTn3cXhZJfHvbFEdt9hQczeDQzBrv7kUdDKV9kDI
-	 SKOZfcvk9uIxp51DAf68iwdIOu+OSPCaZ+lzbYj0aX+7o55DrJsxJtTH20HpdRFBy0aOH
-	 FZaudX7gIVkFKwU1u9IQwzrFDoz3SofU3hj9DBzNse+FrLkGsq04ywlB/C0RRuSjFa03b
-	 2JdPLRoqu+jWouDyiZXTKf9TM+m8xuBTNHOtWrQ506yKIVJOdwrsYKn1KhpPf7QQvsQ==
+	t=1795718116;
+	b=YDAHQSMejARWFZf/hI/2kZl+TVPfdL3o9fFr2gZhBECpd+RAVMJ9WdaWtQLOssSreAlr
+	 l9n0fp8b6WgZ2+DvR6Rvd3CN96iQQaR+y/OlsDqWssbtbsJfAuYAYsSa3BznjXPINKa1N
+	 ZRLCH7oK7I0rniG5Eo98E9GonaJVHn7tjEVUVBVJuBMgO8Tit1uxSGsMU5KCM6TNs4BrL
+	 gUS1dsBtuqnzGHJuIXR1arqh2d6J/L55GFAt7OjPxfU8ZscGQfR1pIzdjbdz8kLcG4viE
+	 3KnAtxt5ZGHsejZ4r2he7VVwu7vKXpI1TpWJOMhAif4Z3M6f9rDEAGDPxylqupUM3+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795707646;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795718116;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=p00VxTiGOpViwP+yiHZZnvcXAmwYh4g3z9+pDFjv8bk=;
-	b=FvZ9tERmbZSgmbJcoYLYAVEGwGCc0dQvAbwnam/G5GhPfGlxaafpwoou+oDIp8stqowF
-	 r75PjMrd7AdHhqdx0TWBIT+SROH9Px4aVS95Gy+V4Yq1+aq3tlIrdTedGX4/LnFpEuxe/
-	 R8YP43otPjANs1+urR6PsyKnHQebQP4Iij5iwC/zG+sHokDrFhQ0ffrh2UOhiKnFx2Scd
-	 SUT+tH4aC+XZXxaNyIb39XRukQg7WX9XkXF1pm74GxQ29p+CYyh5K39j/QOpIEwO2evCX
-	 FN0t3+taoy2irKj0nLxQ3P8MC7PPpX2YPTw5sTKfRH4fKBg10f6VK7Eu7fpzn0c6U2w==
+	bh=lNoDcgtyIRtshKKQA77hdTnKAgEL8asv9kuIbWA+WPc=;
+	b=cs+nLenylHSLw66iUqIk+Zivt30gDLuZekkjJYu93K5qAUpvy6BFc29DKeeUKG3OapaD
+	 8ifZ3kkSqCOb0xiO4dmjdNpTdhdR9RxnRTc+pUF4EG2metFyJtDcipHQxQCnDHgvkw2JX
+	 HfhSbRrMXbsMtxLraSBhqvRPZjnLfRINuJimkZoPqNrs3rbR0xufSxvI1DoqJL6k5Iz82
+	 XqvmXwikOnxmo7Dv1HDCml+z+n3o8NzKUbn86maVgJ6Xyovgk+m3DI9klBBib+t+9rcKZ
+	 jG/AXBEbQ6LNUSkK8QzwSDne0eK/rZAt5WMnAr/Q0efaZTwED+tPyYuFQXAsdqdUwxg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=infradead.org;
 	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=Y8uQWJq2;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=rCRivMKW;
+	arc=none smtp.remote-ip=90.155.50.34
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1A2606A31C;
-	Thu, 26 Nov 2026 15:40:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE1A2606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253F5606A31C;
+	Thu, 26 Nov 2026 18:35:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 253F5606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=Y8uQWJq2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=rCRivMKW
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=p00VxTiGOpViwP+yiHZZnvcXAmwYh4g3z9+pDFjv8bk=; b=Y8uQWJq2qqRhqdQCHKhIDZvzue
-	+5GWDxQKJIPt5BLSKw8uoLCR/Q/wB1tsjHMfkK4fX3XDa61P0TtpRDWsNsnruhITqT+CnK9rSfgi4
-	i/KZrCbQ8BJAh3BxhkgCqBU1a4/Wq2EK5s5DZrV95FAAQroUYQAUf9dMx9ZUyHr9+Hdl0nE0oiobB
-	Jt3ImGw3+hTiSzxiUvprrYF1LSiBWywB5TNMTlvNoV+i6ARyHm5hYRdOZk0TV81NCkdlst64eaGla
-	nhUKp/mWtBrLqipWLivpcPIu1kEwa5H5sBEYAWEjfaNG5VfsBxcI6TjZbhwxaK9aioGMO+4A9TVfE
-	ycJ0g2hA==;
+	bh=lNoDcgtyIRtshKKQA77hdTnKAgEL8asv9kuIbWA+WPc=; b=rCRivMKWHsAiaN8JRlhI3+jK8V
+	+T0Sca7uBnOGSjoNNgOIu0W/geC6OsBdDDKHdzjRIcHhNB5bzFnkkOsNVQXeN2IPAGJ8hWqRGNud1
+	xB8l50rPqNOIrVlfnsBMeXw7ADQb9DDVc9h0iN+TWHrU3Tvk4rO9wReixGol+gBuRHEV7N9zkX2pG
+	TgapIprlCIPmlc11tAhkkZwRC6D+vvG5pFVy98gkr0VgvMT3hVRWRrmsGVmi+DmWl22Ab7Mh2/6rM
+	5c8QEQcK+s55noA2BmBwI3gc8CBlWaXq/akpEkUsUqOiyP6l82caF79JOtrR49T/1NR8v2hmHqgpq
+	LLLLjTVg==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWbaU-00000006oqb-0UAg;
-	Thu, 26 Nov 2026 15:40:42 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xWeJB-0000000A55i-2Zkw;
+	Thu, 26 Nov 2026 18:35:01 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1E61C302186; Thu, 26 Nov 2026 16:40:41 +0100 (CET)
-Date: Thu, 26 Nov 2026 16:40:41 +0100
+	id 6F22E302186; Thu, 26 Nov 2026 19:34:53 +0100 (CET)
+Date: Thu, 26 Nov 2026 19:34:53 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: Dominik Maier <dmnk@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+To: Karl Mehltretter <kmehltretter@gmail.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, dmnk+artist@google.com
-Subject: Re: [PATCH v2] perf/core: check perf_allow_kernel() in
- PERF_EVENT_IOC_SET_FILTER
-Message-ID: <20261126154041.GJ49833@noisy.programming.kicks-ass.net>
-References: <20261124180611.75836-1-dmnk@google.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Hongyan Xia <hongyan.xia@transsion.com>, Song Liu <song@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] sched/preempt: Check notrace preempt-count updates
+Message-ID: <20261126183453.GM49833@noisy.programming.kicks-ass.net>
+References: <cover.1795631277.git.kmehltretter@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -75,88 +80,22 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261124180611.75836-1-dmnk@google.com>
+In-Reply-To: <cover.1795631277.git.kmehltretter@gmail.com>
 
-On Tue, Nov 24, 2026 at 06:06:11PM +0000, Dominik Maier wrote:
-> Under perf_event_paranoid = 2, an unprivileged caller can open a
-> task-scoped counting trace event (including tracepoints and tracefs
-> uprobes) with attr.exclude_kernel = 1 and attach trace event filters via
-> PERF_EVENT_IOC_SET_FILTER without passing perf_allow_kernel(). Trace
-> event filter predicates are parsed by create_filter() and support kernel
-> symbol and address matching (such as the .function modifier), exposing
-> kernel address information to callers that are not allowed kernel
-> profiling.
-> 
-> Require perf_allow_kernel() before applying trace event filters in
-> perf_event_set_filter().
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Dominik Maier <dmnk@google.com>
-> ---
-> v2:
-> - Gate trace event filtering in perf_event_set_filter() with
->   perf_allow_kernel() instead of only checking kallsyms_show_value() on
->   numeric .function predicates in trace_events_filter.c (Steven Rostedt).
-> - v1: https://lore.kernel.org/linux-trace-kernel/20261119192233.2664654-1-dmnk@google.com/
-> 
-> Found with AI-assisted code review; tested in QEMU across root and
-> unprivileged callers at perf_event_paranoid = 1 and 2, and build-tested
-> with CONFIG_EVENT_TRACING both enabled and disabled.
+On Thu, Nov 26, 2026 at 03:30:51AM +0100, Karl Mehltretter wrote:
 
-Does this want a Fixes tag? Or should I stick this in perf/core for the
-next cycle?
+> Hongyan Xia (1):
+>   arm64: Always inline raw preempt count updates
+> 
+> Karl Mehltretter (2):
+>   arm64: Always inline preempt count and reschedule checks
+>   sched/preempt: Check preempt counts in notrace helpers
+> 
+>  arch/arm64/include/asm/preempt.h | 10 ++++----
+>  include/linux/preempt.h          | 23 +++++++++++++-----
+>  kernel/sched/core.c              | 40 ++++++++++++++++++++++++++++----
+>  kernel/trace/Kconfig             |  1 +
+>  4 files changed, 59 insertions(+), 15 deletions(-)
 
->  kernel/events/core.c | 36 +++++++++++++++++++++---------------
->  1 file changed, 21 insertions(+), 15 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index e870f12c3ad8..e053de4c164c 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -12371,22 +12371,28 @@ static int perf_event_set_filter(struct perf_event *event, void __user *arg)
->  
->  #ifdef CONFIG_EVENT_TRACING
->  	if (perf_event_is_tracing(event)) {
-> -		struct perf_event_context *ctx = event->ctx;
-> +		ret = perf_allow_kernel();
-> +		if (!ret) {
-> +			struct perf_event_context *ctx = event->ctx;
->  
-> -		/*
-> -		 * Beware, here be dragons!!
-> -		 *
-> -		 * the tracepoint muck will deadlock against ctx->mutex, but
-> -		 * the tracepoint stuff does not actually need it. So
-> -		 * temporarily drop ctx->mutex. As per perf_event_ctx_lock() we
-> -		 * already have a reference on ctx.
-> -		 *
-> -		 * This can result in event getting moved to a different ctx,
-> -		 * but that does not affect the tracepoint state.
-> -		 */
-> -		mutex_unlock(&ctx->mutex);
-> -		ret = ftrace_profile_set_filter(event, event->attr.config, filter_str);
-> -		mutex_lock(&ctx->mutex);
-> +			/*
-> +			 * Beware, here be dragons!!
-> +			 *
-> +			 * the tracepoint muck will deadlock against ctx->mutex,
-> +			 * but the tracepoint stuff does not actually need it.
-> +			 * So temporarily drop ctx->mutex. As per
-> +			 * perf_event_ctx_lock() we already have a reference on
-> +			 * ctx.
-> +			 *
-> +			 * This can result in event getting moved to a different
-> +			 * ctx, but that does not affect the tracepoint state.
-> +			 */
-> +			mutex_unlock(&ctx->mutex);
-> +			ret = ftrace_profile_set_filter(event,
-> +							event->attr.config,
-> +							filter_str);
-> +			mutex_lock(&ctx->mutex);
-> +		}
->  	} else
->  #endif
->  	if (has_addr_filter(event))
-> -- 
-> 2.56.1.831.g720f3f5937-goog
-> 
+A quick reading doesn't show anything weird; I'll sit on them a while --
+at the very least until I get an ACK from an ARM64 person ;-)
