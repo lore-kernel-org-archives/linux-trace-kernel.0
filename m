@@ -1,74 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795718116;
-	b=YDAHQSMejARWFZf/hI/2kZl+TVPfdL3o9fFr2gZhBECpd+RAVMJ9WdaWtQLOssSreAlr
-	 l9n0fp8b6WgZ2+DvR6Rvd3CN96iQQaR+y/OlsDqWssbtbsJfAuYAYsSa3BznjXPINKa1N
-	 ZRLCH7oK7I0rniG5Eo98E9GonaJVHn7tjEVUVBVJuBMgO8Tit1uxSGsMU5KCM6TNs4BrL
-	 gUS1dsBtuqnzGHJuIXR1arqh2d6J/L55GFAt7OjPxfU8ZscGQfR1pIzdjbdz8kLcG4viE
-	 3KnAtxt5ZGHsejZ4r2he7VVwu7vKXpI1TpWJOMhAif4Z3M6f9rDEAGDPxylqupUM3+w==
+	t=1795723798;
+	b=RDJbE4vGhscD9aK6bGlX4UGl+I2hhjNd7IZHNB4Cxi3AMQO6BFmOgHuWWtpQHz/JoejE
+	 Sr+U4qLbJSpI/5V4YUZKZ9WYfdQF27Th96y5vQEmbL3uIwEckwX+bWEEs/6x7c/xwRClf
+	 hVFTlDcP57k0XzlMddK99ieYjimDrb+5XBHB5yV3743UGExZ9FXb83gu6lXNCsHJTKE9b
+	 S5LzLzIAhMbuKe2olCOmioaBvMzaCq6zvmZNEmKRYFVARzh3EtK0R//pYTGXQM9XVPY7t
+	 JO+qghvNn0vng8hRL0lw+tGcGHGaWtLGfTox4Upb46DBqGqTa04opN1aJd+FhHvFmLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795718116;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=lNoDcgtyIRtshKKQA77hdTnKAgEL8asv9kuIbWA+WPc=;
-	b=cs+nLenylHSLw66iUqIk+Zivt30gDLuZekkjJYu93K5qAUpvy6BFc29DKeeUKG3OapaD
-	 8ifZ3kkSqCOb0xiO4dmjdNpTdhdR9RxnRTc+pUF4EG2metFyJtDcipHQxQCnDHgvkw2JX
-	 HfhSbRrMXbsMtxLraSBhqvRPZjnLfRINuJimkZoPqNrs3rbR0xufSxvI1DoqJL6k5Iz82
-	 XqvmXwikOnxmo7Dv1HDCml+z+n3o8NzKUbn86maVgJ6Xyovgk+m3DI9klBBib+t+9rcKZ
-	 jG/AXBEbQ6LNUSkK8QzwSDne0eK/rZAt5WMnAr/Q0efaZTwED+tPyYuFQXAsdqdUwxg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795723798;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=/OrrKD4PbU8J1zBT1VW3T/D/BHUVvLrmnY9knf4JEkk=;
+	b=ZszlnOZwX2pnIxYCAnQUUVgRvTNqDI/0Ch2Oeiw+jGuBsZkC+vA0f/5VmesYxlcdvBrz
+	 54i8EGt8wVfP9pI+803DmtnG9YghDzrWrGfx+XYb2tDrOdvqtSBTquKwdlqW+QKZyWLB3
+	 1c5nUpbtOk89ZHEeiHTKmYwe7hXQAkVbTcaJOsuUy2mORAoqEwDN0BAHSLqqK6KllUDef
+	 1nzmBTfOGkFWRs7i6HGImdkgMEJzqJBJiggmVQk6c/HxIQsyMIAGPT5Lp8ub2TSG3vcSD
+	 6S/9VB3baWPmv3z922gdJdiux4t17sxN/8iENVc5ZgHzr9ARUupANfy+kNJlogTbAgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=rCRivMKW;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dn9pOQUq;
+	arc=none smtp.remote-ip=209.85.221.54
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253F5606A31C;
-	Thu, 26 Nov 2026 18:35:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 253F5606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CF3606A68C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 20:09:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 17CF3606A68C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=rCRivMKW
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lNoDcgtyIRtshKKQA77hdTnKAgEL8asv9kuIbWA+WPc=; b=rCRivMKWHsAiaN8JRlhI3+jK8V
-	+T0Sca7uBnOGSjoNNgOIu0W/geC6OsBdDDKHdzjRIcHhNB5bzFnkkOsNVQXeN2IPAGJ8hWqRGNud1
-	xB8l50rPqNOIrVlfnsBMeXw7ADQb9DDVc9h0iN+TWHrU3Tvk4rO9wReixGol+gBuRHEV7N9zkX2pG
-	TgapIprlCIPmlc11tAhkkZwRC6D+vvG5pFVy98gkr0VgvMT3hVRWRrmsGVmi+DmWl22Ab7Mh2/6rM
-	5c8QEQcK+s55noA2BmBwI3gc8CBlWaXq/akpEkUsUqOiyP6l82caF79JOtrR49T/1NR8v2hmHqgpq
-	LLLLjTVg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWeJB-0000000A55i-2Zkw;
-	Thu, 26 Nov 2026 18:35:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6F22E302186; Thu, 26 Nov 2026 19:34:53 +0100 (CET)
-Date: Thu, 26 Nov 2026 19:34:53 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Hongyan Xia <hongyan.xia@transsion.com>, Song Liu <song@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] sched/preempt: Check notrace preempt-count updates
-Message-ID: <20261126183453.GM49833@noisy.programming.kicks-ass.net>
-References: <cover.1795631277.git.kmehltretter@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dn9pOQUq
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-490f38e9688so5169144f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 12:09:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795723796; x=1796328596; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=/OrrKD4PbU8J1zBT1VW3T/D/BHUVvLrmnY9knf4JEkk=;
+        b=dn9pOQUqmIA6QOfUKt+k2aFnxD4sE8qGh9LlHU/8NKYf+C/7yk80j94i2FYny3it54
+         bs3ukKO5Kws0wO/QML1kVl2cKdTDNv8mhRLT/ksqWWIvbb/HO8qnU4b0xRRnl1CYWRf3
+         FxMAwLQKk4Ki/3rkPq996pKuzlCr8CpwrLAwHz6jk33jzCEv1rlYMOsfIwLGRocp/Kd0
+         Zd2TaIF73+Q1EflQ7Y+aiKJixdAupQH8Nv9wa2VGekg1qC9DhbgRntOW2SoSRv4Av1T7
+         80yMBniIozPDV53Rh6eBJI0fwIy1E4E6Ri1R980idAbZpw2QN5lHwC6vce7iKQDSzwdt
+         tGCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795723796; x=1796328596;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/OrrKD4PbU8J1zBT1VW3T/D/BHUVvLrmnY9knf4JEkk=;
+        b=cr2qRipphdAYyf5mmokVFHEgNw7v3ajR7y0ISVUicFUdkUqDrdU5DEE0hflnOGhUjV
+         pp/DJN4OBcyuI9ps/DTCr26B9yqke1UpwRKn1T3MUo7gm5ulhEy0j7Y4Y2Gy+oy5zaYJ
+         bXn0GOUPNXltgXPNhcf6roG9/ck7+9WxZoq77WVRpU9mQL7hOJW4gjPZS42FsLuLrBKo
+         l4yjuqnC9rcuF1J+peL8jjsWccvTyd2IxP+vuy9dIa2oUww2XKhzLJCuCY4J9d6PwQ3/
+         bs14YaVfu18oOJSy0OgHatMynMYXPyVg1zn1toYBG4Kvhn6Me0c2519BF0vmImFFnssG
+         angg==
+X-Forwarded-Encrypted: i=1; AL+hErGyvsNC0eQUWaHnYmtc/ue0WmdDg+2M3Yt64gjJXa+lhT2PWA0Ag1jIjiMqMNTLyD+h+pMSjHcNyDsnk968yvm24kQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z8ilx1RwdIwUBWVh6kL9/JtWiU6kyW3wTLh/J4oIC2f6RTgzfir
+	yndZZTDKKqNaGYQFdwlJFyXlAYhXySBkAk18KnCNBiOPlpURfpLhylyEB5JCiFvAupf1xQWlLru
+	KN6J0iA==
+X-Gm-Gg: AZFdTZe/mtYi7A5K25VEnTDFPJjWRWk6wJFk/bQ0lxUtxQMi2MjZQuC/0sfWRFtXmHL
+	sNNme4ySKCsAprELUns3gigwIkV4pDvS3fmGgkklYjCrxKAs6wffOykdbCKhF+tThTsta9XjMA4
+	oe5H0ErpZomxPxLmcrVmIQhahrmInIjojuxPoTP0tMsdn7ApCPkk6xyFxZPNOsFtyRgFEQAgFxj
+	BzLOif+1062SqOsnCbnJCU+M/GAc5CzMkNgCRjM5NlyO8+C3/FoOhuQdPL3J+eY8dP1joeMxFqp
+	7cRy/7lTwDdsWQx9JBCKqHYwA1NVuDMV5ygMDqmd121Obv6kcAHl9YDjUOe7uhJEQb+q3SO8iqG
+	/sPkJPw4ZKDDrhmm0YXUn1SDcbQodDB6YupEWFjHlM8nL5O3tY8fJ0da73VtX78o20hKmavJ1Ly
+	u3O5n7UA6VkBHab5bpgD6yKaJmkFhxl7Du1rklahppzbKkFw9VB/y2D/WFA2CF9VYY8WN4PSVyq
+	MoCBZLclgRu4PJHkwzAd5Eq36GI7Ap4kgtvYQhuJKD7AbsUI3MYL3VYzAfyPRiaz7Zi0ePIM9qZ
+	RRoYJJl2EVnsFH0hUB8YZYxJdcJMe4bH1Ac4GZZM0QL/BHxHoJoNHfGpOlHNd1XTqa7UZz1Vf2D
+	NYULwn7Z9TdtHF0Ol5Sf63Q==
+X-Received: by 2002:a05:6000:29d8:b0:4ab:1d39:92c3 with SMTP id ffacd0b85a97d-4ab1d39937emr31825976f8f.20.1795723796009;
+        Thu, 26 Nov 2026 12:09:56 -0800 (PST)
+Received: from google.com (0.182.34.34.bc.googleusercontent.com. [34.34.182.0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6c340df4sm48791551f8f.55.2026.11.26.12.09.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2026 12:09:55 -0800 (PST)
+Date: Thu, 26 Nov 2026 20:09:52 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 00/21] tracing/remotes: Add printk, dump_on_panic and
+ boot parameters
+Message-ID: <awiSEPZdfQog3o-k@google.com>
+References: <20261124152845.2233401-1-vdonnefort@google.com>
+ <20261125160106.01c468e2@gandalf.local.home>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -80,22 +103,64 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1795631277.git.kmehltretter@gmail.com>
+In-Reply-To: <20261125160106.01c468e2@gandalf.local.home>
 
-On Thu, Nov 26, 2026 at 03:30:51AM +0100, Karl Mehltretter wrote:
-
-> Hongyan Xia (1):
->   arm64: Always inline raw preempt count updates
+On Wed, Nov 25, 2026 at 04:01:06PM -0500, Steven Rostedt wrote:
+> On Tue, 24 Nov 2026 15:28:24 +0000
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Karl Mehltretter (2):
->   arm64: Always inline preempt count and reschedule checks
->   sched/preempt: Check preempt counts in notrace helpers
+> > Vincent Donnefort (21):
+> >   tracing/remotes: Gate tracefs files opening on trace remote
+> >     registration
+> >   tracing/remotes: Release tracefs,eventfs on registration failure
+> >   tracing/remotes: Use kstrtobool for boolean tracefs files
+> >   tracing/remotes: Initialise pos in trace_start()
+> >   tracing/remotes: Annotate remote shared fields with
+> >     READ_ONCE/WRITE_ONCE
+> >   tracing/remotes: Use a single per-remote polling work
+> >   tracing/simple_ring_buffer: Add support for compressed length
+> >   tracing/remotes: Add dmesg tracefs file
+> >   tracing/remotes: selftests: Add a test for the dmesg tracefs file
+> >   tracing/remotes: selftests: Prefix hypervisor folder
 > 
->  arch/arm64/include/asm/preempt.h | 10 ++++----
->  include/linux/preempt.h          | 23 +++++++++++++-----
->  kernel/sched/core.c              | 40 ++++++++++++++++++++++++++++----
->  kernel/trace/Kconfig             |  1 +
->  4 files changed, 59 insertions(+), 15 deletions(-)
+> 
+> >   ring-buffer: Use irqsave for the reader lock in
+> >     ring_buffer_poll_remote
+> >   ring-buffer: Avoid reader_lock deadlock during panic
+> >   ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
+> >   ring-buffer: Add kerneldoc for ring_buffer_poll_remote
+> 
+> Do the ring-buffer specific changes need to be part of this remote patch series?
+> 
+> They probably should be separate.
+> 
+> -- Steve
 
-A quick reading doesn't show anything weird; I'll sit on them a while --
-at the very least until I get an ACK from an ARM64 person ;-)
+I could separate
+
+   ring-buffer: Use irqsave for the reader lock in ring_buffer_poll_remote
+   ring-buffer: Avoid reader_lock deadlock during panic
+   ring-buffer: Add kerneldoc for ring_buffer_poll_remote
+
+They are into this series because those issues came out while working on this
+series and I thought they weren't important enough to be on their own, but I can
+surely send them separately.
+
+   ring-buffer: Use panic-friendly locking in ring_buffer_iter interface
+
+This one however is only useful with that series.
+
+-- 
+Vincent
+
+> 
+> 
+> >   tracing/remotes: Use ring_buffer_capacity() in trace_remote_has_cpu()
+> >   tracing/remotes: Add dump_on_panic tracefs file
+> >   tracing/remotes: selftests: Add a test for the dump_on_panic tracefs
+> >     file
+> >   tracing/remotes: Add poll_ms tracefs file
+> >   tracing/remotes: Add trace_remote cmdline options
+> >   Documentation: tracing/remotes: Add detailed tracefs layout
+> >   Documentation/kernel-parameters: Add trace_remote
+> 
