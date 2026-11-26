@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795698077;
-	b=BeMKhMAfOGO6CsHKqbls+4uJMl2k5wshNlDU+gEm8j8w4lrHnw5igdfXbDZ4EG0EW51f
-	 LC8XwpGt4C8AJNnzMY7+voyuR0i9T6w08rxzL/0ryf1UpZs8tmxbBV9XjguMcc2e+zxJf
-	 6I41Jq5LBiqDlNufBRkh0PjvXzcMHyQTt1k+bpOj+5uiPm5wqoWKz5m7ql93JTRG0ab2g
-	 WDunJDslVPK9FHCQ8sGk/IXw3vZxXf3eyHjBB8GncEz+Xzb6kqtDcoHb1sj0fKR5OR618
-	 S20BFaXkKQriosONKkvo/wGd4jntbK2KFjtdMweZH3B0Ncbf3hETjf8ioOWBp2x2FJA==
+	t=1795698083;
+	b=gG124JNJIRK2PzLSiZ5/2dmDSYBaXmoc2dBZW4jiLkG9O2aGBckrld8A7NO144oxVGK1
+	 lT2VKODwIKOnMhpTdFMcaugaXs5wXFGlWXLN4D46FctgTYEATI9AM9nrqxyIsy6KAAlqm
+	 sBlseN+H1NzMVbK9rdmp6ovMciNbUZMcqQCXhqcBX2QyQwxxO+W3xEFsdtaE3I/U0uH91
+	 6WiC1TjB0vzOP1Q5P+0lZNv9mVIAEHpElaLf0O2bZQ89Qye9Do8PSkPVOEdk2vatHYRaY
+	 8Jqctxw7ovAl/82z38lPQCEYVY23TxsNIdsi/jN1EiZXVluIforBklGmHnxw4SwM6Qg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795698077;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795698083;
 	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
 	 X-Mimecast-MFC-AGG-ID:Received:Received:From:To:Cc:Subject:Date:
 	 Message-ID:In-Reply-To:References:MIME-Version:X-Scanned-By:
 	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
 	 Content-Transfer-Encoding:content-type;
-	bh=zC8dAuQq149MZ5BsQEvyCxHSGduIDqnB2gj0ZZzxdpM=;
-	b=Li8Hh/F2NtmCbfJfbWo3Qg0HmarvT0QRvXFfodVDm2sH3YlJouWB4qrrkMgjZ27hooLc
-	 kfZ/U8DyfhzcLgUeIqzNyFnLrC6Nontbjh41MEwVf+QDN0vo2naaX+OKC3MVBXQr1okgS
-	 Wnu8e4744FCI+TuCNLlySICTUOUqiqlfzGW67bT3oO9uGOJWxB2aoFxd902tLkd1w9oqj
-	 TrwHT9SkPIigexYjgmgneITPoO5ACWUEUVS2fVVa+iYUGHv1Y2ETxzclZNT8NuLxtKoAl
-	 0R8+d2OyDk4HNrF4lEaimhvOB6Mtyflk0XDBjunMEDQbsH5N6mZOo4OQ0D9sG8jsnNA==
+	bh=zGvc4KxJZB3NeERGpYzcEekNx68KNzuyEnfFZOh/Vyg=;
+	b=I04gd23fvV4cAhm2K8CTh/E25Q1bgmDVc+OYDzNUzSWuh8B77RSrnIiTKKFB+i6L5XBj
+	 fAZoVeEgDceRup+yuwj0VVjweOPnnLnSgOPduBaKGQWesfDgf0uypZ6s9yrPVaH90Tffv
+	 2thFELEmdIWWXh2U/lXW7nvQpUyxk5fwO7sSQRN3AB9lJN+dERi2zTrIIoe82E05ah9gz
+	 AmboiWBkoKXUqEXonHHXSEAZvek/99mI8DK7g9emALcgjRVUbi7G1FyeGj6xnLNzlkyX9
+	 nqPumGUPsT6LfWqzUmIOGijLtQ3mwmFmUvmAlkX7vcoB9ufv9UT9vnI/NPmbP1NBXPQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=T9pBnVzS;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=A8CnjTkc;
 	arc=none smtp.remote-ip=170.10.129.124
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50625606A330
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:01:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50625606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92FD606A329
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Nov 2026 13:01:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E92FD606A329
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=T9pBnVzS
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=A8CnjTkc
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795698075;
+	s=mimecast20190719; t=1795698082;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zC8dAuQq149MZ5BsQEvyCxHSGduIDqnB2gj0ZZzxdpM=;
-	b=T9pBnVzS6IQxrEkUAwVicVDzRgJ4r+t67MPB+LQCREdi/yDegxYRTL5Slwq9XKubN2B3Hq
-	6uCUbIpZAHHlcJZldN0UaWPniE/997DLoI51UP/tys9ZMSSDxE694DiRgn9QxhX95OeJkK
-	8m7KE0a95ex5fo0nD5G11qEsDOwQODU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=zGvc4KxJZB3NeERGpYzcEekNx68KNzuyEnfFZOh/Vyg=;
+	b=A8CnjTkcsE5nymmkICmbmy56Jvp8Zukrkf6nO0SqEauZtmak1UeNmext6wNEvYTwzKfwHC
+	snTbm2sqV3SE7/TdEtQeWLcY3/8lp1hKVA1zLQJHV+U2nD3d5lBAD3pQ7TvWpNbJqjslaV
+	afV/xpYOL7uYCKNpTwr6V9K53C5NzVo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-331-S3kHA3hUOKu_Uyhd_Sj9WA-1; Thu,
- 26 Nov 2026 13:01:11 +0000
-X-MC-Unique: S3kHA3hUOKu_Uyhd_Sj9WA-1
-X-Mimecast-MFC-AGG-ID: S3kHA3hUOKu_Uyhd_Sj9WA_1795698069
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-661-NA64PonHN82whrqr7ZISag-1; Thu,
+ 26 Nov 2026 13:01:17 +0000
+X-MC-Unique: NA64PonHN82whrqr7ZISag-1
+X-Mimecast-MFC-AGG-ID: NA64PonHN82whrqr7ZISag_1795698074
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8AA411955F74;
-	Thu, 26 Nov 2026 13:01:09 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B2981956069;
+	Thu, 26 Nov 2026 13:01:14 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.redhat.corp (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 586EB1800543;
-	Thu, 26 Nov 2026 13:01:06 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 094A81801A73;
+	Thu, 26 Nov 2026 13:01:10 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
@@ -74,9 +74,9 @@ Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
 	Viktor Malik <vmalik@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v3 09/18] tools/rv: Implement BPF monitor discovery and listing
-Date: Thu, 26 Nov 2026 13:59:55 +0100
-Message-ID: <20261126130004.127155-10-gmonaco@redhat.com>
+Subject: [PATCH v3 10/18] tools/rv: Implement BPF monitor loading and tracing
+Date: Thu, 26 Nov 2026 13:59:56 +0100
+Message-ID: <20261126130004.127155-11-gmonaco@redhat.com>
 In-Reply-To: <20261126130004.127155-1-gmonaco@redhat.com>
 References: <20261126130004.127155-1-gmonaco@redhat.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -89,387 +89,624 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: 173pKoEcym4LgYOO05AsHf5N6dJq7d05ZKINPHTWaFU_1795698069
+X-Mimecast-MFC-PROC-ID: ANOrgtMveEJaUfENNf7F0S0xiRIjmgHx7EHKCaS8iUw_1795698074
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Implement the BPF monitor listing functionality that scans for compiled
-BPF monitor object files and displays them in the monitor list.
+Implement BPF monitor loading, execution, and optional tracing
+functionality.
 
-If enabled, running rv list shows in-kernel and BPF monitors found in
-/usr/share/rv/bpf_monitors/ or in ./bpf_monitors/ relative to the RV
-binary's location (used during development).
+Running rv mon MON loads the MON monitor into the kernel and passing the
+-t parameter also attaches to the trace events using the same utilities
+shared with in-kernel monitors.
+The shared infrastructure still needs refactoring and wiring with new
+generic trace events.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rv/Makefile              |   4 +-
- tools/verification/rv/Makefile.config       |  23 ++
- tools/verification/rv/include/bpf_monitor.h |  14 ++
- tools/verification/rv/src/Build             |   5 +
- tools/verification/rv/src/bpf_monitor.c     | 240 ++++++++++++++++++++
- tools/verification/rv/src/rv.c              |   2 +
- 6 files changed, 287 insertions(+), 1 deletion(-)
- create mode 100644 tools/verification/rv/include/bpf_monitor.h
- create mode 100644 tools/verification/rv/src/bpf_monitor.c
+ tools/verification/rv/include/bpf_monitor.h |   6 +
+ tools/verification/rv/include/utils.h       |   2 +
+ tools/verification/rv/src/bpf_monitor.c     | 490 ++++++++++++++++++++
+ tools/verification/rv/src/rv.c              |   3 +
+ tools/verification/rv/src/utils.c           |   7 +-
+ 5 files changed, 506 insertions(+), 2 deletions(-)
 
-diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-index 8ae5fc0d1d17..0a8c7a656f7f 100644
---- a/tools/verification/rv/Makefile
-+++ b/tools/verification/rv/Makefile
-@@ -32,8 +32,10 @@ DOCSRC		:= ../../../Documentation/tools/rv/
- 
- FEATURE_TESTS	:= libtraceevent
- FEATURE_TESTS	+= libtracefs
-+FEATURE_TESTS	+= libbpf
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
-+FEATURE_DISPLAY	+= libbpf
- 
- all: $(RV)
- 
-@@ -57,7 +59,7 @@ endif
- 
- CFLAGS		+= $(INCLUDES) $(LIB_INCLUDES)
- 
--export CFLAGS OUTPUT srctree
-+export CFLAGS OUTPUT srctree BUILD_BPF
- 
- $(RV): $(RV_IN)
- 	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $(RV) $(RV_IN) $(EXTLIBS)
-diff --git a/tools/verification/rv/Makefile.config b/tools/verification/rv/Makefile.config
-index 066302230eb2..0600170ac217 100644
---- a/tools/verification/rv/Makefile.config
-+++ b/tools/verification/rv/Makefile.config
-@@ -43,6 +43,29 @@ else
-   $(info libtracefs is missing. Please install libtracefs-dev/libtracefs-devel)
- endif
- 
-+ifndef BUILD_BPF
-+  # BPF monitors are optional but enabled by default
-+  BUILD_BPF := 1
-+endif
-+
-+ifeq ($(BUILD_BPF),0)
-+  $(info BPF monitor support disabled, building without BPF monitor support.)
-+endif
-+
-+$(call feature_check,libbpf)
-+ifeq ($(feature-libbpf), 1)
-+  $(call detected,CONFIG_LIBBPF)
-+else
-+  $(info libbpf is missing, building without BPF monitor support.)
-+  $(info Please install libbpf-dev/libbpf-devel)
-+  BUILD_BPF := 0
-+endif
-+
-+ifeq ($(BUILD_BPF),1)
-+  CFLAGS += -DHAVE_LIBBPF
-+  $(call lib_setup,bpf)
-+endif
-+
- ifeq ($(STOP_ERROR),1)
-   $(error Please, check the errors above.)
- endif
 diff --git a/tools/verification/rv/include/bpf_monitor.h b/tools/verification/rv/include/bpf_monitor.h
-new file mode 100644
-index 000000000000..e58bc45c5f75
---- /dev/null
+index e58bc45c5f75..e650f11afdab 100644
+--- a/tools/verification/rv/include/bpf_monitor.h
 +++ b/tools/verification/rv/include/bpf_monitor.h
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#ifndef _BPF_MONITOR_H
-+#define _BPF_MONITOR_H
+@@ -4,11 +4,17 @@
+ 
+ #ifdef HAVE_LIBBPF
+ int bpf_list_monitors(char *container);
++int bpf_run_monitor(char *monitor_name, int argc, char **argv);
+ #else
+ static inline int bpf_list_monitors(char *container)
+ {
+ 	return 0;
+ }
 +
-+#ifdef HAVE_LIBBPF
-+int bpf_list_monitors(char *container);
-+#else
-+static inline int bpf_list_monitors(char *container)
++static inline int bpf_run_monitor(char *monitor_name, int argc, char **argv)
 +{
 +	return 0;
 +}
-+#endif /* HAVE_LIBBPF */
-+
-+#endif
-diff --git a/tools/verification/rv/src/Build b/tools/verification/rv/src/Build
-index d781983c1a79..326503c22915 100644
---- a/tools/verification/rv/src/Build
-+++ b/tools/verification/rv/src/Build
-@@ -1,4 +1,9 @@
- rv-y += trace.o
- rv-y += utils.o
- rv-y += in_kernel.o
-+
-+ifeq ($(BUILD_BPF),1)
-+  rv-y += bpf_monitor.o
-+endif
-+
- rv-y += rv.o
+ #endif /* HAVE_LIBBPF */
+ 
+ #endif
+diff --git a/tools/verification/rv/include/utils.h b/tools/verification/rv/include/utils.h
+index 61f77a72a1a2..d6b4e60df7ff 100644
+--- a/tools/verification/rv/include/utils.h
++++ b/tools/verification/rv/include/utils.h
+@@ -10,11 +10,13 @@ void mon_usage(int exit_val, char *monitor_name, const char *fmt, ...);
+ int parse_arguments(char *monitor_name, int argc, char **argv);
+ 
+ void ikm_usage_print_reactors(void);
++void bpf_usage_print_reactors(void);
+ 
+ struct config {
+ 	bool debug;
+ 	bool is_container;
+ 	bool trace;
++	bool is_bpf;
+ 	int has_id;
+ 	int my_pid;
+ 	char *initial_reactor;
 diff --git a/tools/verification/rv/src/bpf_monitor.c b/tools/verification/rv/src/bpf_monitor.c
-new file mode 100644
-index 000000000000..a5767617c720
---- /dev/null
+index a5767617c720..5c9c4d9b4835 100644
+--- a/tools/verification/rv/src/bpf_monitor.c
 +++ b/tools/verification/rv/src/bpf_monitor.c
-@@ -0,0 +1,240 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * BPF monitor support: allows rv to control BPF monitors.
-+ *
-+ * Copyright (C) 2026 Red Hat Inc, Gabriele Monaco <gmonaco@redhat.com>
-+ */
+@@ -16,11 +16,13 @@
+ #include <dirent.h>
+ #include <libgen.h>
+ #include <errno.h>
++#include <inttypes.h>
+ #include <bpf/libbpf.h>
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
+ 
+ #include <bpf_monitor.h>
++#include <trace.h>
+ #include <utils.h>
+ #include <rv.h>
+ 
+@@ -36,6 +38,31 @@ static char bpf_base_paths[][MAX_PATH] = {
+ #define DEVEL_PATH 0
+ 
+ #define RV_LOCK_DIR "/run/rv"
++#define MAX_ENUMS 64
++#define MAX_LINKS 16
++#define PROG_ENABLE_MON "enable_monitor"
++#define PROG_INIT_TASK "init_task"
++#define RV_TRACE_STRUCT "rv_trace_entry"
++#define RV_TRACE_TYPE_ENUM "rv_trace_type"
 +
-+#define _GNU_SOURCE
++#define CPU_POSSIBLE "/sys/devices/system/cpu/possible"
++#define CPU_MAX "/sys/devices/system/cpu/kernel_max"
 +
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <fcntl.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
-+#include <dirent.h>
-+#include <libgen.h>
-+#include <errno.h>
-+#include <bpf/libbpf.h>
-+#include <bpf/bpf.h>
-+#include <bpf/btf.h>
-+
-+#include <bpf_monitor.h>
-+#include <utils.h>
-+#include <rv.h>
-+
-+static char bpf_base_paths[][MAX_PATH] = {
-+	".",
-+	"/etc/rv",
-+	"/usr/local/share/rv",
-+	"/usr/share/rv",
-+	"", /* Marker */
++enum trace_type_id {
++	TRACE_TYPE_ERROR,
++	TRACE_TYPE_EVENT,
++	TRACE_TYPE_MAX,
 +};
 +
-+/* Path used for development, searched first */
-+#define DEVEL_PATH 0
++static const char *const trace_type_names[] = {
++	[TRACE_TYPE_ERROR] = "RV_TRACE_ERROR",
++	[TRACE_TYPE_EVENT] = "RV_TRACE_EVENT",
++};
 +
-+#define RV_LOCK_DIR "/run/rv"
++struct bpf_monitor_ctx {
++	char monitor_name[MAX_DA_NAME_LEN];
++	int trace_types[TRACE_TYPE_MAX];
++};
+ 
+ /*
+  * bpf_lock_acquire - take the ownership lock for a monitor
+@@ -238,3 +265,466 @@ int bpf_list_monitors(char *container)
+ 
+ 	return 0;
+ }
 +
-+/*
-+ * bpf_lock_acquire - take the ownership lock for a monitor
-+ *
-+ * The lock is held for the whole monitor lifetime and released by the kernel
-+ * when the process exits, including on crashes. The lock file is never
-+ * removed: unlinking it would allow two processes to lock different inodes.
-+ *
-+ * Returns the fd if the lock was acquired, -errno on error, -EAGAIN means busy.
-+ */
-+static int bpf_lock_acquire(const char *monitor_name)
++static int libbpf_print_fn(enum libbpf_print_level level, const char *format,
++			   va_list args)
 +{
-+	struct flock fl = { .l_type = F_WRLCK, .l_whence = SEEK_SET };
-+	char path[MAX_PATH];
-+	int fd, ret;
-+
-+	snprintf(path, MAX_PATH, "%s/%s.lock", RV_LOCK_DIR, monitor_name);
-+
-+	if (mkdir(RV_LOCK_DIR, 0700) && errno != EEXIST)
-+		return -errno;
-+
-+	fd = open(path, O_RDWR | O_CREAT | O_CLOEXEC | O_NOFOLLOW, 0600);
-+	if (fd < 0)
-+		return -errno;
-+
-+	if (fcntl(fd, F_OFD_SETLK, &fl)) {
-+		ret = errno;
-+		close(fd);
-+		return -ret;
-+	}
-+
-+	return fd;
-+}
-+
-+/*
-+ * bpf_lock_is_held - check if a monitor is owned by a running process
-+ *
-+ * Use F_OFD_GETLK to query the lock without disturbing the owner.
-+ *
-+ * Returns 1 if the monitor is locked, 0 otherwise.
-+ */
-+static int bpf_lock_is_held(const char *monitor_name)
-+{
-+	struct flock fl = { .l_type = F_WRLCK, .l_whence = SEEK_SET };
-+	char path[MAX_PATH];
-+	int fd, ret;
-+
-+	snprintf(path, MAX_PATH, "%s/%s.lock", RV_LOCK_DIR, monitor_name);
-+
-+	fd = open(path, O_RDONLY | O_CLOEXEC | O_NOFOLLOW);
-+	if (fd < 0)
++	if (level == LIBBPF_DEBUG && !config.debug)
 +		return 0;
-+
-+	ret = fcntl(fd, F_OFD_GETLK, &fl);
-+	close(fd);
-+
-+	return ret ? 0 : fl.l_type != F_UNLCK;
++	return vfprintf(stderr, format, args);
 +}
 +
 +/*
-+ * bpf_read_desc - read monitors' description
++ * extract_trace_type_metadata - extract trace type enum values from BTF
 + *
-+ * Return the provided string containing the monitor's description, NULL
-+ * otherwise.
-+ */
-+static char *bpf_read_desc(char *desc, struct bpf_object *obj, const char *monitor_name)
-+{
-+	struct bpf_map *map = bpf_object__find_map_by_name(obj, ".rodata.description");
-+	const char *desc_data;
-+	size_t desc_size;
-+
-+	if (!map) {
-+		debug_msg("bpf: cannot find description for %s\n",
-+			  monitor_name);
-+		return NULL;
-+	}
-+	desc_data = bpf_map__initial_value(map, &desc_size);
-+	if (!desc_data || desc_size == 0) {
-+		debug_msg("bpf: empty description for %s\n", monitor_name);
-+		*desc = 0;
-+		return desc;
-+	}
-+
-+	if (desc_size >= MAX_DESCRIPTION)
-+		desc_size = MAX_DESCRIPTION - 1;
-+	strncpy(desc, desc_data, desc_size);
-+	desc[desc_size] = '\0';
-+
-+	return desc;
-+}
-+
-+/*
-+ * bpf_fill_base_paths - fill the path for development builds
++ * Introspect the rv_trace_type enum via BTF and store enum values for
++ * event type dispatch and configuration.
 + *
-+ * RV searches for BPF monitors on absolute paths on the system as well
-+ * as in the same directory of the rv binary. This is useful when running
-+ * rv from the kernel tree. This function resolves the right location.
++ * Returns 0 on success, -1 on error
 + */
-+static void bpf_fill_base_paths(void)
++static int extract_trace_type_metadata(const struct btf *btf, struct bpf_monitor_ctx *ctx)
 +{
-+	char tmp_path[MAX_PATH], *dir;
-+	ssize_t len;
++	const struct btf_type *enum_type;
++	const struct btf_enum *enums;
++	int type_id, vlen, filled = 0;
 +
-+	len = readlink("/proc/self/exe", tmp_path, MAX_PATH);
-+	if (len > 0 && len != MAX_PATH) {
-+		tmp_path[len] = '\0';
-+		dir = dirname(tmp_path);
-+		snprintf(bpf_base_paths[DEVEL_PATH], MAX_PATH, "%s", dir);
-+	}
-+}
++	for (int i = 0; i < TRACE_TYPE_MAX; i++)
++		ctx->trace_types[i] = -1;
 +
-+static void bpf_object_iterate_path(const char *base_path, const char *subdir,
-+				    void (*action)(const char *name, struct bpf_object *obj))
-+{
-+	char path[MAX_PATH];
-+	struct dirent *entry;
-+	DIR *dir;
-+	char *ext;
-+
-+	snprintf(path, sizeof(path), "%s/%s", base_path, subdir);
-+	dir = opendir(path);
-+	if (!dir) {
-+		debug_msg("bpf: error opening directory: %s\n", path);
-+		return;
++	type_id = btf__find_by_name_kind(btf, RV_TRACE_TYPE_ENUM, BTF_KIND_ENUM);
++	if (type_id <= 0) {
++		debug_msg("bpf: could not find enum '%s' in BTF\n", RV_TRACE_TYPE_ENUM);
++		return -1;
 +	}
 +
-+	while ((entry = readdir(dir)) != NULL) {
-+		size_t size;
-+		struct bpf_object *obj;
-+		char name[MAX_DA_NAME_LEN], obj_path[MAX_PATH];
++	enum_type = btf__type_by_id(btf, type_id);
++	if (!enum_type) {
++		debug_msg("bpf: could not get type for '%s'\n", RV_TRACE_TYPE_ENUM);
++		return -1;
++	}
 +
-+		if (entry->d_name[0] == '.')
++	enums = btf_enum(enum_type);
++	vlen = btf_vlen(enum_type);
++
++	for (int i = 0; i < vlen; i++) {
++		const char *name = btf__name_by_offset(btf, enums[i].name_off);
++
++		if (!name)
 +			continue;
 +
-+		ext = strrchr(entry->d_name, '.');
-+		if (!ext || strcmp(ext, ".o") != 0)
-+			continue;
-+
-+		size = (size_t)(ext - entry->d_name);
-+		if (size >= MAX_DA_NAME_LEN) {
-+			err_msg("bpf: name too long, skipping %s/%s\n", path,
-+				entry->d_name);
-+			continue;
++		for (int j = 0; j < TRACE_TYPE_MAX; j++) {
++			if (strcmp(name, trace_type_names[j]) == 0) {
++				ctx->trace_types[j] = enums[i].val;
++				++filled;
++				break;
++			}
 +		}
-+		memcpy(name, entry->d_name, size);
-+		name[size] = '\0';
-+
-+		size = snprintf(obj_path, sizeof(obj_path), "%s/%s", path,
-+				entry->d_name);
-+		obj = bpf_object__open_file(obj_path, NULL);
-+		if (!obj || size >= MAX_PATH) {
-+			err_msg("bpf: error opening object file %s: %s\n",
-+				obj_path, strerror(errno));
-+			continue;
-+		}
-+
-+		action(name, obj);
-+
-+		bpf_object__close(obj);
 +	}
 +
-+	closedir(dir);
-+}
-+
-+static void list_monitor_action(const char *name, struct bpf_object *obj)
-+{
-+	char desc[MAX_DESCRIPTION];
-+
-+	if (!bpf_read_desc(desc, obj, name)) {
-+		err_msg("bpf: monitor %s does not have desc map, bug?\n", name);
-+		return;
++	if (filled < TRACE_TYPE_MAX) {
++		debug_msg("bpf: could not find all trace types in BTF\n");
++		return -1;
 +	}
-+
-+	printf("%-*s %s %s\n", MAX_DA_NAME_LEN, name,
-+	       desc, bpf_lock_is_held(name) ? "[ON]" : "[OFF]");
-+}
-+
-+/*
-+ * list_monitors_from_path - list monitors from a specific base path
-+ */
-+static void list_monitors_from_path(const char *base_path)
-+{
-+	bpf_object_iterate_path(base_path, "bpf_monitors", list_monitor_action);
-+}
-+
-+/*
-+ * bpf_list_monitors - list available BPF monitors from all sources
-+ *
-+ * @container: BPF monitors are not nested, skip listing.
-+ *
-+ * Returns 0 on success
-+ */
-+int bpf_list_monitors(char *container)
-+{
-+	if (container)
-+		return 0;
-+	bpf_fill_base_paths();
-+	for (int i = 0; bpf_base_paths[i][0]; i++)
-+		list_monitors_from_path(bpf_base_paths[i]);
 +
 +	return 0;
 +}
++
++/*
++ * extract_btf_info - extract BTF types information from the monitor
++ *
++ * Extract state and event names from enums using BTF and extract field
++ * offsets for flexible event parsing.
++ */
++static int extract_btf_info(struct bpf_object *obj, struct bpf_monitor_ctx *ctx)
++{
++	const struct btf *btf;
++
++	btf = bpf_object__btf(obj);
++	if (!btf) {
++		err_msg("bpf: no BTF found in BPF object\n");
++		return -1;
++	}
++
++	if (extract_trace_type_metadata(btf, ctx)) {
++		err_msg("bpf: failed to extract trace type metadata\n");
++		return -1;
++	}
++
++	return 0;
++}
++
++/*
++ * find_bpf_file - search for a BPF object file in a specific subdirectory
++ */
++static int find_bpf_file(const char *subdir, const char *name, char *path_out, size_t path_len)
++{
++	char path[MAX_PATH];
++
++	for (int i = 0; bpf_base_paths[i][0]; i++) {
++		size_t size = snprintf(path, sizeof(path), "%s/%s/%s.o",
++				       bpf_base_paths[i], subdir, name);
++
++		if (size < MAX_PATH && access(path, R_OK) == 0) {
++			strncpy(path_out, path, path_len - 1);
++			path_out[path_len - 1] = '\0';
++			return 1;
++		}
++	}
++
++	return 0;
++}
++
++/*
++ * find_bpf_monitor - search for BPF monitor object file in all directories
++ */
++static int find_bpf_monitor(const char *monitor_name, char *path_out, size_t path_len)
++{
++	return find_bpf_file("bpf_monitors", monitor_name, path_out, path_len);
++}
++
++/*
++ * bpf_usage_print_reactors - print available BPF reactors
++ */
++void bpf_usage_print_reactors(void)
++{
++	fprintf(stderr, "  available BPF reactors: nop\n");
++}
++
++/*
++ * bpf_enable_tracing - set the trace_level variable in .rodata
++ *
++ * Find trace_level in a special section of .rodata and set its value before
++ * loading.
++ *
++ * Returns 0 on success, -1 on error.
++ */
++static int bpf_enable_tracing(struct bpf_object *obj, struct bpf_monitor_ctx *ctx)
++{
++	struct bpf_map *map = bpf_object__find_map_by_name(obj, ".rodata.trace_level");
++	size_t data_size;
++	int *trace_level;
++
++	if (!map)
++		return -1;
++
++	trace_level = bpf_map__initial_value(map, &data_size);
++	if (!trace_level || data_size != sizeof(*trace_level))
++		return -1;
++
++	*trace_level = ctx->trace_types[TRACE_TYPE_EVENT];
++	return 0;
++}
++
++static int readline(char *buf, size_t size, const char *path)
++{
++	FILE *f;
++
++	f = fopen(path, "r");
++	if (!f)
++		return -errno;
++
++	if (!fgets(buf, size, f)) {
++		fclose(f);
++		return -EINVAL;
++	}
++	fclose(f);
++
++	if (!strchr(buf, '\n'))
++		return -E2BIG;
++	return 0;
++}
++
++/*
++ * get_nr_cpu_ids: Find the maximum number of CPUs
++ *
++ * The BPF programs iterate over CPUs during initialisation, the highest id + 1
++ * is a safe value in case of a sparse CPU mask.
++ * Fall back to the maximum number of CPUs.
++ *
++ * Returns nr_cpu_ids or a negative errno.
++ */
++static int get_nr_cpu_ids(void)
++{
++	char buf[4096], *comma, *dash, *sep;
++
++	if (readline(buf, sizeof(buf), CPU_POSSIBLE)) {
++		int res = readline(buf, sizeof(buf), CPU_MAX);
++
++		return res ?: strtol(buf, NULL, 10) + 1;
++	}
++
++	comma = strrchr(buf, ',');
++	dash = strrchr(buf, '-');
++	sep = dash && (!comma || dash > comma) ? dash : comma;
++
++	return strtol(sep ? sep + 1 : buf, NULL, 10) + 1;
++}
++
++/*
++ * open_bpf_monitor - open and load a BPF monitor object from a file path
++ *
++ * Returns loaded BPF object on success, NULL on error.
++ */
++static struct bpf_object *open_bpf_monitor(const char *path, struct bpf_monitor_ctx *ctx)
++{
++	struct bpf_object *obj = NULL;
++	int res, nproc = get_nr_cpu_ids();
++	char kconfig[128];
++
++	if (nproc <= 0) {
++		err_msg("bpf: error getting possible CPUs: %s\n", strerror(-nproc));
++		return NULL;
++	}
++	/* Define statically what is known, Kconfig may not be available. */
++	snprintf(kconfig, sizeof(kconfig), "CONFIG_NR_CPUS=%d\n",
++		 nproc);
++
++	LIBBPF_OPTS(bpf_object_open_opts, opts,
++		.object_name = ctx->monitor_name,
++		.kconfig = kconfig,
++	);
++
++	obj = bpf_object__open_file(path, &opts);
++	if (!obj) {
++		err_msg("bpf: error opening object: %s\n", strerror(errno));
++		return NULL;
++	}
++
++	res = extract_btf_info(obj, ctx);
++	if (res || bpf_enable_tracing(obj, ctx)) {
++		err_msg("bpf: failed to enable tracing\n");
++		bpf_object__close(obj);
++		return NULL;
++	}
++
++	res = bpf_object__load(obj);
++	if (res) {
++		err_msg("bpf: error loading object: %s\n", strerror(-res));
++		bpf_object__close(obj);
++		return NULL;
++	}
++
++	return obj;
++}
++
++/*
++ * attach_bpf_handlers - attach all BPF programs
++ *
++ * Attach all handler programs and store links in the provided array. Skip
++ * known non-handler programs.
++ *
++ * Returns fd of enable program on success, -1 on error.
++ */
++static int attach_bpf_handlers(const char *monitor_name, struct bpf_object *obj,
++				struct bpf_link **links, int *link_count)
++{
++	struct bpf_program *prog;
++	int enable_mon_fd = -1;
++
++	bpf_object__for_each_program(prog, obj) {
++		struct bpf_link *link = NULL;
++		const char *prog_name;
++
++		/* Special program to initialise the monitor */
++		if (!strcmp(bpf_program__name(prog), PROG_ENABLE_MON)) {
++			enable_mon_fd = bpf_program__fd(prog);
++			continue;
++		}
++
++		/* Task iterator program to initialise existing tasks */
++		if (!strcmp(bpf_program__name(prog), PROG_INIT_TASK))
++			continue;
++
++		if (*link_count >= MAX_LINKS) {
++			err_msg("bpf: too many programs to attach (%d)\n", *link_count);
++			return -1;
++		}
++
++		prog_name = bpf_program__name(prog);
++		link = bpf_program__attach(prog);
++		if (!link) {
++			err_msg("bpf: error attaching program '%s': %s\n",
++				prog_name, strerror(errno));
++			return -1;
++		}
++		links[(*link_count)++] = link;
++	}
++	if (enable_mon_fd < 0)
++		err_msg("bpf: could not find program %s\n", PROG_ENABLE_MON);
++	return enable_mon_fd;
++}
++
++/*
++ * bpf_init_tasks - initialize storage for existing tasks using task iterator
++ *
++ * Runs the task iterator program if present in the object, initializing
++ * task storage for all currently existing tasks before monitor is enabled.
++ * Silently succeed if the program is not there (not a per-task monitor).
++ *
++ * Returns 0 on success, -errno on error.
++ */
++static int bpf_init_tasks(struct bpf_object *obj)
++{
++	struct bpf_program *prog;
++	struct bpf_link *link;
++	char buf[128];
++	int iter_fd, retval = 0;
++	ssize_t len;
++
++	prog = bpf_object__find_program_by_name(obj, PROG_INIT_TASK);
++	if (!prog)
++		return 0;
++
++	link = bpf_program__attach_iter(prog, NULL);
++	if (!link)
++		return -errno;
++
++	iter_fd = bpf_iter_create(bpf_link__fd(link));
++	if (iter_fd < 0) {
++		bpf_link__destroy(link);
++		return -errno;
++	}
++
++	do {
++		len = read(iter_fd, buf, sizeof(buf));
++	} while (len > 0 || (len < 0 && errno == EINTR));
++
++	retval = (len < 0) ? -errno : 0;
++
++	close(iter_fd);
++	bpf_link__destroy(link);
++
++	return retval;
++}
++
++/*
++ * bpf_validate_name - check that a monitor name is valid
++ *
++ * Avoid path separators, special directories and long names.
++ *
++ * Returns 0 if the name is valid, -1 otherwise.
++ */
++static int bpf_validate_name(const char *monitor_name)
++{
++	if (!monitor_name[0] || strlen(monitor_name) >= MAX_DA_NAME_LEN)
++		return -1;
++
++	if (strchr(monitor_name, '/'))
++		return -1;
++
++	if (!strcmp(monitor_name, ".") || !strcmp(monitor_name, ".."))
++		return -1;
++
++	return 0;
++}
++
++/*
++ * bpf_run_monitor - load and run a BPF monitor
++ *
++ * Returns 1 if monitor was found and executed, 0 if not found, -1 on error
++ */
++int bpf_run_monitor(char *monitor_name, int argc, char **argv)
++{
++	struct bpf_link *links[MAX_LINKS] = {0};
++	struct trace_instance inst = {0};
++	struct bpf_monitor_ctx ctx = {0};
++	struct bpf_object *obj = NULL;
++	int res, link_count = 0, enable_mon_fd, retval = -1, lock_fd = -1;
++	char monitor_path[MAX_PATH];
++
++	libbpf_set_print(libbpf_print_fn);
++	bpf_fill_base_paths();
++
++	if (bpf_validate_name(monitor_name)) {
++		err_msg("bpf: invalid monitor name: %s\n", monitor_name);
++		return -1;
++	}
++
++	if (!find_bpf_monitor(monitor_name, monitor_path, sizeof(monitor_path)))
++		return 0;
++
++	config.is_bpf = true;
++
++	/* we should be good to go */
++	res = parse_arguments(monitor_name, argc, argv);
++	if (res)
++		mon_usage(1, monitor_name, "bpf: failed parsing arguments");
++
++	lock_fd = bpf_lock_acquire(monitor_name);
++	if (lock_fd == -EAGAIN) {
++		err_msg("bpf: monitor %s (BPF) is already enabled\n", monitor_name);
++		return -1;
++	}
++	if (lock_fd < 0) {
++		err_msg("bpf: cannot lock monitor %s: %s\n",
++			monitor_name, strerror(-lock_fd));
++		return -1;
++	}
++
++	strncpy(ctx.monitor_name, monitor_name, sizeof(ctx.monitor_name) - 1);
++
++	if (config.reactor && strcmp(config.reactor, "nop")) {
++		mon_usage(1, monitor_name,
++				"bpf: failed to set %s reactor, is it available?",
++				config.reactor);
++	}
++
++	obj = open_bpf_monitor(monitor_path, &ctx);
++	if (!obj)
++		goto cleanup;
++
++	if (config.trace) {
++		if (trace_instance_setup(&inst, monitor_name))
++			goto cleanup;
++	}
++
++	enable_mon_fd = attach_bpf_handlers(monitor_name, obj, links, &link_count);
++	if (enable_mon_fd < 0)
++		goto cleanup;
++
++	res = bpf_init_tasks(obj);
++	if (res) {
++		err_msg("bpf: error initializing tasks: %s\n", strerror(-res));
++		goto cleanup;
++	}
++
++	res = bpf_prog_test_run_opts(enable_mon_fd, NULL);
++	if (res) {
++		err_msg("bpf: error enabling the monitor: %s\n", strerror(-res));
++		goto cleanup;
++	}
++
++	if (config.trace)
++		trace_print_header(inst.seq);
++
++	while (!should_stop()) {
++		if (config.trace) {
++			res = tracefs_iterate_raw_events(inst.tep,
++							 inst.inst,
++							 NULL,
++							 0,
++							 collect_registered_events,
++							 &inst);
++			if (res) {
++				err_msg("bpf: error reading trace buffer\n");
++				break;
++			}
++		}
++
++		sleep(1);
++	}
++
++	retval = 1;
++
++cleanup:
++	for (int i = 0; i < link_count; i++)
++		bpf_link__destroy(links[i]);
++
++	trace_instance_destroy(&inst);
++
++	bpf_object__close(obj);
++
++	close(lock_fd);
++
++	return retval;
++}
 diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
-index 09e0d8598619..7c4a2e49ff9d 100644
+index 7c4a2e49ff9d..571c9a14c1a2 100644
 --- a/tools/verification/rv/src/rv.c
 +++ b/tools/verification/rv/src/rv.c
-@@ -13,6 +13,7 @@
- #include <trace.h>
- #include <utils.h>
- #include <in_kernel.h>
-+#include <bpf_monitor.h>
+@@ -127,6 +127,9 @@ static void rv_mon(int argc, char **argv)
+ 	 */
+ 	run += ikm_run_monitor(monitor_name, argc-1, &argv[1]);
  
- static int stop_session;
++	if (!run)
++		run += bpf_run_monitor(monitor_name, argc-1, &argv[1]);
++
+ 	if (!run)
+ 		err_msg("rv: monitor %s does not exist\n", monitor_name);
+ 	exit(run > 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+diff --git a/tools/verification/rv/src/utils.c b/tools/verification/rv/src/utils.c
+index e19dd65ec789..1b1ad7a3ca32 100644
+--- a/tools/verification/rv/src/utils.c
++++ b/tools/verification/rv/src/utils.c
+@@ -81,7 +81,10 @@ void mon_usage(int exit_val, char *monitor_name, const char *fmt, ...)
+ 	for (i = 0; usage[i]; i++)
+ 		fprintf(stderr, "%s\n", usage[i]);
  
-@@ -76,6 +77,7 @@ static void rv_list(int argc, char **argv)
+-	ikm_usage_print_reactors();
++	if (config.is_bpf)
++		bpf_usage_print_reactors();
++	else
++		ikm_usage_print_reactors();
+ 	exit(exit_val);
+ }
+ 
+@@ -132,7 +135,7 @@ int parse_arguments(char *monitor_name, int argc, char **argv)
+ 		}
  	}
  
- 	ikm_list_monitors(container);
-+	bpf_list_monitors(container);
+-	debug_msg("ikm: my pid is %d\n", config.my_pid);
++	debug_msg("%s: my pid is %d\n", config.is_bpf ? "bpf" : "ikm", config.my_pid);
  
- 	exit(EXIT_SUCCESS);
+ 	return 0;
  }
 -- 
 2.56.1
