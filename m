@@ -1,48 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795790486;
-	b=kM8iAZxX3tv2EVVoo02E0oA1++YiC3IYp47HIwR7nqcUVfzViQOYYRA74L7VOZkjC7E2
-	 YWKEMMU5QY1+JZlUZvWgmJMwOUEJyQESwZbHdErhZjZlavR0ba2Rk7Z++SXAgh1yO4zy7
-	 mzK+H3XoHSkJtQTVukbXRX3xKBBbCxtTFysvQ4goApbsHcJFNOrwfK9QRzHnHiLffxOQ1
-	 Yo44dKrbVRHhnncLx3PUCQ9cygvEY43y/XgQeYhMd2INVoYBC+du0a9Pn7JJzLWHVEdNY
-	 6+aECR+UaVy623CRwBb4El9RFPvNnKTOV8TLuqLysIk39ADRy7YvNh4rhYMfky9NChA==
+	t=1795790586;
+	b=WhhmBJIMnOgnNGjA0/JdeR6cjfKULFlEGx7LzxAwXJ+ZDhwb1sVsIIX1XgjtsrLcZMh+
+	 Fh010sHrMhUJ8LLZ6qcKu+gxSt7RkzIgMCFLHerFhkNfVfXhPZhWY4FZZYorl2dA7a/4b
+	 XSusWf24I2xpLtMZEyISB++syyH/Gh2vwwI0QOidFvIwb4jwatG1B5X/OOjcr7lZc6+CS
+	 jaWxRq4VzpUhYRuS3ifT4miw/lkkL5IhtVizlTYzCc2AJYkp3EEYboOPUC7x1y5zSjbq8
+	 qItA/W2KR001ZT0cIhaeBQIBSJFBm6cyMn8Ikv+r9cAsiUilFJESpg0PYsCRNaan2cg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795790486;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795790586;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=iBwxQmXSjGr3/gqu7AvvP0Rjc+5sGJ4XbMUAtx8two0=;
-	b=aqPTRDZhCwd9pUxazHTZigd2PL40Nw5KXZOEamXEmyVfGQDojo+8BjLcBhBnNEjd7u4A
-	 P/8Osigqwwq70C62l3fqP35J+L0L7RxhY4siOBijFZs+kVrJPB+VyEu9VM9I7EdqGT72Q
-	 0BSYmquFqdsAArp5funIbs/lNbKD+lNJeXV4Kgk3uY6UUBNUm3edWRufKyLMrDxIpliCd
-	 TCKTZcNAravjBueMt3v7pjoxsKfTWg6PI2xqL0XBnLyDvfgMikJ22h1LIWEzn9QL657KZ
-	 0tNW5rCLHI6RvZQA7X3Kzo9zRU6jGWzJQVFLCGwPSmwk8xJKEJ8MS1N9lJZexX2Kg2w==
+	bh=oWWqZ5Ga7+BMiSg1Mh0sLjfADGHTNfzDFkajJz6BULc=;
+	b=wBh9M5yapogcsdC2pPFG9Q9oqUS5rv+U0LC1+gZAFYBWKIzdbc5KmwALTQGwttZ44RfL
+	 YZTrb3got3vW2HFFXH57zDMWcM5vPWrMEHlKeJjZvhrZycSA2DnCMnkcBiPYKJ8xM8VVj
+	 tDpEjGw6w3DDqdaeNYnHwvUdWvD3d75RYTyAcrqpCpG9MTP12zmetcN8319g1adTnN5A5
+	 +CSbvW35CFPnsdCAEYdNpuR6Z1V0CjHgixZeBQvMlJNAWa/t33aRMekVSbvWI0lgqFPG4
+	 8ij6VC7bgNPU8kJwRADWzepSQx52QS6XztBPregh1whi57kZR/ggormez7zvcbrfHlA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MtDzQRjv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FBrTFKIH;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92623606A332;
-	Fri, 27 Nov 2026 14:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BB8606A31C;
+	Fri, 27 Nov 2026 14:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MtDzQRjv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660511F00899;
-	Fri, 27 Nov 2026 14:41:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FBrTFKIH
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE34F1F000C1;
+	Fri, 27 Nov 2026 14:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795790486;
-	bh=iBwxQmXSjGr3/gqu7AvvP0Rjc+5sGJ4XbMUAtx8two0=;
+	s=k20260515; t=1795790585;
+	bh=oWWqZ5Ga7+BMiSg1Mh0sLjfADGHTNfzDFkajJz6BULc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MtDzQRjvYMv9X8QxM4QadsuI11MwnUZF4aJ0/DDKm0vfbvGgov0uacS12aKidW1Gl
-	 Iqx7qmx0Wikyei+Fbgiez9j5oWxSuWU++QPGUtfRF6+sNM9oBqsxZr3JikxMqthPzX
-	 hybDZB/ZO8uN0qg4IwN9oAO6yucW0v96Vwky1f+mkvuX7oh70Ize39GNvzh2oG7C0a
-	 vtw40CM5eV0Xxe2ShXdXZgsFySHqnxs9OBAv4hYnr/L4T541VLWaLbI5TPUwlIYQV/
-	 xROM4jr+AoOosGGunpM4aCN6g0l6TaaOuJ+/rIKVO/Erx27uJyxgDIjqPq3SMvsd+l
-	 dimkPC12q986A==
-Message-ID: <sashiko-outbox-237584@kernel.org>
+	b=FBrTFKIHvYqjGOEJLKQZ0OLNVFYSah/uA5luM2GA5RC4lVw/7Iaq1Ku63HwmYIEmI
+	 WKLk/bHV6VPCTA7/uGCwTRTnDOKv+rtuwro/VRTrG7fcw5MNRN1wO2b8gT8xGM8Dxk
+	 X9Th/SEF4GsQPESx0W3JmjVRPqlhUBHq/10Rs/8Bdy2W1qoLT3J41GeTtGYcmUHyqe
+	 F0IErYNpbOmzEsXXO+VQMVbIZ+Bsr5f3n7F04U+76BvrxKpQ/0gWNxjpIyYlgTjD55
+	 A3dCWp3fRg/bg1KoFMsQR3ox4q7hZtlAhubPNK3lqMfKhA9WedjWSqAVMiTEoP6+Y4
+	 OsychnkcX6jsg==
+Message-ID: <sashiko-outbox-237589@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v2 10/35] spi: atmel-quadspi: Consume dummy cycles
- directly
+Subject: Re: [PATCH RFC v2 06/35] spi: spi-mem: Add support for dummy cycles
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.org>, "Liang
  Yang" <liang.yang@amlogic.com>, "Feng Chen" <feng.chen@amlogic.com>, "Xianwei
@@ -62,12 +61,12 @@ To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.or
  =?utf-8?b?c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, "Michal Simek" <michal.simek@amd.com>
 Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Alvin Zhou" <alvinzhou@mxic.com.tw>, "Cheng
  Ming Lin" <chengminglin@mxic.com.tw>, linux-amlogic@lists.infradead.org, imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com, linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, neil.armstrong@linaro.org
-In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-10-5c93f5e5d630@bootlin.com>
+In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-6-5c93f5e5d630@bootlin.com>
 References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
- <20261127-macronix-upstreaming-spi-mem-cycles-v2-10-5c93f5e5d630@bootlin.com>
+ <20261127-macronix-upstreaming-spi-mem-cycles-v2-6-5c93f5e5d630@bootlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 14:41:23 +0000
+Date: Fri, 27 Nov 2026 14:43:03 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -79,67 +78,123 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] spi: atmel-quadspi: incomplete dummy cycle check in
-  atmel_qspi_supports_op()
+- [Medium] spi: spi-mem: missing dummy.ncycles checks in
+  spi_mem_default_supports_op()
 --
 
-commit 07ba105643bc7f3f3737d56084ca2bed8b3821f6
+commit 5399654721195bff49303bc619a04db290c22c52
 Author: Miquel Raynal <miquel.raynal@bootlin.com>
 
-spi: atmel-quadspi: Consume dummy cycles directly
+spi: spi-mem: Add support for dummy cycles
 
-This commit advertises the dummy_cycles spi-mem capability and switches
-the driver from converting op->dummy.nbytes to consuming
-op->dummy.ncycles directly.
+This commit adds a dummy.ncycles field to struct spi_mem_op and a
+dummy_cycles capability to struct spi_controller_mem_caps, converting
+between dummy bytes and dummy clock cycles depending on controller
+capabilities.
 
-> diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-> index 0b695b0b3c98f..abca99b32b619 100644
-> --- a/drivers/spi/atmel-quadspi.c
-> +++ b/drivers/spi/atmel-quadspi.c
-> @@ -502,7 +502,7 @@ static bool atmel_qspi_supports_op(struct spi_mem *me=
-m,
-> =20
->  	/* special case not supported by hardware */
->  	if (op->addr.nbytes =3D=3D 2 && op->cmd.buswidth !=3D op->addr.buswidth=
- &&
-> -	    op->dummy.nbytes =3D=3D 0)
-> +	    !op->dummy.ncycles)
+Link: https://lore.kernel.org/all/20220911174551.653599-1-sergiu.moga@micro=
+chip.com/
+Link: https://lore.kernel.org/all/20250115134158.19908-1-pratyush@kernel.or=
+g/
+
+> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+> index a1f129c476984..1642388b70048 100644
+> --- a/drivers/spi/spi-mem.c
+> +++ b/drivers/spi/spi-mem.c
+
+[ ... ]
+
+> +/*
+> + * Controllers either program the dummy phase in clock cycles or in whole
+> + * bytes. Convert the representation used by the operation to the one the
+> + * controller expects.
+> + *
+> + * Return: 0 if the operation is lossless, -EOPNOTSUPP otherwise.
+> + */
+> +static int spi_mem_convert_dummy(struct spi_mem *mem, struct spi_mem_op =
+*op)
+> +{
+> +	struct spi_controller *ctlr =3D mem->spi->controller;
+> +	int n;
+> +
+> +	if (op->dummy.ncycles) {
+> +		if (spi_mem_controller_is_capable(ctlr, dummy_cycles))
+> +			return 0;
+> +
+> +		n =3D spi_mem_dummy_cycles_to_bytes(op);
+> +		if (n < 0)
+> +			return n;
+> +
+> +		op->dummy.nbytes =3D n;
+> +		op->dummy.ncycles =3D 0;
+> +	} else if (op->dummy.nbytes) {
+> +		if (!spi_mem_controller_is_capable(ctlr, dummy_cycles))
+> +			return 0;
+> +
+> +		n =3D spi_mem_dummy_bytes_to_cycles(op);
+> +		if (n < 0)
+> +			return n;
+> +
+> +		op->dummy.ncycles =3D n;
+> +		op->dummy.nbytes =3D 0;
+> +
+> +		return 0;
+> +	}
+> +
+> +	return 0;
+> +}
+
+[ ... ]
+
+> @@ -321,6 +448,9 @@ bool spi_mem_supports_op(struct spi_mem *mem, const s=
+truct spi_mem_op *op)
+>  	if (spi_mem_check_op(&eval_op))
 >  		return false;
 > =20
->  	return true;
+> +	if (spi_mem_convert_dummy(mem, &eval_op))
+> +		return false;
+> +
+>  	return spi_mem_internal_supports_op(mem, &eval_op);
+>  }
+>  EXPORT_SYMBOL_GPL(spi_mem_supports_op);
 
 [Severity: Medium]
-Should this check reject op->dummy.ncycles < 8 / op->addr.buswidth
-instead of !op->dummy.ncycles?
+Should spi_mem_default_supports_op() also check op->dummy.ncycles in its
+dummy-phase DTR and buswidth checks?
 
-For 2-byte addresses in atmel_qspi_set_cfg(), shifting the address into
-the first dummy byte requires at least 8 / op->addr.buswidth dummy
-cycles:
+When a controller advertises dummy_cycles, spi_mem_convert_dummy() leaves
+the dummy duration in op->dummy.ncycles with op->dummy.nbytes set to 0
+before spi_mem_supports_op() and spi_mem_exec_op() call
+spi_mem_internal_supports_op().  Because spi_mem_default_supports_op() only
+tests op->dummy.nbytes:
 
-drivers/spi/atmel-quadspi.c:atmel_qspi_set_cfg() {
+drivers/spi/spi-mem.c:spi_mem_default_supports_op() {
 	...
-		case 2:
-			if (dummy_cycles < 8 / op->addr.buswidth) {
-				ifr &=3D ~QSPI_IFR_INSTEN;
-				ifr |=3D QSPI_IFR_ADDREN;
-				iar =3D (op->cmd.opcode << 16) |
-					(op->addr.val & 0xffff);
-			} else {
-				ifr |=3D QSPI_IFR_ADDREN;
-				iar =3D (op->addr.val << 8) & 0xffffff;
-				dummy_cycles -=3D 8 / op->addr.buswidth;
-			}
-			break;
+	/* xS-xS-xD-xS is not allowed */
+	if (op->dummy.nbytes && op->dummy.dtr) {
+		if (op->data.nbytes && !op->data.dtr)
+			return false;
+	}
+
+	/* Bus width can only grow across phases, ie. 1-4-1, or 1-8-4 are not allo=
+wed */
+	if ((op->addr.nbytes && op->addr.buswidth < op->cmd.buswidth) ||
+	    (op->dummy.nbytes && op->dummy.buswidth < op->cmd.buswidth) ||
+	    (op->data.nbytes && op->data.buswidth < op->cmd.buswidth) ||
+	    (op->addr.nbytes && op->dummy.nbytes && op->dummy.buswidth < op->addr.=
+buswidth) ||
+	    (op->addr.nbytes && op->data.nbytes && op->data.buswidth < op->addr.bu=
+swidth) ||
+	    (op->dummy.nbytes && op->data.nbytes && op->data.buswidth < op->dummy.=
+buswidth))
+		return false;
 	...
 }
 
-When op->cmd.buswidth !=3D op->addr.buswidth and op->dummy.ncycles is
-non-zero but less than 8 / op->addr.buswidth (for example, 2 dummy
-cycles in 1-2-2 mode), atmel_qspi_supports_op() now accepts the
-operation, causing atmel_qspi_set_cfg() to pack op->cmd.opcode into iar
-and transmit the opcode on op->addr.buswidth lines instead of
-op->cmd.buswidth lines.
+those checks are skipped whenever op->dummy.ncycles is used, allowing
+operations with invalid DTR transitions or decreasing buswidth across the
+dummy phase to pass spi_mem_supports_op() and reach controller execution.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127-macronix-u=
-pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D10
+pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D6
