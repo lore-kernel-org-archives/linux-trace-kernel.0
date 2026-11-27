@@ -1,59 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.246.84.56
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795789575;
-	b=B60Go+FiCZ0QdPH5S6pzPJdOBW/Oaq/HiaALUucDPEDAXXXORb0KWBWmJbDawyjvNMZT
-	 qTXCA7VIPgCtJybJpbAYaJmmbYSzjbFEmSQb3JQyth5kMjSIUVGvlAyG1v0z7mGl3YW3i
-	 kQ9uMghdxloxhyDhKM6YgAebdGfN60L10EtUpq5nqgq6UQSo70qyiFgMUfjuKePK1x7f+
-	 dv2/8p3lw6zuc89bhhD1CiI3+i8bEfX4DoNt2I0DDqp8n+wrol9HvMKXPJakCx7yZnfd+
-	 lUqw0CV4pTgvKdFX17UpRgx4tQy3n+QuNtl+O5CCwjxeO8Nn/1ufn9H9njWk4zSAzVA==
+	t=1795789587;
+	b=jBtkhnFUFY4WGQgBJ5RPrxa8H/E51un0Q51xPF/BcqngD0llUpxB/DVEv/FiSP9VgCL3
+	 l1hUz3AuhJ+KzyzIjl9Nd000wid6IzH+u2yqte8kUbvJyoUbIzXHGnRq82JRtcuO0uI6b
+	 TyUnsP2VXbJAQgEO4IGBFx9Z5bHlac/TOYBzPdbkbR5o8eWnc1Q9P/PGx0T7i/N7IsZWA
+	 cw6tuO9/AE73YzbNhimlZte77sKrAnoSU9F9QBPXPehoiRNM2Ls495M5n99dfXApSJbuG
+	 c5aUqhymZBfIArV3sm2VvOyg9FQ7SMWCMLaIPHdzXT+zSUH7mOz0OtkdyVoF1XWCQRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795789575;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795789587;
 	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:From:Date:
 	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Last-TLS-Session-Version;
-	bh=AoxU+JhvKBTXrYbtTbJzsGk9QEyditaab6z3oGK2TJY=;
-	b=PUaFoBgfiocHDuSRJ61q/f0sd7nTJTXaT7jqQtNR4KabGEnaxcF0BSRxUAPAeoo1pBM4
-	 ikx1a5zyz9a3IGrSthlMCsijBoqqsvtUsQQ+/aNGfqKG3OREaLxpkv3AT+9wA0yrusS8a
-	 3H9COnlZaSoXxZdtIN9gi/lpQ+bhZ9sZNhkOz+lcjM+6CwpF1Em/+Nq18E3C1JLVtNsBm
-	 aMIdVCIz1ut5ghfe6sFuUYW8QluaSLQmLzLaJjYacUY4rdZR4Ekk8VuqUGILTtJYl+s9j
-	 BB9kzQtxUjNwaVpnpZkW4LFCQxBVlFE3ex5H49uj9yRGMGRcEvaQ743WybN+XQ3k8Xw==
+	bh=+5J6Vj21k2iCMRlv7+I2xt+eX5HWFZ+N3D4FDSD3N6s=;
+	b=FIFeEIhzAHi5NuO1+4sKGrMIv4ZYAG8jtP7X0qNYrIfWD8igiyDpvjxCgSL9ee0tTjSO
+	 IyVOZSDSE2Tf6Ozx7mqsMfJ02iFW/froEOZGnjuOf7Y5hzqGY+AlNrDzyQ+7R+aS0C5L4
+	 Ja4E1ilzqNPCXNg48IkboSeEkzMPyWT5FPaEqVU0WcX2C+R/hXi1EiXRqY5X4ryGB50r3
+	 VvJ4/ZMEB5TUiiYU9x+iwNxgyFBDoR8dE++lVDJWW4JQ3EBCirMmH36O7BmzjiGNKc+Nd
+	 Y8jCCvsy/g1kQcT32lR5nOS4q/58um3v8TFZfXy+1xp1JRntHh/e6WIbF3346cVZFnw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bootlin.com;
 	spf=pass smtp.mailfrom=bootlin.com;
-	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=zAkwwjJh;
-	arc=none smtp.remote-ip=185.246.85.4
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=qbitKIHM;
+	arc=none smtp.remote-ip=185.246.84.56
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480C4606A6A7
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 14:26:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 480C4606A6A7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45899606A690;
+	Fri, 27 Nov 2026 14:26:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 45899606A690
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=zAkwwjJh
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=qbitKIHM
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id E9B534E417C8;
-	Fri, 27 Nov 2026 14:26:13 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id DDCCD1A0440;
+	Fri, 27 Nov 2026 14:26:25 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id B32536049C;
-	Fri, 27 Nov 2026 14:26:13 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DC5DB11E68FF4;
-	Fri, 27 Nov 2026 15:25:59 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id AF40A6049C;
+	Fri, 27 Nov 2026 14:26:25 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A1BA211E6900C;
+	Fri, 27 Nov 2026 15:26:11 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1795789567; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1795789578; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=AoxU+JhvKBTXrYbtTbJzsGk9QEyditaab6z3oGK2TJY=;
-	b=zAkwwjJhwVG0zSV6YA46JQojW1bolXRH0EAHLZlwyqXLXtk9FaxqcsUZKb+OQ07CO9PpA4
-	KfDre7rmcmytfCYVyYQ/OPPYrgRL6OYfPg+JczDL2rRTLqgsiKqd8JeYHfs7JrB8GOsNf8
-	kl17IMq1kAfobSqitEG6cidb+v+vQDJ85/q88WXuQEB+rNQg8RJyVPQA6f+UfBnf4WRIBc
-	IGFxwV1X5/oObK49PmVtOCrbpeahRDC87AewuGKejSG2iCgDQZoLexg4JQdwtq76TRMFbI
-	pA+e5j/GlD477cxLSbyqWFl/HVZGTzoDgvxYow1S58Kv/pjmgX0fa86bkaMgpw==
+	bh=+5J6Vj21k2iCMRlv7+I2xt+eX5HWFZ+N3D4FDSD3N6s=;
+	b=qbitKIHMBo7JeSA9tv7PrthCAxceGYnOkYVFxh3VzX9NhCk+/mp8UTJjR5xfvMinznzFHM
+	GVLflZTyfHkJ1emb3sTNL4lpUVe5cIxRD/jlFecbpswD/HdHbL1wlTYiwjRCj3pLd7jVOc
+	PG67VSW7pRkdoxAHRm6YAFT2iqctzn5AgLhouaUrCJxCYu1iYmALl4mrk5emTwREmwSTn6
+	vnd5sAgUeANKiJJsWPUGLS10MBgwQJ7sGJiF1k6VoNZdfaOB8VP3sT4IUfjG11v55PIODr
+	7eGteqQuvq2buyDMr/96s/fNWfLq3XgsGhzsZAtWj9oKcwNpcRpARJCn9OTWkg==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Fri, 27 Nov 2026 15:22:43 +0100
-Subject: [PATCH RFC v2 21/35] spi: nxp-xspi: Fix a comment
+Date: Fri, 27 Nov 2026 15:22:44 +0100
+Subject: [PATCH RFC v2 22/35] spi: nxp-xspi: Reject mixed DTR modes
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -65,7 +65,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-21-5c93f5e5d630@bootlin.com>
+Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-22-5c93f5e5d630@bootlin.com>
 References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 To: Mark Brown <broonie@kernel.org>, Liang Yang <liang.yang@amlogic.com>, 
@@ -105,30 +105,41 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.3
 X-Last-TLS-Session-Version: TLSv1.3
 
-Looking at the i.MX952 TRM which is I believe one of the SoCs with this
-controller inside, the maximum number of supported dummy clock cycles is
-64 and not 32, so the code seems more accurate than the comment, which
-needs fixing.
+The controller only supports operations where all phases use the same
+DTR mode. The mode selection in nxp_xspi_select_mem() assumes either an
+all-DTR or an all-SDR operation; mixed DTR operations would be
+misconfigured.
 
-Reviewed-by: Haibo Chen <haibo.chen@nxp.com>
+Reject mixed DTR operations from ->supports_op().
+
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/spi/spi-nxp-xspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-nxp-xspi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/spi/spi-nxp-xspi.c b/drivers/spi/spi-nxp-xspi.c
-index 8b836662a5da..ccd00c744d18 100644
+index ccd00c744d18..f2a847b5fd27 100644
 --- a/drivers/spi/spi-nxp-xspi.c
 +++ b/drivers/spi/spi-nxp-xspi.c
-@@ -407,7 +407,7 @@ static bool nxp_xspi_supports_op(struct spi_mem *mem,
- 	if (op->addr.nbytes > 4)
- 		return false;
+@@ -385,8 +385,18 @@ static bool nxp_xspi_supports_op(struct spi_mem *mem,
+ 				 const struct spi_mem_op *op)
+ {
+ 	struct nxp_xspi *xspi = spi_controller_get_devdata(mem->spi->controller);
++	bool all_true, all_false;
+ 	int ret;
  
--	/* Max 32 dummy clock cycles supported */
-+	/* Max 64 dummy clock cycles supported */
- 	if (op->dummy.ncycles > 64)
- 		return false;
++	all_true = op->cmd.dtr &&
++		   (!op->addr.nbytes || op->addr.dtr) &&
++		   (!op->data.nbytes || op->data.dtr);
++
++	all_false = !op->cmd.dtr && !op->addr.dtr && !op->data.dtr;
++
++	if (!all_true && !all_false)
++		return false;
++
+ 	ret = nxp_xspi_check_buswidth(xspi, op->cmd.buswidth);
  
+ 	if (op->addr.nbytes)
 
 -- 
 2.56.0
