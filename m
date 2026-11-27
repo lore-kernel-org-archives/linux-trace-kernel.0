@@ -1,60 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.246.84.56
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795789536;
-	b=2zlFBUbZ9tUc85vrcLgK6EG53HjjfYEF3gmx1WJ1xDmxijIXxN5H8toPUl0Pj5LSVcOo
-	 7Wuxadp3TplJu0L2oAX0CDCveKtm7r4WkhrqtZB8wuM86/1fo+i/hLzOEXkcY4YRYjM1j
-	 7KcZfWVNVwyKgQGJEHUWvZUsZmLD4WRJOH6Dmtxkdp9Lc6SSI+59A6lWylqcNl5gRQqNE
-	 wsoCDUjScZp6pYYVTl8flq5Y+EXCE4ijZAFJoi4oPktil3Pdn8aLm3D7+5MChTXB/yv1A
-	 N/PIHbzH3aemq0bTe7pKvW9rJ4oFhej500nQ5+Q3MyujUc2NdAfn6Boh5y1gvUlVHsg==
+	t=1795789545;
+	b=SnRfUJZ0YrqWZxM1iccA1Cc040SbRaXdY1gQHgLRsBQK9UTmce5r1/GUzi2TCpd7O+la
+	 51g9U0zNKdNT49u51M5JPznHz+YhV9li4kCtmNM+JqO062ywJHgDSsp0XOzVFTaTN6kvG
+	 OddsTouytzn+ZYVFIvORGj1MIfl1HN3u5QUPLAlAi33E0img/rEMJZHNbmOdUbkuPoHKA
+	 eaVAGoylipUxbZBdkDlL8QjzKF1UIjdNd1s6Vd0uN1LhCfK/QsOPqqXdw1E8Ckn1ExkvR
+	 csjvRN9iyrIZGms4liI7pJt8vPwZWjTqX7Q68nGjSoVtgqJWuFG2OGS8vYVn3KCemaw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795789536;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795789545;
 	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:From:Date:
 	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Last-TLS-Session-Version;
-	bh=oIP6YsVJ0tzemJtkR4/F0RGkjUMxie6otevjRQEs/Zw=;
-	b=agaOkUngWsHQB4Kp6nBTtb+RFdK9ZPIAh2t+ZW4nK9HR0MUYjU/u+E3O2k1tffx/66eo
-	 lnSg0DyD4IBg/O+HVUf0m2BRIIbnxMI7i6uYqKQgvokGDZJPHLlz1qMh21J88bOuRxG3T
-	 W6gR9TxRsFHjEBkWFqsTDcuHCBqW5j0RWzobzpCJ7MI1hpn1nFUMf9AL5T9peTPSaI6HN
-	 hDLVjhKv/+QpKvOVNkksHw9MtwCGeGF4zu3PR5MdjFkQOMkoXA/1Y9s+gH+ecwEqqUdzF
-	 Uya1UM5Dy+8olqOpNu0Vwkt9W1OYlCeCUADyMZK7Hi5E97c2QaOHNqjWkgBOOJXwDdA==
+	bh=itr59vks4zx4d5lnDDhWZZRn0Ff4Dta53BrZPgDcrec=;
+	b=u+bUwfwjH6FtZ8Q1UiLXk8OpKXOKByNsKbr61iErf+uNK3VJ/RmDJKT2nxmWWbTz5CGS
+	 fCIjix3zeppYF6gLk3mXN0YHjJsNI0y553h9EaNW+CsVEoi0teBLJjtihMByGFeYu2/2h
+	 NqNXzAJHmudEJkeGiLIiYwLR4wnBecRx+A+sC9Njxyptb/bxYxi/3rs1NeH4F5WGA0m8k
+	 cCv9yxowduCqe1uDfDjlpQmcTMxA6QpvnMhxP71VHlCWo6B20qkz1n/Pi+gIPQkZgRD8D
+	 fo8A51GJ7ferRsvU3G+Ps6MOp/0MRlHYHVcCG+yTJd01V6tYBJI10+C4C+R6KThnEAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bootlin.com;
 	spf=pass smtp.mailfrom=bootlin.com;
-	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=Nbd+2k2z;
-	arc=none smtp.remote-ip=185.171.202.116
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=wJjlxrXN;
+	arc=none smtp.remote-ip=185.246.84.56
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F7E606C2F3
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 14:25:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1F7E606C2F3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72321606E118
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 14:25:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72321606E118
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=Nbd+2k2z
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=wJjlxrXN
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 49B35C6223B;
-	Fri, 27 Nov 2026 14:25:43 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 5465B1A183A;
+	Fri, 27 Nov 2026 14:25:44 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 73B116049C;
-	Fri, 27 Nov 2026 14:25:34 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 026A611E68FF4;
-	Fri, 27 Nov 2026 15:25:20 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 2594E6049C;
+	Fri, 27 Nov 2026 14:25:44 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4210711E69021;
+	Fri, 27 Nov 2026 15:25:32 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1795789528; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1795789537; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=oIP6YsVJ0tzemJtkR4/F0RGkjUMxie6otevjRQEs/Zw=;
-	b=Nbd+2k2zRxfdX4N7PZuOesTe7y9uTS4XxFCrwjSo3LlykwttKnd2QBPXS7PTjAeHu+DGsh
-	ub3eIakOiP6Hwf4eE4KcQ6YASWe65YaVejiDLnN5qvyijvuYpqqX5380WkqD+LdzgSxTeG
-	hHVt7tbvP1wXmxEl3y3Xj1L7/yArHiTLqkQjyFNFVzowU47sJHCqDoz7MDVHrXwR9Q6Ng6
-	cFg4OluANdGXIR+2n8CHr79haJq9g91aU7IpYD0AKFqSBfvfRvX+SutHyxGkqrS9FR19y+
-	EaljxuCCa79rQSzyVe7u74NkZpnNJezBU/S5NAko5jt+NEUgcla3e/xg4+kB9w==
+	bh=itr59vks4zx4d5lnDDhWZZRn0Ff4Dta53BrZPgDcrec=;
+	b=wJjlxrXNjmNI7oE3odshRqej/oKORm9WSxGYrkKZQBZSCTl5Bjn9zL/qGpty4WIge7yr5a
+	/L26wF3D/dQItMQB0Jw5p/IxgXTErNHXhTGZiKdfisq1jB/WN0Y6kDX6XFrhdbaCFrazRe
+	RNpFLWShejl2BQq7qoq+09Ptu5YW9vbQicS3L6PtfQWaEJ8fCWsdeH+K25P8S8EtV+0nl3
+	xTgql+2fCasgqNChE+Ea21XoHtz0PdGidJJlE2/qqMsd4o0UoJm7t6bbGdeSxzciRTHGt/
+	BXcC0xn1a+9K7eihG2pP4tpcw2yppEQf8yZK2q100Bhz/brnsRdBRQE54Z7SFQ==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Fri, 27 Nov 2026 15:22:38 +0100
-Subject: [PATCH RFC v2 16/35] spi: microchip-core-qspi: Consume dummy
- cycles directly
+Date: Fri, 27 Nov 2026 15:22:39 +0100
+Subject: [PATCH RFC v2 17/35] spi: mtk-snfi: Drop redundant check
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -66,7 +65,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-16-5c93f5e5d630@bootlin.com>
+Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-17-5c93f5e5d630@bootlin.com>
 References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 To: Mark Brown <broonie@kernel.org>, Liang Yang <liang.yang@amlogic.com>, 
@@ -106,66 +105,27 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.3
 X-Last-TLS-Session-Version: TLSv1.3
 
-The controller programs the dummy phase in clock cycles, but the driver
-converts the legacy dummy byte count into cycles. Advertise the
-dummy_cycles capability and use op->dummy.ncycles directly.
+The core already sanitizes the spi-mem operations, this check is
+redundant so let's drop it.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/spi/spi-microchip-core-qspi.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/spi/spi-mtk-snfi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-microchip-core-qspi.c b/drivers/spi/spi-microchip-core-qspi.c
-index c0ea65014d2e..80481011b83e 100644
---- a/drivers/spi/spi-microchip-core-qspi.c
-+++ b/drivers/spi/spi-microchip-core-qspi.c
-@@ -8,6 +8,7 @@
-  *
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -420,7 +421,6 @@ static int mchp_coreqspi_setup_clock(struct mchp_coreqspi *qspi, struct spi_devi
- 
- static void mchp_coreqspi_config_op(struct mchp_coreqspi *qspi, const struct spi_mem_op *op)
+diff --git a/drivers/spi/spi-mtk-snfi.c b/drivers/spi/spi-mtk-snfi.c
+index 6e96e50fedad..882c64341e6d 100644
+--- a/drivers/spi/spi-mtk-snfi.c
++++ b/drivers/spi/spi-mtk-snfi.c
+@@ -1243,7 +1243,7 @@ static bool mtk_snand_supports_op(struct spi_mem *mem,
  {
--	u32 idle_cycles = 0;
- 	int total_bytes, cmd_bytes, frames, ctrl;
- 
- 	cmd_bytes = op->cmd.nbytes + op->addr.nbytes;
-@@ -459,11 +459,7 @@ static void mchp_coreqspi_config_op(struct mchp_coreqspi *qspi, const struct spi
- 	writel_relaxed(frames, qspi->regs + REG_FRAMESUP);
- 	frames = total_bytes & BYTESLOWER_MASK;
- 	frames |= cmd_bytes << FRAMES_CMDBYTES_SHIFT;
--
--	if (op->dummy.buswidth)
--		idle_cycles = op->dummy.nbytes * 8 / op->dummy.buswidth;
--
--	frames |= idle_cycles << FRAMES_IDLE_SHIFT;
-+	frames |= op->dummy.ncycles << FRAMES_IDLE_SHIFT;
- 	ctrl = readl_relaxed(qspi->regs + REG_CONTROL);
- 
- 	if (ctrl & CONTROL_MODE12_MASK)
-@@ -561,6 +557,9 @@ static bool mchp_coreqspi_supports_op(struct spi_mem *mem, const struct spi_mem_
  	if (!spi_mem_default_supports_op(mem, op))
  		return false;
- 
-+	if (op->dummy.ncycles > FIELD_MAX(FRAMES_IDLE_MASK))
-+		return false;
-+
- 	if ((op->data.buswidth == 4 || op->data.buswidth == 2) &&
- 	    (op->cmd.buswidth == 1 && (op->addr.buswidth == 1 || op->addr.buswidth == 0))) {
- 		/*
-@@ -601,6 +600,7 @@ static const struct spi_controller_mem_ops mchp_coreqspi_mem_ops = {
- 
- static const struct spi_controller_mem_caps mchp_coreqspi_mem_caps = {
- 	.per_op_freq = true,
-+	.dummy_cycles = true,
- };
- 
- static int mchp_coreqspi_unprepare_message(struct spi_controller *ctlr, struct spi_message *m)
+-	if (op->cmd.nbytes != 1 || op->cmd.buswidth != 1)
++	if (op->cmd.buswidth != 1)
+ 		return false;
+ 	if (mtk_snand_is_page_ops(op))
+ 		return true;
 
 -- 
 2.56.0
