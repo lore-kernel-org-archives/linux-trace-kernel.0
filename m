@@ -1,80 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.158.5
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795793608;
-	b=q6VE2UkaP26ExjvQFlPyz4/6MiQeIovKtPn7sdp08g7Ppc+U9dxkIHmUuqU3ubHg13TE
-	 PI7bxA8ylatCfmI5QULT7sVXOakPUHp+SDEDKlyZEgnlYKq+YQXCuQjGBVNfL82pNGXB/
-	 FpzndlZY0l/eWAg8uSbvNnp6UD+NP9cjej0e7rB12+KDCOTVIstGuKgJdeLmfPoTZQdUO
-	 xfJNTBDJODZ6KubbvLvhpMA3K1rkWMeP+rX7MKXkJYoHPI7ZaxUBHQWeaSY37553g8Txb
-	 +vB6/aT0AMgu1PKMBDXb6XJfid2i4Tb7Lu1AKcleZl66uEkrCyX5oujlSMYCK8qkg7A==
+	t=1795793892;
+	b=QZcWQTKPivfAszAEKOvzXuwiJBYG3GV3A879GAQ/p8ZuREzNoa6RpzP5yUA5xY9PqiM5
+	 CDmfTASR3XSGFxrMKoQOtDK/CQMJ0+h4Z+hXW1Sj86cz0xrtQX5xHKTF+w1ySvHLuprLY
+	 xvaJU5fqhITYFP9vwAhphMSaG37bD9Qb9bHJX0R2VccLpDJrNuSw3i1+XvFQjcAVL0qvZ
+	 zcXzRNfkYGBUOlM04S9CJ9vY/IIeGHoOpIkdnLdfxsWT0Fkl8FpSGv9Q2qItgyO99PTPJ
+	 pmHAXVd7rpyw7XAMDtk/crPDwRWeny17BTc0fdPxxQz+MIxI9isH+is+p8Z5A74jFJw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795793608;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:From:To:Cc:Subject:Date:
-	 Message-ID:In-Reply-To:References:MIME-Version:X-Scanned-By:
-	 X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
-	 Content-Transfer-Encoding:content-type;
-	bh=/GnUrfOswQvB6I9HfRtOPxKT0JFPLWdnN1Pg+eNzUq0=;
-	b=0ozoDbQt7HkMo4zYR3DiKUnhaK71HCldSgI9djnOaIS3jXB5b7KXg9RtvCXB3WUCo1kE
-	 jkZKTaGNojv5F5JnNNluAP6nKdVxqfibwMm0grtK6LdkUaQigogvh8dDx82FQmXbSNUUL
-	 EHvFB0YKpG7AY/2UEpCg8Wf9NaRWMtw3pPbMDWh9MWEyDPK7sNElfJdFYCEQYxIi26Njv
-	 /vVXenA/Cr74V8i+gg3fZ7HMZA/4hJCEmO0PT7kuV54DDc4IkuDp5GQ8Hz2mLIzokQV1i
-	 BBY+zJEKoXS1cRzJN0INtlDO8LXSAXEI+HVnoBfuh4PAhztPYIEwgctEFdtJS7P+4tQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795793892;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:From:Subject:To:Cc:References:Content-Language:
+	 Organization:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-TM-AS-GCONF:X-Proofpoint-Reinject:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-GUID:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=wSDkFlm4jY6UNA0o3Zt5f5H/V94IK7NSFsorwTBkxTg=;
+	b=iW7rg8hfDtm8YbsbLn1VWmIKzBe8MMlXNpbxdaZ7KsTVhaJy+BLyeRPHDtCu7UgrBn3m
+	 8+Lc6uDqukgKiEd9B6H5Uvbj0z6G8ui1rE0gRpuEcDeLUyIptiHN+o/Lx+MbhYh/jt/5P
+	 gulf0j23LQJCy7cfNfXyC4O2qK0gT1d7ga2Hec/bU7cFdb8120zMfw5EyC6qLCHM0U/wa
+	 AHbhCDH3z9P7iXZaUzg9zp34m9mXAr8dYETpG1z3O/i2MqpuEOv6CTnWVBsOZ4towY0th
+	 7kvFrH3Iz7SO1MCcdJX7uXf+kGUmMAudjIqFnJxC9VwoVvxPuMJg1kqYA963/SIa8jw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dsGc+5vv;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b="nn/hj00N";
+	arc=none smtp.remote-ip=148.163.158.5
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E8D606A6A4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 15:33:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8E8D606A6A4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DEC606A31C;
+	Fri, 27 Nov 2026 15:38:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89DEC606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dsGc+5vv
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795793607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/GnUrfOswQvB6I9HfRtOPxKT0JFPLWdnN1Pg+eNzUq0=;
-	b=dsGc+5vvGgqWLCygSz7hctbvPFK49G0wv2VNytSV7moceoYPygpfbD/3/D0VhcPKizU+9k
-	NdlNvePkjsyaa8r+ZImBUOsQRqx4EeLhqdvPj4XWJse8qlb5XWv9l+krJDLIqGGrS8hzZb
-	F2pirIDlvDiggetnAyoI0sDUFxNsJko=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-493-hRtPShvUPZ-tViyWXke4TA-1; Fri,
- 27 Nov 2026 15:33:23 +0000
-X-MC-Unique: hRtPShvUPZ-tViyWXke4TA-1
-X-Mimecast-MFC-AGG-ID: hRtPShvUPZ-tViyWXke4TA_1795793602
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C8091956079;
-	Fri, 27 Nov 2026 15:33:22 +0000 (UTC)
-Received: from tglozar-thinkpadt14gen5.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 86E711955F76;
-	Fri, 27 Nov 2026 15:33:20 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [RFC PATCH 10/10] Documentation/rtla: Document auto-analysis timestamps
-Date: Fri, 27 Nov 2026 16:32:06 +0100
-Message-ID: <20261127153206.134322-11-tglozar@redhat.com>
-In-Reply-To: <20261127153206.134322-1-tglozar@redhat.com>
-References: <20261127153206.134322-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=nn/hj00N
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6ARE4sZS3266007;
+	Fri, 27 Nov 2026 15:37:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=wSDkFl
+	m4jY6UNA0o3Zt5f5H/V94IK7NSFsorwTBkxTg=; b=nn/hj00NgZJYb5SXVZhx2Z
+	kNkF85lXdR5x+V+fqdDyxJ5qYh+Gqipxe0MXks2I/k/un6fKwJ3RJaiTxctQaP3z
+	nCMk1w00QNknlcaL+IOfEC7OeTi8YZ0MRCNvCUsHFIsIoo2c9niAfPaklcJTFebi
+	qkJGjLSH4y4xq/eFyQ1U5fWtVLz7iulTZYM+peO9uvVRKsefY4CRYRSxQc+DaKCn
+	lGJi0Jwl+FH3u48VV2G3+qhvTDQk1AnZhUUL+VXF5QXvZEDDGj4oIQwJIvS7hrbY
+	5qJpcAuXFjFaWRPge4t52PMZGfS4F+OreQ8l8CHyb2ZpBdA7WTO85cQAzXNB62ag
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j34g1nns7-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 27 Nov 2026 15:37:14 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6ARE4Hec2819251;
+	Fri, 27 Nov 2026 15:37:13 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4j5kfaarn6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Nov 2026 15:37:13 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6ARFb8ha49676778
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Nov 2026 15:37:11 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 915132004F;
+	Fri, 27 Nov 2026 15:37:08 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0CC8F2004E;
+	Fri, 27 Nov 2026 15:37:05 +0000 (GMT)
+Received: from [9.111.162.114] (unknown [9.111.162.114])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 27 Nov 2026 15:37:04 +0000 (GMT)
+Message-ID: <a98fab70-48fa-4640-88d2-a7a08f523128@linux.ibm.com>
+Date: Fri, 27 Nov 2026 16:37:04 +0100
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -84,49 +86,219 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yyiCkFmXfymUcNupkmMaSQJ64g2WnIHuLyC8TpzEElQ_1795793602
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla Thunderbird
+From: Jens Remus <jremus@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 01/30] unwind: Add Minimal DWARF CFI bytecode
+ interpreter
+To: Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Cc: jpoimboe@kernel.org, rostedt@goodmis.org, peterz@infradead.org,
+        mingo@redhat.com, tglx@kernel.org, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, pjw@kernel.org,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+        linux-riscv@lists.infradead.org, acme@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, mhiramat@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, bpf@vger.kernel.org,
+        nathan@kernel.org, llvm@lists.linux.dev, nsc@kernel.org,
+        linux-kbuild@vger.kernel.org, ojeda@kernel.org,
+        rust-for-linux@vger.kernel.org, ardb@kernel.org,
+        linux-efi@vger.kernel.org, maz@kernel.org, oupton@kernel.org,
+        kvmarm@lists.linux.dev, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, indu.bhagat@oracle.com,
+        wnliu@google.com, dylanbhatch@google.com
+References: <20261125061523.1540234-1-irogers@google.com>
+ <20261125061523.1540234-2-irogers@google.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20261125061523.1540234-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: brvXg_RJUZTQu5mAUmnatHUtcWzdDrrf
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTI3MDA2MiBTYWx0ZWRfX+qzyyuyu1B+R
+ /ruRXWo/zu5u+2/Z0LaCtY3N+BUb8znffYTTtu+NHKiNIaooKN3ELdx20GOt2uvxx7P5wXL+1+A
+ cpcYOaHmrjyz1MF/V7sVGbOPBX+fEdk=
+X-Proofpoint-GUID: wK7aymzh3GdSqbeQ85e9O3Dhs5dNAbYJ
+X-Authority-Analysis: v=2.4 cv=c8M+0h9l c=1 sm=1 tr=0 ts=6b09a3ab cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
+ a=1XWaLZrsAAAA:8 a=M8zXbRpaHz8_b2Mss2oA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=O8hF6Hzn-FEA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTI3MDA2MiBTYWx0ZWRfX4HPNbmoz03PS
+ bjSpWwHbVDc6A2l18C+xFCEmA5d1gCfAti1AE4Q1SzAW+XWH1dJfaPQdyS4stAn2G+cg/1aAUvf
+ uRdgrMyWaeQO3VhqDkxGUuZ2cKaGcV1OBrcozmGInTBrfeDXb6RQrK4KxWwkAtf42OotKBIWdHe
+ BceGetoE/nBLl99++V5H3LEeU1J4HIw9TYbDgVEuk9GuJR2pdZKKa9D/CsYi8ZDqJARO/x5ufyD
+ 2Jpgbhn/gZMqp0o8TMTsgQaOMNwvalX4PYiAfWhyhXyVAi/esM70kJBhZWD9wMlkR/aiDWPBf4i
+ xwqUtmTmLdRda/+RZJvu1W41t85aw+igiTDUK8MpVNp9G1dcUK9mU62x9+jkJKQaVc9srXlgnZB
+ Ih3tcpQ1UlqbOBvPf5aIAVXxJ3jGYc131ZTQb9l7oa6JZzH2VjFqr7PCIm5nNDsFOCNVU4nM1HJ
+ FsYR8R2QvfZiN/PT/7g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-27_02,2026-11-27_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1011 malwarescore=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611270062
 
-Update the rtla-timerlat-top example to show the new auto-analysis
-header, with the time elapsed since the beginning of the measurement and
-the sequence number of the sample that hit the stop condition.
+Hello Ian,
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- Documentation/tools/rtla/rtla-timerlat-top.rst | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+great work, I like it!  I am working on adding s390 support on top of
+your series.  Some early feedback.
 
-diff --git a/Documentation/tools/rtla/rtla-timerlat-top.rst b/Documentation/tools/rtla/rtla-timerlat-top.rst
-index 05959f1a4661b..58469a0b78dfa 100644
---- a/Documentation/tools/rtla/rtla-timerlat-top.rst
-+++ b/Documentation/tools/rtla/rtla-timerlat-top.rst
-@@ -76,7 +76,7 @@ higher is found::
-    22 #12319     |        0         0         1        11 |        8         3        10        22
-    23 #12320     |       28         0         1        28 |       41         3        11        41
-   rtla timerlat hit stop tracing
--  ## CPU 23 hit stop tracing, analyzing it ##
-+  [  0d 00:00:03.482] ## CPU 23 hit stop tracing, analyzing it ## (seqnum 4211)
-   IRQ handler delay:                                        27.49 us (65.52 %)
-   IRQ latency:                                              28.13 us
-   Timerlat IRQ duration:                                     9.59 us (22.85 %)
-@@ -109,6 +109,13 @@ higher is found::
-     Max timerlat IRQ latency from idle: 17.48 us in cpu 4
-   Saving trace to timerlat_trace.txt
- 
-+The value in brackets is the time elapsed since the beginning of the
-+measurement on that CPU, in days, hours, minutes, seconds and milliseconds,
-+followed by the sequence number of the timerlat sample that hit the stop
-+condition. Both identify the sample that caused the trace to stop, which is
-+useful when tracing is not stopped on the first occurrence, for example with
-+**--on-threshold continue**.
-+
- In this case, the major factor was the delay suffered by the *IRQ handler*
- that handles **timerlat** wakeup: *65.52%*. This can be caused by the
- current thread masking interrupts, which can be seen in the blocking
+On 11/25/2026 7:14 AM, Ian Rogers wrote:
+> Add a strictly bounded DWARF Call Frame Information (.eh_frame /
+> .eh_frame_hdr) interpreter (CONFIG_UNWIND_DWARF_CFI) matching SFrame's
+> stack-unwinding state model and security properties, without requiring
+> new toolchain sections or duplicating user-space unwind metadata.
+> 
+> Instead of implementing a general DWARF expression virtual machine or
+> tracking arbitrary architectural register arrays, struct dwarf_cfi_row
+> tracks only:
+>  - CFA = (SP | FP | prologue scratch reg) + cfa_off, or fixed-pattern
+>    indirect CFA *(FP + off) (DRAP stack realignment) / *(SP + off)
+>    (signal trampolines)
+>  - Stack pointer save rule (SAME or *(CFA + off)) for signal frames that
+>    save SP in sigcontext (such as 32-bit x86 vdso32 __kernel_rt_sigreturn)
+>  - Frame pointer save rule (SAME, *(CFA + off), *(FP + off), *(SP + off))
+>  - Return address save rule (SAME in link register, *(CFA + off),
+>    *(SP + off), or UNDEFINED for bottom-of-stack termination), plus
+>    AArch64 PAC-RET signing state (DW_CFA_AARCH64_negate_ra_state)
+> 
+> Callee-saved general-purpose register spill/restore opcodes are decoded
+> and ignored in O(1) space. General DW_OP_* expressions, DW_CFA_set_loc
+> backward PC jumps, and DW_CFA_register rules on {SP, FP, RA} are
+> rejected with -EINVAL; DW_EH_PE_indirect encodings are rejected whenever
+> an encoded address is evaluated (while unused 'P'/'L' CIE augmentation
+> fields are skipped by encoded width without dereferencing). CIEs
+> (<= 128 B), FDEs (<= 4096 B), LEB128 operands (<= 5 B), and
+> DW_CFA_remember_state nesting (<= 4 entries) execute in a single forward
+> pass with zero dynamic memory allocations, zero locks, KMSAN output
+> unpoisoning, noinstr kernel-memory entry points, and Spectre v1 / v1.1
+> nospec hardening (array_index_nospec() and barrier_nospec()).
+> 
+> Also provide shared RCU-safe loadable-module .eh_frame indexing helpers
+> using kvmalloc()/kvfree_rcu_mightsleep() (dwarf_cfi_mod_alloc(),
+> dwarf_cfi_mod_free_rcu(), dwarf_cfi_mod_eval()).
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+> diff --git a/include/linux/unwind_dwarf_cfi.h b/include/linux/unwind_dwarf_cfi.h
+
+> +/**
+> + * enum dwarf_cfi_rule - Recovery rule for caller's SP, FP, or return address
+> + * @DWARF_CFI_RULE_SAME: Register retains its value from the current frame
+> + *                       (or defaults to CFA for SP).
+> + * @DWARF_CFI_RULE_OFFSET: Saved on the stack at *(CFA + off).
+> + * @DWARF_CFI_RULE_FP_OFFSET: Saved relative to FP at *(FP + off) (DRAP frame).
+> + * @DWARF_CFI_RULE_SP_OFFSET: Saved relative to SP at *(SP + off) (sigframe).
+
+For s390 support I plan to add the following:
+
+For the implicit DW_CFA_val_offset(SP, -160) rule, as the CFA is defined
+as SP at call site + 160:
+
+ * @DWARF_CFI_RULE_VAL_OFFSET: Value is CFA + off; only used for SP.
+
+For DW_CFA_register (mostly used in lead functions to save FP and RA as
+well as SP):
+
+ * @DWARF_CFI_RULE_REG[ISTER]: Saved in another register.
+
+> + * @DWARF_CFI_RULE_UNDEFINED: Explicitly undefined (DW_CFA_undefined); marks
+> + *                            the bottom of a stack (e.g. _start or clone).
+> + */
+> +enum dwarf_cfi_rule {
+> +	DWARF_CFI_RULE_SAME = 0,
+> +	DWARF_CFI_RULE_OFFSET,
+> +	DWARF_CFI_RULE_FP_OFFSET,
+> +	DWARF_CFI_RULE_SP_OFFSET,
+> +	DWARF_CFI_RULE_UNDEFINED,
+> +};
+> +
+> +/**
+> + * struct dwarf_cfi_arch - Architecture DWARF register numbers and word size
+
+For s390 support I plan to add:
+
+ * @sp_off: Initial SP offset from the CFA unless a CIE instruction says
+ *          otherwise, caller SP = CFA + @sp_off.
+ *          0 on most ABIs; -160 on s390, where CFA = caller SP + 160.
+
+That would be used in dwarf_cfi_parse_cie() to initialize the SP rule
+and offset.
+
+> + * @ws: Target address/word size in bytes (4 or 8).
+> + * @sp_reg: DWARF register number for the stack pointer.
+> + * @fp_reg: DWARF register number for the frame pointer.
+> + * @ra_reg: Default DWARF return-address column number.
+> + */
+> +struct dwarf_cfi_arch {
+> +	u8 ws;
+> +	u8 sp_reg;
+> +	u8 fp_reg;
+> +	u8 ra_reg;
+> +};
+> +
+> +/**
+> + * struct dwarf_cfi_row - Evaluated Minimal DWARF unwind state at a target PC
+> + * @cfa_off: Byte offset added to the CFA base register before or as the CFA.
+
+As a non-native speaker I have a hard time to understand that comment.
+Wouldn't the following suffice?
+
+ * @cfa_off: Byte offset added to the CFA base register.
+
+> + * @sp_off: Byte offset used to load the saved SP when @sp_rule is an offset.
+> + * @fp_off: Byte offset used to load the saved FP when @fp_rule is an offset.
+> + * @ra_off: Byte offset used to load the saved RA when @ra_rule is an offset.
+> + * @cfa_base: CFA computation mode (&enum dwarf_cfi_base).
+
+What about renaming to cfa_rule?  That would nicely align with the
+{sp|fp|ra}_rule and *_reg.
+
+> + * @cfa_reg: DWARF register number when @cfa_base is %DWARF_CFI_BASE_REG.
+
+For s390 support I plan to add the following to support DW_CFA_register:
+
+ * @sp_reg: DWARF register number containing the saved SP when @sp_rule is a register.
+ * @fp_reg: DWARF register number containing the saved FP when @fp_rule is a register.
+ * @ra_reg: DWARF register number containing the saved RA when @ra_rule is a register.
+
+> + * @sp_rule: Recovery rule for the stack pointer (&enum dwarf_cfi_rule;
+> + *           %DWARF_CFI_RULE_SAME indicates caller SP equals CFA).
+> + * @fp_rule: Recovery rule for the frame pointer (&enum dwarf_cfi_rule).
+> + * @ra_rule: Recovery rule for the return address (&enum dwarf_cfi_rule).
+> + * @signal: True if the CIE carries the 'S' signal/interrupt frame augmentation,
+> + *          indicating that the saved PC points directly to the interrupted
+> + *          instruction rather than after a call instruction.
+> + * @ra_signed: True on AArch64 when DW_CFA_AARCH64_negate_ra_state indicates
+> + *             that the saved return address carries a PAC signature.
+> + */
+> +struct dwarf_cfi_row {
+> +	s32 cfa_off;
+> +	s32 sp_off;
+> +	s32 fp_off;
+> +	s32 ra_off;
+> +	u8 cfa_base;
+> +	u8 cfa_reg;
+> +	u8 sp_rule;
+> +	u8 fp_rule;
+> +	u8 ra_rule;
+> +	bool signal;
+> +	bool ra_signed;
+> +};
+Regards,
+Jens
 -- 
-2.56.1
+Jens Remus
+Linux on Z Development (D3303)
+jremus@de.ibm.com / jremus@linux.ibm.com
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
