@@ -1,57 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795806388;
-	b=aL821THzTBGDiROfodYM7fn7fLuZSJJ9qJcfVG9teRGcE1pbIcoeoJCmqSuOUex7YTRy
-	 tB7N7CMEjo9ETT+QR1U5xYKTJVgKAnzKtmU4HyDeqwKbr52oL+Cd8ae3OUjfaFhCeWIBI
-	 xc1O9mo43rSeX8RVbYUDjl7w0SWDCOaK6vadciJbKgvnO6IrqTws6ey1h5VnUjdkcfiDo
-	 58L4VC84MnlYZbqn96jAvK6d1cRyUzt5ICcZajOFcqPCuETJwCXWlIFRKwqigDlBwrIyA
-	 3AOYFN7c54OjLI0s5yPDQkhrv9G/AYAPgQkgGNzq+JyiPJGa+XWB/5kjldLHrXy8iUQ==
+	t=1795806905;
+	b=BVsw/XPlAvGU5RYPA1+oofBxeHVoPltkeSbNZZStisEfIypRaYo67wuG0fdpCE1i5k3J
+	 vX2trjBna01SD1Wmdj5AavZN7sYjl5nI5vi3BYFi57YLT+2XMpUCGqEYj0WoKfE6BpBA4
+	 dND7qb2HkuAZKLmhpuq6Yefv3ExF8kfdHLjiFyAYhk5Wpyb/YWJLxgeoRE9ERfdDgMsSl
+	 afSPhow7QDSGb3a53flTrnr+Cf3QrJjJ+Dbq2XPZlc8HUyS+UAO9jN11ul2bUM0KNKGtF
+	 VTN6JZ6nU3tP5sSMPK45svG3qKQ60UaJmUOCk+3AnSXR8z/8NTIOxphjmhiiHPHIKAg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795806388;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Queue-Id:X-Stat-Signature:
-	 X-Spam-Status:X-Rspamd-Server:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=OZxJ0b1DAe2W6h6ON48HJxM4S/YcAq0RnaKf6tiQ/+4=;
-	b=jMG7ixXj5E5EnjEWgslTHMeuPc033BrTldRSzW43Z5S6mjw1aufJ1IOxikOnC1D1FrEI
-	 0DqRlFdleVIZ2q0JRJMWLVHi9YaCCwhOoqRyUJ1GbPmFNj3vAdFGkCpLCNMDIJNuyX5BO
-	 7FDW5NfVQOtM8c5VuooVrENgd73Sm/SusK3RsQTkfPB2VJzImdEeT+Nn0E72t9i49HpOf
-	 SSbu5zjhNgEmyV7mXkgnwEZ2QghzBxZ/ob5+kKfzoSOLyX8O/FfjddqgMWyLVRSZY/2Ld
-	 S3XzS42ZzAD48wHebOsp+oBpmJ3V10ELQeLh7Xb3aNuIkfGsEWbD5GF3k0XevMqfXzw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795806905;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=jAnxInstWAEYfpFdPtL2H+hnJItNJfdtmS8iAUb+HoM=;
+	b=WwHpANYaU8neMFNpUUOvC8ZF/h/ALBE6uC0+co1IOMBW/QqUj7sw0ByaAVIZXTyMhRYb
+	 rmKTm7zK0714ucZ87Pdw2NYu/YF+z4beM1serQyW9NvoZWOLM068Ad0EwoaTlOllnCqMR
+	 6WoXyI5cgx+4Skf5tN50+idPaK4QtEV4gs2IWphfyUgCnR7QMLohaL0exVkLRCKrH+ZX0
+	 ZmbgLaBZpJL1TPWifCJ4KZbkM9GKoPzDSEu0AKXDx6umXo4WcSLsXL0fXgbn8tfUP8VEK
+	 QA7hLQddvpSHHKQ4l3QXRx/VWAVAiypv/QtJqLYa9UDV9PhA2HIgM/vG1W5m32V8bIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=wOI29Kiy;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WI8dm56R;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83F2606A31C;
-	Fri, 27 Nov 2026 19:06:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E83F2606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD12606A31C;
+	Fri, 27 Nov 2026 19:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=wOI29Kiy
-Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 3CC69120481;
-	Fri, 27 Nov 2026 19:06:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 498A92000E;
-	Fri, 27 Nov 2026 19:06:18 +0000 (UTC)
-Date: Fri, 27 Nov 2026 14:06:16 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Antoine Tenart <atenart@kernel.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, vmalik@redhat.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH] tracing/probes: fix race between probe execution and
- event unregistering
-Message-ID: <20261127140616.20616c68@gandalf.local.home>
-In-Reply-To: <20261126132830.14992-1-atenart@kernel.org>
-References: <20261126132830.14992-1-atenart@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WI8dm56R
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 314851F000C1;
+	Fri, 27 Nov 2026 19:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795806904;
+	bh=jAnxInstWAEYfpFdPtL2H+hnJItNJfdtmS8iAUb+HoM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=WI8dm56RbbjT3V0hDSEHBTm6t3SDktFubL6Pz4EfjRpTXSIHEO+FRWRSeqw5InVRA
+	 Q67uTOjDvPqm9NH/SsHpD1D5frJTSpwAjHMjlMlUJzUAc1F1xu32A5zrUmKKEhaOmO
+	 vOZQx8ziqZpSvWmoZ/uQaF+nnoaHmqW2RckeWTWVXwvo+1Ck+uNFCYGIE8pnR6ziFO
+	 kTNAgVbD/3MXmwXoBMAUIua3kftzGao3InIX9UbdYoFhX9ZXuVa548gFUnD0L2HN9a
+	 2FDmxZC4HMqwUH32SsjRgkACrenr4ro1Z+a0gvLISsNqWl8FGR9BjWrmZZcKtI32MO
+	 nREO+F6RzFhTQ==
+Message-ID: <sashiko-outbox-238151@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 15/16] selftests/membarrier: Check the memory
+ barriers of each thread
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>
+Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261127185822.158216-16-mathieu.desnoyers@efficios.com>
+References: <20261127185822.158216-1-mathieu.desnoyers@efficios.com>
+ <20261127185822.158216-16-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 27 Nov 2026 19:15:03 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -60,114 +60,111 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 498A92000E
-X-Stat-Signature: 9ikrewumikziwyua1dmmkrp6jtz3eagg
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19ldCQPsIbSeQQ1USvM9uLvXqCICDktYVI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=OZxJ0b1DAe2W6h6ON48HJxM4S/YcAq0RnaKf6tiQ/+4=; b=wOI29KiyL6CNN3/0Zg7Pww8V1i0J/JdtPJN38W+HIENjF0Cy4qgC/sqdWXvE6LCEK6ihTsTiP6fIOfwNJ/t/DY9mMt9tyVHF5THp1TSn9wx7zzp08/DS0xpmtEnrnSzckw8ddH3Vo1QHs1jAvkNlljslxtAM8CqqRCDJ2xubtG0=
-X-HE-Tag: 1795806378-566714
-X-HE-Meta: U2FsdGVkX194Uoqr5igP2liRgVSWx9MCgmEg20Cmss2t7mqywcRC4n0W6qeuEvxAM78IYwozHDHmLnMVO6V3GlgFtvEqz0HQ91yJqH7FSIG+bv08dHDHNtJHBIy1vJw6yjBkfQFTnSOyHU1MStJBiXish1cJxlkr7+LAQabHAQ2jpX0WzqtUOaZ1fJsnUL8L/sQOKnzOBvRY/H2IpuKf8Xm2xTG9YDCG5je9S+y/ohSw/vZq7LC1ccLUmojVQS7f/7raIH5xWMihVdBLLSB75HcZgA6uQieDi34f2RBkRmTlIomLxGkACNxFWoy5sNg2VJMOnZ+UoUhWB7SeD4DhQJ3kbQFumnLubDWXt/YCKIgfyfQMhQrWV+6AJkN56IGf
 
-On Thu, 26 Nov 2026 14:28:30 +0100
-Antoine Tenart <atenart@kernel.org> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] selftests/membarrier: run_target() reads missed-barrier stat
+  before sched-out
+--
 
-> 
-> Hi,
-> 
-> I found this while debugging another (downstream) issue, reusing the
-> same reproducer on mainline. The reproducer registers/enables and
-> disables/unregisters a kretprobe on a syscall in a loop while triggering
-> it (I can share if you're interested). It should work with other probe
-> types.
-> 
-> I'm not versed into the tracing subsystem so I went the safe way and
-> reverted back to the previous behaviour. There might be something more
-> clever to do.
+commit 2ae7bc75d862920739dabb87323389a8eebbf751
+Author: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-I would hate having to put back the inline synchronize_rcu() as that has
-noticeable impact on removing kprobes.
+selftests/membarrier: Check the memory barriers of each thread
 
+This commit adds membarrier_test_barrier, a BPF- and kprobe-based selftest
+that counts per-thread memory barriers executed in the membarrier syscall,
+IPI handlers, and scheduler paths.
 
-> 
-> Thanks!
-> Antoine
-> 
->  kernel/trace/trace_probe.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index cff55dcae36f..8addaf641431 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -2841,7 +2841,13 @@ int trace_probe_remove_file(struct trace_probe *tp,
->  		return -ENOENT;
->  
->  	list_del_rcu(&link->list);
-> -	kvfree_rcu_mightsleep(link);
+> diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.c=
+ b/tools/testing/selftests/membarrier/membarrier_test_barrier.c
+> new file mode 100644
+> index 0000000000000..88c5dbf5d7c79
+> --- /dev/null
+> +++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.c
+> @@ -0,0 +1,1270 @@
+
+[ ... ]
+
+> +/* Run the checks of a target. */
+> +static void run_target(const struct target *target)
+> +{
+> +	struct target_stats *stats =3D &shared->stats[target->idx];
+> +	const uint64_t *counters;
+> +	long deadline =3D now_ms() + target->ms;
+> +	unsigned long checks =3D 0;
+> +	uint64_t first_ipi, first_sched_in;
 > +
 > +	/*
-> +	 * Synchronize with probes being executed. This is not only for freeing
-> +	 * link but also for related objects (e.g. link->file).
+> +	 * Register before moving to the CPU. The BPF program then sees
+> +	 * the target scheduled in there, as in the lazy TLB test case.
 > +	 */
-> +	synchronize_rcu();
-> +	kvfree(link);
->  
->  	if (list_empty(&tp->event->files))
->  		trace_probe_clear_flag(tp, TP_FLAG_TRACE);
+> +	counters =3D map_counters();
+> +	if (!counters) {
+> +		setup_error("register_thread");
+> +		atomic_fetch_add(&shared->ready, 1);
+> +		return;
+> +	}
+> +	if (target->cpu >=3D 0 && pin_to_cpu(target->cpu))
+> +		setup_error("sched_setaffinity");
+> +	atomic_fetch_add(&shared->ready, 1);
+> +	while (!atomic_load(&shared->registered) && !atomic_load(&shared->stop))
+> +		sched_yield();
+> +	first_ipi =3D counter(counters, MBT_IPI);
+> +	first_sched_in =3D counter(counters, MBT_SCHED_IN);
+> +	while (!atomic_load(&shared->stop)) {
+> +		if (check_call(counters, stats) && target->thread_exit &&
+> +		    !(++checks % 16)) {
+> +			pthread_t thread;
+> +
+> +			if (pthread_create(&thread, NULL, thread_nop, NULL) ||
+> +			    pthread_join(thread, NULL))
+> +				setup_error("thread exit");
+> +		}
+> +		if (target->ms && now_ms() >=3D deadline)
+> +			break;
+> +	}
+> +	atomic_fetch_add(&stats->ipis, counter(counters, MBT_IPI) - first_ipi);
+> +	atomic_fetch_add(&stats->sched_in,
+> +			 counter(counters, MBT_SCHED_IN) - first_sched_in);
+> +	atomic_fetch_add(&stats->sched_in_missed,
+> +			 counter(counters, MBT_SCHED_IN_MISSED));
+> +}
 
-Would something like this work? I haven't fully tested it though:
+[Severity: Medium]
+Can run_target() read MBT_SCHED_IN_MISSED before the target thread has
+scheduled out to flush state->owed?
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index cff55dcae36f..c249256dea80 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -2812,6 +2812,7 @@ int trace_probe_add_file(struct trace_probe *tp, struct trace_event_file *file)
- 		return -ENOMEM;
- 
- 	link->file = file;
-+	event_file_get(file);
- 	INIT_LIST_HEAD(&link->list);
- 	list_add_tail_rcu(&link->list, &tp->event->files);
- 	trace_probe_set_flag(tp, TP_FLAG_TRACE);
-@@ -2831,6 +2832,14 @@ struct event_file_link *trace_probe_get_file_link(struct trace_probe *tp,
- 	return NULL;
- }
- 
-+static void free_link_rcu(struct rcu_head *rcu)
-+{
-+	struct event_file_link *link = container_of(rcu, struct event_file_link, rcu);
-+
-+	event_file_put(link->file);
-+	kvfree(link);
-+}
-+
- int trace_probe_remove_file(struct trace_probe *tp,
- 			    struct trace_event_file *file)
- {
-@@ -2841,7 +2850,7 @@ int trace_probe_remove_file(struct trace_probe *tp,
- 		return -ENOENT;
- 
- 	list_del_rcu(&link->list);
--	kvfree_rcu_mightsleep(link);
-+	call_rcu(&link->rcu, free_link_rcu);
- 
- 	if (list_empty(&tp->event->files))
- 		trace_probe_clear_flag(tp, TP_FLAG_TRACE);
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index d1fb3520700f..aecc9f24951d 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -281,6 +281,7 @@ struct trace_probe {
- struct event_file_link {
- 	struct trace_event_file		*file;
- 	struct list_head		list;
-+	struct rcu_head			rcu;
- };
- 
- static inline unsigned int trace_probe_load_flag(struct trace_probe *tp)
+In membarrier_test_barrier.bpf.c, sched_switch only increments
+MBT_SCHED_IN_MISSED when the CPU leaves the thread on a subsequent
+context switch:
 
--- Steve
+tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c:sched_swit=
+ch() {
+	...
+	/* The CPU leaves the thread which it last switched to. */
+	if (state->owed & OWES_BARRIER)
+		count(state->slot, 1U << MBT_SCHED_IN_MISSED);
+	count(slot_of(prev), 1U << MBT_SCHED_OUT);
+	...
+}
+
+In global_expedited_lazy_tlb, shared->registered is already 1 when
+run_target() is called, so after pin_to_cpu(target->cpu) switches the
+child in after the idle thread on cpus[1], the child spins in user space
+for ROUND_MS and reads MBT_SCHED_IN_MISSED while still running on cpus[1].
+If the child is not preempted during that round, the schedule-out on
+cpus[1] only happens at _exit(0) after run_target() has already recorded
+stats->sched_in_missed, so a missing scheduler barrier on that switch-in
+will go undetected.
+
+Also, sampling first_sched_in after pin_to_cpu(target->cpu) subtracts out
+the MBT_SCHED_IN increment from that initial migration onto target->cpu
+when computing stats->sched_in.  Should first_sched_in be read before
+pin_to_cpu(), and should run_target() force a schedule-out (e.g. via
+sched_yield() or migrating off target->cpu) before reading
+MBT_SCHED_IN_MISSED?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127185822.1582=
+16-1-mathieu.desnoyers@efficios.com?part=3D15
