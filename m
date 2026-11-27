@@ -1,77 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795779792;
-	b=i5ZYeXBmVZzOS9popCXqBXVWlXumpzWZj3mL9aGbkPmWNGMVDdisqrRFdESZdx8hvTpZ
-	 L0EWi1hViiPGEjt6l3mAly8Gg1NQ6uXBv2PvarOnBplwMCsgotxRBAthrRrq2L8lKhnQC
-	 rmgMWag4ZCCV2Rwp9F9r9cIZWGJIpA1K2qHHJNAF54ze+DExpTFIaTEO9W+W3u8v9mtAW
-	 gSEFWFu8Ud+TjFoDdlCsFnumKhlkCIrsvAVNdBLI26rZpw0GN2+yltwwXxAhQAZLaftzW
-	 WzWN9F37nePqDh8sKbPCHajY8wJvrDLXOZzy9G3LBa60gxEF1etG2kqWlaaDTSNa/JQ==
+	t=1795784094;
+	b=aPHrccGMvTGG/F4HL07FSJ2hiTqZjNVX/m9KHmvvHsoo6aybKZt4aI7O64ZMhsrkKInA
+	 I9BNMGrL8W/IA1ij1ZsiyD1PTjhg2ZcbLOPWzAMtlnNrKHfbNm1o9k3Evd1JRrR4h3+rD
+	 MCrC2GlOITZ115QOVmsspoE+/eOo6e45Ff/gWnksfEN+fC9icuGptjX8v5/ciSLD0SmY2
+	 NZzT+4FlTTzi9b9KJqFagKku3wa2/JpThvfBKblidXMfjnAW9ejjnMPOCfj2+0uz/7xUG
+	 zViyTi9HTNqBUjFZxwPO3LdqqJZN2Yft2w5NMbF7HtW9LEb88Am3snjJ0r86moq8WWg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795779792;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:From:To:Cc:Subject:Date:
-	 Message-ID:MIME-Version:X-Scanned-By:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
-	 Content-Transfer-Encoding:content-type;
-	bh=8wE3pr2Us7VMHrw2+oY4814SVfOgFE3t1to/YtX9de4=;
-	b=qNDaCLnbkDzpsJrOLbkg1bmV6fZrx1Bmk05q+3JJw9Cx2IE30YuPYGLtK0kgDXvFI4++
-	 RvU6rXv7AibsVbv7BjdHmsfz7auUrq2T1E6CP093jqmdjP/FimP3ok0ex/2x7cDCX2Jvh
-	 jUa70gFNV2yZz7c2VEGTP/SCkeHgHm09hYl8xtGv1ZdvmusuyBnTi5Xz9OfYvGrya5NQe
-	 IfxGWx/fBHjM0ntm0mgQv5wPy9qE8HLhkkERPbZnYQADFL9TDDu9yddlMqZM2BT3SLABR
-	 Y6w/jIYKkDHV+1u2zMtHaB1faQ0LRdlBUh4vWVp4W8CR5UYluSF+19EMeDqPQFACwzA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795784094;
+	h=DMARC-Filter:DKIM-Signature:X-MC-Rep:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:
+	 Cc:X-Mimecast-Spam-Score:X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=aoCFCzIshNyrPQBZCxE5KPBXPIt/CPhY20OoZaQzriM=;
+	b=YaDAQtmqyJx4sFbqVBiPNHWstl49JDqFyNm2xe6gV0zDCtB8XfqmUga9IPqXx4ydvVvG
+	 x6HbXSryev01XkbRZm29Ru9ciwEgwmVjp6rO7z41tjrVDn0HhxU1or+IXmuE7dJHT1JQN
+	 3UGUTUP4lBm/5HmfIueHDo9VwHd5ib/72shQqdsbI7E4DzjOBXM8PVumR5Wcgy2lVlpNh
+	 rYn2BCC0telE2X0ARPSDvwYsgZHSi0tt0mYbe9Yx1rjFVuR3wksvx+zKOuO80UNzAo1jl
+	 ieiVHR9RoUM2ncdschQnzhWR50XfwZhed2vauIt2fJYzjhCvaAK5xkKrfYUu7ArDfjA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=redhat.com;
 	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=jJTbfbPe;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=cu7m1CUj;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDFD606A31E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 11:43:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6FDFD606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D79606A31E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 12:54:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34D79606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=jJTbfbPe
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=cu7m1CUj
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795779790;
+	s=mimecast20190719; t=1795784093;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8wE3pr2Us7VMHrw2+oY4814SVfOgFE3t1to/YtX9de4=;
-	b=jJTbfbPeo/8JhSZAa9+7EQfEAo0QJ55CabKzS/TYstWwgqYnZzMd6IRV3nTIJlY428ntVU
-	vrjlOwkBuzvuWFEpiOh0oge3rL9zjQB616KMK7Zyy/l4AnrS0/8rUuMMqYeJfX7js2bCVf
-	pL3dMW8LXaC/izzGpzW+lSq2XM8ID8o=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-K98YH8ekNVKmfDyQtlwLNw-1; Fri,
- 27 Nov 2026 11:43:06 +0000
-X-MC-Unique: K98YH8ekNVKmfDyQtlwLNw-1
-X-Mimecast-MFC-AGG-ID: K98YH8ekNVKmfDyQtlwLNw_1795779785
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 76CA41956068;
-	Fri, 27 Nov 2026 11:43:05 +0000 (UTC)
-Received: from tglozar-thinkpadt14gen5.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E3917589;
-	Fri, 27 Nov 2026 11:43:02 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Crystal Wood <crwood@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] rtla/timerlat_top: Trigger actions with --aa-only in BPF mode
-Date: Fri, 27 Nov 2026 12:32:18 +0100
-Message-ID: <20261127113219.86220-1-tglozar@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aoCFCzIshNyrPQBZCxE5KPBXPIt/CPhY20OoZaQzriM=;
+	b=cu7m1CUjmYGSBM0829JiM8qKzV90Yr3U0/1p3vF8J5ZczPcDGTItFRHRn5iXuwQRWxvOOy
+	Yi2jku4RmbE5asovrClHsP7t5s+PLaSfWUKHHoBrq2HBM0bR7f2t/+DUsw0cOahPt2cV9b
+	FvHr0rT5d+RgVcjG+21GuLWPDWnOvX0=
+X-MC-Rep: binary re single
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-5-uj_xK4LFNXyZQyLMNLQpAA-1; Fri, 27 Nov 2026 12:54:51 +0000
+X-MC-Unique: uj_xK4LFNXyZQyLMNLQpAA-1
+X-Mimecast-MFC-AGG-ID: uj_xK4LFNXyZQyLMNLQpAA_1795784091
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8b203b0c139so5680426b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 04:54:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795784091; x=1796388891;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=aoCFCzIshNyrPQBZCxE5KPBXPIt/CPhY20OoZaQzriM=;
+        b=CX+PkFYP+ha1uT9roemmLb/dh3HlGbJCfkGdUAYZCaRbwER/wK5VKr9OrHzOnaPtGl
+         ltwv/3u/A5jPbwKkowM9WczEGMsFRSsanLmFoXqG75XtD1GgLP9zVcpmKjHQvqd+slRy
+         SO7zWs63AdRGe+OT3qRiT+VKfVCa0mxpL0HHcsR+zHR1+AY+q6ZeAZyWvfGKS647Rfek
+         9lfK7ibiAVPFJFsQo7av0tD0NwR57dTQiTPtgJ/pR+sgFoxITVngp9u31W89InNyzIwG
+         FPS3NlTOroEzEExs98wIJIpaNX0rv/ZAomTvhfn39LWq2vdIiQDS0+P2LQXb3Bmk1wqB
+         cw4Q==
+X-Gm-Message-State: APuU4Z90bHNXNvsv6uFjFaEGwirrMgQQc5UVeIVT//GOvKC8mLgeNv4F
+	J7GZA49qu+7RT0K62GYlz2ebglHc1AE+V6Z85sOb4PUAJGquVZn+sB6K4ceOlBhVjR/i8rIq1Yv
+	YBBfEx/LNQN1qjcxOXyDAK8TvGSFYzcLVBC3gL4HbZ+WcPvCUcBAgjWu0JoKWVyIejilpt/gJA5
+	bq3R3whBq25/jAhseCvQCXAG6DOPoSbUIw2Y2lY4mFYCRQYC+9
+X-Gm-Gg: AZFdTZfOJrO+iwUwb7uOcRysnafATlTq/t1OZpB2TEBUaKuageIIR5kZp99Xt7Wsu8k
+	LGglRaischRYrMTxo3yE6ZgckkUEtHMe3qtTXxLc9O6AJY4FW4ia7VE5qr5Pubgwmb9IEIS/bLq
+	ArxZTE4t1D4A6l0NUAQIlPrNyFu5z40AEp/A9ZFl9AqNFBpXEYqCIefjtzzSC86ejImE7eC5vHE
+	9yhe6f67Xb1wBs=
+X-Received: by 2002:a05:6a00:124f:b0:89e:b12e:7ee1 with SMTP id d2e1a72fcca58-8c8794b9878mr22414593b3a.1.1795784090564;
+        Fri, 27 Nov 2026 04:54:50 -0800 (PST)
+X-Received: by 2002:a05:6a00:124f:b0:89e:b12e:7ee1 with SMTP id
+ d2e1a72fcca58-8c8794b9878mr22414574b3a.1.1795784090148; Fri, 27 Nov 2026
+ 04:54:50 -0800 (PST)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -81,76 +90,66 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+References: <cover.1795262546.git.chaosheng.qu.linux@gmail.com> <328ecfadb98649f317985124b6b49bae2d356bcf.1795262546.git.chaosheng.qu.linux@gmail.com>
+In-Reply-To: <328ecfadb98649f317985124b6b49bae2d356bcf.1795262546.git.chaosheng.qu.linux@gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 27 Nov 2026 13:54:39 +0100
+X-Gm-Features: Aa3M54qGBxxWIk1P5kyegq9H4jk8G8LmhabQ5LcSTQ0-EevIyeLc7S4mtnWR1HU
+Message-ID: <CAP4=nvSFE95SAvysnn2ay880DgFUrqQgUY1A3pTcSTXagdiDNg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rtla: handle SIGTERM during a run
+To: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-kernel@vger.kernel.org
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3wd8rEwGHqFKOoKiLBujxt3B5eAGwmRB_v-8Ax0uJYI_1795779785
+X-Mimecast-MFC-PROC-ID: Dv7UAa51_3PQrJ3lZpygaPadGas5lFFs3YfeBI07PVU_1795784091
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The implementation of timerlat_top_bpf_main_loop() for aa-only mode is
-reduced to one call of timerlat_bpf_wait(), after which the function
-returns. This does not allow for any actions to be performed, including
-trace output and continuation of tracing.
+On Sat, Nov 21, 2026 at 1:03=E2=80=AFPM Chaosheng Qu
+<chaosheng.qu.linux@gmail.com> wrote:
+>
+> rtla installs a handler for SIGINT, and for SIGALRM when a duration is
+> given, but not for SIGTERM.  A run stopped by the system - a shutdown or
+> a service manager - therefore dies without going through the cleanup
+> path and leaves its tracefs instance behind, so the next invocation
+> finds the instance name in use.
+>
 
-Modify the implementation so that --aa-only uses the same code path as
---quiet, with the exception of not calling timerlat_top_bpf_pull_data(),
-as rtla does not collect any aggregated data in that mode.
+In my experience, stopping via SIGTERM most commonly happens in
+runtime tests when a test times out, as that is what the "timeout"
+command uses.
 
-This fixes a discrepancy with regards the tool's behavior in tracefs
-mode, where actions are handled by the shared top_main_loop() function.
+> Install the same handler for SIGTERM, and restore the default
+> disposition in unset_signals().
+>
+> Fixes: 2f3172f9dd58 ("tools/rtla: Consolidate code between osnoise/timerl=
+at and hist/top")
 
-The discrepancy appeared back when actions were moved to the main loop
-to allow the implementation of --on-threshold continue; --aa-only was
-not taken into consideration.
+What actually regressed is RTLA no longer resetting the thresholds
+(osnoise_stop_us, osnoise_stop_total_us) before starting tracing -
+which would otherwise protect RTLA from being affected from a stale
+osnoise option (that can be set by someone else, not only by RTLA not
+terminating cleanly on SIGTERM). That behavior was implemented by
+commit 0122938a7ab49 ("rtla: Always set all tracer options"), but
+commit c219d4ee1d6 ("rtla: Set stop threshold after all instances are
+enabled") broke it, as it flips the threshold back too late (not
+commit 2f3172f9dd58, as far as I understand).
 
-Fixes: 8d933d5c89e8 ("rtla/timerlat: Add continue action")
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/src/timerlat_top.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+So there are actually two bugs. Together, the fact that RTLA does not
+restore settings upon SIGTERM (never implemented) or on start
+(implemented but regressed) causes RTLA to misbehave with respect to
+thresholds in multiple ways. I'm going to take your SIGTERM
+improvement, without the Fixes tag, and send a separate fix for the
+reset on start regression.
 
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 2afd619c16059..f9221c71dd1ed 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -515,23 +515,25 @@ static int
- timerlat_top_bpf_main_loop(struct osnoise_tool *tool)
- {
- 	const struct common_params *params = tool->params;
--	int retval, wait_retval;
-+	int sleep_time, retval, wait_retval;
- 
--	if (params->aa_only) {
--		/* Auto-analysis only, just wait for stop tracing */
--		timerlat_bpf_wait(-1);
--		return 0;
-+	if (params->quiet || params->aa_only) {
-+		/* There is no data to periodically refresh */
-+		sleep_time = -1;
-+	} else {
-+		sleep_time = params->sleep_time;
- 	}
- 
- 	/* Pull and display data in a loop */
- 	while (!stop_tracing) {
--		wait_retval = timerlat_bpf_wait(params->quiet ? -1 :
--						params->sleep_time);
-+		wait_retval = timerlat_bpf_wait(sleep_time);
- 
--		retval = timerlat_top_bpf_pull_data(tool);
--		if (retval) {
--			err_msg("Error pulling BPF data\n");
--			return retval;
-+		if (!params->aa_only) {
-+			retval = timerlat_top_bpf_pull_data(tool);
-+			if (retval) {
-+				err_msg("Error pulling BPF data\n");
-+				return retval;
-+			}
- 		}
- 
- 		if (!params->quiet)
--- 
-2.56.1
+> Signed-off-by: Chaosheng Qu <chaosheng.qu.linux@gmail.com>
+> ---
+>  tools/tracing/rtla/src/common.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> [cut]
 
+Thanks,
+
+Tomas
