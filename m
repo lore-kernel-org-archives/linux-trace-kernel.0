@@ -1,56 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.17
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795799273;
-	b=n4RKZZAbjk2zrhoSSmkJbdAufgn9FlCkjgB/IAgCmNd+BiNhdZbjPatEYx+Ks5FEUnxK
-	 id4H0SQUmPE4fv8g+WNWbnAHC47Lh5wO2Tz84L/iNs6k4/xGoHdl5XXuafIneNCU5rC0n
-	 1PQYsYgUvIiHjXCQahloMhyrADjf+37Zp3XwERl/DhkFF714v0V1mz0J85iO2d8tLi5gz
-	 c/JcXvvbdWK1ubmzyjPkLWD/B/QfzlZplV4uXV2MHtWqX4DNPE8iJSKq0pqhOexkKnGHq
-	 3B61dBLsTl+Z9wLQjfKHPdahWUa6Us/WYc6oyYhJkl6d/BJXTb3h3eZWq8S9y7iLFyw==
+	t=1795802638;
+	b=znkKqUHEN1poBNBC9epOB/DA1k6UwGWTk8rtdxYzcwNJWyjIvM+YsKpSst9wekL7N0L6
+	 ctqQ9HzlrAsUe1NylGnM0XY2yiandoAXbSsV9qoctIQvpqeMncUwXAZCQtnlpaw/dWdR8
+	 fMBahM1jU+ZJMwlaGF6HPhMl3iD2Ha/f3rmTSwkSzPd7lLqI7e0r2zrT4xznr45yctyHa
+	 J92MwfgWonZLmBVLT4ah70fUEFdXqNgabSsdvYfLKYVddaSCdcl15SXokeYHfIGtQgu3C
+	 7VENKAaKuQSThMz4gz0v8bWBzgD6tj7ZQ3CHSrcgWDyU75iL4mMU0rg7hwf3XprptpQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795799273;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=vcjiH1TUy+GY3+dmhgbUvGPnqAPspWJzTSrt2DjxgLY=;
-	b=1RFPuNj9F/3iMn1g8qoC4ptmdkA3t5vh61YE0FTVQB0J5gd4O94Tr6eVDHWnJdY2J4Xi
-	 wQtmOil3tom/8EiZySG9yU0vaksRV7l2SAx11FaA2OZZjO9n7Mso4kbA31XvAbKmzUvh+
-	 qMc4pa8V281+gMiM8iq+uK40KsYfPDh9sgRDRuRN6TyaJz7WyOjKNdWhc8MqmRisrGMQf
-	 7atLevYzmtaSZKvAIjK1+OxgOh9tlAVUmv8cPEhCadWc69lY0E/dce91Xd1Dd+4rMmZk0
-	 U1BIFjlIFyr6JuFbLhJCqn5pmPxr8QlcTP9iZIvFbNNdVuYIS8HZkX5lCVVi8CVN55A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795802638;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
+	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
+	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
+	bh=9pWZ3EWTAvBpk0cahRb0lTVvvb814awtr8WKr44+mVA=;
+	b=tfAG8lrbTFH9B/at2R9otu376p1MRV71Q7yr2gelf0LEA8a2fDyuukOiYP+YvwMn7K4t
+	 o78DUDXcCp5siaMGWDRRwhvEFxrksYZQqrGZ5MlOpDqLc9f+kGAe9oBHhDej6KO07bo/v
+	 XA53oqIhGHbvErU2/nOIMPMIqj7ujdbnV5rgzoUP8OjlqQMc0OcU44e9A9ia5a5yAENS/
+	 R1W/Gv3vR0fWc91QyNeKyKWgsZN8HOpv4Z4tnpV4nGmjDDTY+B504XDogT3FfsY43uelU
+	 LzkXveS5nlhWfBd3yNHn4aucLyBpKMAlXIYYnCgn3SKvxIyXD2ZKhQgtlMNxX9W/U7g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOmhEnLY;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=goodmis.org;
+	spf=pass smtp.mailfrom=goodmis.org;
+	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=kaldtiCF;
+	arc=none smtp.remote-ip=216.40.44.17
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393D5606A32D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 17:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FE6606A31C;
+	Fri, 27 Nov 2026 18:03:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 02FE6606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gOmhEnLY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6062C1F0089C;
-	Fri, 27 Nov 2026 17:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795799272;
-	bh=vcjiH1TUy+GY3+dmhgbUvGPnqAPspWJzTSrt2DjxgLY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gOmhEnLYgqV4NLWZOIB5I4DrskKgaKd6l2RkdXW52dDb6ZytNtAPFuWaVQLXhIMFg
-	 MO+9ylp6DKBEHcaceryCstGh9x5c0pP47vrAcZrsYxxqy7jMsOuA027zmiuluZ8LuN
-	 rwSeJMsocn8Xio0p3lnf3bLLNU4DdoMTfVb41CDgtvGCYfb92mdzibz2wYUo2/S72g
-	 kQmJFryifMS1cdxcpBbMRWv4AqX01uViAcznhPulmDXThxaRAiD0VkSOT6tXVeb+Cj
-	 4i0lQIMnthghNe2UMVdAk0NQI0i+EhsZNgZmQm9RsRPHrE7wvt3KZhqmyaNbXTrNfZ
-	 jqLwYNlzGUIfw==
-Message-ID: <sashiko-outbox-237963@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 9/9] media: hantro: Add v4l2_hw run/done traces
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Detlev Casanova" <detlev.casanova@collabora.com>
-Cc: linux-trace-kernel@vger.kernel.org, media-ci@linuxtv.org
-In-Reply-To: <20261127-v4l2-add-ftrace-v4-9-24138479002f@collabora.com>
-References: <20261127-v4l2-add-ftrace-v4-0-24138479002f@collabora.com>
- <20261127-v4l2-add-ftrace-v4-9-24138479002f@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 17:07:51 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=kaldtiCF
+Received: from omf06.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 8EDB4A77F5;
+	Fri, 27 Nov 2026 18:03:49 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id A7BB82000E;
+	Fri, 27 Nov 2026 18:03:47 +0000 (UTC)
+Date: Fri, 27 Nov 2026 13:03:46 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jaeyeong Lee <lee@jaeyeong.cc>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] tracing: Reject filter commands in perf function event
+ filters
+Message-ID: <20261127130346.2caf63af@gandalf.local.home>
+In-Reply-To: <20261125060411.445-1-lee@jaeyeong.cc>
+References: <20261125060411.445-1-lee@jaeyeong.cc>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -59,68 +60,133 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: A7BB82000E
+X-Stat-Signature: aa3ku49etq5heib8116fmey8957jchin
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19ESAvDAcOS6rFJ3VY0F2ntNB+MKBfNvUw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=9pWZ3EWTAvBpk0cahRb0lTVvvb814awtr8WKr44+mVA=; b=kaldtiCFQc6lwivJefi+IYI2OOVftvy9gAcFSinswzJ0jdqAHM099Oyz+uWDPheshnkKK5Uih4yttVPJv4SxBmGRFvRIT3s35DW8CoOYkqcNQACuEHmDHrJGjJTZJIlOHlDjqhDkPJHNaAH6ZwWsXSqovVx/vp1SEOcITxVnME8=
+X-HE-Tag: 1795802627-954037
+X-HE-Meta: U2FsdGVkX19IbsaVSUwUxngVcYthpSe6DD2fir3oDKhubmjRVl5vCa33k0aM9IerwPuvs5J8rP7CdVH5zwCFxlplNVhZxXZ/xdbho9zlH/nwgyDc5Dvn9dPBZbm/yZe2c5kZ6FIDZFfiuhlEXQBU8kJDkWw1AWOD7bSv5JrWHSVc2kad9nIAEkcrRtnOmkTOcCGIDpTMv5oME+Iqp6Klh/ywoOO33PBnoLOcwGbNJKb9+AWA6KVIHmExfORylHnfTWRvCDxFz4n7vOTnUTdAa+R44BGHmvJyRaZpzVzn1KThqz2rJFdfXCrLnKRZG5QiRn/WIy8C2nPjXKw/q/IfIw3a27Ly8zIZ
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] media: hantro: spurious v4l2_hw_run trace in
-  hantro_end_prepare_run()
---
+On Wed, 25 Nov 2026 06:04:44 +0000
+Jaeyeong Lee <lee@jaeyeong.cc> wrote:
 
-commit 1ae655efcf68c0a93d5323d8fc7f3881bf26bec6
-Author: Detlev Casanova <detlev.casanova@collabora.com>
+> The perf function event (ftrace:function) keeps a CPU number in
+> event->ftrace_ops.private: perf_ftrace_function_register() stores
+> nr_cpu_ids there, and the TRACE_REG_PERF_ADD/DEL callbacks store
+> smp_processor_id() and nr_cpu_ids.
+> 
+> Since commit 31f505dc7033 ("ftrace: Implement :mod: cache filtering on
+> kernel command line"), ftrace_set_regex() treats ops->private as a
+> struct trace_array when the pattern contains a ":mod:" command. The
+> "ip" filter of a perf function event is passed unchanged to
+> ftrace_set_filter() and ftrace_set_notrace(), so a filter such as
+> 
+>   ip == foo:mod:bar
 
-media: hantro: Add v4l2_hw run/done traces
+Hmm, I think this should be allowed to filter only on modules.
+Just not cache the module if it doesn't exist.
 
-This commit adds trace_v4l2_hw_run() and trace_v4l2_hw_done() calls to the
-Hantro VPU driver and records the hardware cycle count on the Rockchip
-VPU981 AV1 decoder.
-
-> diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/drivers/me=
-dia/platform/verisilicon/hantro_drv.c
-> index 3734ea701145a..45bf926c0480d 100644
-> --- a/drivers/media/platform/verisilicon/hantro_drv.c
-> +++ b/drivers/media/platform/verisilicon/hantro_drv.c
-[ ... ]
-> @@ -159,6 +165,8 @@ void hantro_end_prepare_run(struct hantro_ctx *ctx)
->  	v4l2_ctrl_request_complete(src_buf->vb2_buf.req_obj.req,
->  				   &ctx->ctrl_handler);
-> =20
-> +	trace_v4l2_hw_run(ctx->fh.tgid, ctx->fh.fd);
+> 
+> makes ftrace_set_regex() use the CPU number as a trace_array pointer.
+> When the module is not loaded, ftrace_set_hash() sets
+> FTRACE_HASH_FL_MOD on the filter hash of the new perf event, which is
+> still NULL. If an earlier pattern in the same filter created the hash
+> (for example "ip == vfs_read foo:mod:bar"), cache_mod() then
+> dereferences &tr->mod_trace at a small address instead:
+> 
+>   BUG: kernel NULL pointer dereference, address: 0000000000000018
+>   RIP: 0010:ftrace_set_hash+0x210/0x260
+>   Call Trace:
+>    ftrace_set_regex+0xc0/0x160
+>    ftrace_profile_set_filter+0x24f/0x340
+>    _perf_ioctl+0x531/0xb20
+>    perf_ioctl+0x42/0x70
+>    __x64_sys_ioctl+0x96/0xe0
+>    do_syscall_64+0xf9/0x540
+> 
+>   BUG: kernel NULL pointer dereference, address: 00000000000001f2
+>   RIP: 0010:cache_mod+0xb7/0x1f0
+>   Call Trace:
+>    ftrace_set_regex+0x121/0x160
+>    ftrace_profile_set_filter+0x24f/0x340
+>    _perf_ioctl+0x531/0xb20
+> 
+> Perf function filters only take function name patterns, and the perf
+> ops has no trace_array to cache module filters in. Reject patterns
+> that contain the ':' command separator before they reach
+> ftrace_set_regex(). This is the result ftrace_set_regex() already
+> returns for such patterns when ops->private is NULL.
+> 
+> Both crashes were reproduced on v7.4-rc4 (8d7fe9885c62) in QEMU/KVM
+> with x86_64_defconfig plus CONFIG_FUNCTION_TRACER, using a test that
+> opens ftrace:function with perf_event_open() and sets the filters above
+> with PERF_EVENT_IOC_SET_FILTER as root. With this change both filters
+> return -EINVAL without a crash, and plain filters such as
+> "ip == vfs_read", "ip != vfs_write" and
+> "ip == vfs_read || ip == vfs_write" are still accepted.
+> 
+> This bug was found by static analysis.
+> 
+> Fixes: 31f505dc7033 ("ftrace: Implement :mod: cache filtering on kernel command line")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jaeyeong Lee <lee@jaeyeong.cc>
+> ---
+>  kernel/trace/trace_events_filter.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index a9d77df3e..da48210a6 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -2669,6 +2669,9 @@ static int ftrace_function_set_regexp(struct ftrace_ops *ops, int filter,
+>  {
+>  	int ret;
+>  
+> +	if (strnchr(re, len, ':'))
+> +		return -EINVAL;
 > +
->  	/* Kick the watchdog. */
->  	schedule_delayed_work(&ctx->dev->watchdog_work,
->  			      msecs_to_jiffies(2000));
+>  	if (filter)
+>  		ret = ftrace_set_filter(ops, re, len, reset);
+>  	else
 
-[Severity: Low]
-Will calling trace_v4l2_hw_run() inside hantro_end_prepare_run() emit
-v4l2_hw_run events even when frame preparation fails and the hardware is
-never started?
 
-For example, rockchip_vpu981_av1_dec_run() calls hantro_end_prepare_run()
-on its error path before returning without enabling the decoder:
+Does this work to fix the problem?
 
-drivers/media/platform/verisilicon/rockchip_vpu981_hw_av1_dec.c:rockchip_vp=
-u981_av1_dec_run() {
-    ...
-	hantro_end_prepare_run(ctx);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 5b161959e701..6e82941ee2e9 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6808,9 +6808,6 @@ ftrace_set_regex(struct ftrace_ops *ops, unsigned char *buf, int len,
+ 
+ 	/* This can also handle :mod: parsing */
+ 	if (next) {
+-		if (!tr)
+-			return -EINVAL;
+-
+ 		command = strsep(&next, ":");
+ 		if (strcmp(command, "mod") != 0)
+ 			return -EINVAL;
+@@ -6850,8 +6847,15 @@ ftrace_set_regex(struct ftrace_ops *ops, unsigned char *buf, int len,
+ int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
+ 		       int len, int reset)
+ {
++	void *private = ops->private;
++	int ret;
++
+ 	ftrace_ops_init(ops);
+-	return ftrace_set_regex(ops, buf, len, reset, 1);
++	/* ftrace_set_regex expects private to be a trace_array or NULL */
++	ops->private = NULL;
++	ret = ftrace_set_regex(ops, buf, len, reset, 1);
++	ops->private = private;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ftrace_set_filter);
+ 
 
-	hantro_reg_write(vpu, &av1_dec_e, 1);
-
-	return 0;
-
-prepare_error:
-	hantro_end_prepare_run(ctx);
-	hantro_irq_done(vpu, VB2_BUF_STATE_ERROR);
-	return ret;
-}
-
-When rockchip_vpu981_av1_dec_prepare_run() fails (such as on an invalid
-tile count), this emits both trace_v4l2_hw_run() and trace_v4l2_hw_done()
-even though no job ran on the hardware.  Similarly, hantro_g2_vp9_dec_run()
-and rockchip_vpu2_vp8_dec_run() call hantro_end_prepare_run() when
-start_prepare_run() fails and return an error to device_run(), which emits
-an unpaired trace_v4l2_hw_run() without a matching trace_v4l2_hw_done().
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127-v4l2-add-f=
-trace-v4-0-24138479002f@collabora.com?part=3D9
+-- Steve
