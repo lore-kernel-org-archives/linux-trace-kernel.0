@@ -1,72 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795792420;
-	b=dc8eaXmBg0rKWe+yMqlf59D2VXHix4j9ZBhCE7CFbH1+z1haDFCG/IK04LfiY33GfdGb
-	 UYlrjcYBU4qpu71lVb4wPpTojxdjPQ+0d03EkRPklia5oXEs9ZV9tVIjBk4kiqVqsVEYR
-	 5HZ26a4DY+dfiS5hxLs8dRb14SAhPIZ3IAialjA2fhxXbbI9PwLOu2lIVRSBMS+2VkUNA
-	 XxH45ogs1Om8xiBdzjm1e/OlYksvKFsFPQ2Bu8sK6JX0GWPID/OzOJ1hNjNTLV6NfrU68
-	 P9TXP/Z9pzddqENh16HcUbx9DwX+CHI/a7NXhBC3bhRk4cGpbocaRTkAK1TsdxDt3pA==
+	t=1795792421;
+	b=1+7jjhl8Qr1nDZQkkLX1yIYy8Obzy8xkh/l+Xaf1+03luw4Ci586bt8oYSDFtkbsBMhS
+	 tUrU5uPscohe7JDYGJSzY9Ah6RttaAOPU5I1wOuokX/F2+chjgAJmE8yW1TlZWhYjO/rV
+	 RDDtmw4L5UNxaOlCk50hWLUAAIjyAUHde3dYMtGRclPkuDVyVfG9VcGVWdq6Wvr72nYst
+	 8Cfl+jUWQEK66rAQoHH2WUC9Pv+qGrkgRsWsZ5J04gHu82UUcf28MnNIEBgZDLXACNBZQ
+	 k3kFPyjy87NJ/QdkIdCNG5iNkBG/eHS2SpQuAskVCgdi1yvoogDc/+f3Iw7jtwq2lhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795792420;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795792421;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=R4ZdZ/Z/X95qaVtYQz57sFrlKFBZaBVJXWXtnEfxeZw=;
-	b=ARww5ZBpp/TbcE3xAdE62W4kn/5GP1wZApIJRbjizwLizUXOLW651i+EBzGxpZa4QA4/
-	 e7N1NARSp2JSnsUhqSltuwf/u05eSeorMpcUdm9SFOg65aZamaLJkmmRLf7QTN1xnvrvW
-	 GRvLxAIndOVYohdyi6maPXLjSvJnunqaLDsN9IByASYuYUdweAKC+Z1RzSQQjpCFWE1nk
-	 O++ARXuxnee0TI9B4GEbGcQrPB11OW0mGaiWbgd7+VObid9APjhFpk3mM0vqMQz/b/+O0
-	 WhZK7Do91OdrGqTccoAfiIpEEksIvgxHCoyre1jaAwVww+9lPvE/YBq90zsTojdBq5g==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=0snJA/p3qoZflzr6S+Is/MiZdzdW+xQl+yqw+NL2eXs=;
+	b=W61p1oBxCCDrHb5X/ZeipMbhx/wqPSv3F+A4JmU28GaxcDMZrVJJiuBhgtp0wzwzdoeL
+	 WZMHgwQczZm6ZBYqrasS/k46isRpAL8gLwuaxyU/S1GCiuqSTyPgjIzea+xN7Hx5W5iQz
+	 WIqXQprimNaDhn8FTs/jmd0x5w5USnAAKupcpJpZ9w+UHAXrS3FX7VWaswMML0/3L5uBi
+	 4idF/LYFzazgV0UY4LvFNkqNUmsCEKUuYuKqa5lAAsgElhUgOB/bWZNuL+wTB8bwc2sQU
+	 k66nvmDyYjyr9IaXN0aoVBeBwFHYNKWTmUCpyIG9xdYY+JbdkyJrFtRjrvlfKJfVVZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i78wvBAv;
-	arc=none smtp.remote-ip=209.85.221.71
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="MOT/hKYN";
+	arc=none smtp.remote-ip=209.85.128.70
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE742606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 15:13:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DE742606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D919B606A326
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 15:13:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D919B606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=i78wvBAv
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4a7c864000eso4875160f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 07:13:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=MOT/hKYN
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4bba856092dso19884785e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 07:13:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795792418; x=1796397218; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=R4ZdZ/Z/X95qaVtYQz57sFrlKFBZaBVJXWXtnEfxeZw=;
-        b=i78wvBAvohyU2L3IaLOUfhATWQKDRKARv9EAS2PPUpzfz7y3PK8Obs2ufTxRvqCVF7
-         IUC7PkHbaobjUqzf1T8l2yA/sXGEdEA5Io/ruAXE7otzzU+4uqpsQH+VcEE7sZdogq8a
-         4X6MKTxRGMEBNEqVxfgwJNr6RUizh3Co2oOZTvE7dXgadGM2nBTER50M7S6ahufdymkO
-         tHT4i+n7GcnXGIBJ1R5I0C+DVL9u7zV5qO9VLAnIFlYCS780gQjPIaZlXSBEBo1jb43E
-         nnEwlab7lW3QtYqfFjup8praiFYJWKg3iAHrPbzRnOAyvNVrI6iTa7z8mkCwhAkbVt+R
-         U+VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795792418; x=1796397218;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1795792419; x=1796397219; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=R4ZdZ/Z/X95qaVtYQz57sFrlKFBZaBVJXWXtnEfxeZw=;
-        b=IhxK2vRllc7NbPxk/YSkp2mSp75doc43pcVi8iai4+B2sv5Dq3AVoWN2l68PZblf2k
-         27jMeKf888wQbI4mHNYNeP0klkmnbV4pudd8ZbND10biNlLAblMET4y/IxJAnqp+91i8
-         rxalReUe82WIl+qQzPMx7Qq4TEXomJS5fkL2PNNPmxUfBPBIazhPQ4ckTcfoWCokU6a8
-         aGWqavoXkmR1YjuQWdk+S03GErzeOzKD3sNUarZH9SNvI+OS5LWM+ZXL2U5PptcYenvc
-         3qObvkjp1rVX3V0YVn3ZQmwAVG8fXWgjevAP+/Qfa4p09T0KBdpFcTEyMf9G6ZUu4tyB
-         JeGA==
-X-Forwarded-Encrypted: i=1; AL+hErG9ZznjBHqnYwj6HigCMt1b3IHR1pbL64gJzfP3tWl0ozo63XvSHo4WC6i6SJDbG9Eo/qhvzo5W04339yDJIaKgQls=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8MDeMZEZzeqLkNojXmU+7AtI6w1b41GMUHwiaHfZzJnIeGRYhR
-	nV7r4HzchJFBT3se2Q5USEdo7hNLBR7zNw2KI9NxNaCRHl53kVdzP2cQdaG98I/b0GkfsIYvvmE
-	VB1khF9yqqVHlUsHyHpUodQ==
-X-Received: from wrpq17.prod.google.com ([2002:adf:f791:0:b0:4a4:35d8:cd7b])
+        bh=0snJA/p3qoZflzr6S+Is/MiZdzdW+xQl+yqw+NL2eXs=;
+        b=MOT/hKYNoYZIHUYNtgI7Svut9HQ8qieGUNBtHupehQEDZfrjJWwyumg2grlu/c/INl
+         ZJoq+fLZZfeqq7mKdQzDTDD/fpQ/t+lkp4wlC/cSR2R/hfSxmPy2SVLX6AYQmVFpuLSj
+         /SpFYiVeN+SPYPgL4ZAYmefqxTTzKby8ibF1Jlrxb3uo5h5J36yuXZh1a37cwE7f+EN4
+         0YBwOEr0I4j7/ZLf3gLo2jx6Cv305eCVId97AeCMyMbCzXJHpznO7DuwEurtZnqFIJyH
+         GJDGYbIT6Vnv/XgrohFz4Q0+9ZVQ6djjdqkq0Uz0HFr3xMgygFA5CV7KeNnYTwfVQJKX
+         +RxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795792419; x=1796397219;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0snJA/p3qoZflzr6S+Is/MiZdzdW+xQl+yqw+NL2eXs=;
+        b=EDXZhXynSC5VAH7lyuT35GaUa2KeqBs/rUaik+3QWe+srEugGxyfeDG1USMq0JYHdy
+         Q+tbaBI1kk02X+x6a2C6j42aLb+Ny4fjWua/+mU+WIn3D0LM/aU+0pEx5QKanEG1FRrE
+         nBIBs3P/2ERmI6UkV5mAW08OPRXmuVMWl1msfYmfb7i78vH06nWQQ/JEXnbSle4fi/zh
+         JiJ2KjHMHpJnNklLpcWU7k2GUr0onm0uVVMfnfY+Hr1jsqwje0j0NuVNYTYy93Txiguw
+         EJydZVdQhCIDApjKo+mYeu9dRsl4mEZWkoasit+eH8soA75cyrXsmnhGHZNxeU8AI4xq
+         0AOA==
+X-Forwarded-Encrypted: i=1; AL+hErHo2guesgdRs8kmm0AIlzNVdA/JW1sGs7n+xkOwfc6A++qSGGb0kfsOXTyiRqHJJpUChg1V+DqkRXNJ55lznAB+pGE=@vger.kernel.org
+X-Gm-Message-State: APuU4Z9dGx6RPjzZY8Ieo3aGou8NJNY0/Md+nzPBpbbmhChGdFG2q3C9
+	rZCeypc9SUdqNp8uG0hhAgvd0IEzNjawn88trqBUDeqGyooeGA6H6nWtAr2ZM7q8iYYLwg1s+V9
+	jLtUnbzUhK9l2EI1cd8Alrw==
+X-Received: from wmee23.prod.google.com ([2002:a05:600c:2197:b0:4bb:4bbf:7120])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:4809:b0:4aa:842f:5f78 with SMTP id ffacd0b85a97d-4abb759e947mr46727558f8f.46.1795792417605;
- Fri, 27 Nov 2026 07:13:37 -0800 (PST)
-Date: Fri, 27 Nov 2026 15:13:22 +0000
+ 2002:a05:600d:9:b0:4bb:aa4f:c025 with SMTP id 5b1f17b1804b1-4bbaa4fc0f1mr120603915e9.1.1795792418988;
+ Fri, 27 Nov 2026 07:13:38 -0800 (PST)
+Date: Fri, 27 Nov 2026 15:13:23 +0000
+In-Reply-To: <20261127151326.515232-1-vdonnefort@google.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -76,9 +79,10 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
+References: <20261127151326.515232-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
-Message-ID: <20261127151326.515232-1-vdonnefort@google.com>
-Subject: [PATCH v2 0/3] ring-buffer: Use kvmalloc variants for big allocations
+Message-ID: <20261127151326.515232-2-vdonnefort@google.com>
+Subject: [PATCH v2 1/3] ring-buffer: Use kvzalloc_objs for user mapping arrays
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -86,31 +90,70 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	linux-kernel@vger.kernel.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Several allocations in the ring buffer code scale with buffer capacity
-or sub-buffer order and require high-order contiguous physical memory
-when using plain kmalloc. Under memory fragmentation or with large
-buffers, these allocations can fail unnecessarily.
+Mapping a large trace buffer to user space requires allocating arrays of
+struct buffer_page * and struct page *. For large ring buffers, these
+contiguous allocations can fail under memory fragmentation.
 
-This series converts those allocations to their kvmalloc equivalents.
+Switch both to kvzalloc_objs() to use the vmalloc fallback under memory
+pressure.
 
-Changelog:
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+---
+ kernel/trace/ring_buffer.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-v2:
-  * Drop "ring-buffer: Drop redundant ring_buffer_iter::event_size". (Steven)
-  * Rebase on 7.4-rc4.
-
-v1 (https://lore.kernel.org/all/20260922072944.1281427-1-vdonnefort@google.com/)
-
-Vincent Donnefort (3):
-  ring-buffer: Use kvzalloc_objs for user mapping arrays
-  ring-buffer: Use kvzalloc_objs for remote buffer subbuf_ids
-  ring-buffer: Use kvmalloc for ring_buffer_iter::event
-
- kernel/trace/ring_buffer.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
-
-
-base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index a5a0adc934fa..484fb1c08682 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7762,9 +7762,9 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 			struct vm_area_struct *vma)
+ {
+ 	unsigned long nr_subbufs, nr_pages, nr_vma_pages;
+-	pgoff_t pgoff = vma_start_pgoff(vma);
++	struct page **pages __free(kvfree) = NULL;
+ 	unsigned int subbuf_pages, subbuf_order;
+-	struct page **pages __free(kfree) = NULL;
++	pgoff_t pgoff = vma_start_pgoff(vma);
+ 	int p = 0, s = 0;
+ 	int err;
+ 
+@@ -7801,7 +7801,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	nr_pages = nr_vma_pages;
+ 
+-	pages = kzalloc_objs(*pages, nr_pages);
++	pages = kvzalloc_objs(*pages, nr_pages);
+ 	if (!pages)
+ 		return -ENOMEM;
+ 
+@@ -7893,7 +7893,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 		return err;
+ 
+ 	/* subbuf_ids includes the reader while nr_pages does not */
+-	subbuf_ids = kzalloc_objs(*subbuf_ids, cpu_buffer->nr_pages + 1);
++	subbuf_ids = kvzalloc_objs(*subbuf_ids, cpu_buffer->nr_pages + 1);
+ 	if (!subbuf_ids) {
+ 		rb_free_meta_page(cpu_buffer);
+ 		return -ENOMEM;
+@@ -7917,7 +7917,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 		cpu_buffer->user_mapped = 1;
+ 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	} else {
+-		kfree(cpu_buffer->subbuf_ids);
++		kvfree(cpu_buffer->subbuf_ids);
+ 		cpu_buffer->subbuf_ids = NULL;
+ 		rb_free_meta_page(cpu_buffer);
+ 		atomic_dec(&cpu_buffer->resize_disabled);
+@@ -7974,7 +7974,7 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+ 
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 
+-	kfree(cpu_buffer->subbuf_ids);
++	kvfree(cpu_buffer->subbuf_ids);
+ 	cpu_buffer->subbuf_ids = NULL;
+ 	rb_free_meta_page(cpu_buffer);
+ 	atomic_dec(&cpu_buffer->resize_disabled);
 -- 
 2.56.1.839.g22a8290db9-goog
 
