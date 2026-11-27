@@ -1,60 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.246.84.56
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795789640;
-	b=sC5oSW89kkaeNbR/w7xmF03cRMAzGy1Qz9uqh1GYPMy/GMd/JPph3087geMLSat0SJHY
-	 twgnk3BrjJMGjKapw416P0choH4iZWSXQK617PQlKyvzahILpM9HeN1oJrWVe/5DqBJxi
-	 px8brmOVUQAIgeBb4kM/7iK7LK/4UHaA5yz6nXRIs+HlAsHJPQ5B+/KpO7QXJ4eIjO+tV
-	 oV9M22cUYxGrwzO7N7RWMu7hiW4JKKsbW8nAcD1+f7OwtAC+OpkX5e51QHiWZOdxrNsGP
-	 fM07h8LfKBaM0XTksvblZOgNrCQaU2RUitDxr+tf2S++Zzv1BHezfnmwPHsVFcOMHCg==
+	t=1795789648;
+	b=plAYPINXWud43Z6UUvAWY/nRBUepmP0QDqvLsSHYUc2qBMPzu7qWVhZQcGgyV38Vp+uD
+	 1YkyeKmsNBFiv3hXMtAfQ5nw7E6q/noFAJ0KAjcjN0pno2TLP5vLVegbu6D1BoYGQCCHI
+	 nC7YG7E1a3yC6/kVmRLbVrpdgputhNdw3b19rbQweaMnecBIG6LXVn8PBaN78nHXpyZOx
+	 C9FnG8fnYa8vBEBwuMs/vWX6wRRyDsjHlo2A+cPBgeLgbDBCgjCy3ndsbwppiII/7UObv
+	 rm2yvb46B44yjNIpTEovizAodP90PCC4BIM5n8PWYZl6txbZRU0uo0h1KZck/BlG84w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795789640;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795789648;
 	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:From:Date:
 	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Last-TLS-Session-Version;
-	bh=+CU5gTDGqNI0A7OtXnfaxY+IVWdsopI+NOANirtisZk=;
-	b=o5cUlya+eTwnZ6xy/uzRdARPxhcYohGc3mHF6WWl7bGwf2VrShUN2sRDyrRXNaXsJPXd
-	 jZDqfhwDM+3UStgn0AwNy3RZ7+VRd8gHbvz6pKSsR4drwW7ltZLGSxV4sIf/iim/grGKM
-	 ovC5pUc3Ik0A6Z8fVBkoOU7nMeKnZpOW6YbwvOF1Ocv1dJnubgshwm7yA6Z7ihVqXt5MX
-	 ihHSKwveY1g+oQigcRSmj1h4TXafqpsTHdO82mKtgDG6lL/YTvAxSuATyi+G3kbzyAjbq
-	 zEDik2zwLpB8FfG3Oy7A9wzhuOpbNEXxy6bOezf5yhnfuHL0e+gB63maJLOqZAGvnbg==
+	bh=PzsT2/vnTOLgeC13FDUQXpv3y/kUea2jI2GTpmgE9eM=;
+	b=ZKzRMb4xgWrBg5RFl2RZIGUnPcGaDQy1ffLm1wyHah89+f197MSerrMyilleUZzFQQOl
+	 r3XxlfS1fP8hr1ZOx6UfmjmWUvJ5jQ3lZ/uGDbSNXPmvcnqCy2zoCTuTy3m5vHEyHidiN
+	 IccBIIlJAzNR9dUjWiZ1gJg7UzVeifawNfaJowa1QtJTnzt5ZpAWLsFRMfOleewp8Jxmz
+	 PB40Gg+JBwhjPDdjwJR+BsWg4lCk0tPH9CByr2FpG1XCXLKd0/1iMVVukdpIHAO3ly7Qy
+	 ydO9TdZs/53KKQf2WgvENP6g5cbmIla/naHzay4REg3TwhL1stCeNg4xoCxfwH1wxlw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bootlin.com;
 	spf=pass smtp.mailfrom=bootlin.com;
-	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b="E+DjkZ/y";
+	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=udHo41LZ;
 	arc=none smtp.remote-ip=185.246.84.56
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6695606C711;
-	Fri, 27 Nov 2026 14:27:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B6695606C711
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6E5606B182;
+	Fri, 27 Nov 2026 14:27:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ED6E5606B182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=E+DjkZ/y
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=udHo41LZ
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 6286F1A1838;
-	Fri, 27 Nov 2026 14:27:18 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id B08251A183F;
+	Fri, 27 Nov 2026 14:27:26 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 342DF6049C;
-	Fri, 27 Nov 2026 14:27:18 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9B2FF11E68FDF;
-	Fri, 27 Nov 2026 15:27:02 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 825CB6049C;
+	Fri, 27 Nov 2026 14:27:26 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 04CC211E69021;
+	Fri, 27 Nov 2026 15:27:14 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1795789630; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1795789642; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=+CU5gTDGqNI0A7OtXnfaxY+IVWdsopI+NOANirtisZk=;
-	b=E+DjkZ/y7ZfCRww8fNEowh4OMsOcCcn80GvTb4Hr+lBZb5E1kT2KHO395PZmz27BScMe8/
-	HSntgqrnLZC/e7np/CzUpxIoMu8Sld45fsWnCmrSTpGiQgj9a2cwhvRpJaJ4CqVANWcvAa
-	9NvVc2rFixduWXIeDC1rOTR1MMUxbrCVcb7oXIe7hd/bbYmlPiUaADEghABIBTwcYMzxVe
-	PtGt3H5PCCY1K46IijtFval2jAqtebcKcUAFaEwYZHjNhkXo7LL37yqyDP/CofIrsfmm4C
-	DG84wbaFSgsE9w2q1oqns1CFnkCWXhufwEqyh0DE3DMpCKV4ljb6RIupvSik+Q==
+	bh=PzsT2/vnTOLgeC13FDUQXpv3y/kUea2jI2GTpmgE9eM=;
+	b=udHo41LZ9pUYk5V1GKFBsW+tpcv8NEvbhIdv1MV7PCqO9109uFbTupw+GGlpLp4jY0jUNc
+	8m+eKM5zExD2ih/EIGrU3+JoJ8HjqcVBNvsxBzTVSoYjikEcax9o94bun1EBRzj4Dgl9er
+	R3Ne/Rmgyh9Z1UEMsL8hTkFQ97NmuwtSmKbPC7xpSOXEHWHiLiPE6vAWniqV6lCW7PrzpP
+	fQuJovv/7NBZYLkytUwsR+IF9dlAnOdttrpygKXOk/aBWIRzzizFgPBE/seqiHsrVXAUoC
+	fp89ZOlDp0u7aUFZRg9hxGo1GrSFPklJCBEECRWRTrr2cxGxVvNCqgFX8wppLQ==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Fri, 27 Nov 2026 15:22:51 +0100
-Subject: [PATCH RFC v2 29/35] spi: stm32-ospi: Consume dummy cycles
- directly
+Date: Fri, 27 Nov 2026 15:22:52 +0100
+Subject: [PATCH RFC v2 30/35] spi: stm32-ospi: Reject excessive dummy cycle
+ counts
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -66,7 +66,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-29-5c93f5e5d630@bootlin.com>
+Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-30-5c93f5e5d630@bootlin.com>
 References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 To: Mark Brown <broonie@kernel.org>, Liang Yang <liang.yang@amlogic.com>, 
@@ -106,61 +106,40 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.3
 X-Last-TLS-Session-Version: TLSv1.3
 
-The controller programs the dummy phase in clock cycles, but the driver
-converts the legacy dummy byte count into cycles. Advertise the
-dummy_cycles capability and use op->dummy.ncycles directly.
+The controller stores the number of dummy cycles in a 5-bit field.
+Prevent field corruption by adding a proper ->supports_op() callback.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/spi/spi-stm32-ospi.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/spi/spi-stm32-ospi.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
-index fa0e8e83cb1b..bf42f46ce194 100644
+index bf42f46ce194..30d48ee1be21 100644
 --- a/drivers/spi/spi-stm32-ospi.c
 +++ b/drivers/spi/spi-stm32-ospi.c
-@@ -492,10 +492,9 @@ static int stm32_ospi_send(struct spi_device *spi, const struct spi_mem_op *op)
- 	}
+@@ -772,11 +772,17 @@ static int stm32_ospi_setup(struct spi_device *spi)
+ 	return 0;
+ }
  
- 	tcr = TCR_SSHIFT;
--	if (op->dummy.buswidth && op->dummy.nbytes) {
--		tcr |= FIELD_PREP(TCR_DCYC_MASK,
--				  op->dummy.nbytes * 8 / op->dummy.buswidth);
--	}
-+	if (op->dummy.ncycles)
-+		tcr |= FIELD_PREP(TCR_DCYC_MASK, op->dummy.ncycles);
+-/*
+- * No special host constraint, so use default spi_mem_default_supports_op
+- * to check supported mode.
+- */
++static bool stm32_ospi_supports_op(struct spi_mem *mem,
++				   const struct spi_mem_op *op)
++{
++	if (op->dummy.ncycles > FIELD_MAX(TCR_DCYC_MASK))
++		return false;
 +
- 	writel_relaxed(tcr, regs_base + OSPI_TCR);
- 
- 	if (op->data.nbytes) {
-@@ -691,7 +690,7 @@ static int stm32_ospi_transfer_one_message(struct spi_controller *ctrl,
- 		 */
- 		if (transfer->dummy_data) {
- 			op.dummy.buswidth = transfer->tx_nbits;
--			op.dummy.nbytes = transfer->len;
-+			op.dummy.ncycles = transfer->len * 8 / transfer->tx_nbits;
- 			dummy_bytes = transfer->len;
- 
- 			/* If happens, means that message is not correctly built */
-@@ -784,6 +783,10 @@ static const struct spi_controller_mem_ops stm32_ospi_mem_ops = {
- 	.poll_status	= stm32_ospi_poll_status,
- };
- 
-+static const struct spi_controller_mem_caps stm32_ospi_mem_caps = {
-+	.dummy_cycles = true,
-+};
++	return spi_mem_default_supports_op(mem, op);
++}
 +
- static int stm32_ospi_get_resources(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -933,6 +936,7 @@ static int stm32_ospi_probe(struct platform_device *pdev)
- 	ctrl->setup = stm32_ospi_setup;
- 	ctrl->bus_num = -1;
- 	ctrl->mem_ops = &stm32_ospi_mem_ops;
-+	ctrl->mem_caps = &stm32_ospi_mem_caps;
- 	ctrl->use_gpio_descriptors = true;
- 	ctrl->transfer_one_message = stm32_ospi_transfer_one_message;
- 	ctrl->num_chipselect = STM32_OSPI_MAX_NORCHIP;
+ static const struct spi_controller_mem_ops stm32_ospi_mem_ops = {
++	.supports_op	= stm32_ospi_supports_op,
+ 	.exec_op	= stm32_ospi_exec_op,
+ 	.dirmap_create	= stm32_ospi_dirmap_create,
+ 	.dirmap_read	= stm32_ospi_dirmap_read,
 
 -- 
 2.56.0
