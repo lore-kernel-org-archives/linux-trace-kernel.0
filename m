@@ -1,120 +1,146 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=128.30.2.78
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795768062;
-	b=xT7MPTehTJLtnFLBTkFScYhMZnyEzlFn6vW7yr5+Jggt+a8esyrgrDdybV3LV7CeH3nd
-	 RfBkMsOUAMB2a2hUVHIbuoE37ZmWO6Ls26XMbJkl74wVbBIsA9xyqMNMq2UzDKZaDDcgS
-	 2lLYp4CWGVwBIzNfjd98oE9uiCyI3HT+DgvvaHb0dtA+uzHorD9n4EHpm96aZLDR0DFV8
-	 fvhYKbRM5l/jRtRezSaFOO8NO/l6g9hoDb3vcDyFJl6CnpiBq2FaA9RNU34LRt4IexAsH
-	 N2UVNdB6yVWPcz/we5+TrowK3GluUjMr4uLc3UM02Kg9+JJpcPkgeg0A7dplzwjtbHg==
+	t=1795769464;
+	b=3vmcZn7Jpe8VKDy7Ay8xuQmiIfOAl6kZO6UQuc3+Pyo8jGm7v/fRuMDD9Xj/oHJvxrv8
+	 cLXJLtNXdAyK6fjz+6gB8eSEiGpNUBlW2Z/6EBFinZ9Cv9UgOO+ooPc66TPrCEOd4HCAc
+	 fcz2KGuvH2bc1uqsRa5mNaonMTDmkECgosdmoIvDauL4pha6Lrj1Kb7V4fgihrUjcvdF8
+	 h6Lm/v+YvEU6Qspd1dxzgd9S0IQtadoVKQsRQ00LuruHWhvQaWClHmyMDOlWbnjeIsEqB
+	 sZ8KJ47GhtgYshTDfyKNDQj9Qimm2MFc7vaUJ1rKpr7BVFRLY98aqw9Zho1BIAlWjzw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795768062;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:Received:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Autocrypt:User-Agent:MIME-Version:X-Mimecast-Spam-Score:
-	 X-Mimecast-MFC-PROC-ID:X-Mimecast-Originator:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=SxaqJRgRU9lhQE08/YFU2De44zTG7wSWXgQ5bbce0Pk=;
-	b=UIIZn3LFgcRpXOeWAD0KP+F+1pWjhawJiX/Pr5aZFQ0a87XGhRXN8ULhDbcCvOXW6kNq
-	 oIm2eExnUNqSQGdg+DzSnhDe2/ga5Btp4up4lOW/S/BIr+AaBaCHHVxtNXUW4HfblxENk
-	 sYPizJyakFfhKTQey1mXsExsFPFXFjeGTHCIjGsarYpLMj3cF1rf+SB0CPv7LY3ob86Jd
-	 nLJBYgQQ7NNkcjeijlp9PvdELFZWumG62OkJyvv+Nq4EI30XFyropEmCn4I4nGfovJ+hc
-	 Jt8YRC4h9RaPXdqEw9KQj1YzsP4mZVJ8y1o3G+1a5WLbG+BY6lB8Ds34vmTVRCeClAQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795769464;
+	h=DMARC-Filter:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=njh3SQBBAQE61UxliWgOlIeTiJ2q96ejV3+knyCCvnY=;
+	b=d1DXSzToQ+NSWw3JPfbbCrAQhkNYUaW9zaQ0Kq36JP/8woKgKUTQgShqaZ81EMafXCG8
+	 DiMpPZ97OccqrKo7UFt334tkVjALPM2IZ1xomiHQXsloYBKIPjRZgTPZkfTXEgIuMKm9Q
+	 b7sz4NZ/jrYEC4SK/QralyrpABcEM3c4IqS4+t1BQJ4t0IGFt36KPGh/71hEPyzFmrovC
+	 nxc+Wj+vndn+a79SArUDt7iPLwuEgjZVc4EU2LwUiuG5EFKMkjzbdHTWlbJk9g5Ghhk3i
+	 +gyaUSwMT4DyVt4FMfzdvMPL6rGzFmLXNPqHEwk7ssXWB+RiqyGc5V3rVm/N0hQbEkQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EAdjWA9a;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	dmarc=pass header.from=csail.mit.edu;
+	spf=pass smtp.mailfrom=csail.mit.edu;
+	dkim=pass header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.a=rsa-sha256 header.s=test20231205 header.b=xCF78GQE;
+	arc=none smtp.remote-ip=128.30.2.78
+Received: from outgoing2021.csail.mit.edu (outgoing2021.csail.mit.edu [128.30.2.78])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F44606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 08:27:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 99F44606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CD4606A31C;
+	Fri, 27 Nov 2026 08:51:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48CD4606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=csail.mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csail.mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EAdjWA9a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795768060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=SxaqJRgRU9lhQE08/YFU2De44zTG7wSWXgQ5bbce0Pk=;
-	b=EAdjWA9aPa+p5Z11ox/bI7IlIIVpIFIGYHevkGuXIyU9wrhZ2iwv1V6utsFfHzYV2e6le7
-	hkP3gNbMAI30KZlgf6vwAUFl4ftnBs8joFh78c3A/Xm3uqksErpzt2V+8W7tL4XGMKcR6Y
-	fNmZltIN5eQTDPDO6YzO6QQElKQOpHY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-466-2gLf4faDMWqPeCNdy1svdQ-1; Fri, 27 Nov 2026 08:27:38 +0000
-X-MC-Unique: 2gLf4faDMWqPeCNdy1svdQ-1
-X-Mimecast-MFC-AGG-ID: 2gLf4faDMWqPeCNdy1svdQ_1795768057
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4a35e1d2dddso65157075e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 00:27:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795768057; x=1796372857;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :autocrypt:references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=SxaqJRgRU9lhQE08/YFU2De44zTG7wSWXgQ5bbce0Pk=;
-        b=kpm+NSwyolJfkikmgIJcDKjBX0f9TEdQxAPzGUgK7Fin0lK0xc584G58qz9PsDQQ7J
-         Q16AKl6h9r9kUzqEmpfMiUqCFht76idST1RCtAYbRK6z19KpiXmeTjXQiAKUmI/TJorb
-         3t3h+eacmcdVBT2K04+xOw/v3hqYnFa9+gc4e3JWOJwEAQvaHNHIEW0lGUEC8qhcOAmn
-         onuXbS79JstFeFoWrQgBVmzwVQ9queeFBpRDgS82cd5FryAiw0aDLn5t/Aj/USZaXy/I
-         e8ZhnEtEbyjqBar0CCgu1Iylu/Pzi71XnrwI/QdVtWtkIr9SfTDg8quaeQNNiUEbUwxr
-         GVFQ==
-X-Forwarded-Encrypted: i=1; AL+hErHzFTI31gWMDOsuFD6rHCdjuED8O93wPn8xuri424sv0k6dYnyZtueAcB+YvKvb8sp4/KLGScF7tBC5njZl5ZweQeM=@vger.kernel.org
-X-Gm-Message-State: APuU4Z9cQ+OBHwFHsTWOETRwUXO9LKlian5s1vypgTHX8V4DAdaMvFvW
-	4xnt7CKQ/dTrVufiuPs2xzC9YE+DfZf7WS0BOlrSH+TEjRrUBVlosFEKv5foycNpZwwpUD+LFF4
-	iwRcTrw6K5Yeea5Id7DS1ylD+Hvq2Uy4cmOJEA+HqN66ORW1N38UuWERWjKlIieWdgBUtIMZhcn
-	auJEH75KoW
-X-Gm-Gg: AZFdTZeD1WdJj53JecQXqWNaqYvCdXPEdHw073qkUAuNYyBT2rTCSAgidQ7joPcPmCr
-	usgBj9yGKqKmgX6uK0Gg3YXg2T1Dfk5IKkrhrGfxz5tm95QLwW+uK0JlPlRKvr04Sx8xVVYqJgE
-	UGeCNG8cMCWhjerc0SVf2rITfMq8lWwtm42xjMz9aStXrBL/ti8J4/lzKyvwhO4/LvzgAglGJyk
-	HcZBl22rWecjGtMZonyjw22/p7WEcl3aQOQIAzGYDIZC7vrF/+00o7+I5ktw2/yeQI7y1Jshy14
-	ViupNAiIUQl5ZjlOnRXbpzwbogUQO8hhzeZ21Wi0hZvV7IpaWSlTW0JRzgmnO9Y1++WuG07/xm1
-	nZV0wIxxxrACciktDqXtwzoaw5V6ja718TDE5IgyIf6pXt+fUh487z9p9FPYkTMLSu9hdUXAhcg
-	SI
-X-Received: by 2002:a05:600c:3b94:b0:4bb:6f41:39be with SMTP id 5b1f17b1804b1-4bb8880ca3cmr589964505e9.15.1795768057012;
-        Fri, 27 Nov 2026 00:27:37 -0800 (PST)
-X-Received: by 2002:a05:600c:3b94:b0:4bb:6f41:39be with SMTP id 5b1f17b1804b1-4bb8880ca3cmr589963995e9.15.1795768056658;
-        Fri, 27 Nov 2026 00:27:36 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.168.96.228])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bbab390cf5sm180472695e9.7.2026.11.27.00.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2026 00:27:36 -0800 (PST)
-Message-ID: <6ee9fd02caec10b09c8f25913a2c0e619f5dd4e7.camel@redhat.com>
-Subject: Re: [PATCH v4 3/4] rv: collect per-edge dwell time for per-cpu
- DA/HA monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Tobias Schaffner <tobias.schaffner@siemens.com>, Steven Rostedt
-	 <rostedt@goodmis.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, Randy
- Dunlap <rdunlap@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers	 <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, 	linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- rpm@xenomai.org, jan.kiszka@siemens.com, Shuah Khan	
- <skhan@linuxfoundation.org>
-Date: Fri, 27 Nov 2026 09:27:33 +0100
-In-Reply-To: <20261127070545.64265-4-tobias.schaffner@siemens.com>
-References: <20261127070545.64265-1-tobias.schaffner@siemens.com>
-	 <20261127070545.64265-4-tobias.schaffner@siemens.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0BrZXJuZWwub3JnPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmjKX2MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfIQuAD+JulczTN6l7oJjyroySU55Fbjdvo52xiYYlMjPG7dCTsBAMFI7dSL5zg98I+8
- cXY1J7kyNsY6/dcipqBM4RMaxXsOtCRHYWJyaWVsZSBNb25hY28gPGdtb25hY29AcmVkaGF0LmNvb
- T6InAQTFgoARAIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBMrKEfgLgd0WcK
- eo9u9KbElYeE3yBQJoymCyAhkBAAoJEO9KbElYeE3yjX4BAJ/ETNnlHn8OjZPT77xGmal9kbT1bC1
- 7DfrYVISWV2Y1AP9HdAMhWNAvtCtN2S1beYjNybuK6IzWYcFfeOV+OBWRDQ==
-User-Agent: Evolution 3.62.1 (3.62.1-1.fc45)
+	dkim=pass (2048-bit key, unprotected) header.d=outgoing.csail.mit.edu header.i=@outgoing.csail.mit.edu header.a=rsa-sha256 header.s=test20231205 header.b=xCF78GQE
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=outgoing.csail.mit.edu; s=test20231205; h=In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=njh3SQBBAQE61UxliWgOlIeTiJ2q96ejV3+knyCCvnY=; t=1795769464; x=1796633464; 
+	b=xCF78GQEoFuR5VSaFZJwsaQMsUqzxgkhr09s1AQlGBjs9gBHC90OExhT7yjx4EsH4WivLTHbGpI
+	p1E/a5+X4T4RCZDkcyYHblwO39qcnCS/jX+2rUBbwS1mQZgFvoM/x2kdWTDEyGuqBWjJm6feGtK2Z
+	wFpefSVLt7txJoZA0iIqI5jyU1zgPndu9WsOj6WeNxR3WovhoLSiXmJUNYFRfVro1Za1MGilJ19PW
+	Hz4feHPtbiuyFMlqUrY+NSp8E4S+LNWmiuwiqTCvoNSDozbzEFxQ7prI17GmZtzkMkrajaIxy6L5f
+	r/0Om6ynlQj5DoUoMwLx+tY8sfilr31FNhtg==;
+Received: from [167.220.238.14] (helo=csail.mit.edu)
+	by outgoing2021.csail.mit.edu with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srivatsa@csail.mit.edu>)
+	id 1xWreR-007Btx-5B;
+	Fri, 27 Nov 2026 03:49:51 -0500
+Date: Fri, 27 Nov 2026 14:19:20 +0530
+From: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jens Axboe <axboe@kernel.dk>, Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Sizhe Liu <liusizhe5@huawei.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	"Joerg Roedel (AMD)" <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai@fygo.io>, Li Nan <magiclinan@didiglobal.com>,
+	Xiao Ni <xiao@kernel.org>, Haren Myneni <haren@linux.ibm.com>,
+	Rick Lindsley <ricklind@linux.ibm.com>,
+	Nick Child <nnac123@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marcin Wojtas <marcin.s.wojtas@gmail.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowangio@gmail.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Frank Li <Frank.li@nxp.com>, Xu Yang <xu.yang_2@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Yushan Wang <wangyushan12@huawei.com>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	Justin Tee <justin.tee@broadcom.com>,
+	Paul Ely <paul.ely@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <mkp@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Yosry Ahmed <yosry@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
+	coresight@lists.linaro.org, iommu@lists.linux.dev,
+	linux-raid@vger.kernel.org, netdev@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev,
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-cxl@vger.kernel.org, imx@lists.linux.dev,
+	linux-scsi@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Prasanna Kumar T S M <ptsm@linux.microsoft.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>
+Subject: Re: [PATCH] cpu/hotplug: Rename cpuhp_remove_multi_state to be
+ symmetric with setup
+Message-ID: <awlEEAmT4k7fvQck@csail.mit.edu>
+References: <20261127-fix-rename_cpuhp_remove_multi_state-v1-1-097db4564cbd@csail.mit.edu>
+ <awk6TGp9riwDD55i@MWDK4CY14F>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -124,163 +150,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 2kUbHStpVZpl7a0vsL3zuBF_iCRnZeFc4ZbGe7V_2xI_1795768057
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <awk6TGp9riwDD55i@MWDK4CY14F>
 
-On Fri, 2026-11-27 at 08:05 +0100, Tobias Schaffner wrote:
-> @@ -110,10 +111,11 @@ static inline void da_monitor_reset(struct da_monit=
-or
-> *da_mon)
-> =C2=A0 *
-> =C2=A0 * The monitor will ignore all events until monitoring is set to tr=
-ue. This
-> =C2=A0 * function needs to be called to tell the monitor to start monitor=
-ing.
-> + * @state is the initial state, stamped with its entry time if known.
-> =C2=A0 */
-> -static inline void da_monitor_start(struct da_monitor *da_mon)
-> +static inline void da_monitor_start(struct da_monitor *da_mon, da_state_=
-t
-> state)
+Hi Richard,
 
-So the idea is that monitors using da_handle_start_run_event() would end up=
- with
-a few nanoseconds more in their initial state instead of a 0. Right?
-Maybe more if preemption is possible.
+On Fri, Nov 27, 2026 at 04:09:11PM +0800, Richard Cheng wrote:
+> On Fri, Nov 27, 2026 at 01:07:40PM +0800, Srivatsa S. Bhat (Microsoft) wrote:
+> > The multi-instance CPU hotplug state setup API is named as
+> > cpuhp_setup_state_multi(), whereas the corresponding remove API is
+> > currently named as cpuhp_remove_multi_state(). Rename the latter as
+> > cpuhp_remove_state_multi() to fix the asymmetry. This also helps
+> > maintain consistency in the API names by letting them share a common
+> > prefix, i.e., cpuhp_setup/remove_state_*() across all the variants
+> > [none|nocalls|nocalls_cpuslocked].
+> > 
+> > Signed-off-by: Srivatsa S. Bhat (Microsoft) <srivatsa@csail.mit.edu>
+> 
+> Hi Srivatsa,
+> 
+> Not sure whether this is really needed, it doesn't harm anything,
+> but IMHO it doesn't really brings us benefit.
+> 
 
-I don't particularly like changing the prototype of da_monitor_start(). It =
-isn't
-used by existing monitors, but is a public API, so I don't want to send the
-message that monitors can start from any state.
+I agree, this is not intended to be a functional change. The cleanup benefit is
+on the side of the CPU hotplug core API to provide better consistency in terms
+of the API naming pattern, but the current callsites that consume this API
+should see no functional difference as a result of this change. The consistency
+will help future callsites though!
 
-We could either:
-1. document this timing discrepancy and live with it
-2. reset the timestamp just after da_monitor_start() (done only once)
-3. create another da_monitor_start_notime() (can share code in a
-__da_monitor_start())
-
-What do you think?
-
-Thanks,
-Gabriele
-
-> =C2=A0{
-> -=09da_mon->curr_state =3D model_get_initial_state();
-> +=09da_mon->curr_state =3D state;
-> =C2=A0=09da_monitor_init_hook(da_mon);
-> =C2=A0=09/* Pairs with smp_load_acquire in da_monitoring(). */
-> =C2=A0=09smp_store_release(&da_mon->monitoring, 1);
-> @@ -276,6 +278,11 @@ static inline void da_monitor_reset_state_all(void)
-> =C2=A0 */
-> =C2=A0static inline int da_monitor_init(void)
-> =C2=A0{
-> +=09int retval =3D rv_edge_stats_create(rv_this.root_d);
-> +
-> +=09if (retval)
-> +=09=09return retval;
-> +
-> =C2=A0=09da_monitor_reset_state_all();
-> =C2=A0=09return 0;
-> =C2=A0}
-> @@ -287,6 +294,7 @@ static inline void da_monitor_destroy(void)
-> =C2=A0{
-> =C2=A0=09da_monitor_reset_all();
-> =C2=A0=09da_monitor_sync_hook();
-> +=09rv_edge_stats_remove();
-> =C2=A0}
-> =C2=A0
-> =C2=A0#ifndef da_implicit_guard
-> @@ -689,9 +697,11 @@ static inline void da_trace_error(struct da_monitor
-> *da_mon,
-> =C2=A0static inline bool da_event(struct da_monitor *da_mon, enum events =
-event,
-> da_id_type id)
-> =C2=A0{
-> =C2=A0=09enum states curr_state, next_state;
-> +=09da_state_t old;
-> =C2=A0
-> -=09curr_state =3D READ_ONCE(da_mon->curr_state);
-> +=09old =3D READ_ONCE(da_mon->curr_state);
-> =C2=A0=09for (int i =3D 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {
-> +=09=09curr_state =3D da_state_of(old);
-> =C2=A0=09=09next_state =3D model_get_next_state(curr_state, event);
-> =C2=A0=09=09if (next_state =3D=3D INVALID_STATE) {
-> =C2=A0=09=09=09react(curr_state, event);
-> @@ -699,7 +709,8 @@ static inline bool da_event(struct da_monitor *da_mon=
-,
-> enum events event, da_id_
-> =C2=A0=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 model_get_event_na=
-me(event), id);
-> =C2=A0=09=09=09return false;
-> =C2=A0=09=09}
-> -=09=09if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state,
-> next_state))) {
-> +=09=09if (likely(da_state_try_commit(&da_mon->curr_state, &old,
-> +=09=09=09=09=09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 next_state, event)))=
- {
-> =C2=A0=09=09=09if (!da_monitor_event_hook(da_mon, curr_state, event,
-> next_state, id))
-> =C2=A0=09=09=09=09return false;
-> =C2=A0=09=09=09da_trace_event(da_mon,
-> model_get_state_name(curr_state),
-> @@ -737,7 +748,7 @@ static inline bool __da_handle_start_event(struct
-> da_monitor *da_mon,
-> =C2=A0=09if (!da_monitor_enabled())
-> =C2=A0=09=09return 0;
-> =C2=A0=09if (unlikely(!da_monitoring(da_mon))) {
-> -=09=09da_monitor_start(da_mon);
-> +=09=09da_monitor_start(da_mon,
-> da_state_entered(model_get_initial_state()));
-> =C2=A0=09=09return 0;
-> =C2=A0=09}
-> =C2=A0
-> @@ -751,8 +762,9 @@ static inline bool __da_handle_start_run_event(struct
-> da_monitor *da_mon,
-> =C2=A0{
-> =C2=A0=09if (!da_monitor_enabled())
-> =C2=A0=09=09return 0;
-> +=09/* In the initial state since an unknown time: do not time it. */
-> =C2=A0=09if (unlikely(!da_monitoring(da_mon)))
-> -=09=09da_monitor_start(da_mon);
-> +=09=09da_monitor_start(da_mon, model_get_initial_state());
-> =C2=A0
-> =C2=A0=09__da_handle_event_common(da_mon, event, id);
-> =C2=A0
-> diff --git a/include/rv/edge_stat.h b/include/rv/edge_stat.h
-> index 8b99e8520e1e..16c28aedabdd 100644
-> --- a/include/rv/edge_stat.h
-> +++ b/include/rv/edge_stat.h
-> @@ -145,7 +145,10 @@ static void rv_edge_stats_remove(void)
-> =C2=A0=09rv_this_stats_file =3D NULL;
-> =C2=A0}
-> =C2=A0
-> -/* A zero timestamp marks resets, which can run on a different CPU. */
-> +/*
-> + * A zero timestamp marks an unknown entry time: resets can run on a
-> different
-> + * CPU, and da_handle_start_run_event() starts in a state entered earlie=
-r.
-> + */
-> =C2=A0#define da_state_entered(s)=09da_state_pack((s), local_clock())
-> =C2=A0
-> =C2=A0static __always_inline void
-> diff --git a/include/rv/ha_monitor.h b/include/rv/ha_monitor.h
-> index 6e1c7fe5449a..78d1bb80aefd 100644
-> --- a/include/rv/ha_monitor.h
-> +++ b/include/rv/ha_monitor.h
-> @@ -312,7 +312,7 @@ static inline void __ha_monitor_timer_callback(struct
-> ha_monitor *ha_mon)
-> =C2=A0=09if (unlikely(READ_ONCE(ha_mon_destroying)))
-> =C2=A0=09=09return;
-> =C2=A0=09/* Ensure consistent curr_state if we race with da_monitor_reset=
- */
-> -=09curr_state =3D smp_load_acquire(&ha_mon->da_mon.curr_state);
-> +=09curr_state =3D da_state_of(smp_load_acquire(&ha_mon-
-> >da_mon.curr_state));
-> =C2=A0=09if (unlikely(!da_monitor_handling_event(&ha_mon->da_mon)))
-> =C2=A0=09=09return;
-> =C2=A0
-
+Regards,
+Srivatsa
