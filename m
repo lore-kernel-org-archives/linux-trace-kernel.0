@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795791534;
-	b=iTCcZpjtmH+eGYVVaLAsa6sGxACxSH/KBuTb+RkD9suRwHNO9TdMcvro9j7TzcwGAA1l
-	 A8eNB5cwH4Ak0EoxZQzmqKtE5KntEBX3vzGUogCLM/nrjihNLCqYAWnpyfE1rz5rnWFnC
-	 RWiUAiaSZo/JUv3mvjB9cN0Kqkxon3uj1TzR5DMup+LjfGko8AgVaiCou6NFOMPRCyIfM
-	 OXmDMwADTfkM/iAQpMcvmYKzseD0Mv1JYZFrE90DSbo9ODcBbWkF6ETx9Cs6XCU2fgYAC
-	 EGM2Z+QqT1RS17BOuPmokuj74lQzOAwQOC4RYhXze6Kohejc9+yvUVv5OcJO+ud596w==
+	t=1795791649;
+	b=JES70IaXfupOcLL4c4GBwKQZgtYb66om3Vlizd3fPktlmSPPn5PkWef6SOCcMKdZ8/S/
+	 hJmdYk4wsa3jA165UYUyEFplOPm3G2i9WtexeJHilyqm+UUpYhryqPbql2EsBe5bZwXdh
+	 qzYFTTKrph7NUFE7R2Qm4wXDUq3nHGK8kU1VSGOWHxDWcoXcFjnFaNGoQXlpXCKEtILkV
+	 KU/vN3XYlGZ66DsFICs64gRvIVwd0wyN9nf0ZUaXZnimw1Ofeh6aiXwrE5fjvwnSXmnpC
+	 rxBBWRDoG76gKwNo+Yl+ihpp/HER+woECzRdnVczWWwqZUfR04x54kDm0A8Lz+cW83g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795791534;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795791649;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=9EdxXWF0MoQta2ocUjikzENKESzXNTXPeM81HlznVmk=;
-	b=Yg7riaAU0HYgaWBtCf8dfZKBIHbWOjQpFuqMdj857wyjESDw3vIu2GwPPQu29b0WMQgL
-	 863V+RF39QOu909x1lz5Wbxeg/E2LkdP1C/fnVp6xI0HBFvKUjoEmCfH3C0QkVwEISlvt
-	 aSbzhSQ9RfrIUwlsSvtp5OIZkXnUSk1SmtCciQE/zuLHDxw86bEbFxjpqYJ/lhsw34bYP
-	 uGFTudHF4fmVL+huiOsapxZSAMLGjeajwr3Txvd+NhiQ4T7NqBOb9McCA9hdOfyzj5tQy
-	 Kge9LtGAeqX9aTWM9QPBH9KNiO9EU4LvcrbZmw30AdDbwE/UzjserQM8Ow2TXhpGvEg==
+	bh=eLcbyujfUpUezFzf+dyuSUdvtd7PBrhQqklGwJTYvrU=;
+	b=IRPj3VDDvGl7ulybuOMR+pHIEqFO1zeKpoNsBYQv3pSFPO+gO/4wGPDMhuzFCwSE8Usg
+	 1PjAEJT/qa/aQVPkJAA93R1akRoEK0vInBfoX3wvkTI8epXxvuiSXoWM74G84XZi1gSyV
+	 SKAfE7W/528EVlK/5zHrFeek7FO6ctvsw0fpK9esPnYGSPup0I528MaOspomtIPYwpVFl
+	 bqnbXjtswnSnFOVsNJfGnW0PzDDkYbGpYLZ8IWaIAVegY/hitm7cHaiW64RRd1x0NfqN2
+	 3dDeTz+inegVoDwp93INz1nrsLFVHut62bgkrl1bh8OBKLRhhhBIkRMGKQoIfpleIYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bzD5rd0s;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ilC/3IeW";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB35606A31E;
-	Fri, 27 Nov 2026 14:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DEA606A31E;
+	Fri, 27 Nov 2026 15:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bzD5rd0s
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D9A1F00897;
-	Fri, 27 Nov 2026 14:58:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ilC/3IeW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0051F00893;
+	Fri, 27 Nov 2026 15:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795791534;
-	bh=9EdxXWF0MoQta2ocUjikzENKESzXNTXPeM81HlznVmk=;
+	s=k20260515; t=1795791648;
+	bh=eLcbyujfUpUezFzf+dyuSUdvtd7PBrhQqklGwJTYvrU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bzD5rd0s0Z04M6LYUY7OeLU2Arm74Odj6rXpmxsA0tQ5uvzfJbJqxeHU06nMJbm/r
-	 CLkWXeqrqDZQlmjgfqnCNd9EU0noBkWRT9v+21PNsD/GBMm4m2LXMZmQm99QkEQOKJ
-	 YkfZgNH0uhJXwYwlhYz2MxWEUumYNi/9iEaY6kOlTcek7JcfQD8EeFPy8YqV3MH7oI
-	 G3Tw0s5VriahDWUQK/EA963+RvOQx2L67HhYbVmKtnEcQnQe1iP9gDwsp52z1yDSWY
-	 1nV5KVzk8VgWiUtqccPHyvvFzfZfDv2JB6u1q0J+4cYf7CN6uQyrR98OwYyfHPaW+b
-	 e+YwVYoGkcA6w==
-Message-ID: <sashiko-outbox-237651@kernel.org>
+	b=ilC/3IeW/OwB3WPoHlf9D6FzDd5BY8aQuQ5HEIWB9Zpomygj8Y8u8aVnq8wDqESVd
+	 iPhX9IPRqNWIMFfhEC1TNMH2CGHL5f411aolSajFEptnZU1y622XETeDe1CPwXvGRN
+	 0wAncTOlryTyaCCcggFLawODTmIu8ehc1BwZYdU+f7nm+lrJRtksEqRsGKOf9qHIbI
+	 9qQwj8uj3FnYrVJVcKOMLZNTvaDr99QOce93z5AnGW4yNnrIfhrB7/FzNjiBg0MVAX
+	 IWcpinXAYpJs5fTBo39DyaqEx/3oyeTt7Lhqqvf2aOXAgqcQ4lInNzXakVmnlYUsqT
+	 F02xFjf9TG9FQ==
+Message-ID: <sashiko-outbox-237658@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v2 22/35] spi: nxp-xspi: Reject mixed DTR modes
+Subject: Re: [PATCH RFC v2 19/35] spi: nxp-fspi: Reject mixed DTR modes
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.org>, "Liang
  Yang" <liang.yang@amlogic.com>, "Feng Chen" <feng.chen@amlogic.com>, "Xianwei
@@ -61,12 +61,12 @@ To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.or
  =?utf-8?b?c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, "Michal Simek" <michal.simek@amd.com>
 Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Alvin Zhou" <alvinzhou@mxic.com.tw>, "Cheng
  Ming Lin" <chengminglin@mxic.com.tw>, linux-amlogic@lists.infradead.org, imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com, linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, neil.armstrong@linaro.org
-In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-22-5c93f5e5d630@bootlin.com>
+In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-19-5c93f5e5d630@bootlin.com>
 References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
- <20261127-macronix-upstreaming-spi-mem-cycles-v2-22-5c93f5e5d630@bootlin.com>
+ <20261127-macronix-upstreaming-spi-mem-cycles-v2-19-5c93f5e5d630@bootlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 14:58:51 +0000
+Date: Fri, 27 Nov 2026 15:00:45 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -78,27 +78,26 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] spi: nxp-xspi: inconsistent DTR detection in
-  nxp_xspi_supports_op()
+- [Medium] spi: nxp-fspi: missing dummy.dtr check in
+  nxp_fspi_supports_op()
 --
 
-commit ce8d7a3ff5fbe9ec51a6d3a172d4b7891aaf62c1
+commit d17e73cd13692fc9ae92cbd1176efe56ea596829
 Author: Miquel Raynal <miquel.raynal@bootlin.com>
 
-spi: nxp-xspi: Reject mixed DTR modes
+spi: nxp-fspi: Reject mixed DTR modes
 
-This commit updates nxp_xspi_supports_op() to reject SPI memory operations
-that mix DTR and SDR phases.
+This commit adds checks in nxp_fspi_supports_op() to reject spi-mem
+operations that mix SDR and DTR phases.
 
-> diff --git a/drivers/spi/spi-nxp-xspi.c b/drivers/spi/spi-nxp-xspi.c
-> index ccd00c744d186..f2a847b5fd27d 100644
-> --- a/drivers/spi/spi-nxp-xspi.c
-> +++ b/drivers/spi/spi-nxp-xspi.c
-> @@ -385,8 +385,18 @@ static bool nxp_xspi_supports_op(struct spi_mem *mem,
+> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+> index e6fdded67a00e..04999369dd1bd 100644
+> --- a/drivers/spi/spi-nxp-fspi.c
+> +++ b/drivers/spi/spi-nxp-fspi.c
+> @@ -536,8 +536,18 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
 >  				 const struct spi_mem_op *op)
 >  {
->  	struct nxp_xspi *xspi =3D spi_controller_get_devdata(mem->spi->controll=
-er);
+>  	struct nxp_fspi *f =3D spi_controller_get_devdata(mem->spi->controller);
 > +	bool all_true, all_false;
 >  	int ret;
 > =20
@@ -112,35 +111,41 @@ er);
 > +		return false;
 
 [Severity: Medium]
-Does this DTR check match how nxp_xspi_select_mem() detects DTR operations
-and how the dummy phase is validated?
+Should all_true and all_false also check op->dummy.dtr when
+op->dummy.ncycles is non-zero?
 
-In nxp_xspi_select_mem(), op_is_dtr requires dtr to be set on all four
-phases unconditionally:
+Because nxp_fspi_mem_caps sets dummy_cycles =3D true,
+spi_mem_convert_dummy() converts op->dummy.nbytes to op->dummy.ncycles and
+clears op->dummy.nbytes before nxp_fspi_supports_op() and
+spi_mem_default_supports_op() run.  Since spi_mem_default_supports_op()
+only checks op->dummy.nbytes, an operation whose dummy phase has a
+different DTR setting from the command, address, and data phases passes
+validation.
 
-drivers/spi/spi-nxp-xspi.c:nxp_xspi_select_mem() {
+Unlike other drivers that ignore op->dummy.dtr once dummy bytes are
+converted to cycles, this driver still uses op->dummy.dtr to program the
+LUT and to select the controller DTR mode and clock rate:
+
+drivers/spi/spi-nxp-fspi.c:nxp_fspi_prepare_lut() {
     ...
-	/* xspi only support one DTR mode: 8D-8D-8D */
+	if (op->dummy.ncycles) {
+		lutval[lutidx / 2] |=3D LUT_DEF(lutidx, op->dummy.dtr ? LUT_DUMMY_DDR : L=
+UT_DUMMY,
+    ...
+}
+
+drivers/spi/spi-nxp-fspi.c:nxp_fspi_select_mem() {
+    ...
+	/* flexspi only support one DTR mode: 8D-8D-8D */
 	bool op_is_dtr =3D op->cmd.dtr && op->addr.dtr && op->dummy.dtr && op->dat=
 a.dtr;
     ...
 }
 
-Standard Octal DTR templates that omit an address, dummy, or data phase
-(such as SPINAND_PROG_LOAD_8D_8D_8D_OP or SPINAND_WR_EN_8D_0_0_OP) leave
-dtr as false on the unused phase via SPI_MEM_OP_NO_DUMMY,
-SPI_MEM_OP_NO_ADDR, or SPI_MEM_OP_NO_DATA.  Those operations pass
-all_true here, and nxp_xspi_prepare_lut() emits DDR LUT instructions for
-the active phases, but nxp_xspi_select_mem() evaluates op_is_dtr as false
-and calls nxp_xspi_disable_ddr().
-
-In addition, neither all_true nor all_false checks op->dummy.dtr when
-op->dummy.ncycles > 0.  Because this driver sets dummy_cycles =3D true in
-nxp_xspi_mem_caps, spi_mem_convert_dummy() clears op->dummy.nbytes to 0
-before nxp_xspi_supports_op() and spi_mem_default_supports_op() run, so a
-mismatched op->dummy.dtr is not caught by spi_mem_default_supports_op()
-either.
+Also note that all_true permits empty addr or data phases to have .dtr
+set to false, whereas op_is_dtr in nxp_fspi_select_mem() requires all four
+.dtr fields to be true unconditionally.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127-macronix-u=
-pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D22
+pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D19
