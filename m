@@ -1,59 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.246.85.4
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795789593;
-	b=xgnF+VNmnG/TVyl0tLIU3bdQKdedrK0EbwrYClV6zQjDnxtcJH/0zNqHwj9FMEIrrIs+
-	 54h/PkJP6+YtGv0gwAArB6uoYcXe6Pj4bH5c/m8QfOHSM7ijazgi7ZzGLpfbc3AcAklMX
-	 X0Sh/gl4kPjYqhjoIewQ3nGe/F98dIIrjm/X5Wp6QGmB0nN6FufZzq2XQ9zt7wrfPM2Ee
-	 T34ngPM7qbRhWfYA+IHa9jBJv4TuQl18nR15afOilVzD1PBbv1kIc8qt0igN0kkMsHkjz
-	 rAEmgsYYr4Rd9myCwb5AYNyGZ+mHqIorKPL33gm8hhA/s9YPQXag96Q0YVSE99WOVIw==
+	t=1795789600;
+	b=F8F/UP+V+WWyWYAEFh9uc5Pg7bTiFDqXdzkIh+6dYQ6SshlFskDwrZjkuZ4z0xS16Vib
+	 8NJYLu/VNNo0VDWJYLwNS6l1uj06NL2B7fkSxSIxy6OFm+M34JNje+ZAvJXQfxWWurI2K
+	 QDKO8fV94IVTsrcHWg5iKrW9lWEXOQ5jL0UPunfX0o/xFWi/FDBAy1LJSQ4HjrjykVh03
+	 +JY9LexgDBMnfvbcjhyb4gwj+gRNR25iB+9a67C51YLXGIi6RVVcd6YZv1CGpZYOCaOSo
+	 RtHA7PGe4QapuwZmObtYisR/aRi3yiLykQ+UvP0ZiamNKiM+fhjKO4wLFb2xa8SfLGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795789593;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795789600;
 	h=DMARC-Filter:Received:Received:Received:DKIM-Signature:From:Date:
 	 Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Last-TLS-Session-Version;
-	bh=y6mtK80FnUhnlIn0Ql1z1lHX72SknUFV1tBVwuKNXKg=;
-	b=cgscon4TRE/f7FE4j8X0yTZN7IumCTO40AUHg8KoZdPuop+CvlQ03ymJyZ+jrwrrQvOe
-	 lxcMmAPSSFg2UG9E3Z2pihX7NQ1Dk6JX4ArVIAY/upZ1tqmgLnSJGIPIVS8KnQskDX8tE
-	 9kCEZUzc0u+zi7IrZeLDMWnGv/C/Ba1XVyCSSEuTLwtwDsJPH2LrTb/BlwhYCWxMh0Ue1
-	 dOuCuQQ6uGQeJ1oj6s6a077PAk9VLVJuHtszgB4bPnc8yu2oN8AAyLHJixxjLZGVZ10cK
-	 i2y2m9ksVHfZ3rM0xODiuCQJxiEDT99Otx5zGwvo+sJxU9oi91XNkbwDj6EB9tmXIiw==
+	bh=zu0lJYnLrg1ZYSrYUBUQpODtv+uDnit0AU11jYGH7x4=;
+	b=B+vOa8ZRpPNXoIpnLfcprmot4l5Cud+JqJJuH1p1hEUiQriOxKseQ8ggt5fkGIaFrL/v
+	 38NOhrA6fQRjNbdQ1eqRjGqFTI3C9NMUg3WNtmu2FoFOrCsL7HQg+Fgi4Z1tBmcoxNDnU
+	 FhdVZYG6r7GvmOntAJ5BDsT4wUuhDsad7XT9Uprp1l11jKflvWKKnd9uM7hwJelWBbYvA
+	 FIOkcIUtNWPwjIvPW0HfvaIgDNRVUOowHwWaFNbuaf8tE9D3ji6GeMR6sqpIOqNniT5C+
+	 ospLibU4gjbAo2r/ewPBiEVnKORPtVH4G8+oz/wrvGeMI3L+Zd5muhxZl68zJs6XPoA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bootlin.com;
 	spf=pass smtp.mailfrom=bootlin.com;
-	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=lQKM2amg;
+	dkim=pass header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=F5FxOjCN;
 	arc=none smtp.remote-ip=185.246.85.4
 Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571EC6070F4F;
-	Fri, 27 Nov 2026 14:26:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 571EC6070F4F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918CE606A693;
+	Fri, 27 Nov 2026 14:26:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 918CE606A693
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=lQKM2amg
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.a=rsa-sha256 header.s=dkim header.b=F5FxOjCN
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 0AB414E417C9;
-	Fri, 27 Nov 2026 14:26:32 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 3B8854E417CA;
+	Fri, 27 Nov 2026 14:26:38 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id CB1496049C;
-	Fri, 27 Nov 2026 14:26:31 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3AA5D11E68FF4;
-	Fri, 27 Nov 2026 15:26:23 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 064DA6049C;
+	Fri, 27 Nov 2026 14:26:38 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 77B1111E68FD9;
+	Fri, 27 Nov 2026 15:26:29 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1795789589; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1795789594; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=y6mtK80FnUhnlIn0Ql1z1lHX72SknUFV1tBVwuKNXKg=;
-	b=lQKM2amgQFt+qbow/bVvK97yA20xp4kq016KopWI69AOOJPDun1cwWGdh9I1ulznEOXlVe
-	sHTH6JUSlQvNv2Moj+X3Bi9eVGqR9Dg1TTHHJ0C2yf5089OMOSAgquvAMlxnVpOYBr94E4
-	kY5lS5VtmvVpqHCGIB6+7dYK04tbU5U4kWY+tUlDpuUCeuarMnQ0Y1zxZbzcdB0/k/Nyyf
-	rJt4XrXfZwncPj35KuznnrBMDGnMZxBSqShOOuCcrGxMZBP3ozHZUQJ5QJhbF7smvBGjr3
-	KjfjlDP5zKvaLggZerDldAgfVCfbZBPJlKEttuvSQkYTimN7Kkc4XGYjnXl8Rg==
+	bh=zu0lJYnLrg1ZYSrYUBUQpODtv+uDnit0AU11jYGH7x4=;
+	b=F5FxOjCNucjObr+WpOHDrEhkZVlYHLQEzVZPxyFtxTgV4dEIzIKnUN7gxonuOrhSqt9p9e
+	SZgyMm5WF9oF5//bprUzP0wEVKjkXBG8brJ9Lpd2+pqj7JZf5RyAYk4IBBgvnOSkZuJsQR
+	2T8fXKyTJ3NMrC9KryISZCkIhYemuPGhB55+OmsKA+n2yJRZLtZ27dyJXEsPCQDPyK5EBm
+	U1IeQDQJvLpcLC73J9fuABHcni2av3M+s1RZs+HuC62rl4UkR6N3788pNG1i5gujetnks9
+	6qTztonu2XIu+6i9c9N81L82lXcEsgVWSBH5jwUUiIgRSrss6FuwJ4DWNqf6PQ==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Fri, 27 Nov 2026 15:22:45 +0100
-Subject: [PATCH RFC v2 23/35] spi: realtek-rtl-snand: Drop redundant check
+Date: Fri, 27 Nov 2026 15:22:46 +0100
+Subject: [PATCH RFC v2 24/35] spi: rpc-if: Consume dummy cycles directly
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -65,7 +65,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-23-5c93f5e5d630@bootlin.com>
+Message-Id: <20261127-macronix-upstreaming-spi-mem-cycles-v2-24-5c93f5e5d630@bootlin.com>
 References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
 To: Mark Brown <broonie@kernel.org>, Liang Yang <liang.yang@amlogic.com>, 
@@ -105,27 +105,51 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.3
 X-Last-TLS-Session-Version: TLSv1.3
 
-The core already sanitizes the spi-mem operations, this check is
-redundant so let's drop it.
+The controller programs the dummy phase in clock cycles, but the driver
+converts the legacy dummy byte count into cycles. Advertise the
+dummy_cycles capability and use op->dummy.ncycles directly.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/spi/spi-realtek-rtl-snand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-rpc-if.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-realtek-rtl-snand.c b/drivers/spi/spi-realtek-rtl-snand.c
-index 61fe54d8167a..e2394842800b 100644
---- a/drivers/spi/spi-realtek-rtl-snand.c
-+++ b/drivers/spi/spi-realtek-rtl-snand.c
-@@ -54,7 +54,7 @@ static bool rtl_snand_supports_op(struct spi_mem *mem,
+diff --git a/drivers/spi/spi-rpc-if.c b/drivers/spi/spi-rpc-if.c
+index 9a740342d0f7..fb27ee6064c2 100644
+--- a/drivers/spi/spi-rpc-if.c
++++ b/drivers/spi/spi-rpc-if.c
+@@ -32,10 +32,9 @@ static void rpcif_spi_mem_prepare(struct spi_device *spi_dev,
+ 		rpc_op.addr.val = spi_op->addr.val;
+ 	}
+ 
+-	if (spi_op->dummy.nbytes) {
++	if (spi_op->dummy.ncycles) {
+ 		rpc_op.dummy.buswidth = spi_op->dummy.buswidth;
+-		rpc_op.dummy.ncycles  = spi_op->dummy.nbytes * 8 /
+-					spi_op->dummy.buswidth;
++		rpc_op.dummy.ncycles = spi_op->dummy.ncycles;
+ 	}
+ 
+ 	if (spi_op->data.nbytes || (offs && len)) {
+@@ -141,6 +140,10 @@ static const struct spi_controller_mem_ops rpcif_spi_mem_ops = {
+ 	.dirmap_write	= xspi_spi_mem_dirmap_write,
+ };
+ 
++static const struct spi_controller_mem_caps rpcif_spi_mem_caps = {
++	.dummy_cycles = true,
++};
++
+ static int rpcif_spi_probe(struct platform_device *pdev)
  {
- 	if (!spi_mem_default_supports_op(mem, op))
- 		return false;
--	if (op->cmd.nbytes != 1 || op->cmd.buswidth != 1)
-+	if (op->cmd.buswidth != 1)
- 		return false;
- 	return true;
- }
+ 	struct device *parent = pdev->dev.parent;
+@@ -167,6 +170,7 @@ static int rpcif_spi_probe(struct platform_device *pdev)
+ 
+ 	ctlr->num_chipselect = 1;
+ 	ctlr->mem_ops = &rpcif_spi_mem_ops;
++	ctlr->mem_caps = &rpcif_spi_mem_caps;
+ 
+ 	ctlr->bits_per_word_mask = SPI_BPW_MASK(8);
+ 	ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_TX_QUAD | SPI_RX_QUAD;
 
 -- 
 2.56.0
