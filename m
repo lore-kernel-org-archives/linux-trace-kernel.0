@@ -1,131 +1,71 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=158.69.130.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795805906;
-	b=ncQdPjwK0h037YHOMLb9hBeK2jfLUyzrDqVIl/IPop5WrQu4/BYtv2Z/3Egk5BA5Noc1
-	 wwVVnQ1UsmZFmK69ULS4fiGFheF30oYdV5meshvGO7/XMfP7Bb1kmDbDW6eWAW54X+vPz
-	 pblJfo1n8KQQru9rIldBxBq8lI8T8m7Zj08yvwUa0Ac6BZ0arE7HSNtxmfNrK59HkZ6Tm
-	 hSA0QCcA7mA/bwzQRE8riGHHS9yCS6Ayc8ccogDZR9/3g/k8UczvcPoOclG7gwJF4AZvD
-	 1q39kjXp9O/fExp6K9fB0gOAw939LC5s0afh5jKvj/WEPEggH74/fkfVFGtJP2i8d8Q==
+	t=1795805908;
+	b=ojZHVllYeMPMwfa0ItKRLF0Nq9PPnmILDQvudqtTz4gC2Nr59sKectLdQuT2zcr31VoN
+	 cLN3i+6J/h6wvQu4LFCIb3wxlnXoCSyxfMRHRKOG0CO2eguqZy+254zIeZNrD3vem5Fi0
+	 udklIjnlGXky3sAG0KlT7rcA41uq/RKSsGPhZCWjpwwETpj1guJiKYp2f2/3TKGOJrraB
+	 IMuQ+95IrtRsobxualR6OvfQXXZMjVEnVFcFT4moVgDqnhfBPIKTtJle3jcLMBCVndSsf
+	 SqfPDxxY/vNKkjBYmML3ciku1KsAMT49Ec2OcdrDVhTjTXu4XJX8SUe9VcNqEtxLdRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795805906;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795805908;
 	h=DMARC-Filter:DKIM-Signature:Received:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=zuf19/Sm9DL6ZOPD0E1irSSwGTnKZXB6/6sdFafIiyg=;
-	b=wXklM6LRuiB54Urc3vrAfaqBpvhtHOCBDWuLcNKiFBKcM4RTMx1wy1eHaGW8cNGf8Dk3
-	 GGIX94L80+Ri1wK7zKDlRtTuXucunWg05Nt78ycyIHvnFV9B4hJXjViM0W18+8s6qD0rr
-	 VbkIG7HdhcnM9SzCon6BVXppQ0UFym/RGphbR5ZmBX6+WOJUf0TysKej5MrvC6mMFuroq
-	 kMXPXqe8S6QUdzklE7aAKDWQzYTqoBffN4cHU2n+gNz1fVJlczIANKaHwpY5Iop6GlKJi
-	 gz7dcpk602b8kiM/LzTaTT92R9bNtYOo4mMwumG8zShnPIpg/Vb3CuCyZ6+dmP/3sSg==
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=UYAk5OCIDhY0tZYkh0/pBMWL6d4j8z+mQiO9Q3KCzDk=;
+	b=o5RoE5N50/ZNuEwOIfa6EfHZeYkWQRJZkl4JOsyW/nRwGhJ0g5cOiuL5jLBNG+4y6myQ
+	 KvFS5LnxFet+Wc/rzO8dcHSY2A+ZqPX/+yPI9/v2l+4FPLxjU9fTi/O/VSuAMme9Lujxl
+	 SCQh8jB94Powjwz3qPmBt5IOuW8IIhwrn0iI0EKB9OnXBYGY9sYJm0fpEUthex/cOItB4
+	 k4bIli5V3FkvJQGtZnLgGGvyfGStESDzYp11w0lNxGyjVL6lx3TrcmQKf2covQFxzM/3/
+	 xZUdeVnAwcwjRjT/VYppdEZmwTrQ1vGKjIjH1zgSeMZuSs4Zcu3UWg8TLITstuLrlmg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=efficios.com;
 	spf=pass smtp.mailfrom=efficios.com;
-	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=C1em5emX;
+	dkim=pass header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=SNI4So+B;
 	arc=none smtp.remote-ip=158.69.130.18
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC616606A321;
-	Fri, 27 Nov 2026 18:58:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EC616606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701FC60A2600;
+	Fri, 27 Nov 2026 18:58:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 701FC60A2600
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=C1em5emX
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=SNI4So+B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-	s=smtpout1; t=1795805903;
-	bh=zuf19/Sm9DL6ZOPD0E1irSSwGTnKZXB6/6sdFafIiyg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=C1em5emXbpmwbUaychggQSZrT3/kvUnR68z3W0GT1P/KTN19CUjYc2REt7KFklvVF
-	 J8ry+o1VdxlmxoI+X886jiZoEdbjCzH0pgZlg5BvEB4Y6+RxL3+wiFZCoNWiE5hg94
-	 f7LHNRAybdMcAiNE53dIeZ6shefiwO8hFGsCtqfr9BRFRqP3hIkjZpjLniFGxpJTE1
-	 tHV46If6OOv3tjaOmG0aNuRMZ3sxMzj/fRgNPMhfMxRoVKW3Y1oroobsD5q2j9K0bW
-	 m/M98kcEHIDkPJPyzTY5YMyUrYtiXgLO3X72Jba1FZUJUA3zbA4Bz1BjRsuzUVP3j1
-	 wLoVrol/jTNkw==
+	s=smtpout1; t=1795805905;
+	bh=UYAk5OCIDhY0tZYkh0/pBMWL6d4j8z+mQiO9Q3KCzDk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SNI4So+BitHYFar+JbOHww1CKeitCAqdJK/Klo0ZOYcQlaDWsReJ2pr5sLXyylvUl
+	 VDPkd+3EzOKqzpdBg03sXWZg5p4W+1U8YGuxgyk7Rwx1elkwaa0tKGWI2MvIMZkSNp
+	 TrXcAGHQpQr5ofktCUPCEAUtyvWB+BIBjVzydciDutyyzY+DnD9teTYV3M3vf/biDn
+	 LWAJrkgF82R9FwEcFmvQ1bcL3ufgKbS1R7QeJ35ds207R5H9HbTOLxFDwrgXu+Mzls
+	 X4WnAvnVtzZmUpc1gVPZZ1yK/OJlmUU9FfgVLzHZvyUqBJ2FSdd40uBLjcNPtNMHfL
+	 Zcrj4sj9Nhgnw==
 Received: from thinkos.internal.efficios.com (mtl.efficios.com [216.120.195.104])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jbjNv3kpyzXT5;
-	Fri, 27 Nov 2026 13:58:23 -0500 (EST)
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4jbjNx55VDzXmP;
+	Fri, 27 Nov 2026 13:58:25 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Michal Clapinski <mclapinski@google.com>,
-	Andrei Vagin <avagin@gmail.com>,
 	Shuah Khan <shuah@kernel.org>,
 	Aniket Gattani <aniketgattani@google.com>,
+	linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chris Gellermann <christian.gellermann@codasip.com>,
-	Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	John David Anglin <dave.anglin@bell.net>,
-	linux-parisc@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Guo Ren <guoren@kernel.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	linux-openrisc@vger.kernel.org,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-sh@vger.kernel.org,
-	Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	linux-arch@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Andy Lutomirski <luto@kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Boqun Feng <boqun@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	lkmm@lists.linux.dev,
+	"Paul E. McKenney" <paulmck@kernel.org>,
 	bpf@vger.kernel.org,
 	Naveen N Rao <naveen@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 00/16] membarrier: fixes, selftests and documentation
-Date: Fri, 27 Nov 2026 13:58:05 -0500
-Message-ID: <20261127185822.158216-1-mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2 16/16] selftests/membarrier: Check the core serialization of the sync core command
+Date: Fri, 27 Nov 2026 13:58:21 -0500
+Message-ID: <20261127185822.158216-17-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20261127185822.158216-1-mathieu.desnoyers@efficios.com>
+References: <20261127185822.158216-1-mathieu.desnoyers@efficios.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -137,208 +77,347 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series comes from a review of the membarrier system call. The
-review covered the code, its selftests and the fixes applied over
-time. It also covered the barrier and core serialization requirements
-of each architecture.
+MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE promises more than a
+memory barrier. Each running sibling thread of the caller executes a
+core serializing instruction after the call starts, and before it
+runs user-space code again. A thread which is not running executes
+one before it resumes user-space. This supports memory reclaim by a
+JIT compiler.
 
-The series fixes four kernel issues:
+On x86, the kernel serializes the core in the IPI handler and in the
+scheduler. membarrier_test_barrier counts the memory barriers of each
+thread, but not these instructions.
 
- - Patch 1: update the runqueue membarrier state when the scheduler
-   switches from a kernel thread or an exited task which borrowed the
-   mm. MEMBARRIER_CMD_GLOBAL_EXPEDITED no longer skips a registered
-   process.
+Count them as well. These are the instructions, for x86-64:
 
- - Patch 2: report a registration in MEMBARRIER_CMD_GET_REGISTRATIONS
-   only when it completed. An rseq or sync core registration is no
-   longer reported as a private expedited registration as well.
+ - sync_core() in ipi_sync_core(),
+ - the writes to CR3 in switch_mm_irqs_off(),
+ - sync_core() in finish_task_switch().
 
- - Patch 8 and patch 9: add a full memory barrier in switch_mm() for
-   registered processes, on LoongArch and on parisc. The expedited
-   commands need it after the store to rq->curr.
+sync_core() issues SERIALIZE or IRET. An IRET cannot be probed, so the
+instruction before it is probed instead.
 
-Patch 1 and patch 2 were reproduced from user-space on v7.4-rc2.
+The sync core test case then checks two more things:
 
-Patch 8 and patch 9 were found by reading the code and the
-architecture manuals. Feedback from the LoongArch and parisc
-maintainers is welcome.
+ - A call makes each target execute a core serializing instruction
+   in the IPI handler. A check where the target was scheduled out is
+   dropped.
 
-The series fixes and extends the selftests:
+ - A target can be scheduled in after a task of another mm or after
+   a kernel thread. The scheduler then executes a core serializing
+   instruction before the target is scheduled out again.
 
- - Patch 3: rebuild the tests when membarrier_test_impl.h changes.
+These checks are skipped with page table isolation. The kernel then
+serializes the core with the write to CR3 of each return to
+user-space, in entry code which cannot be probed.
 
- - Patch 4: issue the sync core command in the test which is named
-   after it.
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ .../membarrier/membarrier_test_barrier.bpf.c  |  11 +-
+ .../membarrier/membarrier_test_barrier.c      | 102 +++++++++++++++++-
+ .../membarrier/membarrier_test_barrier.h      |   6 ++
+ 3 files changed, 112 insertions(+), 7 deletions(-)
 
- - Patch 5: run the tests on nohz_full kernels, which only lack
-   MEMBARRIER_CMD_GLOBAL.
-
- - Patch 6: add membarrier_test_ipi. It checks which CPUs each
-   expedited command interrupts. Two of its test cases fail without
-   patch 1.
-
- - Patch 7: add membarrier_test_cmd. It checks the command arguments
-   and the registrations across fork, exec and CLONE_VM. Two of its
-   tests fail without patch 2.
-
- - Patch 13: add litmus tests of the memory ordering scenarios, for
-   the Linux kernel memory model. One variant shows the LoongArch and
-   parisc issue.
-
- - Patch 14: add the selftests to the MEMBARRIER SUPPORT entry of
-   MAINTAINERS.
-
- - Patch 15: add membarrier_test_barrier, a stress test for x86-64.
-   BPF programs on kprobes count, for each thread, the memory
-   barriers which membarrier relies on. The test also checks the
-   barriers of the scheduler. Two of its test cases fail without
-   patch 1. It adds no kernel code.
-
- - Patch 16: extend membarrier_test_barrier to the sync core
-   command. It counts the core serializing instructions in the same
-   way.
-
-The series updates the documentation:
-
- - Patch 10: add the missing architectures to the list of barriers
-   after the store to rq->curr.
-
- - Patch 11: describe what the sync core command relies on for x86
-   with FRED and for arm64 with FEAT_ExS.
-
- - Patch 12: remove two stale x86 entry comments.
-
-The sync core requirements were checked against the architecture
-manuals of x86 (Intel SDM and AMD APM), arm, arm64, powerpc, s390 and
-riscv. These are the architectures which support the sync core
-command. No return path to user-space was found to miss its documented
-serialization.
-
-Testing:
-
- - The six membarrier test programs pass in an x86-64 KVM guest
-   with 8 CPUs and lockdep.
-
- - With nohz_full=2-7, the six programs pass. Only the
-   MEMBARRIER_CMD_GLOBAL test is skipped.
-
- - With nosmp and with maxcpus=2, membarrier_test_ipi is skipped
-   because it needs 3 CPUs. membarrier_test_barrier skips the two
-   test cases which need 3 CPUs. The four other programs pass.
-
- - With pti=on, membarrier_test_barrier passes and does not check
-   the core serialization.
-
- - Patch 8 and patch 9 are compile-tested only: LoongArch and parisc
-   (32-bit, SMP), default configuration.
-
- - herd7 reports the expected result for each of the 13 litmus tests.
-
-The series is based on v7.4-rc2.
-
-Changes since RFC v1:
-
- - Patch 15: fix three issues reported by Sashiko in
-   membarrier_test_barrier. The lazy TLB test case now sees the target
-   switch back to its CPU. The test is skipped, instead of failing,
-   on a kernel without CONFIG_BPF_EVENTS or CONFIG_KPROBE_EVENTS. A
-   test case no longer reuses the counter slots of the previous one.
-
- - Patch 16: context changes only.
-
-RFC v1: https://lore.kernel.org/lkml/20261113131903.157186-1-mathieu.desnoyers@efficios.com/
-
-An LLM coding assistant did this work at my request: the review, the
-reproducers, the fixes, the tests and the changelogs. I actively
-steered it and reviewed the result.
-
-Thanks,
-
-Mathieu
-
-Mathieu Desnoyers (16):
-  sched/membarrier: Fix stale runqueue state after a lazy mm switch
-  sched/membarrier: Report only completed registrations
-  selftests/membarrier: Rebuild the tests when their header changes
-  selftests/membarrier: Issue the sync core command in its test
-  selftests/membarrier: Run the tests on nohz_full kernels
-  selftests/membarrier: Test which CPUs the expedited commands interrupt
-  selftests/membarrier: Test command arguments and registration lifetime
-  LoongArch: membarrier: Add full memory barrier in switch_mm()
-  parisc: membarrier: Add full memory barrier in switch_mm()
-  Documentation/membarrier: Update the per-architecture barrier list
-  Documentation/features: Update the membarrier sync core requirements
-  x86/entry: Remove stale membarrier sync core comments
-  selftests/membarrier: Add litmus tests of the memory ordering
-  MAINTAINERS: Add the membarrier selftests to MEMBARRIER SUPPORT
-  selftests/membarrier: Check the memory barriers of each thread
-  selftests/membarrier: Check the core serialization of the sync core
-    command
-
- .../membarrier-sync-core/arch-support.txt     |   35 +-
- Documentation/scheduler/membarrier.rst        |   14 +-
- MAINTAINERS                                   |    1 +
- arch/loongarch/Kconfig                        |    1 +
- arch/loongarch/include/asm/membarrier.h       |   33 +
- arch/loongarch/include/asm/mmu_context.h      |    4 +
- arch/parisc/Kconfig                           |    1 +
- arch/parisc/include/asm/membarrier.h          |   33 +
- arch/parisc/include/asm/mmu_context.h         |    2 +
- arch/x86/entry/entry_32.S                     |    5 -
- arch/x86/entry/entry_64.S                     |    4 -
- arch/x86/include/asm/sync_core.h              |    2 +-
- kernel/sched/core.c                           |   16 +-
- kernel/sched/membarrier.c                     |   32 +-
- kernel/sched/sched.h                          |   15 +
- tools/testing/selftests/membarrier/.gitignore |    6 +
- tools/testing/selftests/membarrier/Makefile   |   20 +
- tools/testing/selftests/membarrier/config     |    9 +
- .../selftests/membarrier/litmus/README        |   52 +
- .../litmus/ipi-after-thread-no-exit-mb.litmus |   36 +
- .../ipi-after-thread-no-handler-mb.litmus     |   36 +
- .../membarrier/litmus/ipi-after-thread.litmus |   47 +
- .../ipi-before-thread-no-entry-mb.litmus      |   37 +
- .../ipi-before-thread-no-handler-mb.litmus    |   37 +
- .../litmus/ipi-before-thread.litmus           |   46 +
- .../litmus/sched-in-no-entry-mb.litmus        |   34 +
- .../membarrier/litmus/sched-in-no-mb.litmus   |   33 +
- .../membarrier/litmus/sched-in-release.litmus |   38 +
- .../membarrier/litmus/sched-in.litmus         |   51 +
- .../litmus/sched-out-no-exit-mb.litmus        |   34 +
- .../litmus/sched-out-no-sched-mb.litmus       |   34 +
- .../membarrier/litmus/sched-out.litmus        |   49 +
- .../membarrier/membarrier_test_barrier.bpf.c  |  173 +++
- .../membarrier/membarrier_test_barrier.c      | 1364 +++++++++++++++++
- .../membarrier/membarrier_test_barrier.h      |   54 +
- .../membarrier/membarrier_test_cmd.c          |  352 +++++
- .../membarrier/membarrier_test_impl.h         |   14 +-
- .../membarrier/membarrier_test_ipi.c          |  739 +++++++++
- 38 files changed, 3443 insertions(+), 50 deletions(-)
- create mode 100644 arch/loongarch/include/asm/membarrier.h
- create mode 100644 arch/parisc/include/asm/membarrier.h
- create mode 100644 tools/testing/selftests/membarrier/config
- create mode 100644 tools/testing/selftests/membarrier/litmus/README
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-after-thread-no-exit-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-after-thread-no-handler-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-after-thread.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-before-thread-no-entry-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-before-thread-no-handler-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/ipi-before-thread.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in-no-entry-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in-no-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in-release.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-in.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-out-no-exit-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-out-no-sched-mb.litmus
- create mode 100644 tools/testing/selftests/membarrier/litmus/sched-out.litmus
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_barrier.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_barrier.h
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_cmd.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_ipi.c
-
-
-base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c b/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
+index 46cfba13f00f..ce18089f8dab 100644
+--- a/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
++++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Count the memory barriers which membarrier relies on, for each
+- * registered thread.
++ * Count the memory barriers and the core serializing instructions which
++ * membarrier relies on, for each registered thread.
+  *
+  * See membarrier_test_barrier.c.
+  */
+@@ -40,6 +40,7 @@ struct {
+ 
+ /* What the scheduler owes to the thread which it switched to. */
+ #define OWES_BARRIER	1
++#define OWES_SYNC_CORE	2
+ 
+ struct cpu_state {
+ 	/* Slot, plus one, of the thread which this CPU last switched to. */
+@@ -111,6 +112,8 @@ int barrier_site(struct pt_regs *ctx)
+ 		slot = state->slot;
+ 		if (mask & (1U << MBT_SWITCH_MM))
+ 			state->owed &= ~OWES_BARRIER;
++		if (mask & (1U << MBT_SYNC_CORE_SWITCH))
++			state->owed &= ~OWES_SYNC_CORE;
+ 	} else {
+ 		slot = slot_of(bpf_get_current_task_btf());
+ 	}
+@@ -131,13 +134,15 @@ int BPF_PROG(sched_switch, bool preempt, struct task_struct *prev,
+ 	/* The CPU leaves the thread which it last switched to. */
+ 	if (state->owed & OWES_BARRIER)
+ 		count(state->slot, 1U << MBT_SCHED_IN_MISSED);
++	if (state->owed & OWES_SYNC_CORE)
++		count(state->slot, 1U << MBT_SYNC_CORE_IN_MISSED);
+ 	count(slot_of(prev), 1U << MBT_SCHED_OUT);
+ 	slot = slot_of(next);
+ 	state->slot = slot;
+ 	state->owed = 0;
+ 	/* The cases which need a barrier after the store to rq->curr. */
+ 	if (slot && next->mm && prev->mm != next->mm) {
+-		state->owed = OWES_BARRIER;
++		state->owed = OWES_BARRIER | OWES_SYNC_CORE;
+ 		count(slot, 1U << MBT_SCHED_IN);
+ 	}
+ 	return 0;
+diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.c b/tools/testing/selftests/membarrier/membarrier_test_barrier.c
+index 88c5dbf5d7c7..082f048541b0 100644
+--- a/tools/testing/selftests/membarrier/membarrier_test_barrier.c
++++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.c
+@@ -36,6 +36,9 @@
+  * must then execute a memory barrier after the store to rq->curr,
+  * before the target is scheduled out again.
+  *
++ * The sync core command is checked in the same way, with the core
++ * serializing instructions.
++ *
+  * The instructions are found by their bytes in the kernel text, which
+  * is read from /proc/kcore. The list is for x86-64. It depends on what
+  * the compiler inlines into the functions it names.
+@@ -94,6 +97,10 @@ struct target_stats {
+ 	atomic_ulong sched_in;
+ 	/* Scheduled in without a barrier after the store to rq->curr. */
+ 	atomic_ulong sched_in_missed;
++	/* Checks where the target did not serialize its core. */
++	atomic_ulong sync_core_missed;
++	/* Scheduled in without a core serializing instruction. */
++	atomic_ulong sync_core_in_missed;
+ };
+ 
+ struct shared {
+@@ -126,6 +133,9 @@ struct target {
+ static struct shared *shared;
+ static int shared_fd;
+ 
++/* The targets of this process also check the sync core guarantee. */
++static bool check_sync_core;
++
+ static int sys_membarrier(int cmd, unsigned int flags, int cpu_id)
+ {
+ 	return syscall(__NR_membarrier, cmd, flags, cpu_id);
+@@ -191,6 +201,11 @@ enum match {
+ 	MATCH_CR3,
+ 	/* Instruction with a LOCK prefix. */
+ 	MATCH_LOCK,
++	/*
++	 * SERIALIZE or IRET, as issued by sync_core(). An IRET cannot be
++	 * probed: the instruction before it is probed instead.
++	 */
++	MATCH_SYNC_CORE,
+ };
+ 
+ struct site {
+@@ -206,15 +221,21 @@ struct site {
+ #define IPI		(1U << MBT_IPI)
+ #define SYSCALL		(1U << MBT_SYSCALL)
+ #define SWITCH_MM	(1U << MBT_SWITCH_MM)
++#define SYNC_CORE	(1U << MBT_SYNC_CORE)
++#define SYNC_CORE_SWITCH (1U << MBT_SYNC_CORE_SWITCH)
+ 
+ static const struct site sites[] = {
+ 	{ "ipi_mb", MATCH_MB, IPI },
+ 	{ "ipi_sync_core", MATCH_MB, IPI },
++	{ "ipi_sync_core", MATCH_SYNC_CORE, SYNC_CORE },
+ 	{ "ipi_rseq", MATCH_MB, IPI },
+ 	{ "membarrier_global_expedited", MATCH_MB, SYSCALL },
+ 	{ "membarrier_private_expedited", MATCH_MB, SYSCALL },
+-	/* Switch to another mm: write to CR3. It is a full barrier. */
+-	{ "switch_mm_irqs_off", MATCH_CR3, SWITCH_MM, true },
++	/*
++	 * Switch to another mm: write to CR3. It is a full barrier and
++	 * it is core serializing.
++	 */
++	{ "switch_mm_irqs_off", MATCH_CR3, SWITCH_MM | SYNC_CORE_SWITCH, true },
+ 	/* Switch to the mm which the CPU kept in lazy TLB mode: smp_mb(). */
+ 	{ "switch_mm_irqs_off", MATCH_MB, SWITCH_MM, true },
+ 	/*
+@@ -222,6 +243,8 @@ static const struct site sites[] = {
+ 	 * locked instruction of this function counts as well.
+ 	 */
+ 	{ "finish_task_switch", MATCH_LOCK, SWITCH_MM, true },
++	/* membarrier_mm_sync_core_before_usermode() */
++	{ "finish_task_switch", MATCH_SYNC_CORE, SYNC_CORE_SWITCH, true },
+ };
+ 
+ struct probe {
+@@ -320,6 +343,7 @@ static void scan_function(const struct site *site, const struct ksym *sym,
+ {
+ 	unsigned char *text;
+ 	size_t i, left;
++	int32_t imm;
+ 
+ 	text = malloc(size);
+ 	if (!text || !read_kernel(sym->addr, text, size)) {
+@@ -351,6 +375,24 @@ static void scan_function(const struct site *site, const struct ksym *sym,
+ 			if (insn[0] == 0xf0)
+ 				probe_insn(site, sym, addr);
+ 			break;
++		case MATCH_SYNC_CORE:
++			/* SERIALIZE is 0f 01 e8. */
++			if (left >= 3 && insn[0] == 0x0f && insn[1] == 0x01 &&
++			    insn[2] == 0xe8) {
++				probe_insn(site, sym, addr);
++				break;
++			}
++			/*
++			 * iret_to_self() is "pushq $1f; iretq; 1:". Probe the
++			 * push.
++			 */
++			if (left < 7 || insn[0] != 0x68 || insn[5] != 0x48 ||
++			    insn[6] != 0xcf)
++				break;
++			memcpy(&imm, insn + 1, sizeof(imm));
++			if (imm == (int32_t)(addr + 7))
++				probe_insn(site, sym, addr);
++			break;
+ 		}
+ 	}
+ 	free(text);
+@@ -630,8 +672,9 @@ static bool check_call(const uint64_t *counters, struct target_stats *stats)
+ 	unsigned long done = atomic_load(&shared->done);
+ 	uint64_t ipi = counter(counters, MBT_IPI);
+ 	uint64_t sched_out = counter(counters, MBT_SCHED_OUT);
++	uint64_t sync_core = counter(counters, MBT_SYNC_CORE);
+ 	unsigned long started = atomic_load(&shared->started);
+-	bool by_ipi, scheduled;
++	bool by_ipi, scheduled, serialized;
+ 	int spins = 0;
+ 
+ 	/* A call is in flight. */
+@@ -643,6 +686,7 @@ static bool check_call(const uint64_t *counters, struct target_stats *stats)
+ 	}
+ 	by_ipi = counter(counters, MBT_IPI) != ipi;
+ 	scheduled = counter(counters, MBT_SCHED_OUT) != sched_out;
++	serialized = counter(counters, MBT_SYNC_CORE) != sync_core;
+ 	if (scheduled) {
+ 		atomic_fetch_add(&stats->by_sched, 1);
+ 		return true;
+@@ -654,6 +698,8 @@ static bool check_call(const uint64_t *counters, struct target_stats *stats)
+ 		atomic_fetch_add(&stats->by_ipi, 1);
+ 	else
+ 		atomic_fetch_add(&stats->missed, 1);
++	if (check_sync_core && !serialized)
++		atomic_fetch_add(&stats->sync_core_missed, 1);
+ 	return true;
+ }
+ 
+@@ -664,7 +710,8 @@ static void run_target(const struct target *target)
+ 	const uint64_t *counters;
+ 	long deadline = now_ms() + target->ms;
+ 	unsigned long checks = 0;
+-	uint64_t first_ipi, first_sched_in;
++	uint64_t first_ipi, first_sched_in, first_sync_core_missed;
++	uint64_t first_sched_out;
+ 
+ 	/*
+ 	 * Register before moving to the CPU. The BPF program then sees
+@@ -681,6 +728,18 @@ static void run_target(const struct target *target)
+ 	atomic_fetch_add(&shared->ready, 1);
+ 	while (!atomic_load(&shared->registered) && !atomic_load(&shared->stop))
+ 		sched_yield();
++	/*
++	 * The scheduler serializes the core of a registered process
++	 * only. The target may have been scheduled in before the
++	 * registration. So wait until it is scheduled out, and count
++	 * from there.
++	 */
++	first_sched_out = counter(counters, MBT_SCHED_OUT);
++	while (check_sync_core &&
++	       counter(counters, MBT_SCHED_OUT) == first_sched_out &&
++	       !atomic_load(&shared->stop))
++		usleep(1000);
++	first_sync_core_missed = counter(counters, MBT_SYNC_CORE_IN_MISSED);
+ 	first_ipi = counter(counters, MBT_IPI);
+ 	first_sched_in = counter(counters, MBT_SCHED_IN);
+ 	while (!atomic_load(&shared->stop)) {
+@@ -700,6 +759,10 @@ static void run_target(const struct target *target)
+ 			 counter(counters, MBT_SCHED_IN) - first_sched_in);
+ 	atomic_fetch_add(&stats->sched_in_missed,
+ 			 counter(counters, MBT_SCHED_IN_MISSED));
++	if (check_sync_core)
++		atomic_fetch_add(&stats->sync_core_in_missed,
++				 counter(counters, MBT_SYNC_CORE_IN_MISSED) -
++				 first_sync_core_missed);
+ }
+ 
+ static void *target_thread(void *arg)
+@@ -826,6 +889,9 @@ static void sum_stats(int first, int nr, struct target_stats *sum)
+ 		sum->ipis += atomic_load(&stats->ipis);
+ 		sum->sched_in += atomic_load(&stats->sched_in);
+ 		sum->sched_in_missed += atomic_load(&stats->sched_in_missed);
++		sum->sync_core_missed += atomic_load(&stats->sync_core_missed);
++		sum->sync_core_in_missed +=
++			atomic_load(&stats->sync_core_in_missed);
+ 	}
+ }
+ 
+@@ -838,6 +904,8 @@ static void sum_stats(int first, int nr, struct target_stats *sum)
+ 	       __sum.by_ipi, __sum.by_sched, __sum.ipis);		\
+ 	EXPECT_EQ(__sum.missed, 0);					\
+ 	EXPECT_EQ(__sum.sched_in_missed, 0);				\
++	EXPECT_EQ(__sum.sync_core_missed, 0);				\
++	EXPECT_EQ(__sum.sync_core_in_missed, 0);			\
+ 	EXPECT_GT(__sum.by_ipi + __sum.by_sched + __sum.missed, 0);			\
+ } while (0)
+ 
+@@ -919,8 +987,34 @@ TEST(private_expedited)
+ 		     MEMBARRIER_CMD_PRIVATE_EXPEDITED);
+ }
+ 
++/*
++ * With page table isolation, the kernel serializes the core with the
++ * write to CR3 of each return to user-space. This write is in the entry
++ * code, which cannot be probed.
++ */
++static bool page_table_isolation(void)
++{
++	char *line = NULL;
++	bool pti = false;
++	size_t len = 0;
++	FILE *f;
++
++	f = fopen("/proc/cpuinfo", "r");
++	if (!f)
++		return false;
++	while (!pti && getline(&line, &len, f) >= 0)
++		pti = !strncmp(line, "flags", 5) &&
++		      (strstr(line, " pti ") || strstr(line, " pti\n"));
++	free(line);
++	fclose(f);
++	return pti;
++}
++
+ TEST(private_expedited_sync_core)
+ {
++	check_sync_core = !page_table_isolation();
++	if (!check_sync_core)
++		TH_LOG("page table isolation: core serialization not checked");
+ 	test_private(_metadata,
+ 		     MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE,
+ 		     MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE);
+diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.h b/tools/testing/selftests/membarrier/membarrier_test_barrier.h
+index d615ad1d9e8a..7c31d8cba544 100644
+--- a/tools/testing/selftests/membarrier/membarrier_test_barrier.h
++++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.h
+@@ -24,6 +24,12 @@ enum {
+ 	 * the scheduler executed no memory barrier in between.
+ 	 */
+ 	MBT_SCHED_IN_MISSED,
++	/* Core serializing instruction of the membarrier IPI handler. */
++	MBT_SYNC_CORE,
++	/* Core serializing instruction of the scheduler. */
++	MBT_SYNC_CORE_SWITCH,
++	/* Like MBT_SCHED_IN_MISSED, for a core serializing instruction. */
++	MBT_SYNC_CORE_IN_MISSED,
+ 	MBT_NR_COUNTERS,
+ };
+ 
 -- 
 2.47.3
 
