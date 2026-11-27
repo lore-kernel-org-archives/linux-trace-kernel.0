@@ -1,89 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795791831;
-	b=kPXCX4dgY08GvbeQBBlqdAXNfF3AVjrGaffEHRLhgcQaQ4hhjE8fE1lDh6e87Lb7Mh2m
-	 lLiXjC15QIY4zXcBdl86d8Bf82lTzM/gST9o66d9oXf9Ejc+unF5g2AJp2B38NRea8PlQ
-	 M+Dx8MSu6RKJWQJTAoXoxCheLD0EK8KxXieKX3nNfp2XJPOJCrwojDWGwqFYv+SL52aX4
-	 mIM5O/ToURsaxC1EMpSJkmRRTTDz5jYZOpNantsi40r2IPow9bhOUV/ykSUmXl213xWVi
-	 F2CgZUOem5gkZtoaLC4Mw287+AZADsH2cGVAH1Mwat+kslMF+QMtK2xMG7cKLxF9UWQ==
+	t=1795792266;
+	b=ULySbtJQ3ySxlmXNQKFx/zDItgk//JgzyfirIh6bLBmM2uZl1fYE/5lVEZQpO/erlPqk
+	 gt1Wkeae+sSO+5Jjruj3MGkf7k7H5palocYYiXsIesJoLcvq5nXjV3DTcrUHQCJrIQ3xi
+	 eYgnJ5OjUON1/Aip0DWoW1R2Nml1iYgeF4mCzwhdK4qUuBTpqed/Kz6IJzC5VMMRwcOqJ
+	 GvUVpo+CW2OPT2TDN54tBJIsI9RxTv2mQ4b9JO+hKAPgBrX4CJ0rh/IBDpJpJysnkcZ9z
+	 7K53y6bOB5n6SjefRNEXl+p5df0EcxcSz7b+o4u2feWbJGulG6wRHASVnfMWDuEiGpw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795791831;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 X-Cookie;
-	bh=HTsNEFdag3FLow13gNwrWPqr9RuSS6VGPBj7nBJXbBs=;
-	b=ZprmEVf2v8K0RkAYi7LcIYjhLebk4UOQIgzBd3+Fr2LDP3THUx09sjEzpL+N6D50U/A2
-	 DLmNhCMxvhpLmpj+PZfDAStbiFc7FAVMdqZWqrh/QrbUwlPAJ5sMdq9E6EVvMapm9N7t9
-	 AIwwwPbvdeM1P+QjQ1smzGS20A72Q0BnLJDqBQ1unicqZwsoDg4UeFkP2TN/WgIXab5D1
-	 ftlZWzMBRYdb/4P2gSTYlFxwryRYL39Nf/5akuPCPdeY0hIPFbcuL/5wnsm3rQP6muWZi
-	 S0rhLXWNEBj/VPxoKfBlHbA8AClVql5TWz46Md/OC8A26YtZK8L2kon5oHQy+Z6HaOQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795792266;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=8uX5IooKwTnwk7L5O4VKisImlvv7mTHG1V1iBIN1KTU=;
+	b=5ECioB20ALFYw4YlJrlCZsw1xmWXWqXsU48v062XAAQQjVPWzXj89HDCCHjTlzfobKu9
+	 74ARFlW5THufvfcEquORinmEKifASYNuYdI44B1Rb1Okd74eGtfaNFGcEwKkzD2X1i5Ls
+	 XcMr+Fh4RwGWzCZV3i9+ncMzhVtiiyDWU/x4QtPyV/LvTwifhzd4ney5z5hiuJeX/N11L
+	 qBM6l3dePMoAWHLpLc7upEDUZHjbAau41Sk1QQT7Z7AfSKf1CnUVFTEAzuqAxhnLUV3SS
+	 +Wngx1PkFPephEgalt9WksVl+4dgyrZjgz1nz3ITz9Tf3DtauhyuVbmSODVoYB36QXA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="AfXQ5I/n";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J8LIvOBt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F6C606A31F;
-	Fri, 27 Nov 2026 15:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B133D606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 15:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AfXQ5I/n
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 283F41F000C1;
-	Fri, 27 Nov 2026 15:03:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J8LIvOBt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 041461F00898;
+	Fri, 27 Nov 2026 15:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795791830;
-	bh=HTsNEFdag3FLow13gNwrWPqr9RuSS6VGPBj7nBJXbBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AfXQ5I/ncWiUS+XG5a6ulZQQLbXKF9UOyn/8RazJyU2fzEiQ4HydxY3JSQhY4TJff
-	 FbN11xcrwu7edOw7Htf9HdJTaQgpNqszcygI0dh65AT485sjpGcQy+e85Ms3ps+/3b
-	 DqyrkFPIbE3pB6hVtk4kue5cNJTfWm8tIYqxhe6hXMJ/xVRnegq/bkpUqM9Tn6AMjG
-	 UFtgoAopN9wh6AfTxC4paoeTrxA2T9sLBPXQTpRAd9LBKcFvH6Sn3Vf3Qz6KxusdpA
-	 ehn8sp2OjFMK0kNQaL/Xfiw7reDTExIgn7VzpizK5aD3olmzW4CrQNWgyjU9bgO+e+
-	 SO+pQ4xd/deyA==
-Date: Fri, 27 Nov 2026 15:03:39 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Liang Yang <liang.yang@amlogic.com>, Feng Chen <feng.chen@amlogic.com>,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>, Han Xu <han.xu@nxp.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Haibo Chen <haibo.chen@nxp.com>, Jyan Chou <jyanchou@realtek.com>,
-	Yu-Chun Lin <eleanor.lin@realtek.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Takahiro Kuwano <takahiro.kuwano@infineon.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Yogesh Gaur <yogeshgaur.83@gmail.com>,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>,
-	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Michal Simek <michal.simek@amd.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Alvin Zhou <alvinzhou@mxic.com.tw>,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-amlogic@lists.infradead.org, imx@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH RFC v2 00/35] spi: spi-mem: Express the dummy phase using
- cycles when relevant
-Message-ID: <d95e931f-0521-42db-85ac-a4d1fc4018fd@sirena.org.uk>
-References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
+	s=k20260515; t=1795792266;
+	bh=8uX5IooKwTnwk7L5O4VKisImlvv7mTHG1V1iBIN1KTU=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=J8LIvOBtNEPJqv3oUxJRIuChmr0WRf5u9lftJ67EZ7ty8I+VfRDKLMhyMXMnf9LWl
+	 4dtSyTZ1xeDZtoj+SOerz3P9QBdWYVFeitDSob6RcPYmaorvy/PZ68XVPwyoQLpuMu
+	 L0/HDVYXFJyFSvvUJhPWlAeyN2fdHpFWTTSneUU5Seq+B9GOgRWGoS2VFApdLhLD9p
+	 ci/NMUDuXtWtg5Kd1wniLgUVTVDuj7tBEAqVhUc3i68SkbHZzRaYxjbYCjocboo46J
+	 j+yTOkaknS7qigCCYQY2zEh73Y6ykgZJ2jU2GNmWb4gtCpwwPU2kO+FyeKGIHjKs1H
+	 Zcl6jHKWMWMrQ==
+Message-ID: <sashiko-outbox-237682@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH 2/5] bootconfig: Support stacked initrd bootconfigs
+ and bootconfig= selection
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261127144614.61194-3-mhiramat@kernel.org>
+References: <20261127144614.61194-1-mhiramat@kernel.org>
+ <20261127144614.61194-3-mhiramat@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 27 Nov 2026 15:11:05 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -92,54 +59,168 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="EKfE0NJTn63pxWNZ"
-Content-Disposition: inline
-In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
-X-Cookie: Sank heaven for leetle curls.
 
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] bootconfig: unmatched bootconfig=3D selector bypasses
+  CONFIG_BOOT_CONFIG_FORCE
+- [Low] bootconfig: wrong config blamed for unclosed brace in
+  xbc_parse_tree()
+--
 
---EKfE0NJTn63pxWNZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit d486115d0ecb79c7d4d59dbde4c3a203ebf39848
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-On Fri, Nov 27, 2026 at 03:22:22PM +0100, Miquel Raynal wrote:
+bootconfig: Support stacked initrd bootconfigs and bootconfig=3D selection
 
-> ---
-> base-commit: 19d1b4de6d37bccecc3ad9144d279f1baa405eb1
-> change-id: 20261125-macronix-upstreaming-spi-mem-cycles-103274708fec
-> prerequisite-message-id: <20261126-macronix-upstreaming-spi-driver-fixes-v1-0-ca8e924cca1b@bootlin.com>
-> prerequisite-patch-id: 2f68de4139876dfa8e57afb65b429a69628214ab
-> prerequisite-patch-id: 7182a6b4808193323664f79c226ae2a57104b473
-> prerequisite-patch-id: 34a99e8e6644d1db0978b5aa6ca90342a42561f8
-> prerequisite-patch-id: cc060f58179f09af4593df6909b958a29bf11cb2
-> prerequisite-patch-id: c5a7a78ef01696c25c10b6d2968c0b65ab0f4ec6
-> prerequisite-patch-id: 340ee3d69095259d6141c017ea59c0c137d353b5
-> prerequisite-patch-id: 1629dd27a1f0b1d6622199cc7603dad4b17d29b6
-> prerequisite-patch-id: 29bc9e59b1d732a00cd65ba1d73270e051898fd7
-> prerequisite-patch-id: 7a028831f1df214099241bfac0dc290e2f799276
-> prerequisite-patch-id: c28c78ff316ce2ac8c1b6151367662ca8039acd3
-> prerequisite-patch-id: eea3b5adeb19b753a14bf03c5114eb407566c248
-> prerequisite-patch-id: 87bd95813776fe216ac157f9fad23586c71db87b
+This commit adds support for unpacking up to 32 stacked bootconfig trailers
+from an initrd image and selecting which entries to merge via the
+bootconfig=3D kernel command-line parameter.
 
-Please do not stack serieses on top of of each other like this,
-especially not enormous ones like this.  It makes it far too difficult
-to track what is going on.
+> diff --git a/init/main.c b/init/main.c
+> index f147803450513..a539eb5b0cd12 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+[ ... ]
+> @@ -475,16 +575,35 @@ static void __init setup_boot_config(void)
+>  		return;
+>  	}
+> =20
+> -	ret =3D xbc_init(data, size, &msg, &pos);
+> +	report_bad_boot_configs(cfgs, count, total);
+> +
+> +	if (!bootconfig_found && IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE))
+> +		cfgs[0].enabled =3D true;
+> +
+> +	for (i =3D 0; i < count; i++) {
+> +		if (cfgs[i].enabled && cfgs[i].data) {
+> +			any_enabled =3D true;
+> +			break;
+> +		}
+> +	}
+> +	if (!any_enabled)
+> +		return;
+> +
+> +	ret =3D xbc_init_configs(cfgs, count, &msg, &pos, &err_idx);
+>  	if (ret < 0) {
+> -		if (pos < 0)
+> +		if (err_idx >=3D 0)
+> +			pr_err("Failed to parse bootconfig [%d%s%.*s]: %s at %d.\n",
+> +			       err_idx, cfgs[err_idx].name_len ? ":" : "",
+> +			       (int)cfgs[err_idx].name_len,
+> +			       cfgs[err_idx].name, msg, pos);
 
---EKfE0NJTn63pxWNZ
-Content-Type: application/pgp-signature; name="signature.asc"
+[Severity: Low]
+Can this blame an earlier bootconfig block when a later overlay leaves a
+brace unclosed on an existing key?
 
------BEGIN PGP SIGNATURE-----
+When an overlay reopens a key that was already created by an earlier
+block, __xbc_add_key() reuses the existing xbc_node via find_match_node()
+and __xbc_open_brace() pushes that node's index onto open_brace[].  If the
+brace is left unclosed at the end of the overlay, xbc_parse_tree() reports
+the error at xbc_node_get_data(n):
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmsJm8oACgkQJNaLcl1U
-h9Dqkgf9E0bJ2UXkjbckVvjHc+7mjSLOnT6yLtoLsCIaplWfF3H7hanJ7Crja+w9
-0NL1DSaqeHjHuahV3QcpGdIcxsNNFpHiqU/S/hCxVjPLmFGFaoBD79xppeSPeP0J
-laUs2W3a2Z/DHt4/whYH6QyMKF3UbJe9uH1VjXixiGQ4ZEuXX1mzwUnQq9Oa650k
-wu6xRgXl0C/Ts8LRbg4vwtf/AelEaDGshnkWfcszi/b0hgwIgcvYWo7XNdNcknb/
-EU4JBHGO5mbrmR4P6t5ABa+wD4LeaUCFP2Trov9vSRC14lL0hh9X8TpKLt4/B6wF
-OdsSR/Ry9PuwuhvrMT5bEtcLFpv27A==
-=8Hf0
------END PGP SIGNATURE-----
+lib/bootconfig.c:xbc_parse_tree() {
+    ...
+	if (!ret && brace_index) {
+		n =3D &xbc_nodes[open_brace[brace_index - 1]];
+		ret =3D xbc_parse_error("Brace is not closed",
+				      xbc_node_get_data(n));
+	}
+    ...
+}
 
---EKfE0NJTn63pxWNZ--
+Because xbc_node_get_data(n) points into the slice that first defined the
+key, xbc_init_configs() maps xbc_err_pos back to that earlier block's
+err_idx and byte offset.
+
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index fe27e72c9ee54..44177b7c08660 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+> @@ -115,33 +115,54 @@ bool __init xbc_embedded_cmdline_applied(void)
+>  }
+>  #endif	/* CONFIG_CMDLINE_FROM_BOOTCONFIG */
+> =20
+> -/* parse_args() callback: flag when the "bootconfig" parameter is presen=
+t. */
+> -static int __init bootconfig_optin(char *param, char *val,
+> -				   const char *unused, void *arg)
+> +struct xbc_cmdline_select_ctx {
+> +	struct xbc_config *cfgs;
+> +	int count;
+> +	bool seen;
+> +	bool active;
+> +	bool warn;
+> +};
+> +
+> +/* parse_args() callback: track opt-in and update enabled bootconfig ent=
+ries. */
+> +static int __init xbc_cmdline_select_cb(char *param, char *val,
+> +					const char *unused, void *arg)
+>  {
+> -	if (!strcmp(param, "bootconfig"))
+> -		*(bool *)arg =3D true;
+> +	struct xbc_cmdline_select_ctx *ctx =3D arg;
+> +
+> +	if (strcmp(param, "bootconfig"))
+> +		return 0;
+> +
+> +	if (!val) {
+> +		ctx->active =3D true;
+> +	} else if (*val =3D=3D '\0') {
+> +		ctx->active =3D false;
+> +	} else if (*val =3D=3D '+') {
+> +		if (!ctx->seen || val[1] !=3D '\0')
+> +			ctx->active =3D true;
+> +	} else {
+> +		ctx->active =3D true;
+> +	}
+> +
+> +	if (ctx->cfgs)
+> +		__xbc_enable_configs(ctx->cfgs, ctx->count, val,
+> +				     &ctx->seen, ctx->warn);
+> +	else
+> +		ctx->seen =3D true;
+> +
+>  	return 0;
+>  }
+[ ... ]
+> +bool __init bootconfig_cmdline_requested(const char *boot_cmdline, int *=
+end_offset)
+> +{
+> +	struct xbc_config emb =3D { .name =3D "", .name_len =3D 0, .enabled =3D=
+ false };
+> +	const char *data;
+> +	size_t size;
+> +	bool active;
+> +
+> +	data =3D xbc_get_embedded_bootconfig(&size);
+> +	if (data && xbc_parse_id_header(data, size, &emb) < 0) {
+> +		emb.name =3D "";
+> +		emb.name_len =3D 0;
+> +	}
+> +
+> +	active =3D xbc_parse_cmdline_bootconfig(boot_cmdline, &emb, 1,
+> +					      end_offset, false);
+> +	if (IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE) && !active)
+> +		return true;
+> +
+> +	return active && emb.enabled;
+> +}
+
+[Severity: Medium]
+Does an unmatched bootconfig=3D<sel> parameter bypass
+CONFIG_BOOT_CONFIG_FORCE=3Dy instead of falling back to index 0?
+
+xbc_cmdline_select_cb() sets ctx->active =3D true for any non-empty val even
+when __xbc_enable_configs() finds no matching entry and leaves every
+cfgs[i].enabled set to false.  Because active (and bootconfig_found in
+setup_boot_config()) is true while no config is enabled, the
+CONFIG_BOOT_CONFIG_FORCE fallback (!active / !bootconfig_found) is skipped
+in both bootconfig_cmdline_requested() and setup_boot_config(), so no
+bootconfig is applied at all.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127144614.6119=
+4-1-mhiramat@kernel.org?part=3D2
