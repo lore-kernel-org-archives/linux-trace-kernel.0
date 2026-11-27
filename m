@@ -1,100 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.176
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795822387;
-	b=lVhwDuniD8LNORMqNphT/AEfJfzySY6mLFsIZHOQ6zT6t7lSXmk93OLA/u0dXqriSW1O
-	 iCScM/p1gkTV55eX38nNME0YRalTuiD8KXHeon/M+C0WKZxzSW2AfDtla8+oDho8u8Ap8
-	 EGjzSjYYdC5TIgb7bIyHkMOyZw5eva5yYYcdZwqDwEIXBbfWZ/mISa3aEBj153jLSI43h
-	 y2AuvuTtUS2i2L5NM+y6WqRC/1hrQFnLa1Q1U7dXzZDbugN/NFVioMTGx24nccWD4DbgM
-	 wElYIXBMlStIWUj1xV3FOCGnhatbzDXMQ77tdJZ+rSUw8W8J0aH070X7eV5EdmbovVA==
+	t=1795823144;
+	b=IFReygGKsK+Kc2V87AvsAmfJ9h5K77bp6ZVypnPTwEio+LuxwxzK5McmOKiQQjuIrpY5
+	 7WyYVDn25KCJtFqMaQ0WRi8rvvGFMGwhlgaO+G0MaBEBkceIQUruFQYRgBRjG1U9aCZoJ
+	 MDrwzzVaBp+hBaZQ3X6EcnZEauRzH7pXjyZ9DHuArbsGHUpcOU8JcDo7m1t8pz5TrZ3Af
+	 mYr2JD3Zo6TkQEvjSUeTXhhRFhP2K+n7BskvDehBTxxkhv868iPwnjkpluHd2817ImSYp
+	 er7aMmdHmIsbaKF4ayiDtJXbbKko6cXQnvUQZEw/xA9NgVxiUm9nKVUVVpbxujfZPWA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795822387;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795823144;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Content-Type:Date:Message-Id:Subject:From:To:Cc:In-Reply-To:
+	 Content-Type:Date:Message-Id:To:Cc:Subject:From:In-Reply-To:
 	 References:Content-Transfer-Encoding:MIME-Version;
-	bh=Hgp2tkog+fmNuQ20vBF7F2LaDTU6lyjZR93nHU1ofUc=;
-	b=vZBKx4OGVPlmbp23hAaORVZiRlVwPXyhMs54M7GEWeHsI4KTspWLs6h7h0mTGgMV1SkT
-	 vjgno16bCvZeijdvewGP5/xFZqR39UNMw5dR5dAu0sAHEqhjzkvbiVBBmwsaPu0lOZHG/
-	 Yd6P2+chF+XksZPoJbaizaDJYMvaNz7fQPEBEbSVc60h9PNBG8zFW6LFZ/mEWm0LNHDAs
-	 sx+NQlUCw9EZXjDrRJPUYzw0kRW/O1I+oJyj6uw6anByaxhW5QEq9ksYeW6eRdqXZhqf9
-	 H4iYE4O7/BLrv6ayGIX39KY3uHm3Md/zR3JoWCu2YNkOVcyfx5MBTjCXJnfONOqzTZQ==
+	bh=0JYQL+cloTOFKXdKvvfoQThZrj8EkD9DkZga/ImDFNc=;
+	b=uDyVXR6GsSCVYDdk+MfgEq9SRh+XiutF/e5yc/8an8VYCev2jqaHJ7BvBoxH04xLTSl6
+	 PEmYMgxRs+CZIjd5jCTqWacljkCNrvBiLULqSCyiy7wkEb53UIM2RLw/A81mpk5D8T5ir
+	 YZyNRX5Lho0L5s2D+Ip4OU8RG38x2Jffw/VN7bA/tcxiax1aQsOn5UJPFbMswIf3PEK1S
+	 loEm/eApMiWhYdMQf6/qIEFlrDAqx7PBwgugHU1wCxlarqRtPCWKyie05jMUQjfU2SrXC
+	 05rsOohCnB1ZsyBlzHFBbs4Cra5m5KNSjbilPt2rQDN/SqBMLu6RUAEYBIm9qowb+Xw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dLplWFMh;
-	arc=none smtp.remote-ip=209.85.210.171
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lE9qoqAA;
+	arc=none smtp.remote-ip=209.85.214.176
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211DC606A31C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 23:33:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 211DC606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2502A606A31F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 23:45:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2502A606A31F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=dLplWFMh
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8b6b22be970so3287804b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 15:33:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=lE9qoqAA
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2f02ee04378so66933505ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 15:45:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795822386; x=1796427186; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795823143; x=1796427943; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:from
+         :subject:cc:to:message-id:date:content-type:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Hgp2tkog+fmNuQ20vBF7F2LaDTU6lyjZR93nHU1ofUc=;
-        b=dLplWFMhn5q/YrwEE01ZyG4IzSFVnYy6mbRwNzGE7tp9BPq2lMrFLxuA/Q8bJ8QxR6
-         scV1e5ZDWT5xDpZITkXqVWP6dWPT88BOW9GsOrEjgKzVjovkEyEWElCJR5s0ex1D8GAr
-         RJOVbNrRAM1N3KyLRCTt25pRL2pXCsBzCOThrgD3Thn3ALqznpNIkWdrtPjzjVBi0oy9
-         WG+8AG8NVPrKtIR7ok1+s6WI+/MeUgWz8nFKFqui7FmrKmJCK3i/ZH+TSXNRDFJu1l05
-         LEViSyWn4IJEa8c/MsjOd4F10sF+g85gaALoID3nAgBCNkWwCGAlfw00SKfVtl/WWrjh
-         3OJw==
+        bh=0JYQL+cloTOFKXdKvvfoQThZrj8EkD9DkZga/ImDFNc=;
+        b=lE9qoqAATJIFmRZNx4fp+CDcNWB0bsteQY2/N/RZRWeH9ziTbcKHeEUpSMgtR/nMxD
+         N0vi75SPM6J0CCSx9SJs8GpvUXgZvNWFr4zW0yQx0/5dRbCvQx+AcK1ZhOp+7G+sfjjm
+         fQ+6+yO0vZ51OxkRjpByMEIroLiBybkjDeNcurXvHRl1vUWlHQUNyyQ+W0f4RrEAA7cp
+         CN526d1yB0EQL0UEqy3vOXUY34bKfXvybtGUFAUyQgOncZPDgm7QbTsMB6cP3sKDfJYL
+         LwABp/fxZQCcaa6bhIPQKPH7gvWvwWoBLkOypndmN7X7tD17BjyfkLcO/iWlTMGOAdvt
+         N/vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795822386; x=1796427186;
-        h=mime-version:content-transfer-encoding:references:in-reply-to:cc:to
-         :from:subject:message-id:date:content-type:x-gm-gg
+        d=1e100.net; s=20260707; t=1795823143; x=1796427943;
+        h=mime-version:content-transfer-encoding:references:in-reply-to:from
+         :subject:cc:to:message-id:date:content-type:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Hgp2tkog+fmNuQ20vBF7F2LaDTU6lyjZR93nHU1ofUc=;
-        b=YNn9iis8Ko0f70OJuNkwCGmeLFnhGzlCFi+Jx/EnhMczb9v89ypPeWyShECSJc6Dbo
-         /g+4l5sJXRL93+SbDO5PdCG49zAIlvkfjw2G9UBai43QBW6C/xqMIDSl51lRMaJS28kg
-         hY03jXpXtK1OX5YVXtuMhacDjNYPFqYtNqOPDRcUzYl9mlAW+ukHVm1iBkWOHyjvbItx
-         fFG95AMTrkpTeKkzGJk8aiLaidgBTS3IHrm/mLbnd3D4tfS1YitNE9KtuG1l0iVmT1dj
-         CAT+rLC2XXbcoP9CoxU9IHJ/82kgeDJVYI6cLAkQGHVp6DXkjS3JXoSrkL+19G380tmc
-         a9Ww==
-X-Forwarded-Encrypted: i=1; AL+hErE2kLScoo1vtW330mHdvyqMMMUNbzvhauaqojZdOHrQynfNP4e48cy7c9yrb8jy3gH9HoRr7RkQozf3uB2Hpfd6kUw=@vger.kernel.org
-X-Gm-Message-State: APuU4Z8gfDZJ3yq3g0aw83DogD5CK/Wyzxk3I3yc8NtC09FDGPhDRPyJ
-	LrT0BUkIiuqalKdwxK0INGL3YdzDtszsWklgJsBGzNrwt+XbmgssVpc6
-X-Gm-Gg: AZFdTZevb+y3vZgvoiRjOYM9YBXyO1YW4vnDg6lkuwqhVrmAmoxzgDIjde+151r1A/3
-	fvYYUd5KBtEtaygLM466H/kx/q9P7/0v5wWXp1XMrlLh6djw0JJLwTAuI99CcMjK+wZ4fpx+CXN
-	kWHHwOic4lFET3WP2G6lIwVTlGx5ZvkeEqxhzOaEJHUpBOr5vILoo/Ug8ON+osow9RWaJaKIEed
-	/MRPfk1y/dFyYwswQCy1uym7R7t/bWnc3K4PFNgOXkgqui39QMpno/PsCYh3VXrzW2Z1BooDIYs
-	g1o4I2Ylyf98uQPPCMdIQZH78vrFJ96PBGjgdMAfVjBoPRMtfExwgQXPTPnNQXwrBGtPILUkQfw
-	/ZNz8e9dl3+EIyD9N2ipmd65aJE/LkboUXfjQ0H86HOCbF/t6LisyOfHZgmKV9fpbP5fcvNIgwJ
-	2+3Nj76ON7oLPfxXgJobN5cVapmIFaSxNFmudjTtc8q1GMQM+YFcDTpisEKgfr5EfX14Un/YXl+
-	3U5z0N5w+czPSgT+uTO4FX4avYKXXfTkS9rmM+g4/ZNNyY+Ohlcbh8mQR/TzMY0pJ2bbPJWf99B
-	oyJojGUUAq4IDbA5aD8o4gAEfi+6iVuWZCcZLmy/1XXR+0hO+PP16noZR/oDmsmeljwIWBsMTKI
-	m2XSFIKplRsmp3SDHw2SnELQfXf2QQ9D+hA==
-X-Received: by 2002:a05:6a20:734f:b0:3fb:3355:e440 with SMTP id adf61e73a8af0-4014ea47a6cmr28155512637.74.1795822385980;
-        Fri, 27 Nov 2026 15:33:05 -0800 (PST)
-Received: from localhost ([153.61.198.240])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cde6cea7c38sm13857410a12.2.2026.11.27.15.33.05
+        bh=0JYQL+cloTOFKXdKvvfoQThZrj8EkD9DkZga/ImDFNc=;
+        b=mGm7YcnADgHlLw8DLl3tw0l0sXN7AKfyFJVHLZX5Z9RVclx8v+EVUQQEzE2PazfOP0
+         pF2zxUUyLyyNGt+6hIf2zQXr7u5WeT24qvlhSkpxAf8no8vmEMtxBdD5GDMVECwT8MOb
+         g+FaE90vV+1ffKfVbU6XONyOZtja5yFT4JvTOoXLWZTHcsPLUMqPUhzsM+rEZz3jP4gU
+         mCvN6gmw1tUSXgjeCJoVMvCOQY0UJH9X+AkSzK1ipds04eTwEp8LstuMDQB4azLD3/h3
+         E2NGifqm2sFjXQ/jitKU/7xMGt+Vl9TfCMw4DkvguYMRVx3TidffphSQI3KM1bzaNWS5
+         QReg==
+X-Forwarded-Encrypted: i=1; AL+hErHu6ra/sNGin9BBeLlM1g2YRkuH/VbKhzSghJcFWLlXX2V/TKnw8FciIYA+BM+U1NseNB/2t7smwSR8jYK18+NUYtQ=@vger.kernel.org
+X-Gm-Message-State: APuU4Z/gR+4/gj3qDU5PsscU6DR6WwPsryJ2xiUbqRfH125OKg42YEPG
+	cKewiCxDRpiD+UlJ6SqKc/1zvlk5iFCuN8WrAbCL9jNKk3YFbf1RbkQx
+X-Gm-Gg: AZFdTZfCEZIViYQe2o8YhsLIGit/2eZArQhaACqbNMqp1mRLbFFtPpPk1+rwLoGB5Go
+	7LHqMN25gS7+o17PipA+DMaBKCYgg3m2+4F+YL2tx59pZ3IIwwLv3ucsnP403EH7f3Fq/6DkjeO
+	rvL49/glskT9BNeB3VyRW/GFgePSjCKocEjfrCr8dpbH+71wJA+Gb9SB7e5N55aler7KYMXeGGo
+	2lKQfffbBq4gASdt07atFAbCrDiVxcnm3Qh0nw7ssVcW04nupTKfrkEkkZNQzpb/XP6S5/bfWNj
+	zOOtvKfVx2MOm/HjlYFmei1IZkhLRevhU5YdqTRwqU4XhYXjhEC0iZGeKImRaJFGTQcyoNf1KbQ
+	K8v142nX79CrPxUrTFcu+6QPiQwLhfjOMcfValgK16XEOuB6tSMCj5DhPr71Fv34oxa68ZLPNbl
+	OYQCG2m2erU0FtBmUkiMSl9Thp0i1fq1kfU8iGPIiNLHwa1FEhac4uPGLZTAA6m+kiLFW62CGsz
+	FbMYz4/jAa/NBvm1m6FkmqH+QUAM9C7HWCzQZlgmaGEMCc/WxYJET4i6y66YsgBtgq2BPULmeM1
+	L2PuBpBE35jLqdg8IjNguVAYm8/PUYE9wxUeoP4M5NbNX+VOSXaMpPEyk/4K1jMByCmQa9gO4zN
+	dJKRi1x+F2crVGrICfAmRLfUkyCbWRtKX8A==
+X-Received: by 2002:a17:902:f54c:b0:2f0:25ea:8fbe with SMTP id d9443c01a7336-2f03efb104cmr283988045ad.7.1795823143289;
+        Fri, 27 Nov 2026 15:45:43 -0800 (PST)
+Received: from localhost ([153.61.198.247])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f03f0dc0ebsm123686035ad.33.2026.11.27.15.45.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Nov 2026 15:33:05 -0800 (PST)
+        Fri, 27 Nov 2026 15:45:42 -0800 (PST)
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 27 Nov 2026 23:33:05 +0000
-Message-Id: <DN6DWMLNI044.39KJNBB9RWCQY@gmail.com>
-Subject: Re: [PATCH v3 05/18] rv: Add generic monitor event tracepoints and
- BPF kfuncs
+Date: Fri, 27 Nov 2026 23:45:42 +0000
+Message-Id: <DN6E6AI3KW0Y.GIGIAPTDZFS@gmail.com>
+To: "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>
+Cc: "Shuah Khan" <shuah@kernel.org>, "Aniket Gattani"
+ <aniketgattani@google.com>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ <bpf@vger.kernel.org>, "Naveen N Rao" <naveen@kernel.org>, "David S.
+ Miller" <davem@davemloft.net>, "Masami Hiramatsu" <mhiramat@kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 15/16] selftests/membarrier: Check the memory
+ barriers of each thread
 From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Gabriele Monaco" <gmonaco@redhat.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, "Steven
- Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>
-Cc: "Nam Cao" <namcao@linutronix.de>, "Wen Yang" <wen.yang@linux.dev>,
- "Tobias Schaffner" <tobias.schaffner@siemens.com>, "Viktor Malik"
- <vmalik@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>, "John Ogness"
- <john.ogness@linutronix.de>
-In-Reply-To: <20261126130004.127155-6-gmonaco@redhat.com>
-References: <20261126130004.127155-1-gmonaco@redhat.com> <20261126130004.127155-6-gmonaco@redhat.com>
+In-Reply-To: <20261127185822.158216-16-mathieu.desnoyers@efficios.com>
+References: <20261127185822.158216-1-mathieu.desnoyers@efficios.com> <20261127185822.158216-16-mathieu.desnoyers@efficios.com>
 Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -106,247 +107,186 @@ List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 
-On Thu, Nov 26, 2026 at 04:59 AM Gabriele Monaco <gmonaco@redhat.com> wrote:
-> Add also bpf_rv_event_monitor() / bpf_rv_error_monitor() kfuncs wrapping
-> them, so BPF monitors can emit similar events to in-kernel monitors.
->
-> Userspace callers need now to use ftrace filters to get the right events
-> but events and errors are separate channels to ease the most common
-> filtering and account for dramatically different volume (errors are
-> rare).
+On Fri, Nov 27, 2026 at 10:58 AM Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+>  - The test lists the kernel functions which hold the instructions,
+>    and the kind of instruction to look for in each. It finds them by
+>    their bytes in the kernel text, which it reads from /proc/kcore.
+>    The kernel refuses a kprobe which is not on the first byte of an
+>    instruction, so a wrong match is dropped.
 
-I thought we agreed that plain bpf_printk() works with glob filtering on top.
-Why do you need these new kfuncs?
-See below diff that illustrates the point.
+A bunch of x86 specific kprobes?
+Wow. I haven't seen such a heavy duty selftest before.
+I'm glad that it works, but I asked my bot for a simpler solution...
 
-> +	if (strnlen(msg, msg__sz) == msg__sz)
-> +		return -EINVAL;
-> +
-> +	trace_event_monitor(mon__str, id__nullable, msg);
+ipi_mb(), ipi_sync_core() and ipi_rseq() are straight-line code.
+smp_mb() is their first statement. A call of the handler is an
+executed barrier.
+csd_do_func() has trace_csd_function_entry(func, csd) right before
+func(info).
 
-This will read out of bounds. msg can point to a map value.
-Take a BPF_F_MMAPABLE array with one page size value. NUL is the last byte:
+count the IPIs there instead:
 
-  prog                                  user space
-  strnlen(msg, msg__sz) finds the NUL
-                                        writes 'x' over the NUL
-  __string(msg, msg) -> strlen(msg)
-  runs into the vmalloc guard page
+                   kprobe on the insn          csd_function_entry
+  ---------------  --------------------------  ----------------------
+  finds the place  kallsyms, kcore, opcodes    __ksym, libbpf does it
+  arch             x86-64                      all
+  lost hits        nested kprobe,              none, irqs are off
+                   bpf_prog_active
+  global state     kprobes-optimization = 0    none
 
-There is no limit on msg__sz either.
-When perf is on the event, a msg above 8192 bytes hits WARN_ONCE() in
-perf_trace_buf_alloc().
+read_kernel(), scan_function(), probe_sites(), sites[], the cookies,
+set_optprobes(), the signal handlers and the "probe hits were lost"
+warning go away.
 
-
-diff --git a/tools/verification/rv/bpf_monitors/da_monitor_bpf.h b/tools/verification/rv/bpf_monitors/da_monitor_bpf.h
-index e9e673c..6996c01 100644
---- a/tools/verification/rv/bpf_monitors/da_monitor_bpf.h
-+++ b/tools/verification/rv/bpf_monitors/da_monitor_bpf.h
-@@ -24,8 +24,6 @@
- #define da_implicit_guard()
- #define IS_ENABLED(conf) 0
- 
--#define DA_TRACE_MSG_MAX 128
--
- /*
-  * Also used to filter out events higher values imply lower ones.
-  * Userspace will parse this enum but expects EVENT to imply ERROR(s) and ERROR
-@@ -328,10 +326,9 @@ static inline void da_reset_bpf(da_id_type id, monitor_target_bpf target)
- 
- #endif /* RV_MON_TYPE */
- 
--extern int bpf_rv_event_monitor(const char *mon, const int *id__nullable,
--				const char *msg, u32 msg__sz) __ksym;
--extern int bpf_rv_error_monitor(const char *mon, const int *id__nullable,
--				const char *msg, u32 msg__sz) __ksym;
-+/* "rv: <type>: <monitor>: <text>" in bpf_trace:bpf_trace_printk */
-+#define rv_printk(type, fmt, ...) \
-+	bpf_printk("rv: " type ": " __stringify(MONITOR_NAME) ": " fmt, __VA_ARGS__)
- 
- #if RV_MON_TYPE == RV_MON_GLOBAL || RV_MON_TYPE == RV_MON_PER_CPU
- /*
-@@ -345,28 +342,22 @@ static inline void da_trace_event(struct da_monitor *da_mon,
- 				  const char *next_state, bool is_final,
- 				  da_id_type id)
- {
--	char msg[DA_TRACE_MSG_MAX];
--
- 	if (trace_level < RV_TRACE_EVENT)
- 		return;
- 
--	BPF_SNPRINTF(msg, sizeof(msg), "%s x %s -> %s%s",
--		curr_state, event, next_state, is_final ? " (final)" : "");
--	bpf_rv_event_monitor(__stringify(MONITOR_NAME), NULL, msg, sizeof(msg));
-+	rv_printk("event", "%s x %s -> %s%s",
-+		  curr_state, event, next_state, is_final ? " (final)" : "");
- }
- 
- static inline void da_trace_error(struct da_monitor *da_mon,
- 				  const char *curr_state, const char *event,
- 				  da_id_type id)
- {
--	char msg[DA_TRACE_MSG_MAX];
--
- 	if (trace_level < RV_TRACE_ERROR)
- 		return;
- 
--	BPF_SNPRINTF(msg, sizeof(msg), "event %s not expected in the state %s",
--		 event, curr_state);
--	bpf_rv_error_monitor(__stringify(MONITOR_NAME), NULL, msg, sizeof(msg));
-+	rv_printk("error", "event %s not expected in the state %s",
-+		  event, curr_state);
- }
- 
- #elif RV_MON_TYPE == RV_MON_PER_TASK || RV_MON_TYPE == RV_MON_PER_OBJ
-@@ -379,28 +370,22 @@ static inline void da_trace_event(struct da_monitor *da_mon,
- 				  const char *next_state, bool is_final,
- 				  da_id_type id)
- {
--	char msg[DA_TRACE_MSG_MAX];
--
- 	if (trace_level < RV_TRACE_EVENT)
- 		return;
- 
--	BPF_SNPRINTF(msg, sizeof(msg), "%d: %s x %s -> %s%s", id,
--		curr_state, event, next_state, is_final ? " (final)" : "");
--	bpf_rv_event_monitor(__stringify(MONITOR_NAME), &id, msg, sizeof(msg));
-+	rv_printk("event", "%d: %s x %s -> %s%s", id,
-+		  curr_state, event, next_state, is_final ? " (final)" : "");
- }
- 
- static inline void da_trace_error(struct da_monitor *da_mon,
- 				  const char *curr_state, const char *event,
- 				  da_id_type id)
- {
--	char msg[DA_TRACE_MSG_MAX];
--
- 	if (trace_level < RV_TRACE_ERROR)
- 		return;
- 
--	BPF_SNPRINTF(msg, sizeof(msg), "%d: event %s not expected in the state %s",
--		 id, event, curr_state);
--	bpf_rv_error_monitor(__stringify(MONITOR_NAME), &id, msg, sizeof(msg));
-+	rv_printk("error", "%d: event %s not expected in the state %s",
-+		  id, event, curr_state);
- }
- #endif /* RV_MON_TYPE */
- 
-diff --git a/tools/verification/rv/src/trace.c b/tools/verification/rv/src/trace.c
-index 629b4f6..91f86bf 100644
---- a/tools/verification/rv/src/trace.c
-+++ b/tools/verification/rv/src/trace.c
-@@ -15,7 +15,7 @@
- #include <trace.h>
- #include <utils.h>
- 
--#define FILTER_MAX 128
-+#define FILTER_MAX 256
- 
- /**
-  * collect_registered_events - print an event collected from the trace buffer
-@@ -176,20 +176,25 @@ static int enable_specific_event(struct trace_instance *inst, const char *event_
- }
- 
- /*
-- * enable_generic_event - enable a generic event with filters
-+ * enable_bpf_events - collect the messages of a BPF monitor
+diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c b/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
+new file mode 100644
+index 0000000..ffaa899
+--- /dev/null
++++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.bpf.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Count the membarrier IPIs and the context switches of each registered
++ * thread.
 + *
-+ * BPF monitors report via bpf_printk("rv: <event|error>: <monitor>: ...").
-+ *
-+ * Returns 0 on success, -1 otherwise.
-  */
--static int enable_generic_event(struct trace_instance *inst, const char *event_name, char *name)
-+static int enable_bpf_events(struct trace_instance *inst, char *name)
- {
--	struct tep_event *tevent = tep_find_event_by_name(inst->tep, "rv", event_name);
-+	struct tep_event *tevent;
- 	char filter[FILTER_MAX] = "";
- 	size_t len;
- 
-+	tevent = tep_find_event_by_name(inst->tep, "bpf_trace", "bpf_trace_printk");
- 	if (!tevent) {
--		err_msg("trace: fail finding the rv:%s event\n", event_name);
-+		err_msg("trace: fail finding the bpf_trace_printk event\n");
- 		return -1;
- 	}
- 
--	len = snprintf(filter, sizeof(filter), "mon == \"%s\"", name);
-+	len = snprintf(filter, sizeof(filter), "bpf_string ~ \"rv: *: %s: *\"", name);
- 	if (len >= sizeof(filter)) {
- 		err_msg("trace: monitor name %s too long\n", name);
- 		return -1;
-@@ -197,31 +202,12 @@ static int enable_generic_event(struct trace_instance *inst, const char *event_n
- 
- 	if (config.my_pid > 0)
- 		snprintf(filter + len, sizeof(filter) - len,
--			 " && common_pid != %d && !(has_id == 1 && id == %d)",
--			 config.my_pid, config.my_pid);
-+			 " && common_pid != %d && !(bpf_string ~ \"rv: *: %s: %d: *\")",
-+			 config.my_pid, name, config.my_pid);
- 
- 	return apply_filter_enable(inst, tevent, filter);
- }
- 
--/*
-- * enable_bpf_events - enable rv:event_monitor and rv:error_monitor for a monitor
-- *
-- * BPF monitors report via generic rv:event_monitor and rv:error_monitor events.
-- * Enable the events and filter them to only collect the messages of the given monitor.
-- *
-- * Returns 0 on success, -1 otherwise.
-- */
--static int enable_bpf_events(struct trace_instance *inst, char *name)
--{
--	if (!config.trace_errors_only && enable_generic_event(inst, "event_monitor", name))
--		return -1;
--
--	if (enable_generic_event(inst, "error_monitor", name))
--		return -1;
--
--	return 0;
--}
--
- /**
-  * trace_enable_monitor_events - enable a monitor's events in a trace instance
-  *
-diff --git a/tools/verification/rv/tests/rv_mon.t b/tools/verification/rv/tests/rv_mon.t
-index 30d1dda..f51f194 100644
---- a/tools/verification/rv/tests/rv_mon.t
-+++ b/tools/verification/rv/tests/rv_mon.t
-@@ -104,16 +104,16 @@ cpu="\[[0-9]\{3\}\][[:space:]]\+"
- state="[a-z_]\+ "
- id="[0-9]\+"
- selfid="\$pid"
--# BPF monitors report via the common rv:event_monitor/rv:error_monitor
--# events, which add a "<mon>: " prefix to the message.
-+# BPF monitors report via bpf_printk()
-+type_bpf="bpf_trace_printk: rv: \(event\|error\)"
- trace_task="${genpid}${cpu}${type}: ${id}: ${state}"
- trace_task_self="${genpid}${cpu}${type}: ${selfid}: ${state}"
- trace_cpu="${genpid}${cpu}${type}: ${state}"
- trace_cpu_self="${selfpid}${cpu}${type}: ${state}"
--trace_task_bpf="${genpid}${cpu}${type}: ${mon}: ${id}: ${state}"
--trace_task_bpf_self="${genpid}${cpu}${type}: ${mon}: ${selfid}: ${state}"
--trace_cpu_bpf="${genpid}${cpu}${type}: ${mon}: ${state}"
--trace_cpu_bpf_self="${selfpid}${cpu}${type}: ${mon}: ${state}"
-+trace_task_bpf="${genpid}${cpu}${type_bpf}: ${mon}: ${id}: ${state}"
-+trace_task_bpf_self="${genpid}${cpu}${type_bpf}: ${mon}: ${selfid}: ${state}"
-+trace_cpu_bpf="${genpid}${cpu}${type_bpf}: ${mon}: ${state}"
-+trace_cpu_bpf_self="${selfpid}${cpu}${type_bpf}: ${mon}: ${state}"
- 
- check_if_exists "run per-task monitor with tracing" \
- 	"$RV mon sssw -t" "$RVDIR/monitors/sched/sssw" \
-@@ -154,10 +154,10 @@ check_if_exists "run per-task monitor tracing only errors" \
- 
- check_if_exists "run per-task BPF monitor tracing only errors" \
- 	"$RV mon tqueue -t -E" "$RVTOOL/bpf_monitors/tqueue.o" \
--	"$header" "event_monitor"
-+	"$header" "rv: event"
- 
- check_if_exists "run per-cpu BPF monitor tracing only errors" \
- 	"$RV mon nohz -t -E" "$RVTOOL/bpf_monitors/nohz.o" \
--	"error_monitor" "event_monitor"
-+	"rv: error" "rv: event"
- 
- test_end
++ * See membarrier_test_barrier.c.
++ */
++#include <stdbool.h>
++#include <linux/bpf.h>
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++
++#include "membarrier_test_barrier.h"
++
++struct mm_struct;
++
++/* The fields which this program reads. CO-RE relocates them. */
++struct task_struct {
++	struct mm_struct *mm;
++} __attribute__((preserve_access_index));
++
++/*
++ * The IPI handlers. libbpf finds them in /proc/kallsyms. The address is 0
++ * when the kernel has no such handler.
++ */
++extern const void ipi_mb __ksym __weak;
++extern const void ipi_sync_core __ksym __weak;
++extern const void ipi_rseq __ksym __weak;
++
++/* Slot of a registered thread. */
++struct {
++	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
++	__uint(map_flags, BPF_F_NO_PREALLOC);
++	__type(key, int);
++	__type(value, __u32);
++} task_slot SEC(".maps");
++
++/* The counters of each slot. User-space maps them. */
++struct {
++	__uint(type, BPF_MAP_TYPE_ARRAY);
++	__uint(map_flags, BPF_F_MMAPABLE);
++	__uint(max_entries, MBT_MAX_SLOTS);
++	__type(key, __u32);
++	__type(value, struct mbt_counters);
++} counters SEC(".maps");
++
++/*
++ * Only the CPU which runs a thread, or which switches to it, counts for
++ * that thread. So the increments need no lock.
++ */
++static __always_inline struct mbt_counters *counters_of(struct task_struct *task)
++{
++	__u32 *slot = bpf_task_storage_get(&task_slot, task, 0, 0);
++
++	return slot ? bpf_map_lookup_elem(&counters, slot) : NULL;
++}
++
++/* csd_do_func() is about to call func(). Interrupts are disabled. */
++SEC("tp_btf/csd_function_entry")
++int BPF_PROG(csd_function_entry, void *func)
++{
++	struct mbt_counters *c;
++
++	if (func != &ipi_mb && func != &ipi_sync_core && func != &ipi_rseq)
++		return 0;
++	c = counters_of(bpf_get_current_task_btf());
++	if (!c)
++		return 0;
++	c->c[MBT_IPI]++;
++	if (func == &ipi_sync_core)
++		c->c[MBT_SYNC_CORE]++;
++	return 0;
++}
++
++SEC("tp_btf/sched_switch")
++int BPF_PROG(sched_switch, bool preempt, struct task_struct *prev,
++	     struct task_struct *next)
++{
++	struct mbt_counters *c;
++
++	c = counters_of(prev);
++	if (c)
++		c->c[MBT_SCHED_OUT]++;
++	if (!next->mm || prev->mm == next->mm)
++		return 0;
++	c = counters_of(next);
++	if (c)
++		c->c[MBT_SCHED_IN]++;
++	return 0;
++}
++
++/* Give a slot to the calling thread. User-space runs this program. */
++SEC("syscall")
++int register_thread(struct mbt_register *ctx)
++{
++	__u32 slot = ctx->slot;
++
++	if (!bpf_task_storage_get(&task_slot, bpf_get_current_task_btf(), &slot,
++				  BPF_LOCAL_STORAGE_GET_F_CREATE))
++		return -1;
++	return 0;
++}
++
++char _license[] SEC("license") = "GPL";
+diff --git a/tools/testing/selftests/membarrier/membarrier_test_barrier.h b/tools/testing/selftests/membarrier/membarrier_test_barrier.h
+new file mode 100644
+index 0000000..da8edfd
+--- /dev/null
++++ b/tools/testing/selftests/membarrier/membarrier_test_barrier.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef MEMBARRIER_TEST_BARRIER_H
++#define MEMBARRIER_TEST_BARRIER_H
++
++#include <linux/types.h>
++
++/* Counters of a thread. */
++enum {
++	/* A membarrier IPI handler interrupted the thread. */
++	MBT_IPI,
++	/* The handler was ipi_sync_core(). */
++	MBT_SYNC_CORE,
++	/* The thread was scheduled out. */
++	MBT_SCHED_OUT,
++	/*
++	 * The thread was scheduled in after a task of another mm, or
++	 * after a kernel thread.
++	 */
++	MBT_SCHED_IN,
++	MBT_NR_COUNTERS,
++};
++
++struct mbt_counters {
++	__u64 c[16];
++};
++
++/* Argument of the register_thread program. */
++struct mbt_register {
++	__u32 slot;
++};
++
++#define MBT_MAX_SLOTS		512
++
++#endif /* MEMBARRIER_TEST_BARRIER_H */
 
+pw-bot: cr
