@@ -1,73 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795791034;
-	b=qb7lLkxdH0S0xpighfxf1RHkYbmsce/hVovoPYIY/gS5bkLTk3EETpQG0bVVnF6tHXXs
-	 s6aGwAH2z8BjGi2HVBPQLfOImlhBWNzURfP/sfuzmwowV0ai+cLz2unxuVVR2zMirlOFa
-	 +qLIL7hnbN5eDKRC6kKIUeyfLf9dB94j39VhniuD6QwMoS+mLqnP83cCBl7WJ+XtuWoV5
-	 k61k7Wc1rY48J2KNNMDhFmCuZyO1DMfQ0Tpc0XA+9+WpX5Zv0qZ4ymEfV+X7ZF5fj3BzP
-	 SsBnHwGrCBmoueSyBrIwVGMEwZW6zCKxeET4O1zEuVRdg++4KpDFdsMqik+TbOMI1Kw==
+	t=1795791047;
+	b=xzoZKCmFXMrx2oifdLMYdzeeLSSrVe0M2wXY1BLUgYjonVu7JNDTM7KVmGw1r23jTjgi
+	 NlNYAnmDxvApuBnPuD2xIE1EdrZBH5AXPMVRsrb1oCZV2wrtDY3u6QDRNcsaE2MhRFiAm
+	 fnZY8WoKefYNGMUlyrJDYwrf5wL2whYneP9VuWIH8wqBlsOziIbchrQTeXb5jaWxmVNNX
+	 4O8kJ//iHBplk6usK3CL07tS5neHOy7x0yB+4v0K4tT5kdBvA9j9EQ0bdwpFSMo8QkVDh
+	 2nYXvLfkomDbM+jJdJEsVBQokurWHjLlmvjnIhnbCokejSJ21+TuBKwBnV9txX4AwtA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795791034;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=gxq3wgw+barjPLXIWEn74CmRmFDc4UPXarLciG8c6xg=;
-	b=YTH3FsaLMm36yeJS6fVmDUQJ89Z67d7D7sYhWlNrdFkw6JuFJ9rQZqt15/1VrS/pEOCM
-	 Wzf3MHX+/a5d01f6vYPuaYrGQgQ9Yrwks8OMYRfJQgODua9HVCNW89VyEyBOTBLd2dn95
-	 jViqrBTq1zJqkejgbhPHN280jac/FBncl1odimyIt4IMu12WoV/8bpxxWsPnB+Ucv6tRK
-	 dmSpN3Istr0UO2taYJNJhpYqWo9vkS5KKSKy/v3BsTEmHbQTMR4R/5bCucsGM+wY74Q0Z
-	 FDGbiKs3I2RkB/I0+8L+WrZTAhs9K4ZwhIePHD72GHWJYXKlEMnZF34hnSadSeN+iUQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795791047;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=EZGGQwvOJaxyLnrDEyGyhy23fszUciQJ6lW1UO7RFuk=;
+	b=deJ0hpNI7h9b5m0z9tpEcVPVorZuFn4g23mFwdFZL63q6q+3WYgAHKZY0vnRkQf4ok9d
+	 DqRfUMLH2gH3+UjVbTy2KqebjKy0+EQyLtUtw2b64yeeFWaJwQDVR5pmAvAfA3IrdJaOC
+	 4SsBoU3Gz5ahlLlp5RJvZ/Lvz9yK/zPqF7gIdikAgbiSW8Pdw68BX7BW6KGLvWuHiS3N/
+	 JCuJMNsVGAEl17/yrwM8gtEyoaXfA9rxUqpUb2n33N9S3JKg0Bxt58+9W7/AOPXMb84pL
+	 kiSyWp1CVsKNrTycLsn70X2wD2uKAdhpFVnFee+bWij2T61KU3xMP2FBMQcVoMxLMAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TED4nW9v;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LqOz2b0N;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1525606A31F;
-	Fri, 27 Nov 2026 14:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A77606A31F;
+	Fri, 27 Nov 2026 14:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TED4nW9v
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4701F0089B;
-	Fri, 27 Nov 2026 14:50:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LqOz2b0N
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96401F000C1;
+	Fri, 27 Nov 2026 14:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795791034;
-	bh=gxq3wgw+barjPLXIWEn74CmRmFDc4UPXarLciG8c6xg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TED4nW9vOgPd2OvStCjk2PF00jhZuHuSUvhW879VmLpQmVpXIioWRCoVr0mcM7bcF
-	 YVWMtdmXdTlHG28Y+rmPVHxmYB/Z7RG4cgdwOVBdBDLQWpCOhcy40ptKwEmR6UYxu0
-	 OaN1zAL2D3arNsLBOpMKLZerpLUPtFATPJy0Oa81PNnhriQcPfDHY3WUV6WxDqGgUw
-	 1bF+3AN85o5VC2LjPuU5R0GMsWhDEaXjoIpK2FCMlb9QaViA7MbchUSfHC9EK//uti
-	 CLXLy+ainP5AkYjWmCJ9SiAwmhrd6lykH00Sk7jBtKp7xboCkF3EFUIy7eEdzPiWPC
-	 lihqnxW6BL9Mw==
-Message-ID: <sashiko-outbox-237610@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v2 18/35] spi: nxp-fspi: Consume dummy cycles
- directly
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.org>, "Liang
- Yang" <liang.yang@amlogic.com>, "Feng Chen" <feng.chen@amlogic.com>, "Xianwei
- Zhao" <xianwei.zhao@amlogic.com>, "Han Xu" <han.xu@nxp.com>, "Conor Dooley" <conor.dooley@microchip.com>, "Valentina
- Fernandez" <valentina.fernandezalanis@microchip.com>, "Daire McNamara" <daire.mcnamara@microchip.com>, "Haibo
- Chen" <haibo.chen@nxp.com>, "Jyan Chou" <jyanchou@realtek.com>, "Yu-Chun
- Lin" <eleanor.lin@realtek.com>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre
- Torgue" <alexandre.torgue@foss.st.com>, "Pratyush Yadav" <pratyush@kernel.org>, "Michael
- Walle" <mwalle@kernel.org>, "Takahiro Kuwano" <takahiro.kuwano@infineon.com>, "Richard
- Weinberger" <richard@nod.at>, "Vignesh Raghavendra" <vigneshr@ti.com>, "Tudor
- Ambarus" <tudor.ambarus@linaro.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Nicolas
- Ferre" <nicolas.ferre@microchip.com>, "Alexandre Belloni" <alexandre.belloni@bootlin.com>, "Claudiu
- Beznea" <claudiu.beznea@tuxon.dev>, "Matthias Brugger" <matthias.bgg@gmail.com>, "AngeloGioacchino
- Del Regno" <angelogioacchino.delregno@collabora.com>, "Yogesh Gaur" <yogeshgaur.83@gmail.com>, "Chris
- Packham" <chris.packham@alliedtelesis.co.nz>, =?utf-8?b?Sm9uYXRoYW4gTmV1?=
- =?utf-8?b?c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, "Michal Simek" <michal.simek@amd.com>
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Alvin Zhou" <alvinzhou@mxic.com.tw>, "Cheng
- Ming Lin" <chengminglin@mxic.com.tw>, linux-amlogic@lists.infradead.org, imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com, linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, neil.armstrong@linaro.org
-In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-18-5c93f5e5d630@bootlin.com>
-References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
- <20261127-macronix-upstreaming-spi-mem-cycles-v2-18-5c93f5e5d630@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 14:50:31 +0000
+	s=k20260515; t=1795791047;
+	bh=EZGGQwvOJaxyLnrDEyGyhy23fszUciQJ6lW1UO7RFuk=;
+	h=From:To:Cc:Subject:Date;
+	b=LqOz2b0Nqprt3aH1rSKGRpzTkrS+Pr4VATEpUFgGpVdkRpOdhNUiOrY/v72mge2qu
+	 4WOJstVmH+Xpgq9NsxulWK74VZFa8AC+rtnZWl35kg24GfcUJvZsacFiS0JyvBDtF4
+	 Hp9JJ3g1IAiIXWftP0Ea7J3rMSdwjEb8V6cU2UMzwgvWkNoGNrOFucN5o+bXejE8Vf
+	 pdji0VxADJM/L/nUVYxj6x05QvhV9pAYqU4o8mojp2x4AEAw+PSteG/KOQuetG6z1S
+	 3OMnD+MkNCExAFcUrglqcyZaVnuALrarnT6yOP6MqohLy4LVr+pyizshOC4qyNuqSj
+	 bN8juvAcZo5hQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: snambakam@microsoft.com, Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH 0/5] bootconfig: Support multiple named bootconfigs in initrd
+Date: Fri, 27 Nov 2026 14:46:14 +0000
+Message-ID: <20261127144614.61194-1-mhiramat@kernel.org>
+X-Mailer: UndineD 0.1
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -76,74 +54,126 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [High] spi: nxp-fspi: LUT_DUMMY_DDR operand halved in
-  nxp_fspi_prepare_lut()
---
+Hi,
 
-commit 1599225157c651da7c372805ec30cf72cfe8b69c
-Author: Miquel Raynal <miquel.raynal@bootlin.com>
+This RFC series proposes support for bundling multiple named bootconfig
+files in a single initrd image and selecting which subset to load at
+boot time via the kernel command line.
 
-spi: nxp-fspi: Consume dummy cycles directly
+This work is based on our discussion at LPC 2026 on supporting multiple
+bootconfigs in single-image / signed Unified Kernel Image (UKI) setups.
+I would appreciate your feedback on the overall design, on-disk format,
+command-line semantics, and user-space CLI before finalizing this
+series.
 
-This commit enables the dummy_cycles capability in the NXP FlexSPI driver
-and replaces the dummy byte-to-cycle conversions with op->dummy.ncycles.
+Motivation
+----------
+Bootconfig currently allows only a single bootconfig block appended to
+an initrd. In single-image or signed UKI environments, it is often
+useful to ship a default production bootconfig alongside optional
+debug, tracing, or scenario-specific overlays in the same initrd image,
+and enable or combine them at boot without rebuilding or re-signing the
+image.
 
-> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
-> index 66cb58f95fdb1..e6fdded67a00e 100644
-> --- a/drivers/spi/spi-nxp-fspi.c
-> +++ b/drivers/spi/spi-nxp-fspi.c
-[ ... ]
-> @@ -567,8 +567,7 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
->  		return false;
-> =20
->  	/* Max 64 dummy clock cycles supported */
-> -	if (op->dummy.buswidth &&
-> -	    (op->dummy.nbytes * 8 / op->dummy.buswidth > 64))
-> +	if (op->dummy.ncycles > 64)
->  		return false;
-> =20
->  	/* Max data length, check controller limits and alignment */
-> @@ -652,16 +651,15 @@ static void nxp_fspi_prepare_lut(struct nxp_fspi *f,
->  		lutidx++;
->  	}
-> =20
-> -	/* dummy bytes, if needed */
-> -	if (op->dummy.nbytes) {
-> +	/* dummy cycles, if needed */
-> +	if (op->dummy.ncycles) {
->  		lutval[lutidx / 2] |=3D LUT_DEF(lutidx, op->dummy.dtr ? LUT_DUMMY_DDR =
-: LUT_DUMMY,
->  		/*
->  		 * Due to FlexSPI controller limitation number of PAD for dummy
->  		 * buswidth needs to be programmed as equal to data buswidth.
->  		 */
->  					      LUT_PAD(op->data.buswidth),
-> -					      op->dummy.nbytes * 8 /
-> -					      op->dummy.buswidth);
-> +					      op->dummy.ncycles);
->  		lutidx++;
->  	}
+Proposed Specification (Feedback Welcome)
+-----------------------------------------
+1. In-band naming ("#BOOTCONFIG-ID: <id>"):
+   Each named bootconfig carries an optional first-line comment
+   "#BOOTCONFIG-ID: <id>" (1..31 bytes matching [A-Za-z_][A-Za-z0-9_.-]*),
+   keeping the existing 20-byte "#BOOTCONFIG" trailer format, size, and
+   checksum framing unchanged for backward compatibility.
+2. Stacked trailers & index 0 as default:
+   Up to XBC_CONFIG_MAX (32) stacked bootconfig trailers can be attached
+   to an initrd. Block 0 (the first block immediately after initramfs)
+   is defined as the default bootconfig rather than the outermost
+   trailer, so appending optional overlays never alters what bare
+   "bootconfig" loads and places the default first in stack-order
+   merging so overlays can override keys via ":=" or "+=". All valid
+   trailers are always stripped from initrd_end so initramfs unpacking
+   is unaffected.
+3. Command-line selection ("bootconfig=[+][<sel>,...]"):
+   Each <sel> may be a bootconfig ID, a 0-based index, or empty (index
+   0, e.g. "bootconfig=,debug"). A leading "+" appends to a prior
+   selection (or to index 0 if none preceded it). Empty "bootconfig="
+   clears any prior selection (for example, to override a UKI .cmdline),
+   unless CONFIG_BOOT_CONFIG_FORCE=y is set, which continues to force
+   index 0. Note that previously empty "bootconfig=" was equivalent to
+   bare "bootconfig". CONFIG_CMDLINE_FROM_BOOTCONFIG on x86 is updated
+   to follow the same selection rule.
+4. User-space CLI ("tools/bootconfig -i <id[,...]>"):
+   Extends tools/bootconfig with "-i" across apply, delete, show, list,
+   and cmdline rendering, with rollback safety on write failure and
+   merge-conflict warnings against block 0. Five new QEMU boottime
+   selftests are included to exercise the selection modes.
 
-[Severity: High]
-Does passing op->dummy.ncycles directly to LUT_DUMMY_DDR halve the dummy
-cycles programmed in DTR mode?
+Does this specification and command-line/tool interface look reasonable
+for your use cases? Any comments or suggestions are very welcome.
 
-In DTR mode, FlexSPI runs the serial root clock at 2x the flash SCLK rate
-and LUT_DUMMY_DDR counts DDR half-cycles (2 * ncycles).  Previously, DTR
-callers doubled op->dummy.nbytes to account for two transfers per clock,
-and op->dummy.nbytes * 8 / op->dummy.buswidth intentionally did not divide
-by 2, yielding 2 * ncycles.  With .dummy_cycles set,
-spi_mem_dummy_bytes_to_cycles() divides by 2 * op->dummy.buswidth when
-op->dummy.dtr is true (and direct ncycles callers pass full SCLK cycles),
-so nxp_fspi_prepare_lut() now programs half the required LUT_DUMMY_DDR
-operand and breaks DTR flash reads.
+Patch Overview
+--------------
+1. bootconfig: Add multi-config ID helpers and xbc_init_configs() support
+2. bootconfig: Support stacked initrd bootconfigs and bootconfig= selection
+3. tools/bootconfig: Support multiple named bootconfigs with -i option
+4. selftests/ftrace: Add boottime tests for multiple bootconfig selection
+5. Documentation: bootconfig: Document multiple bootconfigs and selection
 
-For the same reason, the > 64 check in nxp_fspi_supports_op() no longer
-accounts for the 2x factor when op->dummy.dtr is set.
+Thank you,
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127-macronix-u=
-pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D18
+Masami Hiramatsu (Google) (5):
+  bootconfig: Add multi-config ID helpers and xbc_init_configs() support
+  bootconfig: Support stacked initrd bootconfigs and bootconfig=
+    selection
+  tools/bootconfig: Support multiple named bootconfigs with -i option
+  selftests/ftrace: Add boottime tests for multiple bootconfig selection
+  Documentation: bootconfig: Document multiple bootconfigs and selection
+
+ Documentation/admin-guide/bootconfig.rst      |  82 +-
+ .../admin-guide/kernel-parameters.txt         |  10 +
+ arch/x86/kernel/setup.c                       |   7 +-
+ include/linux/bootconfig.h                    |  32 +
+ init/main.c                                   | 261 ++++--
+ lib/bootconfig.c                              | 476 +++++++++--
+ tools/bootconfig/include/linux/bootconfig.h   |   4 +
+ tools/bootconfig/main.c                       | 779 ++++++++++++++----
+ tools/bootconfig/test-bootconfig.sh           | 116 +++
+ .../testing/selftests/ftrace/boottime/README  |   4 +-
+ .../bootconfigs/bconf-multi-01-default.bconf  |   5 +
+ .../bconf-multi-01-default.debug.bconf        |   5 +
+ .../bconf-multi-02-select.alt.bconf           |   5 +
+ .../bconf-multi-02-select.base.bconf          |   7 +
+ .../bconf-multi-02-select.dbg.bconf           |   7 +
+ .../bootconfigs/bconf-multi-03-append.bconf   |   6 +
+ .../bconf-multi-03-append.dbg.bconf           |   6 +
+ .../bootconfigs/bconf-multi-04-clear.bconf    |   5 +
+ .../bootconfigs/bconf-multi-05-conflict.bconf |   6 +
+ .../ftrace/boottime/run_boottime_test.sh      |  99 ++-
+ .../boottime/tests/bconf-multi-01-default.sh  |  23 +
+ .../boottime/tests/bconf-multi-02-select.sh   |  53 ++
+ .../boottime/tests/bconf-multi-03-append.sh   |  26 +
+ .../boottime/tests/bconf-multi-04-clear.sh    |  26 +
+ .../boottime/tests/bconf-multi-05-conflict.sh |  22 +
+ 25 files changed, 1762 insertions(+), 310 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-01-default.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-01-default.debug.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-02-select.alt.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-02-select.base.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-02-select.dbg.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-03-append.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-03-append.dbg.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-04-clear.bconf
+ create mode 100644 tools/testing/selftests/ftrace/boottime/bootconfigs/bconf-multi-05-conflict.bconf
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/bconf-multi-01-default.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/bconf-multi-02-select.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/bconf-multi-03-append.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/bconf-multi-04-clear.sh
+ create mode 100755 tools/testing/selftests/ftrace/boottime/tests/bconf-multi-05-conflict.sh
+
+
+base-commit: 56bb11fe6aacc7666938e8e6765b44aa0cf1fcdd
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
