@@ -1,72 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795791649;
-	b=JES70IaXfupOcLL4c4GBwKQZgtYb66om3Vlizd3fPktlmSPPn5PkWef6SOCcMKdZ8/S/
-	 hJmdYk4wsa3jA165UYUyEFplOPm3G2i9WtexeJHilyqm+UUpYhryqPbql2EsBe5bZwXdh
-	 qzYFTTKrph7NUFE7R2Qm4wXDUq3nHGK8kU1VSGOWHxDWcoXcFjnFaNGoQXlpXCKEtILkV
-	 KU/vN3XYlGZ66DsFICs64gRvIVwd0wyN9nf0ZUaXZnimw1Ofeh6aiXwrE5fjvwnSXmnpC
-	 rxBBWRDoG76gKwNo+Yl+ihpp/HER+woECzRdnVczWWwqZUfR04x54kDm0A8Lz+cW83g==
+	t=1795791739;
+	b=Zy0QOwh3g+3C+YXvhxAwwVMVDJMJ867erd+T9YOOMBTsI9Z+EEleL+VYY6cozmvvPhuv
+	 M0r6wO79QydXkurT2BPfCiX0MUdgFrvDv6dSltoASzwFJ+o+ODtk2H11bEYOjGH2Koc7G
+	 kNwhcGuWcUvB2uaQjiBG1gHh4utsty9oDRzjn01YALK2VWHjkRHfWp4WMQN28UrZYzg7c
+	 hhLECXHU3yAaFyBfgHVDVp/bM6L+t6fVHFUWoXfpZP3CXEToXVGD9Q/o8UeveG3wFBy6G
+	 l3R7pF5OfmMEAqLy2WV0BgjCS2A3VQGyjNYNFdm53HFWxfLn1m7hbFGtla2BCA6vYjg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795791649;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795791739;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=eLcbyujfUpUezFzf+dyuSUdvtd7PBrhQqklGwJTYvrU=;
-	b=IRPj3VDDvGl7ulybuOMR+pHIEqFO1zeKpoNsBYQv3pSFPO+gO/4wGPDMhuzFCwSE8Usg
-	 1PjAEJT/qa/aQVPkJAA93R1akRoEK0vInBfoX3wvkTI8epXxvuiSXoWM74G84XZi1gSyV
-	 SKAfE7W/528EVlK/5zHrFeek7FO6ctvsw0fpK9esPnYGSPup0I528MaOspomtIPYwpVFl
-	 bqnbXjtswnSnFOVsNJfGnW0PzDDkYbGpYLZ8IWaIAVegY/hitm7cHaiW64RRd1x0NfqN2
-	 3dDeTz+inegVoDwp93INz1nrsLFVHut62bgkrl1bh8OBKLRhhhBIkRMGKQoIfpleIYw==
+	bh=dMOdHJqD8f2DX0k2c/3C9DzsiE29S4B99vTMeGwDCHo=;
+	b=COULkDiTepPYY1nkA81+Ld5K53kUYXt3P4qY2/wa4HFMMDuLRHBu2C+pumeGSdc6x0PQ
+	 mY66TDFMNslT9tQSzl70JflCBpGoQWCpW+GSZr+I8VAaupls25BVUeD59e1Z6qUes0ssK
+	 sxUBgUi6JZ56qwCK65cwBzmv9sksraIfNLgKb5HABm7LNFQp1IpZyZajR9X/Xclqergqn
+	 5SgxQ2kNlysp/aGbp3WVRAJzZ72AuhX4xgx3P7u4L1x26QFPM9Yjrkx5LwZm+9/7KrYFq
+	 rG2rhvfv9urRppnzYzuK0otNB8rn2yq6NVsS5EYF5OPPTg7xNpt5uzq84zfjx4BJC2w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ilC/3IeW";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NsYZCkqd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DEA606A31E;
-	Fri, 27 Nov 2026 15:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F57A606A31C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Nov 2026 15:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ilC/3IeW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0051F00893;
-	Fri, 27 Nov 2026 15:00:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NsYZCkqd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DAE1F000C1;
+	Fri, 27 Nov 2026 15:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795791648;
-	bh=eLcbyujfUpUezFzf+dyuSUdvtd7PBrhQqklGwJTYvrU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ilC/3IeW/OwB3WPoHlf9D6FzDd5BY8aQuQ5HEIWB9Zpomygj8Y8u8aVnq8wDqESVd
-	 iPhX9IPRqNWIMFfhEC1TNMH2CGHL5f411aolSajFEptnZU1y622XETeDe1CPwXvGRN
-	 0wAncTOlryTyaCCcggFLawODTmIu8ehc1BwZYdU+f7nm+lrJRtksEqRsGKOf9qHIbI
-	 9qQwj8uj3FnYrVJVcKOMLZNTvaDr99QOce93z5AnGW4yNnrIfhrB7/FzNjiBg0MVAX
-	 IWcpinXAYpJs5fTBo39DyaqEx/3oyeTt7Lhqqvf2aOXAgqcQ4lInNzXakVmnlYUsqT
-	 F02xFjf9TG9FQ==
-Message-ID: <sashiko-outbox-237658@kernel.org>
+	s=k20260515; t=1795791739;
+	bh=dMOdHJqD8f2DX0k2c/3C9DzsiE29S4B99vTMeGwDCHo=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=NsYZCkqd6WpIM5IzoLKutlrV10TfmghOA+C45Sp4eJ2T8ykuMfmwdfZOC9DgnpZDq
+	 DMOHF4PfxsrwVW1YzaetySggfqH7rZwMxhk+NZkGm12zYM7TqUSBFnzbCE+6EyTekS
+	 zpLIhp6C9rDjnZUIIuVeGF2knpYj3jmYRit8gfvVFGKQFjT3rNIljF9eS7EqPyVugn
+	 bm0jnbjNju3Oolaa/v+OwEs2BYYJykq8Uev+g81O+ze78oIYoA+ZbV1EBWx9cBDH2f
+	 kZw3gz7HSk4FlJQV53YaUUDwB5SRVT6K80Le3QbJRJ/b1OKfyCh7dYlni2JQMBQB1I
+	 cRKsNn/DtRHUQ==
+Message-ID: <sashiko-outbox-237662@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v2 19/35] spi: nxp-fspi: Reject mixed DTR modes
+Subject: Re: [RFC PATCH 1/5] bootconfig: Add multi-config ID helpers and
+ xbc_init_configs() support
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.org>, "Liang
- Yang" <liang.yang@amlogic.com>, "Feng Chen" <feng.chen@amlogic.com>, "Xianwei
- Zhao" <xianwei.zhao@amlogic.com>, "Han Xu" <han.xu@nxp.com>, "Conor Dooley" <conor.dooley@microchip.com>, "Valentina
- Fernandez" <valentina.fernandezalanis@microchip.com>, "Daire McNamara" <daire.mcnamara@microchip.com>, "Haibo
- Chen" <haibo.chen@nxp.com>, "Jyan Chou" <jyanchou@realtek.com>, "Yu-Chun
- Lin" <eleanor.lin@realtek.com>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre
- Torgue" <alexandre.torgue@foss.st.com>, "Pratyush Yadav" <pratyush@kernel.org>, "Michael
- Walle" <mwalle@kernel.org>, "Takahiro Kuwano" <takahiro.kuwano@infineon.com>, "Richard
- Weinberger" <richard@nod.at>, "Vignesh Raghavendra" <vigneshr@ti.com>, "Tudor
- Ambarus" <tudor.ambarus@linaro.org>, "Steven Rostedt" <rostedt@goodmis.org>, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Nicolas
- Ferre" <nicolas.ferre@microchip.com>, "Alexandre Belloni" <alexandre.belloni@bootlin.com>, "Claudiu
- Beznea" <claudiu.beznea@tuxon.dev>, "Matthias Brugger" <matthias.bgg@gmail.com>, "AngeloGioacchino
- Del Regno" <angelogioacchino.delregno@collabora.com>, "Yogesh Gaur" <yogeshgaur.83@gmail.com>, "Chris
- Packham" <chris.packham@alliedtelesis.co.nz>, =?utf-8?b?Sm9uYXRoYW4gTmV1?=
- =?utf-8?b?c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, "Michal Simek" <michal.simek@amd.com>
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Alvin Zhou" <alvinzhou@mxic.com.tw>, "Cheng
- Ming Lin" <chengminglin@mxic.com.tw>, linux-amlogic@lists.infradead.org, imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com, linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, neil.armstrong@linaro.org
-In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-19-5c93f5e5d630@bootlin.com>
-References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
- <20261127-macronix-upstreaming-spi-mem-cycles-v2-19-5c93f5e5d630@bootlin.com>
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <20261127144614.61194-2-mhiramat@kernel.org>
+References: <20261127144614.61194-1-mhiramat@kernel.org>
+ <20261127144614.61194-2-mhiramat@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 15:00:45 +0000
+Date: Fri, 27 Nov 2026 15:02:18 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -78,74 +62,69 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] spi: nxp-fspi: missing dummy.dtr check in
-  nxp_fspi_supports_op()
+- [Medium] bootconfig: unclosed brace on reused key misattributed in
+  xbc_init_configs()
 --
 
-commit d17e73cd13692fc9ae92cbd1176efe56ea596829
-Author: Miquel Raynal <miquel.raynal@bootlin.com>
+commit 9ef6591953493a8a81a45580cc486a9c5b6fe288
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-spi: nxp-fspi: Reject mixed DTR modes
+bootconfig: Add multi-config ID helpers and xbc_init_configs() support
 
-This commit adds checks in nxp_fspi_supports_op() to reject spi-mem
-operations that mix SDR and DTR phases.
+This commit adds helpers for parsing and selecting named bootconfig blocks
+and introduces xbc_init_configs() to concatenate and parse multiple enabled
+configs into a single XBC tree.
 
-> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
-> index e6fdded67a00e..04999369dd1bd 100644
-> --- a/drivers/spi/spi-nxp-fspi.c
-> +++ b/drivers/spi/spi-nxp-fspi.c
-> @@ -536,8 +536,18 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
->  				 const struct spi_mem_op *op)
->  {
->  	struct nxp_fspi *f =3D spi_controller_get_devdata(mem->spi->controller);
-> +	bool all_true, all_false;
->  	int ret;
+> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+> index 9ae9a215b1da3..fe27e72c9ee54 100644
+> --- a/lib/bootconfig.c
+> +++ b/lib/bootconfig.c
+[ ... ]
+> @@ -1134,12 +1129,219 @@ static int __init xbc_parse_tree(void)
+>  	} while (!ret);
 > =20
-> +	all_true =3D op->cmd.dtr &&
-> +		   (!op->addr.nbytes || op->addr.dtr) &&
-> +		   (!op->data.nbytes || op->data.dtr);
+>  	if (!ret) {
+> -		while (p < xbc_data + xbc_data_size - 1 && *p =3D=3D '\0')
+> +		while (p < data + size && *p =3D=3D '\0')
+>  			p++;
+> -		if (p < xbc_data + xbc_data_size - 1)
+> +		if (p < data + size)
+>  			ret =3D xbc_parse_error("Unexpected data after null character", p);
+>  	}
+> =20
+> +	if (!ret && brace_index) {
+> +		n =3D &xbc_nodes[open_brace[brace_index - 1]];
+> +		ret =3D xbc_parse_error("Brace is not closed",
+> +				      xbc_node_get_data(n));
+> +	}
 > +
-> +	all_false =3D !op->cmd.dtr && !op->addr.dtr && !op->data.dtr;
-> +
-> +	if (!all_true && !all_false)
-> +		return false;
+>  	return ret;
+>  }
 
 [Severity: Medium]
-Should all_true and all_false also check op->dummy.dtr when
-op->dummy.ncycles is non-zero?
+Can an unclosed brace in a later config be misattributed to an earlier
+config in xbc_init_configs()?
 
-Because nxp_fspi_mem_caps sets dummy_cycles =3D true,
-spi_mem_convert_dummy() converts op->dummy.nbytes to op->dummy.ncycles and
-clears op->dummy.nbytes before nxp_fspi_supports_op() and
-spi_mem_default_supports_op() run.  Since spi_mem_default_supports_op()
-only checks op->dummy.nbytes, an operation whose dummy phase has a
-different DTR setting from the command, address, and data phases passes
-validation.
+When a subsequent config reopens a key that was already defined in an
+earlier config (for example, top-level "kernel {") and omits the closing
+brace, __xbc_add_key() reuses the existing struct xbc_node from the
+earlier config without updating node->data:
 
-Unlike other drivers that ignore op->dummy.dtr once dummy bytes are
-converted to cycles, this driver still uses op->dummy.dtr to program the
-LUT and to select the controller DTR mode and clock rate:
-
-drivers/spi/spi-nxp-fspi.c:nxp_fspi_prepare_lut() {
-    ...
-	if (op->dummy.ncycles) {
-		lutval[lutidx / 2] |=3D LUT_DEF(lutidx, op->dummy.dtr ? LUT_DUMMY_DDR : L=
-UT_DUMMY,
-    ...
+lib/bootconfig.c:__xbc_add_key() {
+	...
+	node =3D find_match_node(node, data);
+	if (node) {
+		last_parent =3D node;
+	} else {
+	...
 }
 
-drivers/spi/spi-nxp-fspi.c:nxp_fspi_select_mem() {
-    ...
-	/* flexspi only support one DTR mode: 8D-8D-8D */
-	bool op_is_dtr =3D op->cmd.dtr && op->addr.dtr && op->dummy.dtr && op->dat=
-a.dtr;
-    ...
-}
-
-Also note that all_true permits empty addr or data phases to have .dtr
-set to false, whereas op_is_dtr in nxp_fspi_select_mem() requires all four
-.dtr fields to be true unconditionally.
+Because xbc_node_get_data(n) still points into the earlier config's slice
+of xbc_data, xbc_parse_error() sets xbc_err_pos to an offset within that
+earlier slice.  The error-mapping loop in xbc_init_configs() then reports
+the earlier config's index in *err_idx and its offset in *epos instead of
+blaming the config that left the brace unclosed.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127-macronix-u=
-pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D19
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127144614.6119=
+4-1-mhiramat@kernel.org?part=3D1
