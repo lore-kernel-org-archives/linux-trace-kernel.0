@@ -1,59 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.251.105.195
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795797956;
-	b=gxssiwgvja122XOPE02fJtkZ9pNDet/Wy6GDp7xgYZm06YOYLmf1tjxMuHoUbfdrzwD9
-	 ELrRL7OpAf4I0lt7NFf8Sc4+7VJKolt+YCBQYgDHkN+kNrtMjW7HeqakbijmcMYXdpquJ
-	 kNmnN2kvhvs36Amlg2sqnrlAIT7ZsAvkmRRF/pv9de5TAbhEGKm9o+0y99qLpfOZEVjIU
-	 IhAgxP6Gk5WMH+TafKgpp8ZNoccgzLVGTJ9o6S6CxJoL2CGqhb2hRWKv09vy93jKLH59W
-	 pjlkIFsF7eI8iVuW8FRp1Jr3RFqvqcGBZRk5yTqewZ5q4T8aNVhZbo0Ywwt5Fak9M4w==
+	t=1795797958;
+	b=a5XDS5k64lxQTRN3LXspdBftTl8HwyT9nDJlPEs5kRDgAnmM5nsg7thpbJs3gjCj5J7z
+	 z0UmUtVXUaoCOUrJPnufSC28Rnrrnz0SEVmsJfK5E1+dVMPjvmDgXLOPdkDzt9ANQlTEE
+	 jRfwHa7UHclgta5q78EnRGj+616ZIDTNvaZjj6Vnvvaqj8zZpCW/vnHKUBZ2p2ejFZxy9
+	 poN0v0sJUVgkADnZ76UxMhy3TMv+2WOTQtzwpKyEjTStsNqPONYBsG6GWQ1r6p8MgZiM9
+	 Q+x3MhRTHTjFlnMQ0wpvAWnrUgwY+W0XBoRiS3yhe2zo3X8NiQoFT/ur9VE4Im19F9A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795797956;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795797958;
 	h=DMARC-Filter:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer;
-	bh=1M3acFGCLR5KsNELoY15riziLexMyJMhHyB0Ci8R3Vo=;
-	b=jcpTPIVOCmB41WqKGVm3xYRNSbcO6uteSG4A39tjKu+0LdCJ4D9hnQ2n1FXhj1Bl46X4
-	 YkpqAfki/ugssMVZewM6YaWpZLX6uTuhqCaqWwHAjmadQwrwZaGLM1lD5eSoMOciS1IZd
-	 5vp9nMbQ2af1ePk4MG99G7hmTKd4tZGOE8Ie9JJ+m5EgXHAGYdKEpw/EsB9AYXmYVAcoi
-	 X+9g2xuiJdUcdUPQIUpVIzFPYhGGpwDWyY0vleJ2ciNdQS6ef5j0rB0Vh2+pESJ3f3Y/1
-	 527xhs2Zf1MYWJtYlJDot3QTdY8ta6hlEvmX+E1+WX8wK2vRwn3w54L96uyXn0JXC6A==
+	bh=m+b9qRfoe5kw0wQH5Dx62HKikqet01mDMR3chcUsRE8=;
+	b=YT2Ox7ND0bERPiKNXs9LGgJAz95TxqiA3UJCFRQuQzs5ffQZdEbPzpk8BgMc3L9y963s
+	 s1uhGMerAbUm1hS/wHTFXnqWryKtrPFlczWqcNYYgig+XXJlQf33L7rEhR5aPd9hQGV3q
+	 Mmfw9s0cRtr0om4r7AcIYgUjyIACwQmlup9BN7fjz8vfED8ShhytBUTRhsvE1McRkU4nV
+	 y8fSVvgI8WQbF4GNvLpwOEIBH0k89JF1QQW8PNHcaFi5ewFFRfw/FP+KuJW07rXzALYmE
+	 fKPO5A/eEiBRru6o9D8seIOMmq8mPi/2Fp1+pqGwWRlw4+7q1GVgDq77qdSHDPk2upw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=collabora.com;
 	spf=pass smtp.mailfrom=collabora.com;
-	dkim=pass header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=hMZMbxgX;
+	dkim=pass header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=NoKQmlyD;
 	arc=none smtp.remote-ip=148.251.105.195
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82C4606A324;
-	Fri, 27 Nov 2026 16:45:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A82C4606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D197260A2600;
+	Fri, 27 Nov 2026 16:45:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D197260A2600
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=hMZMbxgX
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.a=rsa-sha256 header.s=mail header.b=NoKQmlyD
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1795797954;
-	bh=L6rZvcWM1EhsZRVJ5/aUwEYKuvUsh9+nsLQFVzmMG7M=;
+	s=mail; t=1795797956;
+	bh=26S/azp/tiJQxKKBFeHPtQPyrSoju++dR4OxSkAG01Q=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hMZMbxgXT3mbhra3N6rQX9B1oSR1Cf2j4MhwgxKNwunaIj+6erhWva49h+QSuQ+gK
-	 Sts4VtKDLxYCBLApHIZylitJCXV91x2JcvAyk9/V8dBSExR7d4+t1wcWaI89udoUYF
-	 a1cKnrIF5N7Dmy23/zqqCIjDdXI2a8z9k2k2sinQtut1pYww1VCWXMf75EiTa4R1Zx
-	 Gbnq8prjbWK/2gg0/aiOfvtjLgjvwaZLUOTjRMKIhDc0NFCrVhkpxOgN8ltMPHZvAc
-	 87JtlUVM/wSXZ1KjoKRfgp+hrCyPtjDaHjpoOwM8PDQSu+QSGw+1y5qMPMjU1hhkKE
-	 +FZldVVotlIVw==
+	b=NoKQmlyDTa5sD/WJBU9qb2fvJDtd5JszW2pnVhUOo497j0YBEwKWZJln1wSAivObc
+	 kIaJNx/n2FipJfAsjTe6aHqbM4bDvHEq5tngcu3FPuACpTRYraNWY/x6dE8QcZiMid
+	 DeXqj25V0MC+fbFvHqT6OdGPk63WnTIkSJsUfb6Ky2+koDvjUpKZ7xt8mmi3mksjIz
+	 NLWKjoWCBFWf5LWrf+INPWMH7cxrIzQME4ODfPQeT4EITpEpzzcYJbUwOO4T8SvfdZ
+	 HrBx6lodJCDWgsQ/KJ0rZjZ2YYdDycXr/8wVQ+VkGcMFPFJq/hMMvLcUoJHcBqO3tS
+	 URF2GzkpOzeEA==
 Received: from [192.168.0.15] (unknown [100.64.0.170])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: detlev)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 206BF17E010F;
-	Fri, 27 Nov 2026 17:45:52 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 55E0117E0A27;
+	Fri, 27 Nov 2026 17:45:54 +0100 (CET)
 From: Detlev Casanova <detlev.casanova@collabora.com>
-Date: Fri, 27 Nov 2026 11:45:11 -0500
-Subject: [PATCH v4 7/9] media: Add stream on/off traces and run them in the
- ioctl
+Date: Fri, 27 Nov 2026 11:45:12 -0500
+Subject: [PATCH v4 8/9] media: Add HW run/done trace events
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -65,7 +64,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-v4l2-add-ftrace-v4-7-24138479002f@collabora.com>
+Message-Id: <20261127-v4l2-add-ftrace-v4-8-24138479002f@collabora.com>
 References: <20261127-v4l2-add-ftrace-v4-0-24138479002f@collabora.com>
 In-Reply-To: <20261127-v4l2-add-ftrace-v4-0-24138479002f@collabora.com>
 To: Daniel Almeida <daniel.almeida@collabora.com>, 
@@ -82,98 +81,91 @@ Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
  Detlev Casanova <detlev.casanova@collabora.com>
 X-Mailer: b4 0.15.2
 
-Automatically trace stream on/off events for all v4l2 drivers.
+The events can be fired by drivers when the hardware is run and when it
+is done.
+That can be used by userspace tracers to see HW performance and usage.
 
-The queue type is also logged so that userspace can identify the possible
-multiple stream on/off events per stream.
+The hw_done event allows setting the number of clock cycles the HW needed
+to do the work, to help tools evaluate performances.
 
 Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 22 +++++++++++++++++++--
- include/trace/events/v4l2.h          | 37 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+), 2 deletions(-)
+ drivers/media/v4l2-core/v4l2-trace.c |  3 +++
+ include/trace/events/v4l2.h          | 52 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 29ca2f7959ef..71dec6618d08 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1965,13 +1965,31 @@ static int v4l_try_fmt(const struct v4l2_ioctl_ops *ops, struct file *file,
- static int v4l_streamon(const struct v4l2_ioctl_ops *ops, struct file *file,
- 			void *arg)
- {
--	return ops->vidioc_streamon(file, NULL, *(unsigned int *)arg);
-+	struct v4l2_fh *fh = file_to_v4l2_fh(file);
-+	unsigned int type = *(unsigned int *)arg;
-+	int err;
-+
-+	err = ops->vidioc_streamon(file, NULL, type);
-+
-+	if (!err)
-+		trace_v4l2_streamon(fh->tgid, fh->fd, type);
-+
-+	return err;
- }
+diff --git a/drivers/media/v4l2-core/v4l2-trace.c b/drivers/media/v4l2-core/v4l2-trace.c
+index af9464403f95..5b24b043295d 100644
+--- a/drivers/media/v4l2-core/v4l2-trace.c
++++ b/drivers/media/v4l2-core/v4l2-trace.c
+@@ -12,6 +12,9 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(vb2_v4l2_buf_queue);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(vb2_v4l2_dqbuf);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(vb2_v4l2_qbuf);
  
- static int v4l_streamoff(const struct v4l2_ioctl_ops *ops, struct file *file,
- 			 void *arg)
- {
--	return ops->vidioc_streamoff(file, NULL, *(unsigned int *)arg);
-+	struct v4l2_fh *fh = file_to_v4l2_fh(file);
-+	unsigned int type = *(unsigned int *)arg;
-+	int err;
++EXPORT_TRACEPOINT_SYMBOL_GPL(v4l2_hw_run);
++EXPORT_TRACEPOINT_SYMBOL_GPL(v4l2_hw_done);
 +
-+	err = ops->vidioc_streamoff(file, NULL, type);
-+
-+	if (!err)
-+		trace_v4l2_streamoff(fh->tgid, fh->fd, type);
-+
-+	return err;
- }
- 
- static int v4l_g_tuner(const struct v4l2_ioctl_ops *ops, struct file *file,
+ /* Export AV1 controls */
+ EXPORT_TRACEPOINT_SYMBOL_GPL(v4l2_ctrl_av1_sequence);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(v4l2_ctrl_av1_frame);
 diff --git a/include/trace/events/v4l2.h b/include/trace/events/v4l2.h
-index 248bc09bfc99..b11293365123 100644
+index b11293365123..a72bd3e47511 100644
 --- a/include/trace/events/v4l2.h
 +++ b/include/trace/events/v4l2.h
-@@ -262,6 +262,43 @@ DEFINE_EVENT(vb2_v4l2_event_class, vb2_v4l2_qbuf,
- 	TP_ARGS(q, vb)
+@@ -299,6 +299,58 @@ DEFINE_EVENT(v4l2_stream_class, v4l2_streamoff,
+ 	TP_ARGS(tgid, fd, type)
  );
  
-+/* Events for stream on/off.
++/* Events for hardware run/done.
 + *
-+ * These events will be fired every time userspace starts or stops a stream.
-+ * tgid and fd are used to identify the process that opened the video device.
-+ * type is the &enum v4l2_buf_type of the queue being started or stopped.
++ * These events will be fired respectively when the hardware is run (v4l2_hw_run) and done
++ * (v4l2_hw_done).
++ * As for other events, tgid and fd are used to identify the process that opened the video device.
 + *
-+ * Note that this even can be fired multiple times for a given tgid/fd pair.
-+ * E.g.: mem2mem drivers expect stream on/off on both output and capture queues.
++ * The v4l2_hw_done event also includes the number of hardware cycles taken by the hardware to
++ * process the command.
 + */
-+DECLARE_EVENT_CLASS(v4l2_stream_class,
-+	TP_PROTO(u32 tgid, s32 fd, u32 type),
-+	TP_ARGS(tgid, fd, type),
++DECLARE_EVENT_CLASS(v4l2_fh_class,
++	TP_PROTO(u32 tgid, s32 fd),
++	TP_ARGS(tgid, fd),
 +
 +	TP_STRUCT__entry(__field(u32, tgid)
 +			 __field(s32, fd)
-+			 __field(u32, type)
 +	),
 +
 +	TP_fast_assign(__entry->tgid = tgid;
 +		       __entry->fd = fd;
-+		       __entry->type = type;
 +	),
 +
-+	TP_printk("tgid = %u, fd = %d, type = %s",
-+		  __entry->tgid, __entry->fd, show_type(__entry->type))
++	TP_printk("tgid = %u, fd = %d", __entry->tgid, __entry->fd)
 +);
 +
-+DEFINE_EVENT(v4l2_stream_class, v4l2_streamon,
-+	TP_PROTO(u32 tgid, s32 fd, u32 type),
-+	TP_ARGS(tgid, fd, type)
++DEFINE_EVENT(v4l2_fh_class, v4l2_hw_run,
++	TP_PROTO(u32 tgid, s32 fd),
++	TP_ARGS(tgid, fd)
 +);
 +
-+DEFINE_EVENT(v4l2_stream_class, v4l2_streamoff,
-+	TP_PROTO(u32 tgid, s32 fd, u32 type),
-+	TP_ARGS(tgid, fd, type)
++DECLARE_EVENT_CLASS(v4l2_hw_done_class,
++	TP_PROTO(u32 tgid, s32 fd, u32 hw_cycles),
++	TP_ARGS(tgid, fd, hw_cycles),
++
++	TP_STRUCT__entry(__field(u32, tgid)
++			 __field(s32, fd)
++			 __field(u32, hw_cycles)
++	),
++
++	TP_fast_assign(__entry->tgid = tgid;
++		       __entry->fd = fd;
++		       __entry->hw_cycles = hw_cycles;
++	),
++
++	TP_printk("tgid = %u, fd = %d, hw_cycles = %u",
++		  __entry->tgid, __entry->fd, __entry->hw_cycles)
++);
++
++DEFINE_EVENT(v4l2_hw_done_class, v4l2_hw_done,
++	TP_PROTO(u32 tgid, s32 fd, u32 hw_cycles),
++	TP_ARGS(tgid, fd, hw_cycles)
 +);
 +
  #endif /* if !defined(_TRACE_V4L2_H) || defined(TRACE_HEADER_MULTI_READ) */
