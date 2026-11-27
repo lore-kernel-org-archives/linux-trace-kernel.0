@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795790876;
-	b=yeW8C20zayc7/wEtBpjR86ULsmY6RAZ6Ou0z2mj05tSrYIlylcwvBudz/vSgVmjMywuQ
-	 ae7OvVcwSbwZf3b/Me054IvCVzySMQ/uoLH6e64FL+PhP8NUlub+EavgcLB99dZDS42sc
-	 7UUVkRtWD9kIyydMbraYMRM2pF9m3vFlcw1u6ppWBMEEp9SxIwKVIVuJhvqmeLZfWgY7I
-	 VAf65OuQGAiQ+REJIZFhf3sFosxN2i5DZPzkxcSMHRI1J7fn8BnmjLrWHO3E/WzjQkmm4
-	 h55IeV/VgzAeeBfcQXjZ2BefT5Hv5M2NVMN3ehLlGTo5RJfXWn8F3wbzqq2iTczqjXg==
+	t=1795791034;
+	b=qb7lLkxdH0S0xpighfxf1RHkYbmsce/hVovoPYIY/gS5bkLTk3EETpQG0bVVnF6tHXXs
+	 s6aGwAH2z8BjGi2HVBPQLfOImlhBWNzURfP/sfuzmwowV0ai+cLz2unxuVVR2zMirlOFa
+	 +qLIL7hnbN5eDKRC6kKIUeyfLf9dB94j39VhniuD6QwMoS+mLqnP83cCBl7WJ+XtuWoV5
+	 k61k7Wc1rY48J2KNNMDhFmCuZyO1DMfQ0Tpc0XA+9+WpX5Zv0qZ4ymEfV+X7ZF5fj3BzP
+	 SsBnHwGrCBmoueSyBrIwVGMEwZW6zCKxeET4O1zEuVRdg++4KpDFdsMqik+TbOMI1Kw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795790876;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795791034;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=oRjIqSWINEkHmDyw4sCziPp6EwjJYhFVjZ6ycoabQMM=;
-	b=aO1+IQXc5OTsldZ8PBBL+AHrk2Wc5LayQs4KyhTwJxXI6yEx5Qwq9rUlGBczTxrWiFyu
-	 1N2GMM4LZuBngxDkgqWCJ7H/GDjNALdGClvkcDAjgSD648Tzj3arlplFLDOUh0rSMeh7O
-	 2TRPRvlkEvR7i6JLksS9Zk0QinJnXmXaWej0YtNOAjZGxxPhlePBjDgWeB3q7UKVqKKhP
-	 8qvp/8XyMggjvR7XqsqEiwsjgdWjJfIOVdsTO+pyma0ljsZK+i/VNM8xRsoAFikuhyKA4
-	 foTcaMr26DPbFuNC40pMkK16bWvdPnxp4IY1pOH7N2erU9mTLqPIBB+gjI/SW93x/QA==
+	bh=gxq3wgw+barjPLXIWEn74CmRmFDc4UPXarLciG8c6xg=;
+	b=YTH3FsaLMm36yeJS6fVmDUQJ89Z67d7D7sYhWlNrdFkw6JuFJ9rQZqt15/1VrS/pEOCM
+	 Wzf3MHX+/a5d01f6vYPuaYrGQgQ9Yrwks8OMYRfJQgODua9HVCNW89VyEyBOTBLd2dn95
+	 jViqrBTq1zJqkejgbhPHN280jac/FBncl1odimyIt4IMu12WoV/8bpxxWsPnB+Ucv6tRK
+	 dmSpN3Istr0UO2taYJNJhpYqWo9vkS5KKSKy/v3BsTEmHbQTMR4R/5bCucsGM+wY74Q0Z
+	 FDGbiKs3I2RkB/I0+8L+WrZTAhs9K4ZwhIePHD72GHWJYXKlEMnZF34hnSadSeN+iUQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gb+PgFDd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TED4nW9v;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF77606A33D;
-	Fri, 27 Nov 2026 14:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1525606A31F;
+	Fri, 27 Nov 2026 14:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gb+PgFDd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826441F0089A;
-	Fri, 27 Nov 2026 14:47:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TED4nW9v
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4701F0089B;
+	Fri, 27 Nov 2026 14:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795790876;
-	bh=oRjIqSWINEkHmDyw4sCziPp6EwjJYhFVjZ6ycoabQMM=;
+	s=k20260515; t=1795791034;
+	bh=gxq3wgw+barjPLXIWEn74CmRmFDc4UPXarLciG8c6xg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gb+PgFDdzoHGawX0SYTrnaJtt78i6/E2aEnD03hZO0CxwgyZ4p6u4GySQZnzzG4Pg
-	 6CJNSWoyilHSm+kZEbdaKO4voErn4u9PQNr2epJdFTzTmj2NmYs7evhHrh2MibsK2E
-	 VHUYzokAUZJZh/wgP0O1wfNkdFVXeBtV07oJpVXIS5QJoNDlaxhLzYTQlqLUpO04N1
-	 DwMWg+eEG/rn5OihPzZHhoKm8RDnAbB+qJiL9t2VHqcoNFq2hLvQilLDtiXtm+a8+I
-	 swuTMXdnSTEMfxd+s7yItcCM1/S7Jm5OZWxmFpN5VMO8txHs10PScanA/rJrWkCy93
-	 sckTuhmUA+9Xg==
-Message-ID: <sashiko-outbox-237604@kernel.org>
+	b=TED4nW9vOgPd2OvStCjk2PF00jhZuHuSUvhW879VmLpQmVpXIioWRCoVr0mcM7bcF
+	 YVWMtdmXdTlHG28Y+rmPVHxmYB/Z7RG4cgdwOVBdBDLQWpCOhcy40ptKwEmR6UYxu0
+	 OaN1zAL2D3arNsLBOpMKLZerpLUPtFATPJy0Oa81PNnhriQcPfDHY3WUV6WxDqGgUw
+	 1bF+3AN85o5VC2LjPuU5R0GMsWhDEaXjoIpK2FCMlb9QaViA7MbchUSfHC9EK//uti
+	 CLXLy+ainP5AkYjWmCJ9SiAwmhrd6lykH00Sk7jBtKp7xboCkF3EFUIy7eEdzPiWPC
+	 lihqnxW6BL9Mw==
+Message-ID: <sashiko-outbox-237610@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC v2 11/35] spi: atmel-quadspi: Reject excessive dummy
- cycle counts
+Subject: Re: [PATCH RFC v2 18/35] spi: nxp-fspi: Consume dummy cycles
+ directly
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.org>, "Liang
  Yang" <liang.yang@amlogic.com>, "Feng Chen" <feng.chen@amlogic.com>, "Xianwei
@@ -62,12 +62,12 @@ To: "Miquel Raynal" <miquel.raynal@bootlin.com>, "Mark Brown" <broonie@kernel.or
  =?utf-8?b?c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, "Michal Simek" <michal.simek@amd.com>
 Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Alvin Zhou" <alvinzhou@mxic.com.tw>, "Cheng
  Ming Lin" <chengminglin@mxic.com.tw>, linux-amlogic@lists.infradead.org, imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com, linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org, Frank.Li@kernel.org, neil.armstrong@linaro.org
-In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-11-5c93f5e5d630@bootlin.com>
+In-Reply-To: <20261127-macronix-upstreaming-spi-mem-cycles-v2-18-5c93f5e5d630@bootlin.com>
 References: <20261127-macronix-upstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com>
- <20261127-macronix-upstreaming-spi-mem-cycles-v2-11-5c93f5e5d630@bootlin.com>
+ <20261127-macronix-upstreaming-spi-mem-cycles-v2-18-5c93f5e5d630@bootlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 27 Nov 2026 14:47:54 +0000
+Date: Fri, 27 Nov 2026 14:50:31 +0000
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -79,45 +79,71 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [High] spi: atmel-quadspi: broken dummy buswidth check in
-  atmel_qspi_supports_op()
+- [High] spi: nxp-fspi: LUT_DUMMY_DDR operand halved in
+  nxp_fspi_prepare_lut()
 --
 
-commit 841dc168dae61bbe3593e703339f362587a598fd
+commit 1599225157c651da7c372805ec30cf72cfe8b69c
 Author: Miquel Raynal <miquel.raynal@bootlin.com>
 
-spi: atmel-quadspi: Reject excessive dummy cycle counts
+spi: nxp-fspi: Consume dummy cycles directly
 
-This commit adds checks to atmel_qspi_supports_op() to reject operations
-whose dummy cycle count exceeds QSPI_IFR_NBDUM_MASK or whose dummy
-buswidth differs from the address buswidth.
+This commit enables the dummy_cycles capability in the NXP FlexSPI driver
+and replaces the dummy byte-to-cycle conversions with op->dummy.ncycles.
 
-> diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-> index abca99b32b619..8946abaafa81b 100644
-> --- a/drivers/spi/atmel-quadspi.c
-> +++ b/drivers/spi/atmel-quadspi.c
-> @@ -487,9 +487,15 @@ static bool atmel_qspi_supports_op(struct spi_mem *m=
-em,
->  	if (!spi_mem_default_supports_op(mem, op))
+> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+> index 66cb58f95fdb1..e6fdded67a00e 100644
+> --- a/drivers/spi/spi-nxp-fspi.c
+> +++ b/drivers/spi/spi-nxp-fspi.c
+[ ... ]
+> @@ -567,8 +567,7 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
 >  		return false;
 > =20
-> +	if (op->dummy.ncycles && op->dummy.buswidth !=3D op->addr.buswidth)
-> +		return false;
+>  	/* Max 64 dummy clock cycles supported */
+> -	if (op->dummy.buswidth &&
+> -	    (op->dummy.nbytes * 8 / op->dummy.buswidth > 64))
+> +	if (op->dummy.ncycles > 64)
+>  		return false;
+> =20
+>  	/* Max data length, check controller limits and alignment */
+> @@ -652,16 +651,15 @@ static void nxp_fspi_prepare_lut(struct nxp_fspi *f,
+>  		lutidx++;
+>  	}
+> =20
+> -	/* dummy bytes, if needed */
+> -	if (op->dummy.nbytes) {
+> +	/* dummy cycles, if needed */
+> +	if (op->dummy.ncycles) {
+>  		lutval[lutidx / 2] |=3D LUT_DEF(lutidx, op->dummy.dtr ? LUT_DUMMY_DDR =
+: LUT_DUMMY,
+>  		/*
+>  		 * Due to FlexSPI controller limitation number of PAD for dummy
+>  		 * buswidth needs to be programmed as equal to data buswidth.
+>  		 */
+>  					      LUT_PAD(op->data.buswidth),
+> -					      op->dummy.nbytes * 8 /
+> -					      op->dummy.buswidth);
+> +					      op->dummy.ncycles);
+>  		lutidx++;
+>  	}
 
 [Severity: High]
-Does this reject every operation that has dummy cycles but no address
-phase?
+Does passing op->dummy.ncycles directly to LUT_DUMMY_DDR halve the dummy
+cycles programmed in DTR mode?
 
-When op->addr.nbytes is 0, op->addr.buswidth is 0 (for example, in
-spi_nor_spimem_setup_op() when micron_st_nor_octal_dtr_en() issues an
-8D-8D-8D Read ID with 0 address bytes and 8 dummy bytes, or in SPI NAND
-operations using SPI_MEM_OP_NO_ADDR with dummy bytes), so comparing
-op->dummy.buswidth against op->addr.buswidth without checking
-op->addr.nbytes causes atmel_qspi_supports_op() to return false and fails
-those operations with -EOPNOTSUPP.
+In DTR mode, FlexSPI runs the serial root clock at 2x the flash SCLK rate
+and LUT_DUMMY_DDR counts DDR half-cycles (2 * ncycles).  Previously, DTR
+callers doubled op->dummy.nbytes to account for two transfers per clock,
+and op->dummy.nbytes * 8 / op->dummy.buswidth intentionally did not divide
+by 2, yielding 2 * ncycles.  With .dummy_cycles set,
+spi_mem_dummy_bytes_to_cycles() divides by 2 * op->dummy.buswidth when
+op->dummy.dtr is true (and direct ncycles callers pass full SCLK cycles),
+so nxp_fspi_prepare_lut() now programs half the required LUT_DUMMY_DDR
+operand and breaks DTR flash reads.
 
-Also, this buswidth check is not mentioned in the commit message.
+For the same reason, the > 64 check in nxp_fspi_supports_op() no longer
+accounts for the 2x factor when op->dummy.dtr is set.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261127-macronix-u=
-pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D11
+pstreaming-spi-mem-cycles-v2-0-5c93f5e5d630@bootlin.com?part=3D18
