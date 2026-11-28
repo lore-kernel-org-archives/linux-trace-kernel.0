@@ -1,54 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=117.135.210.3
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795833096;
-	b=KqCi3keJbNjhC7OM/GxVKu+FcVF3SAt0gbbaGdQNqkAOZfClrp/FH0UIIRgOSlv/Y+V8
-	 RqVZpmXWk95XDZtY7QtQzx65Ikae/MU4cn8fYb0L3oKbLO9URj/x8cQEsRjHXzWAZZfSY
-	 hiuJ69bPakRAz4kBqttj/dDfX89u5HYZ+uC7FoDwUlifjZHZkjBTx0c6LLbI67XquWNF0
-	 rtcg4bCQyiR5bEeH+Hd5CJWHV4svdEBS+0+jJvUuClauLo3mit4decWaWjxvZARQwpU+9
-	 VNJ4EmtEkAReUIIxIL7PDXGY1bKClp7y/GJ6LXB8d0ej0BoYxgFw01+Dmyz0nNbpgLw==
+	t=1795844194;
+	b=1LE2vJ2VJiwwGUA8esv3xJRa+me1ryUgC9BTosTG9Mwdq6E1jYD0vvyM+UOSQMeAtRFN
+	 12KpYFKewdBZ9UfLwJzmDGajIlo8SpDz2S9FN4JS/etrd4Ki7p6j8RR6AIHNlwFhnETse
+	 E78Qm6O1wgvUbWcO3k5Trj99WQPvk4wxAsqYrtjndAjijbVua51LoSst1ZXJ6FE7T0J32
+	 nnsoKBdJloJbJHi3ZL+Ip8tK9LDwCtuOYfmFWZ/3Cu9ILTj0qWp/Fo7YsISLdcjw+Gic+
+	 XNkpfO2UDBkEJlsYr3vC9AyddV12Z+32N5CTUAAK0Q0e7SF3z6+T+aisHkCMMcBjFQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795833096;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795844194;
+	h=DMARC-Filter:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
 	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=VtFNi8cB6WM7FpUP6o6VT1D+XWcmFi3d3WO/9cxQ8vA=;
-	b=1u7gy/I08cK/ITAhI3h0AYZx3Q7slumDTZY3HZx5OnC8e+oTqESoCpTPPPCdHn+Z7/i2
-	 yLwRfApHnGIzEhspSEjupGIlTSOuVG/kUZpS/lqM3kwchoGgCfQH4Sn9yasANMSLMU79b
-	 oE8lSmGgTn+6KAoZ6eR6hEbfqo2Ccq6aA4WkBTq3Cl9B3KmjaemJ66+2WPMdDNSkqjZO+
-	 5/eaMgO7L/LBuIo9uadpV873yr+Fai5+PQOLIorBjqczNf26lyPZz71bDostBJEJl5p/k
-	 16Nrf+lrXUAYyL9zWVKllXHWiM1pJ59ghJGiBePrnniDM+ut8OrMD+aJnWfqenCvWSw==
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	 X-CM-SenderInfo;
+	bh=RMYHGY6d6gHBvlKyo+gYuBlX2+YK0xRmMlJIq1Gx00c=;
+	b=eoLllRSU4w1xV7Jt4v6WrWZjj7JhgmX1TzEVb0OlHWBCv4i5gdXghfb5XTQ19ejjjYYZ
+	 0S+oLPzSTvBydgyQ8SrdRSIk33SXNlgN2ePgWA8mFLvv7EDVH6LmWj6ZPKHDhQXD+wvKD
+	 3E6nLZJspcgE/2eqOpJZcQqRPNMEUfJuWv/M2VveAa4jfGza1+jcHvwDt4aIVcg1QOsLF
+	 xA5eoJz0m0zVudZwCpb2/KGT1mnn9UkMVW3DcR6HwPJlozKbpiDmFCZqPwTLLXXbfVBjx
+	 EZlNDUep8g4e1Fc1CK9rwkuEbJX9Q75pJoZrbaTFQFz9YQsKe/263Q14wny5ZrLFK9w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YKwd3ZEp;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=163.com;
+	spf=pass smtp.mailfrom=163.com;
+	dkim=pass header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b="GGt/CsIh";
+	arc=none smtp.remote-ip=117.135.210.3
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEFF606A31C;
-	Sat, 28 Nov 2026 02:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8AF606A31C;
+	Sat, 28 Nov 2026 05:36:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7E8AF606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YKwd3ZEp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C06A1F00893;
-	Sat, 28 Nov 2026 02:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795833096;
-	bh=VtFNi8cB6WM7FpUP6o6VT1D+XWcmFi3d3WO/9cxQ8vA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YKwd3ZEpRbeT+6VpV/NDRoG5l4H9yNv/hSChadINerHYzo+ZvPAmezrpqsZlRcJfc
-	 fkizaDfxkgOVrUpdYUyI4UuDgsbJ4q1ibguBkOjDvQEGW7ghUrghzhITelsgHrrdRP
-	 +MVjtJ9B6Wp1BWcItbv1kZ1fDP8dp9FlVxefPXToMtf00FJd1EJvg46tN6XcWTX3Sl
-	 qB4IrwUnip/UzKlEdP7+yA/xBgdbWnZwncmAdTmwRgoDtbHDKN9DSpUdW+QeO0uX/X
-	 2XsolnTyViw8x6CWtVaTr4UYzdpwrJVgGwm56Bygjn8iEir1zYMkHCgdmxvqQh0MNy
-	 n+ouAs0fveUxQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Antoine Tenart <atenart@kernel.org>, mathieu.desnoyers@efficios.com, vmalik@redhat.com, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH] tracing/probes: fix race between probe execution and event unregistering
-Date: Sat, 28 Nov 2026 11:31:32 +0900
-Message-ID: <undine-1795833092601383688-d1e19625e907c2ec@undined.local>
-X-Mailer: UndineD 0.1
-In-Reply-To: <20261127140616.20616c68@gandalf.local.home>
-References: <20261126132830.14992-1-atenart@kernel.org> <20261127140616.20616c68@gandalf.local.home>
+	dkim=pass (1024-bit key, unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=GGt/CsIh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version:
+	Content-Type; bh=RMYHGY6d6gHBvlKyo+gYuBlX2+YK0xRmMlJIq1Gx00c=;
+	b=GGt/CsIhjA8rmBBfHqb/d+uzDvwrwOO3gEgrjZTsh2nqXjCnRCBvpPOIHZefio
+	8nm5VkzXBZZzGCOBro14WVPLTAtaX34bvdgYRZEvhRFSJNsCNyThqGQXr7uMJR9y
+	tNX1OjXOSz5sLcbWkdL3AhuWVIYXegSuS7+RmasXCSHew=
+From: Chaosheng Qu <quchaosheng000406@163.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtla: reject -e, --filter and --trigger without --trace
+Date: Sat, 28 Nov 2026 13:30:20 +0800
+Message-ID: <1795843820.20995.223872494152340@163.com>
+In-Reply-To: <CAP4=nvS-iHK1aFiwvdLtSf4sCYcfFvqj6cKjkSb0eJs-O=qfmw@mail.gmail.com>
+References: <179360289114.124676.5863600854966859222@163.com> <CAP4=nvS-iHK1aFiwvdLtSf4sCYcfFvqj6cKjkSb0eJs-O=qfmw@mail.gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -58,117 +57,20 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3P09DaAprnljSKw--.19110S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvj4RANVkDUUUU
+X-CM-SenderInfo: xtxfxtprvkv0bjqqikiqw6il2tof0z/xtbC4wSI-WsKaESx2AAA32
 
-On Fri, 27 Nov 2026 14:06:16 -0500, Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Thu, 26 Nov 2026 14:28:30 +0100
-> Antoine Tenart <atenart@kernel.org> wrote:
-> 
-> > 
-> > Hi,
-> > 
-> > I found this while debugging another (downstream) issue, reusing the
-> > same reproducer on mainline. The reproducer registers/enables and
-> > disables/unregisters a kretprobe on a syscall in a loop while triggering
-> > it (I can share if you're interested). It should work with other probe
-> > types.
-> > 
-> > I'm not versed into the tracing subsystem so I went the safe way and
-> > reverted back to the previous behaviour. There might be something more
-> > clever to do.
-> 
-> I would hate having to put back the inline synchronize_rcu() as that has
-> noticeable impact on removing kprobes.
-> 
+No, and the compatibility argument settles it.  common_options.txt already
+says the option is only active with -t/-a, so the silent no-op I objected to
+is documented behaviour, and rejecting the combination would break
+invocations that always pass -e and only add -t when they want a trace.
 
-Agreed. This kfree_rcu() method seems better, because this is not only
-kprobes, but also other trace_probe based events have the same problem.
+I am withdrawing the patch; there will be no v2.
 
-Thank you!
+Thanks,
+Chaosheng
 
-> 
-> > 
-> > Thanks!
-> > Antoine
-> > 
-> >  kernel/trace/trace_probe.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index cff55dcae36f..8addaf641431 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -2841,7 +2841,13 @@ int trace_probe_remove_file(struct trace_probe *tp,
-> >  		return -ENOENT;
-> >  
-> >  	list_del_rcu(&link->list);
-> > -	kvfree_rcu_mightsleep(link);
-> > +
-> > +	/*
-> > +	 * Synchronize with probes being executed. This is not only for freeing
-> > +	 * link but also for related objects (e.g. link->file).
-> > +	 */
-> > +	synchronize_rcu();
-> > +	kvfree(link);
-> >  
-> >  	if (list_empty(&tp->event->files))
-> >  		trace_probe_clear_flag(tp, TP_FLAG_TRACE);
-> 
-> Would something like this work? I haven't fully tested it though:
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index cff55dcae36f..c249256dea80 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -2812,6 +2812,7 @@ int trace_probe_add_file(struct trace_probe *tp, struct trace_event_file *file)
->  		return -ENOMEM;
->  
->  	link->file = file;
-> +	event_file_get(file);
->  	INIT_LIST_HEAD(&link->list);
->  	list_add_tail_rcu(&link->list, &tp->event->files);
->  	trace_probe_set_flag(tp, TP_FLAG_TRACE);
-> @@ -2831,6 +2832,14 @@ struct event_file_link *trace_probe_get_file_link(struct trace_probe *tp,
->  	return NULL;
->  }
->  
-> +static void free_link_rcu(struct rcu_head *rcu)
-> +{
-> +	struct event_file_link *link = container_of(rcu, struct event_file_link, rcu);
-> +
-> +	event_file_put(link->file);
-> +	kvfree(link);
-> +}
-> +
->  int trace_probe_remove_file(struct trace_probe *tp,
->  			    struct trace_event_file *file)
->  {
-> @@ -2841,7 +2850,7 @@ int trace_probe_remove_file(struct trace_probe *tp,
->  		return -ENOENT;
->  
->  	list_del_rcu(&link->list);
-> -	kvfree_rcu_mightsleep(link);
-> +	call_rcu(&link->rcu, free_link_rcu);
->  
->  	if (list_empty(&tp->event->files))
->  		trace_probe_clear_flag(tp, TP_FLAG_TRACE);
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index d1fb3520700f..aecc9f24951d 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -281,6 +281,7 @@ struct trace_probe {
->  struct event_file_link {
->  	struct trace_event_file		*file;
->  	struct list_head		list;
-> +	struct rcu_head			rcu;
->  };
->  
->  static inline unsigned int trace_probe_load_flag(struct trace_probe *tp)
-> 
-> -- Steve
-> 
->
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
