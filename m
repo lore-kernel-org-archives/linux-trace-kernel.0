@@ -1,97 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795867094;
-	b=cwZRchFtn+g3OJhaoQf3dkFM0PvQCIlt/mg6XByRxFJsDRTMMoXshRB3rcd/HgmgkoRO
-	 i6v6qEVBZ3Pr/2m6v7A2GJshNkDCR+Zn7icxGWtBjFAiL6pDxfhPeDLofDlplDtKfUToN
-	 WLm74vrp2/M9Je41NqV1rYxbVQRUP6LVViQ3Ue85g5dl69C7bpD4NvdqkNk09nkC4qBmF
-	 R5lo7v9eq7gonUY2qTzq4tCYtDPntpzP6YJrMBUh3D2mZ4OV1uWPT/xwQw8J9edRRBWzX
-	 7LzwKmXeFQQe3KzVc6DwKfr1sB2L5SrDbUD3Bv7Ls1P/WJ+uxY47g+WRp58sMttq3sw==
+	t=1795869194;
+	b=hidAo+gwBaSPGCAH772rZfmVVzhVyBk3eODoPGduVcyTJ8Lupd225rvkO3z//LzRcKRH
+	 AjmUlGSDSK5MaK6BWqnmiZieOxj57AHQw9lJpla7VNY1wXkJLjZMe+ruFm0B8mnOpk+i2
+	 oNVS2BpqgbmPZcR66g1RwDZb6Kxrn7pK4ta6MqGhPdhTEh3LoXpeEs2XRHz64/iQIxLBH
+	 QzoGJSuT4KWs+2iWBClF8g5DXxrVIjiatKF0DOfKdinIg8JSKqPxZrGBX+6uRtSveCdMM
+	 LmsuNlsgj9ee3B0unDmYgNTVWPc9QjkP1Jw+ojjG53HzJ7XYBezwrBSebpTGrAaEqDw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795867094;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=SjPI7Jbk9ZW+2UhHnHYD7+GabroYFcfZRUftjzGrH3U=;
-	b=s+5Ej0gvQGq/DkKYo83zXi03uulDSIpFaB361hwrxmu2zjil1c/CmkGUjTgMwpQN+hfu
-	 ZumWi4MfQsx0W+yRkIbMoD+kR7a0UNc58t2ALjdIGTIdPdkFWMt5H1JMlArlw19ghsNB5
-	 4U1BEN+IY2ZUipFipSJpTXNXDejm8vPlVlNfaygfSL0sdfyjFA8RsQYz45XVNVMULgJtT
-	 92tWwRhh+kHOtC5jbo7F+osqbyKMstJL+8oUMQJSHJM6lGSRWSHcApe/NxSflHHKNldFE
-	 XOM93uBbu+aT8AUkHDKXx3CqngCcf8sbIsJ2UQqoAk9AmBef8RvkEfbJzSH2HLN+0pg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795869194;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=NHLg7QzMUvmQbR7yGVRZKWsvqhtvqdIwUR7km16E7I0=;
+	b=qn4FCba+0+tKxxYSzEZcG/D6nhdBK4NkK/x4ZTekV9vVOSos161kO72RQKNHy5hdyeyn
+	 12sjTtMy+Qi8E1iHik/0dHGF7i3wKHW/eT8B9rNJF/E9KKrxH5KWpgNsn/4eUJP4u5wg9
+	 nQM2fbxfsGRK5d188iYpYNrcle9aQJF+iwHitOWeCoFsXrcKTQhVV/YNK+LLyMmW6Tfyb
+	 snK9DXHqd+lhR/5zyUPFDOL3Fv2Z9+AG/9Zh1+NW2zoQeFjfFWtX4F5HzSXbfk4n8wfXU
+	 KRYEGg1YKFFrbUAzin5/mJM+JS5ahGolBGHtY0R+ovk4EF2Bsu8i8BaruM3qdZjxyyg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=oEHsMOgF;
-	arc=none smtp.remote-ip=209.85.221.47
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UgbAj1Qk;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275BA606A324
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Nov 2026 11:58:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 275BA606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69251606A321;
+	Sat, 28 Nov 2026 12:33:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=oEHsMOgF
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-48dee593f18so8420168f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Nov 2026 03:58:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795867091; x=1796471891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=SjPI7Jbk9ZW+2UhHnHYD7+GabroYFcfZRUftjzGrH3U=;
-        b=oEHsMOgF2CsvvJKAvBZxSurRYX7O5jWliShMLdEHmE7x02l0YY23OjRtmSqwo1EpuS
-         Y3QXLp+7LZjeWdYhbjnAGp+W6/2i/7Xj7ovV/dF3g0tlxVh9FEeHHpom0giUNGfBXkMo
-         K4cSrQQfvFY+VaS0XdpnYfsWqWDYw4pqPZ6vdv+U5WqJCbcZA7pYbCZO87M+tJBDZX4m
-         J/OyDPx377MZ0GhDjlP48AyWPZuOu/dQDhoUEAhkTQjjjkidTjGOZ3qUgdetETGV7v5M
-         nKN5w2alyG7/YF4L3niAw7Kw8ghhL9gjQ/U0TpqWq6IL/LGgKALeInJsoYB/bsLngR29
-         AxTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795867091; x=1796471891;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=SjPI7Jbk9ZW+2UhHnHYD7+GabroYFcfZRUftjzGrH3U=;
-        b=cMn2/TuWijqDCVsjABQxMa2PotSkjd1PMXivdM+W4EfvCWqf04KA27WZn5NrLyrUor
-         aUv/bg5R74neylWxyXxfP/3NbG7EjiFDEveHArwYxGTQZYVuOckOgwvhbr5N9kp0S2lv
-         IH5jgImiNV7nrF5e7q0mW4Tc1/qHdvcxNOrlZZO4KGQ9ftdqdaFjTA2lk0qHRnd+iZ+c
-         Ypa+Y2u1j5gw9sBpRpO3gbX01ZI7IApJ2tQ6LweXv6sVQZEP3mFJdLMIKvIpaqFGrOlB
-         RmVYTVNj/uJbC5bhpbmSF8QoLfdk93yyZNNdL/KOTV6IgC28jVgqTPmGYwcOVQ3eRvL6
-         v5Xg==
-X-Forwarded-Encrypted: i=1; AL+hErH0upqR9sgvPpBEK3HSOf9OzegmKJIgnJpeNN58NLVgl7DSEbSndmZPcHOwUiaG2eGmzNIkGoyTovWJsatFY9nyfng=@vger.kernel.org
-X-Gm-Message-State: APuU4Z/JVwbiT561v6ZQbZIX/SBnHFaWOwM5FeWfk37yaLvbO/u2e3yl
-	oQJV99mMQGKRCsPLG9uU9tOYnBV1qYueD69dXkVgDUp6hz5GHcNAMQXL
-X-Gm-Gg: AZFdTZdDe+hJ1i0rdiiu1PeWRVf+0JkahyOEhdYX+mkRMTB+kE/qSBS6uaLe1qVzuDS
-	Y7dzC/ZqqT7LrCRGufOkqk21fcu24hDFq2xURbDdpiV/GEs7kkwt8Zp9JG4QCLNalhi1VM85JUQ
-	5tTpPpYbMLOAsL9fBYgX4SyzsfNsHrF1QH3chE9obv1BO7sQ/y2fcT/3Blz/KbYwRivyjYSjQXO
-	6Z5wA9rr6F0n08rxh7bWG9SijxqdZwN9aLztah/olvxnQAcarV3lPL45hhQ2NR3jvqdkQiULh9U
-	i/VN49X5iv3cpbZt406Fqnqy8zd6+VfFGJ7uJ1aVK/JLANJ0cSmdkjEnXr/pZPD910fXigzMcpD
-	5ZbAB0T1aG04KAdsgA2CYknr8NC9PXpkROGOT4eQ3RM9ocBRC3eA+10TSKd7pn2Ruamwkts4k7b
-	pJKuR5BJgFrqOdfzSFvQciVpYeuDSDEzeJa1gx3CuEcGQdxgkf5KxJRIFAtOTTCFMfksLX+dqHA
-	2nSJsSkyPVhPA7mYDw2p+8Qo9lWcY0TmAP+Px+cApsjMcvb85RrIVZFR0YEuok0Ymus7/ZmJwYt
-	kV1/iceHORAlZRZFrHghW69GdhJeiOZtJDlyt5EEO+ImGgnFL4aepAdXTldKJxsGZdlikbw7lR+
-	B+/SN2SSWydqidb6ZBHSi0Y4sWRM2gOVuiDqC0hrm2xQ89PzCAk+2xcGtJV8vMlFCDGD1Zhk7Gc
-	/G/X27LyviAOnd4LbH/0cRZw1/IuNghAleoLLP7rXEcYd7Q+955eUTDDeEolAtjc+KJMjFsPyYE
-	AnZZhFWjoh1TBbkzA==
-X-Received: by 2002:a05:600c:5306:b0:4a2:5ca:767f with SMTP id 5b1f17b1804b1-4bb887c9af4mr523131755e9.4.1795867091555;
-        Sat, 28 Nov 2026 03:58:11 -0800 (PST)
-Received: from longitude (2a02-8434-fda5-4201-510b-18d1-bc36-7cc9.rev.sfr.net. [2a02:8434:fda5:4201:510b:18d1:bc36:7cc9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853c9170sm832768435e9.14.2026.11.28.03.58.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Nov 2026 03:58:11 -0800 (PST)
-From: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
-To: mhiramat@kernel.org
-Cc: rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] tools/bootconfig: Export tracing state without the function graph tracer
-Date: Sat, 28 Nov 2026 12:57:57 +0100
-Message-ID: <e8de5737f07a1cfee7f8530b82cfeed3e963ce21.1795867077.git.edumucelli@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1795867077.git.edumucelli@gmail.com>
-References: <cover.1795867077.git.edumucelli@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UgbAj1Qk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4C81F00897;
+	Sat, 28 Nov 2026 12:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795869194;
+	bh=NHLg7QzMUvmQbR7yGVRZKWsvqhtvqdIwUR7km16E7I0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UgbAj1Qkv9vgrhmQjPBb3Uin3peWb2GMRg/beMd3hsVnXHSE6u6PLIl3yAfzIwVSk
+	 pfHvBIgrPTyKL0oY24fP48gQF4tMBPtybRbUhhPqycVcg7geq5Wbnm070vu/PGLyBi
+	 0zZbVTy4e5gqJyozmgZ7ABV/P0KpBldWO7E5maSjuaWqnxhy7YDxg+l42RIpINtl1h
+	 xaQPOJO2H/p/DJHrQLpEES6/juETq2enGdpv/nwf5qeVVNO+agHOwF4P0I6jm/gWXH
+	 h9Fi2velcE5HbdTOCGQ+PXigUArBXok8RH4Y/aLVNdwiRaSBhFZiPXYnNc4hQlqO5M
+	 D120zb4zWao4A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Keke Ming <ming.jvle@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: Free utask on dup_return_instance() failure
+Date: Sat, 28 Nov 2026 21:33:10 +0900
+Message-ID: <undine-1795869190837398987-1e7380873dfc6905@undined.local>
+X-Mailer: UndineD 0.1
+In-Reply-To: <20260822150906.528208-1-ming.jvle@gmail.com>
+References: <20260822054620.452262-1-ming.jvle@gmail.com> <20260822150906.528208-1-ming.jvle@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -101,51 +58,66 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-trace-kernel+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-The function graph tracer provides max_graph_depth. With that tracer
-omitted, the unconditional read fails under set -e, and ftrace2bconf
-exits before exporting any ordinary tracing state.
+Hi Keke,
 
-Read the depth only when tracefs provides it. Check each available
-function graph filter file and keep the existing warning when an
-expanded filter list is present.
+Sorry for leaving this patch unattended for so long.
 
-Fixes: 2b86062a34a8 ("tools/bootconfig: Add a script to generates bootconfig from ftrace")
-Signed-off-by: Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
----
- tools/bootconfig/scripts/ftrace2bconf.sh | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+On Sat, 22 Aug 2026 23:09:06 +0800
+Keke Ming <ming.jvle@gmail.com> wrote:
 
-diff --git a/tools/bootconfig/scripts/ftrace2bconf.sh b/tools/bootconfig/scripts/ftrace2bconf.sh
-index b685dd6b070b0c..de571ec11b4392 100755
---- a/tools/bootconfig/scripts/ftrace2bconf.sh
-+++ b/tools/bootconfig/scripts/ftrace2bconf.sh
-@@ -45,14 +45,20 @@ emit_kv() { # key =|+= value
- }
- 
- global_options() {
--	val=`cat $TRACEFS/max_graph_depth`
--	[ $val != 0 ] && emit_kv kernel.ftrace_graph_max_depth = $val
--	if grep -qv "^#" $TRACEFS/set_graph_function $TRACEFS/set_graph_notrace ; then
-+	if [ -f "$TRACEFS/max_graph_depth" ]; then
-+		val=$(cat "$TRACEFS/max_graph_depth")
-+		[ "$val" != 0 ] && emit_kv kernel.ftrace_graph_max_depth = "$val"
-+	fi
-+	for filter in "$TRACEFS/set_graph_function" "$TRACEFS/set_graph_notrace"; do
-+		if [ ! -f "$filter" ] || ! grep -qv "^#" "$filter"; then
-+			continue
-+		fi
- 		cat 1>&2 << EOF
- # WARN: Cannot export kernel.ftrace_graph_filter and kernel.ftrace_graph_notrace.
- # Only the expanded function list is available.
- EOF
--	fi
-+		break
-+	done
- }
- 
- kprobe_event_options() {
+> dup_utask() installs the new uprobe_task in t->utask before copying
+> return_instances. If dup_return_instance() fails, the partially copied
+> utask is left attached to the child task.
+> 
+> Free the partially copied utask before returning -ENOMEM.
+> 
+> Also, dup_return_instance() copies the return_instance before fixing
+> up extra_consumers.
+> 
+> Here, if no deep copy is needed, clear the copied extra_consumers
+> pointer.
+
+Thanks for the update.
+
+Looking closely at v2, this patch actually bundles two distinct changes
+and needs to be split (so that each one can focus on single issue):
+
+1. Clearing ri->extra_consumers = NULL in dup_return_instance():
+   This fixes a real, independent double-free / use-after-free bug that
+   can happen on normal fork() even without any allocation failure.
+
+   ri_pool_push() resets ri->cons_cnt to 0 while keeping
+   ri->extra_consumers allocated for later reuse via krealloc(). When
+   such a pooled return_instance is reused with cons_cnt <= 1 and the
+   task forks, kmemdup() copies old->extra_consumers into the child's
+   return_instance (shallow copied), causing both parent and child to
+   alias the same heap buffer.
+
+   Please split this fix into its own standalone patch with an accurate
+   subject and changelog explaining the ri_pool_push() reuse scenario
+   and the resulting double-free / UAF. That should have:
+
+     Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
+     Cc: stable@vger.kernel.org
+
+
+2. Calling uprobe_free_utask(t) on dup_return_instance() failure in
+   dup_utask():
+
+   As Oleg pointed out on the v1 thread, freeing t->utask inside
+   dup_utask() alone is not sufficient because uprobe_copy_process()
+   returns void after the "No more failure paths" point in
+   copy_process() (and mm_release() already calls uprobe_free_utask()
+   on exit). According to the discussion, I think you will implement
+   option B. In this case, please add below Fixes tag.
+
+     Fixes: 248d3a7b2f10 ("uprobes: Change uprobe_copy_process() to dup return_instances")
+
+Thank you,
+
 -- 
-2.53.0
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
