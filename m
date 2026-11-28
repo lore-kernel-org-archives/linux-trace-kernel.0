@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795859151;
-	b=xxRvnVu7d4E8qOon381PFHNLPVsP2vAJDIpdAxJaxVluZmuur9iYc74iPwfDLNoF3rmo
-	 c6Dsv62X+fK0+J3hlU/BoBPER5BEM++4Al3wVwkCNf76nui9yzGvc0zYDFv2HAIE0STeh
-	 mQhj2NDBWUm5KrCAwoqlMZj3nDseYfJM6Kgx5rWU547bXdyVxKng9wB1xwnzIupQFWUIB
-	 n2hPKhkUaJDjedxrRyUiQv0h2Ycy3Sy2bUuENBD84a+wMXW7Hhpc5bqAwWKw9OrH6Vnvd
-	 RYN6i6/2bK1cFjQNyCPrrNBRjCvZt0sBOFIM3caHrZgH5f12k/rQLxao82NXK1EBdgw==
+	t=1795861823;
+	b=UapTRIuXEu4v3JZuYxpgBmenhDoPR5xqO7zCSAzy6+tUbGuLFbGin5IsrspKjYVzeiE3
+	 jxIVThTyvHBq4OXPPIwFvKO4eD+irJBeby/kMQNxVtaC0NVqPeMTueBQDRuBYtc2rueTO
+	 GBI/YBuv6NcgBfgIF0e8DHHRlAtvFRpYsUacq1mpj4SwSe2FUQUhrQVzxGcYnil8vfDgH
+	 vXdIOdR76MVWcw7Slz/nAtFIv8N11H0sVyYW3VTinezUVKaW3+h8Izbz2d/Z/Csa6uoN6
+	 mlT2wOlnLAX4skvrBD4qcSo7hII12KSCd1ewGfNDHiqpq7H/fz0l7Op9N8DfoPu23lA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795859151;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795861823;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=3duadoI5cMbrpBpkjaOojq5fk/vrpMla0+OafY6QSEY=;
-	b=mfZOuF54PHog+VORWMTz3V/h99Vzbwn4eQdlfmyOvE2s0sH1E+CaRNdapHQc7dqaMKPS
-	 XunrUc33DHk7Wx15eyGGLionuECU9WoI/sLPfX1xO20bKJaA8EAYzuflW1SZV0/ZcYAzQ
-	 XXOox9zJu5SUPrOamuex/NhHfKd+I6wUkcor8z9gxXM8b8OgyHD7h+FpEyL775Shc7CJQ
-	 W7DN51q5Eiwi7VE4ZeAp9OQdRRezJg12X5PEYaETjvgKIOw+Hd40/FIUApOQp5w749sun
-	 u7NxgpGaTtyORM5TLOaEhpcrq1G9ZaCBx02akoBmsZIGhScx2PWrhH7VpGakqi/sIbg==
+	bh=ucG103OtGB0uXp5vLgmcqXc8IoTb+p29U9i3AaC9Yc8=;
+	b=nF1rR3NojUxSuwKCbTG3r+030XFERcKpXCYWizCJfBQiXYlKndK4t8lBB8qRfBvHahpX
+	 hPOtzlH6NFZJZZQhATUu941/mEVxOWBmknETXSmMx7UskzzTP3iwD1kElkbHx6tEN6/RF
+	 SCvu4PCovcNwznSUlByl9XZlYUXqye8HjcenXiwhUlxjS7VwM+44FdC54jntr6cgLMTRn
+	 /ZwR91DdCASWOG+IeGXPevWUoBtAJDFdq9TlKfQSs2EWXIWGJNNfYQZv81RmsexRwDia/
+	 5VY36WlBSOuDsro5g6xXwumRy910+KJ4j8SyUKRWx7yIznTTNk3vklXvJ2zNGtdjwog==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IIGR2Ysu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kHArR55J;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E81606A31F;
-	Sat, 28 Nov 2026 09:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D24606A31F;
+	Sat, 28 Nov 2026 10:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IIGR2Ysu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD1D41F00925;
-	Sat, 28 Nov 2026 09:45:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kHArR55J
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B3C1F000C1;
+	Sat, 28 Nov 2026 10:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795859150;
-	bh=3duadoI5cMbrpBpkjaOojq5fk/vrpMla0+OafY6QSEY=;
+	s=k20260515; t=1795861822;
+	bh=ucG103OtGB0uXp5vLgmcqXc8IoTb+p29U9i3AaC9Yc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IIGR2Ysutw7AuV568EuusrLYN5fsQ+JHe5xTFUKrlyFTWVVgzpS67PYm6OuAsWyCL
-	 qBwgQzF6gr09AZaaKU6qKvArlNSsjhiWEA3AOTuGe8UjxPK8e1hOk7LVyXVi/O3tAJ
-	 RardZKxVUEgxBiTVubX0kh7FcTp6ryxVuFrIXjPEf5xIbIsecmgg7+36U7QRaeVr3I
-	 Z21jOx/+H6SiXeAMnHkAoSstQwxsB73xdMQShyBtMfaTvusEF/2L2hZ1IvuuudldrZ
-	 vdolYei8tRurAHyzpsXDVzk+EMAWTKw3bJx2INQ+GvYGnMwzkOKTgGPlGTwMPuZyQ0
-	 ruDXfUPofnZig==
+	b=kHArR55Jlyf2Fv07KwPTVGMh7dAVYtDpQoUdwbGpk9wGwEQrAGH4MGKDUDbncc78C
+	 CPCrrGmUB0GsrlYsPwoQxkqffPKriVE5KtrPReCPQBKFNdJ+O3PalVXpZH/6f9s5es
+	 SbZUos2y/YtW1A/SBqrtpjINEkvv3YCqQ7KHKy7EQ7dnUHrSCxjOb2lvD+tzfi7Py4
+	 eNBtAJiem7JS8e2MLMFeqZx/j++ABnvjwY9S9eVe2V0jMcNvTxQtZkkF+fQg3vs96d
+	 euriVR0uTFjt58BbfupZYs9EzXpEBsjaGBMb8wHWgboYI3aYlzK/XrnpfbtVEN8J+Y
+	 rlb+L2J0eUTgw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Jaewon Jung <jaewon8868@gmail.com>, "Shuah Khan" <shuah@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Check for dynamic_events before clearing
-Date: Sat, 28 Nov 2026 18:45:47 +0900
-Message-ID: <undine-1795859147374307219-792c74b3de9f0713@undined.local>
+To: Ren Wei <enjou1224z@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, vega@nebusec.ai, rakukuip@gmail.com
+Subject: Re: [PATCH 1/1] tracing/uprobes: Reject unregistering enabled trace_uprobe to prevent UAF
+Date: Sat, 28 Nov 2026 19:30:19 +0900
+Message-ID: <undine-1795861819518649294-8d01b129ddd6b6da@undined.local>
 X-Mailer: UndineD 0.1
-In-Reply-To: <20261016032655.82009-1-jaewon8868@gmail.com>
-References: <20261016032655.82009-1-jaewon8868@gmail.com>
+In-Reply-To: <4ac73dd24e3123cdcdb3e938dc7bd74be66a3f77.1785227724.git.rakukuip@gmail.com>
+References: <cover.1785227724.git.rakukuip@gmail.com> <4ac73dd24e3123cdcdb3e938dc7bd74be66a3f77.1785227724.git.rakukuip@gmail.com>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Post: <mailto:linux-trace-kernel@vger.kernel.org>
@@ -61,41 +61,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-On Fri, 16 Oct 2026 12:26:32 +0900, Jaewon Jung <jaewon8868@gmail.com> wrote:
-> Trace instances do not have a dynamic_events file, but
-> clear_dynamic_events() is called during initialization. Check for the
-> file to avoid a "No such file or directory" error.
+On Wed, 29 Jul 2026 23:19:59 +0800, Ren Wei <enjou1224z@gmail.com> wrote:
+> From: Luxiao Xu <rakukuip@gmail.com>
 >
-> Signed-off-by: Jaewon Jung <jaewon8868@gmail.com>
+> When unregistering a trace_uprobe, if the probe has a sibling
+> (i.e. trace_probe_has_sibling() is true), unregister_trace_uprobe()
+> jumps directly to unreg, bypassing event busy checks and
+> unregister_uprobe_event().
+>
+> However, if the trace_uprobe is currently enabled, freeing it without
+> disabling it allows uprobe callbacks (such as uprobe_dispatcher()) to
+> continue accessing the freed trace_uprobe structure. This leads to a
+> use-after-free (UAF) condition.
+>
+> Fix this by checking trace_probe_is_enabled() at the entry of
+> unregister_trace_uprobe(). If the probe is enabled, return -EBUSY
+> immediately to prevent unregistering and freeing an active probe.
 
-This looks good to me, and need this Fixes tag.
+I found this had been already fixed by f1d9b7a3fe99（"tracing/probes: Check
+enabled and busy state before unlinking sibling probes")
 
-Fixes: aaac2820a367 ("selftests/ftrace: Add clear_dynamic_events() to test cases")
+Thanks,
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
-Shuah, can you also pick this to your selftest fixes branch?
-
-Thank you,
-
+>
+> Fixes: 41af3cf587f4 ("tracing/uprobe: Add multi-probe per uprobe event support")
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Vega <vega@nebusec.ai>
+> Assisted-by: Codex:gpt-5.4
+> Signed-off-by: Luxiao Xu <rakukuip@gmail.com>
+> Signed-off-by: Ren Wei <enjou1224z@gmail.com>
 > ---
->  tools/testing/selftests/ftrace/test.d/functions | 2 ++
->  1 file changed, 2 insertions(+)
+>  kernel/trace/trace_uprobe.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >
-> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-> index 826141e299e5..4f2abb05e365 100644
-> --- a/tools/testing/selftests/ftrace/test.d/functions
-> +++ b/tools/testing/selftests/ftrace/test.d/functions
-> @@ -84,6 +84,8 @@ clear_synthetic_events() { # reset all current synthetic events
->  }
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index c274346853d1..a514a82c4ae0 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -396,6 +396,9 @@ static int unregister_trace_uprobe(struct trace_uprobe *tu)
+>  {
+>  	int ret;
 >  
->  clear_dynamic_events() { # reset all current dynamic events
-> +    [ -f dynamic_events ] || return 0
+> +	if (trace_probe_is_enabled(&tu->tp))
+> +		return -EBUSY;
 > +
->      again=1
->      stop=1
->      # loop mulitple times as some events require other to be removed first
+>  	if (trace_probe_has_sibling(&tu->tp))
+>  		goto unreg;
+>  
+> -- 
+> 2.43.0
+>
 >
 
 -- 
